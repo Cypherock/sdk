@@ -1,18 +1,22 @@
-import { DeviceError, DeviceErrorType } from '@cypherock/sdk-interfaces';
+import {
+  DeviceError,
+  DeviceErrorType,
+  IDeviceConnection
+} from '@cypherock/sdk-interfaces';
 import { commands, constants } from '../config';
 import { logger } from '../utils';
 import { PacketVersion, PacketVersionMap } from '../utils/versions';
-import { xmodemEncode } from '../xmodem/legacy';
-import { DeviceConnectionInterface, PacketData } from '../types';
+import { xmodemEncode, xmodemDecode } from '../xmodem/legacy';
 
 /**
  * Writes the packet to the SerialPort on the given connection,
  * and rejects the promise if there is no acknowledgment from the device
  */
 export const writePacket = (
-  connection: DeviceConnectionInterface,
-  packet: any,
-  version: PacketVersion
+  connection: IDeviceConnection,
+  packet: string,
+  version: PacketVersion,
+  skipPacketIds: string[]
 ) => {
   let usableConstants = constants.v1;
   const usableCommands = commands.v1;
@@ -25,65 +29,97 @@ export const writePacket = (
     usableConstants = constants.v2;
   }
 
+  console.log({ skipPacketIds });
+
   /**
    * Be sure to remove all listeners and timeout.
    */
   return new Promise<void>((resolve, reject) => {
     let timeout: NodeJS.Timeout;
+    let recheckTimeout: NodeJS.Timeout;
 
-    function dataListener(ePacket: PacketData) {
+    function cleanUp() {
       if (timeout) {
         clearTimeout(timeout);
       }
-      connection.removeListener('ack', dataListener);
-      // eslint-disable-next-line
-      connection.removeListener('close', onClose);
+      if (recheckTimeout) {
+        clearTimeout(recheckTimeout);
+      }
+    }
 
-      switch (ePacket.commandType) {
-        case usableCommands.ACK_PACKET:
-          resolve();
+    async function recheckAck() {
+      try {
+        logger.info('Recheck triggred');
+        if (!connection.isConnected()) {
+          reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
           return;
-        case usableCommands.NACK_PACKET:
-          logger.warn('Received NACK');
-          reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
+        }
+
+        // Assuming we'll be using sendData to send only 1 packet
+        const pool = await connection.peek();
+        console.log({ pool });
+
+        // eslint-disable-next-line
+        for (const poolItem of pool) {
+          const { data } = poolItem;
+          if (skipPacketIds.includes(poolItem.id)) {
+            logger.info(`Skipped: ${data}`);
+            // eslint-disable-next-line
+            continue;
+          }
+
+          skipPacketIds.push(poolItem.id);
+
+          logger.info(`Received: ${data}`);
+
+          const packetList = xmodemDecode(Buffer.from(data, 'hex'), version);
+          console.log(packetList);
+
           // eslint-disable-next-line
-          return;
-        default:
-        // Do nothing
+          for (const packet of packetList) {
+            console.log(packet);
+            switch (packet.commandType) {
+              case usableCommands.ACK_PACKET:
+                console.log('ACK PACKET');
+                cleanUp();
+                resolve();
+                return;
+              case usableCommands.NACK_PACKET:
+                logger.warn('Received NACK');
+                cleanUp();
+                reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
+                // eslint-disable-next-line
+                return;
+              default:
+              // Do nothing
+            }
+          }
+        }
+
+        recheckTimeout = setTimeout(recheckAck, usableConstants.RECHECK_TIME);
+      } catch (error) {
+        cleanUp();
+        reject(new DeviceError(DeviceErrorType.UNKNOWN_COMMUNICATION_ERROR));
       }
     }
 
-    function onClose(err: any) {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-
-      connection.removeListener('ack', dataListener);
-      connection.removeListener('close', onClose);
-
-      if (err) {
-        logger.error(err);
-      }
-
-      reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
-    }
-
-    connection.addListener('ack', dataListener);
-    connection.addListener('close', onClose);
-
-    connection.write(packet).catch(error => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      connection.removeListener('ack', dataListener);
-      connection.removeListener('close', onClose);
-      logger.error(error);
-      reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
-    });
+    logger.info(`Writing packet: ${packet}`);
+    connection
+      .send(packet)
+      .then(() => {
+        logger.info(`Writing packet done: ${packet}`);
+        recheckTimeout = setTimeout(recheckAck, usableConstants.RECHECK_TIME);
+      })
+      .catch(error => {
+        logger.info(`Writing packet error: ${error}`);
+        cleanUp();
+        logger.error(error);
+        reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
+      });
 
     timeout = setTimeout(() => {
-      connection.removeListener('ack', dataListener);
-      connection.removeListener('close', onClose);
+      logger.info('Timeout triggred');
+      cleanUp();
       reject(new DeviceError(DeviceErrorType.WRITE_TIMEOUT));
     }, usableConstants.ACK_TIME);
   });
@@ -108,12 +144,13 @@ export const writePacket = (
  * @return
  */
 export const sendData = async (
-  connection: DeviceConnectionInterface,
+  connection: IDeviceConnection,
   command: number,
   data: string,
   version: PacketVersion,
   maxTries = 5
 ) => {
+  let skipPacketIds: string[] = [];
   const packetsList = xmodemEncode(data, command, version);
   logger.info(
     `Sending command ${command} : containing ${packetsList.length} packets.`
@@ -121,18 +158,20 @@ export const sendData = async (
   /**
    * Create a list of each packet and self contained retries and listener
    */
-  const dataList = packetsList.map(d => async (resolve: any, reject: any) => {
+  // eslint-disable-next-line
+  for (const packet of packetsList) {
     let tries = 1;
+    let isDone = false;
     let localMaxTries = maxTries;
     if (command === 255) localMaxTries = 1;
 
     let firstError: Error | undefined;
-    while (tries <= localMaxTries) {
+    while (!isDone && tries <= localMaxTries) {
       try {
         // eslint-disable-next-line
-        await writePacket(connection, d, version);
-        resolve(true);
-        return;
+        await writePacket(connection, packet, version, skipPacketIds);
+        isDone = true;
+        logger.info('Write packet exit');
       } catch (e) {
         // Don't retry if connection closed
         if (e instanceof DeviceError) {
@@ -155,27 +194,14 @@ export const sendData = async (
       tries += 1;
     }
 
-    if (firstError) {
-      reject(firstError);
-    } else {
-      reject(new DeviceError(DeviceErrorType.WRITE_TIMEOUT));
-    }
-  });
-
-  // eslint-disable-next-line
-  for (const i of dataList) {
-    try {
-      // eslint-disable-next-line
-      await new Promise((res, rej) => {
-        i(res, rej);
-      });
-    } catch (e) {
-      if (e) {
-        throw e;
+    if (!isDone) {
+      if (firstError) {
+        throw firstError;
+      } else {
+        throw new DeviceError(DeviceErrorType.WRITE_TIMEOUT);
       }
-
-      throw new DeviceError(DeviceErrorType.WRITE_TIMEOUT);
     }
   }
+
   logger.info(`Sent command ${command} : ${data}`);
 };

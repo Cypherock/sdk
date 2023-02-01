@@ -18,5 +18,6 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   rules: {
     "import/extensions": 0,
+    "no-await-in-loop": 0
   },
 };

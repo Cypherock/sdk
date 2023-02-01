@@ -1,15 +1,28 @@
 import SerialPort from 'serialport';
-import { DeviceError, DeviceErrorType } from '@cypherock/sdk-interfaces';
+import {
+  DeviceError,
+  DeviceErrorType,
+  DeviceState
+} from '@cypherock/sdk-interfaces';
 
-import { IConnectionInfo } from './types';
+import { IConnectionInfo } from '../types';
 
-const supportedVersionsToDeviceState: Record<string, string> = {
+const legacySupportedVersionsToDeviceState: Record<string, DeviceState> = {
   // Bootloader
-  '01': '00',
+  '00': DeviceState.BOOTLOADER,
   // Intiial
-  '02': '01',
+  '01': DeviceState.INITIAL,
   // Main
-  '03': '02'
+  '02': DeviceState.MAIN
+};
+
+const supportedVersionsToDeviceState: Record<string, DeviceState> = {
+  // Bootloader
+  '01': DeviceState.BOOTLOADER,
+  // Intiial
+  '02': DeviceState.INITIAL,
+  // Main
+  '03': DeviceState.MAIN
 };
 
 export const getAvailableConnectionInfo = async (): Promise<
@@ -18,7 +31,7 @@ export const getAvailableConnectionInfo = async (): Promise<
   const list = await SerialPort.list();
 
   let port: SerialPort.PortInfo = { path: '' };
-  let deviceState = '';
+  let deviceState: DeviceState | undefined;
   let hardwareVersion = '00';
   let exists = false;
 
@@ -39,11 +52,14 @@ export const getAvailableConnectionInfo = async (): Promise<
         case '0483':
           if (
             internalHardwareVersion === '02' &&
-            ['00', '01', '02'].includes(internalDeviceState)
+            Object.keys(legacySupportedVersionsToDeviceState).includes(
+              internalDeviceState
+            )
           ) {
             port = portParam;
             hardwareVersion = internalHardwareVersion;
-            deviceState = internalDeviceState;
+            deviceState =
+              legacySupportedVersionsToDeviceState[internalDeviceState];
             exists = true;
           }
           break;
@@ -68,14 +84,14 @@ export const getAvailableConnectionInfo = async (): Promise<
     if (exists) break;
   }
 
-  if (port && port.path) {
+  if (port && port.path && deviceState !== undefined) {
     const { serialNumber: deviceSerialNumber } = port;
 
     return {
       port,
       serial: deviceSerialNumber,
       hardwareVersion,
-      inBootloader: deviceState === '00',
+      inBootloader: deviceState === DeviceState.BOOTLOADER,
       // 00: Bootloader, 01: Initial app, 02: Main app
       deviceState
     };

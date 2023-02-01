@@ -1,6 +1,12 @@
-import { DeviceError, DeviceErrorType } from '@cypherock/sdk-interfaces';
+import {
+  DeviceError,
+  DeviceErrorType,
+  IDeviceConnection
+} from '@cypherock/sdk-interfaces';
+import { PacketVersion } from '../utils/versions';
 import { logger } from '../utils';
-import { DeviceConnectionInterface, PacketData } from '../types';
+import { xmodemDecode, LegacyDecodedPacketData } from '../xmodem/legacy';
+import { constants } from '../config';
 
 const DEFAULT_RECEIVE_TIMEOUT = 15000;
 
@@ -9,11 +15,17 @@ const DEFAULT_RECEIVE_TIMEOUT = 15000;
  */
 // eslint-disable-next-line
 export const receiveCommand = (
-  connection: DeviceConnectionInterface,
+  connection: IDeviceConnection,
   allAcceptableCommands: number[],
+  version: PacketVersion,
   timeout: number = DEFAULT_RECEIVE_TIMEOUT
 ) => {
   const resData: any = [];
+
+  if (!connection.isConnected()) {
+    throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
+  }
+
   return new Promise<{ commandType: number; data: string }>(
     (resolve, reject) => {
       if (!connection.isConnected()) {
@@ -22,23 +34,28 @@ export const receiveCommand = (
       }
 
       let timeoutIdentifier: NodeJS.Timeout | null = null;
+      let recheckTimeout: NodeJS.Timeout | null = null;
+
+      function cleanUp() {
+        if (timeoutIdentifier) {
+          clearTimeout(timeoutIdentifier);
+        }
+        if (recheckTimeout) {
+          clearTimeout(recheckTimeout);
+        }
+      }
 
       if (timeout) {
         timeoutIdentifier = setTimeout(() => {
-          // eslint-disable-next-line
-          connection.removeListener('data', eListener);
-          // eslint-disable-next-line
-          connection.removeListener('close', onClose);
+          cleanUp();
           reject(new DeviceError(DeviceErrorType.READ_TIMEOUT));
         }, timeout);
       }
 
-      function eListener(packet: PacketData) {
+      function processPacket(packet: LegacyDecodedPacketData) {
         const { commandType, currentPacketNumber, totalPacket, dataChunk } =
           packet;
         if (allAcceptableCommands.includes(commandType)) {
-          connection.onPacketUse(packet.id);
-
           resData[currentPacketNumber - 1] = dataChunk;
           if (currentPacketNumber === totalPacket) {
             if (commandType === 49) {
@@ -51,35 +68,58 @@ export const receiveCommand = (
                 `Received command (${commandType}) : ${resData.join('')}`
               );
             }
+            cleanUp();
             resolve({ commandType, data: resData.join('') });
-            if (timeoutIdentifier) {
-              clearTimeout(timeoutIdentifier);
-            }
-            connection.removeListener('data', eListener);
-            // eslint-disable-next-line
-            connection.removeListener('close', onClose);
+            return true;
           }
         }
+
+        return false;
       }
 
-      function onClose(err: any) {
-        if (timeoutIdentifier) {
-          clearTimeout(timeoutIdentifier);
+      async function recheckPacket() {
+        try {
+          logger.info('Recheck triggred for receive');
+          if (!connection.isConnected()) {
+            reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
+            return;
+          }
+
+          const data = await connection.receive();
+          logger.info(`Received: ${data}`);
+          if (!data) {
+            recheckTimeout = setTimeout(
+              recheckPacket,
+              constants.default.RECHECK_TIME
+            );
+            return;
+          }
+
+          const packetList = xmodemDecode(Buffer.from(data, 'hex'), version);
+          let isDone = false;
+
+          // eslint-disable-next-line
+          for (const packet of packetList) {
+            isDone = processPacket(packet);
+            if (isDone) break;
+          }
+
+          if (!isDone) {
+            recheckTimeout = setTimeout(
+              recheckPacket,
+              constants.default.RECHECK_TIME
+            );
+          }
+        } catch (error) {
+          cleanUp();
+          reject(new DeviceError(DeviceErrorType.UNKNOWN_COMMUNICATION_ERROR));
         }
-
-        connection.removeListener('data', eListener);
-        connection.removeListener('close', onClose);
-
-        if (err) {
-          logger.error(err);
-        }
-
-        reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
       }
 
-      connection.addListener('close', onClose);
-      connection.addListener('data', eListener);
-      connection.getPacketsFromPool(allAcceptableCommands).forEach(eListener);
+      recheckTimeout = setTimeout(
+        recheckPacket,
+        constants.default.RECHECK_TIME
+      );
     }
   );
 };
