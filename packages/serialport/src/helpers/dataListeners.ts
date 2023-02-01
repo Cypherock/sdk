@@ -76,7 +76,7 @@ export class DataListener {
 
   private async onData(data: Buffer) {
     console.log({ data, pool: this.pool });
-    this.pool.push({ id: uuid.v4(), data: data.toString('hex') });
+    this.pool.push({ id: uuid.v4(), data: Uint8Array.from(data) });
   }
 
   private async onClose() {

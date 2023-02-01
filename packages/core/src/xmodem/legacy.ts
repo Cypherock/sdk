@@ -1,9 +1,8 @@
 import { byteStuffing, byteUnstuffing, intToUintByte } from '../bytes';
 import { constants, radix } from '../config';
+import { hexToUint8Array, padStart, uint8ArrayToHex } from '../utils';
 import { crc16 } from '../utils/crc';
 import { PacketVersion, PacketVersionMap } from '../utils/versions';
-
-export * from './stm';
 
 export interface LegacyDecodedPacketData {
   startOfFrame: string;
@@ -52,11 +51,8 @@ export const xmodemEncode = (
       (i - 1) * CHUNK_SIZE + CHUNK_SIZE
     );
     const commData = currentPacketNumber + totalPacket + dataChunk;
-    const crc = intToUintByte(crc16(Buffer.from(commData, 'hex')), 16);
-    const stuffedData = byteStuffing(
-      Buffer.from(commData + crc, 'hex'),
-      version
-    ).toString('hex');
+    const crc = intToUintByte(crc16(hexToUint8Array(commData)), 16);
+    const stuffedData = byteStuffing(hexToUint8Array(commData + crc), version);
     const commHeader =
       START_OF_FRAME +
       intToUintByte(commandType, usableRadix.commandType) +
@@ -64,7 +60,8 @@ export const xmodemEncode = (
     const packet = commHeader + stuffedData;
     packetList.push(packet);
   }
-  return packetList;
+
+  return packetList.map(hexToUint8Array);
 };
 
 /**
@@ -85,7 +82,7 @@ export const xmodemEncode = (
  * @return list of decoded packets
  */
 export const xmodemDecode = (
-  param: Buffer,
+  param: Uint8Array,
   version: PacketVersion
 ): LegacyDecodedPacketData[] => {
   let usableConstants = constants.v1;
@@ -98,7 +95,8 @@ export const xmodemDecode = (
 
   const { CHUNK_SIZE, START_OF_FRAME } = usableConstants;
 
-  let data = param.toString('hex').toUpperCase();
+  let data = uint8ArrayToHex(param).toUpperCase();
+
   const packetList: LegacyDecodedPacketData[] = [];
   let offset = data.indexOf(START_OF_FRAME);
 
@@ -124,10 +122,7 @@ export const xmodemDecode = (
     offset += usableRadix.dataSize / 4;
     const stuffedData = data.slice(offset, offset + dataSize * 2);
     data = data.slice(offset + dataSize * 2);
-    const unStuffedData = byteUnstuffing(
-      Buffer.from(stuffedData, 'hex'),
-      version
-    ).toString('hex');
+    const unStuffedData = byteUnstuffing(hexToUint8Array(stuffedData), version);
     offset = 0;
     const currentPacketNumber = unStuffedData.slice(
       offset,
@@ -149,9 +144,11 @@ export const xmodemDecode = (
       0,
       unStuffedData.length - usableRadix.crc / 4
     );
-    const actualCRC = crc16(Buffer.from(crcInput, 'hex'))
-      .toString(16)
-      .padStart(4, '0');
+    const actualCRC = padStart(
+      crc16(hexToUint8Array(crcInput)).toString(16),
+      4,
+      '0'
+    );
 
     const errorList = [];
     if (startOfFrame.toUpperCase() !== START_OF_FRAME) {
@@ -204,11 +201,9 @@ export const createAckPacket = (
   const totalPacket = intToUintByte(0, usableRadix.totalPacket);
   const dataChunk = '00000000';
   const commData = currentPacketNumber + totalPacket + dataChunk;
-  const crc = crc16(Buffer.from(commData, 'hex')).toString(16).padStart(4, '0');
+  const crc = padStart(crc16(hexToUint8Array(commData)).toString(16), 4, '0');
   const temp = commData + crc;
-  const stuffedData = byteStuffing(Buffer.from(temp, 'hex'), version).toString(
-    'hex'
-  );
+  const stuffedData = byteStuffing(hexToUint8Array(temp), version);
 
   const commHeader =
     START_OF_FRAME +

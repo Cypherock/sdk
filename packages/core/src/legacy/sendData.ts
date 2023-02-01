@@ -1,8 +1,11 @@
 import {
   DeviceError,
   DeviceErrorType,
-  IDeviceConnection
+  IDeviceConnection,
+  PoolData,
+  ConnectionTypeMap
 } from '@cypherock/sdk-interfaces';
+import * as uuid from 'uuid';
 import { commands, constants } from '../config';
 import { logger } from '../utils';
 import { PacketVersion, PacketVersionMap } from '../utils/versions';
@@ -14,7 +17,7 @@ import { xmodemEncode, xmodemDecode } from '../xmodem/legacy';
  */
 export const writePacket = (
   connection: IDeviceConnection,
-  packet: string,
+  packet: Uint8Array,
   version: PacketVersion,
   skipPacketIds: string[]
 ) => {
@@ -56,7 +59,17 @@ export const writePacket = (
         }
 
         // Assuming we'll be using sendData to send only 1 packet
-        const pool = await connection.peek();
+        const connectionType = connection.getConnectionType();
+        let pool: PoolData[];
+        if (connectionType === ConnectionTypeMap.SERIAL_PORT) {
+          pool = await connection.peek();
+        } else {
+          const data = await connection.receive();
+          pool = [];
+          if (data) {
+            pool.push({ id: uuid.v4(), data });
+          }
+        }
         console.log({ pool });
 
         // eslint-disable-next-line
@@ -72,7 +85,7 @@ export const writePacket = (
 
           logger.info(`Received: ${data}`);
 
-          const packetList = xmodemDecode(Buffer.from(data, 'hex'), version);
+          const packetList = xmodemDecode(data, version);
           console.log(packetList);
 
           // eslint-disable-next-line
@@ -98,6 +111,7 @@ export const writePacket = (
 
         recheckTimeout = setTimeout(recheckAck, usableConstants.RECHECK_TIME);
       } catch (error) {
+        console.log(error);
         cleanUp();
         reject(new DeviceError(DeviceErrorType.UNKNOWN_COMMUNICATION_ERROR));
       }
@@ -150,7 +164,7 @@ export const sendData = async (
   version: PacketVersion,
   maxTries = 5
 ) => {
-  let skipPacketIds: string[] = [];
+  const skipPacketIds: string[] = [];
   const packetsList = xmodemEncode(data, command, version);
   logger.info(
     `Sending command ${command} : containing ${packetsList.length} packets.`

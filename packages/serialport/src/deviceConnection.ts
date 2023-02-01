@@ -1,4 +1,8 @@
-import { IDeviceConnection, DeviceState } from '@cypherock/sdk-interfaces';
+import {
+  IDeviceConnection,
+  DeviceState,
+  ConnectionTypeMap
+} from '@cypherock/sdk-interfaces';
 import SerialPort from 'serialport';
 import * as uuid from 'uuid';
 
@@ -45,6 +49,11 @@ export default class DeviceConnection implements IDeviceConnection {
     });
     this.initialized = true;
     this.dataListener = new DataListener({ connection: this.connection });
+  }
+
+  // eslint-disable-next-line
+  public getConnectionType() {
+    return ConnectionTypeMap.SERIAL_PORT;
   }
 
   public static async create() {
@@ -107,10 +116,10 @@ export default class DeviceConnection implements IDeviceConnection {
   /**
    * Writes a given data string (in hex) to the device.
    */
-  public send(data: string) {
+  public send(data: Uint8Array) {
     return new Promise<void>((resolve, reject) => {
       try {
-        this.connection.write(Buffer.from(data, 'hex'), error => {
+        this.connection.write(Buffer.from(data), error => {
           if (error) {
             reject(error);
             return;

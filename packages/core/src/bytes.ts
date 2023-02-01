@@ -1,7 +1,11 @@
 import { constants } from './config';
+import { uint8ArrayToHex } from './utils';
 import { PacketVersion, PacketVersionMap } from './utils/versions';
 
-const byteUnstuffing = (inputBuff: Buffer, version: PacketVersion): Buffer => {
+const byteUnstuffing = (
+  inputBuff: Uint8Array,
+  version: PacketVersion
+): string => {
   let usableConstants = constants.v1;
 
   if (version === PacketVersionMap.v2) {
@@ -11,7 +15,7 @@ const byteUnstuffing = (inputBuff: Buffer, version: PacketVersion): Buffer => {
   if (inputBuff.length <= 0) throw new Error('Byte unstuffing failed: 0 size');
 
   const size = inputBuff.length;
-  const outputData: any = [];
+  const outputData: number[] = [];
   for (let i = 0; i < size; i += 1) {
     if (inputBuff[i] === 0xa3 && i < size - 1) {
       if (inputBuff[i + 1] === 0x3a) {
@@ -27,10 +31,11 @@ const byteUnstuffing = (inputBuff: Buffer, version: PacketVersion): Buffer => {
       outputData.push(inputBuff[i]);
     }
   }
-  return Buffer.from(outputData, 'hex');
+
+  return uint8ArrayToHex(Uint8Array.from(outputData));
 };
 
-const byteStuffing = (inputBuff: Buffer, version: PacketVersion) => {
+const byteStuffing = (inputBuff: Uint8Array, version: PacketVersion) => {
   let usableConstants = constants.v1;
 
   if (version === PacketVersionMap.v2) {
@@ -38,7 +43,7 @@ const byteStuffing = (inputBuff: Buffer, version: PacketVersion) => {
   }
 
   if (inputBuff.length <= 0) throw new Error('Byte stuffing failed: 0 size');
-  const outputData: any = [];
+  const outputData: number[] = [];
   inputBuff.forEach(byte => {
     if (byte === usableConstants.STUFFING_BYTE) {
       outputData.push(0xa3);
@@ -50,7 +55,8 @@ const byteStuffing = (inputBuff: Buffer, version: PacketVersion) => {
       outputData.push(byte);
     }
   });
-  return Buffer.from(outputData, 'hex');
+
+  return uint8ArrayToHex(Uint8Array.from(outputData));
 };
 
 const intToUintByte = (ele: any, radix: number) => {

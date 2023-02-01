@@ -10,7 +10,7 @@
     "pretty": "prettier --write 'src/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts'",
     "build": "rimraf dist && tsc -p tsconfig.json",
-    "start": "node dist/index.js"
+    "start:node": "node dist/index.js"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

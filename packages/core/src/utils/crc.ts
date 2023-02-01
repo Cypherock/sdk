@@ -10,12 +10,11 @@ const updateCRC16 = (crcParam: any, byte: any) => {
   return crc & 0xffff;
 };
 
-const crc16 = (dataBuff: Buffer) => {
+const crc16 = (dataBuff: Uint8Array) => {
   let crc = 0;
-  dataBuff.at(0);
   // eslint-disable-next-line
   for (let index = 0; index < dataBuff.length; index += 1) {
-    const i = dataBuff.at(index);
+    const i = dataBuff[index];
     crc = updateCRC16(crc, i);
   }
   crc = updateCRC16(crc, 0);

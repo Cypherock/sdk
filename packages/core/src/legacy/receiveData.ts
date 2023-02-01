@@ -95,7 +95,7 @@ export const receiveCommand = (
             return;
           }
 
-          const packetList = xmodemDecode(Buffer.from(data, 'hex'), version);
+          const packetList = xmodemDecode(data, version);
           let isDone = false;
 
           // eslint-disable-next-line

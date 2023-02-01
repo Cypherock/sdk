@@ -11,8 +11,15 @@
     "dev": {
       "cache": false
     },
-    "start": {
-      "dependsOn": ["build", "^start"]
+    "start:node": {
+      "dependsOn": ["build", "^start:node"]
+    },
+    "dev:browser": {
+      "dependsOn": ["build", "^dev:browser"],
+      "cache": false
+    },
+    "start:browser": {
+      "dependsOn": ["build", "^start:browser"]
     }
   }
 }
