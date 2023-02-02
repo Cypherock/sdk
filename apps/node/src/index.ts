@@ -1,4 +1,4 @@
-import DeviceConnection from '@cypherock/sdk-hw-serialport';
+import DeviceConnection from '@cypherock/sdk-hw-hid';
 import SDK from '@cypherock/sdk-core';
 
 const run = async () => {

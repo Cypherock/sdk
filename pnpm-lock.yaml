@@ -43,6 +43,7 @@ importers:
   apps/node:
     specifiers:
       '@cypherock/sdk-core': workspace:^0.0.0
+      '@cypherock/sdk-hw-hid': workspace:^0.0.0
       '@cypherock/sdk-hw-serialport': workspace:^0.0.0
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
@@ -52,6 +53,7 @@ importers:
       typescript: ^4.5.2
     dependencies:
       '@cypherock/sdk-core': link:../../packages/core
+      '@cypherock/sdk-hw-hid': link:../../packages/hid
       '@cypherock/sdk-hw-serialport': link:../../packages/serialport
     devDependencies:
       eslint: 7.32.0
@@ -101,6 +103,33 @@ importers:
       eslint-config-prettier: 8.6.0_eslint@7.32.0
       prettier: 2.8.3
       typescript: 4.9.4
+
+  packages/hid:
+    specifiers:
+      '@cypherock/sdk-interfaces': workspace:^0.0.0
+      '@types/node-hid': ^1.3.1
+      '@types/uuid': ^9.0.0
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      node-hid: ^2.1.2
+      prettier-config-custom: workspace:^0.0.0
+      rimraf: ^4.1.2
+      tsconfig: workspace:*
+      typescript: ^4.5.2
+      uuid: ^9.0.0
+    dependencies:
+      '@cypherock/sdk-interfaces': link:../interfaces
+      node-hid: 2.1.2
+      uuid: 9.0.0
+    devDependencies:
+      '@types/node-hid': 1.3.1
+      '@types/uuid': 9.0.0
+      eslint: 7.32.0
+      eslint-config-custom: link:../eslint-config-custom
+      prettier-config-custom: link:../prettier-config-custom
+      rimraf: 4.1.2
+      tsconfig: link:../tsconfig
+      typescript: 4.9.5
 
   packages/interfaces:
     specifiers:
@@ -511,6 +540,12 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+
+  /@types/node-hid/1.3.1:
+    resolution: {integrity: sha512-VPxuGDCoDxOUKrTZPSok7IEmiK4cVLfj8Csu09FtG5uF+eqf1HETERHXQkO02Rk6j6YiiHxp0/DA9R4llvhEzQ==}
+    dependencies:
+      '@types/node': 18.11.18
+    dev: true
 
   /@types/node/18.11.18:
     resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
@@ -2132,8 +2167,23 @@ packages:
       semver: 7.3.8
     dev: false
 
+  /node-addon-api/3.2.1:
+    resolution: {integrity: sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==}
+    dev: false
+
   /node-addon-api/4.2.0:
     resolution: {integrity: sha512-eazsqzwG2lskuzBqCGPi7Ac2UgOoMz8JVOXVhTvvPDYhthvNpefx8jWD8Np7Gv+2Sz0FlPWZk0nJV0z598Wn8Q==}
+    dev: false
+
+  /node-hid/2.1.2:
+    resolution: {integrity: sha512-qhCyQqrPpP93F/6Wc/xUR7L8mAJW0Z6R7HMQV8jCHHksAxNDe/4z4Un/H9CpLOT+5K39OPyt9tIQlavxWES3lg==}
+    engines: {node: '>=10'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      bindings: 1.5.0
+      node-addon-api: 3.2.1
+      prebuild-install: 7.1.1
     dev: false
 
   /object-assign/4.1.1:
@@ -2805,7 +2855,6 @@ packages:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
     engines: {node: '>=4.2.0'}
     hasBin: true
-    dev: false
 
   /unbox-primitive/1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
