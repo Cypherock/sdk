@@ -1,3 +1,6 @@
+import { PoolData } from '@cypherock/sdk-interfaces';
+import * as uuid from 'uuid';
+
 // eslint-disable-next-line
 export class DataListener {
   private connection: USBDevice;
@@ -9,6 +12,8 @@ export class DataListener {
   private readonly endpointIn: number;
 
   private readonly endpointOut: number;
+
+  private readonly pool: PoolData[];
 
   private constructor(params: {
     connection: USBDevice;
@@ -22,6 +27,7 @@ export class DataListener {
     this.endpointOut = params.endpointOut;
 
     this.listening = true;
+    this.pool = [];
   }
 
   public static async create(connection: USBDevice) {
@@ -82,9 +88,12 @@ export class DataListener {
   }
 
   public async receive() {
-    const meta = await this.connection.transferIn(this.endpointIn, 6 * 1024);
-    if (!meta.data) return undefined;
-    return new Uint8Array(meta.data.buffer);
+    console.log({ pool: this.pool });
+    const existingData = this.pool.shift();
+    console.log({ pool: this.pool, existingData });
+    if (existingData) return existingData.data;
+
+    return this.receiveNew();
   }
 
   public async send(data: Uint8Array) {
@@ -92,7 +101,19 @@ export class DataListener {
   }
 
   // eslint-disable-next-line
-  public peek() {
-    return [];
+  public async peek() {
+    const newData = await this.receiveNew();
+
+    if (newData) {
+      this.pool.push({ id: uuid.v4(), data: newData });
+    }
+
+    return [...this.pool];
+  }
+
+  private async receiveNew() {
+    const meta = await this.connection.transferIn(this.endpointIn, 6 * 1024);
+    if (!meta.data || meta.data.byteLength === 0) return undefined;
+    return new Uint8Array(meta.data.buffer);
   }
 }

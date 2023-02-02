@@ -2,10 +2,7 @@ import {
   DeviceError,
   DeviceErrorType,
   IDeviceConnection,
-  PoolData,
-  ConnectionTypeMap
 } from '@cypherock/sdk-interfaces';
-import * as uuid from 'uuid';
 import { commands, constants } from '../config';
 import { logger } from '../utils';
 import { PacketVersion, PacketVersionMap } from '../utils/versions';
@@ -58,18 +55,7 @@ export const writePacket = (
           return;
         }
 
-        // Assuming we'll be using sendData to send only 1 packet
-        const connectionType = connection.getConnectionType();
-        let pool: PoolData[];
-        if (connectionType === ConnectionTypeMap.SERIAL_PORT) {
-          pool = await connection.peek();
-        } else {
-          const data = await connection.receive();
-          pool = [];
-          if (data) {
-            pool.push({ id: uuid.v4(), data });
-          }
-        }
+        const pool = await connection.peek();
         console.log({ pool });
 
         // eslint-disable-next-line

@@ -86,7 +86,6 @@ export const receiveCommand = (
           }
 
           const data = await connection.receive();
-          logger.info(`Received: ${data}`);
           if (!data) {
             recheckTimeout = setTimeout(
               recheckPacket,
@@ -94,6 +93,8 @@ export const receiveCommand = (
             );
             return;
           }
+
+          logger.info(`Received: ${data}`);
 
           const packetList = xmodemDecode(data, version);
           let isDone = false;
