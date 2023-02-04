@@ -14,12 +14,20 @@
     "start:node": {
       "dependsOn": ["build", "^start:node"]
     },
+    "nodejs-test#start:node": {
+      "cache": false
+    },
     "dev:browser": {
-      "dependsOn": ["build", "^dev:browser"],
+      "dependsOn": ["build", "^dev:browser"]
+    },
+    "browser-test#dev:browser": {
       "cache": false
     },
     "start:browser": {
       "dependsOn": ["build", "^start:browser"]
+    },
+    "browser-test#start:browser": {
+      "cache": false
     }
   }
 }

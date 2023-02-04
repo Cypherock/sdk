@@ -12,7 +12,7 @@
     "lint": "turbo run lint",
     "start:node": "turbo run start:node",
     "start:browser": "turbo run start:browser",
-    "dev:browser": "turbo run start:browser",
+    "dev:browser": "turbo run dev:browser",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {

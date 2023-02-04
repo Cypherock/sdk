@@ -1,12 +1,14 @@
-import DeviceConnection from '@cypherock/sdk-hw-hid';
-import SDK from '@cypherock/sdk-core';
+// import DeviceConnection from '@cypherock/sdk-hw-hid';
+import SDK from '@cypherock/sdk-core-rust';
 
 const run = async () => {
-  const connection = await DeviceConnection.create();
+  // const connection = await DeviceConnection.create();
 
-  const sdk = await SDK.create(connection);
+  const sdk = await SDK.create();
+  console.log(sdk);
+  sdk.run();
 
-  console.log({ supported: sdk.isSupported(), version: sdk.getVersion() });
+  // console.log({ supported: sdk.isSupported(), version: sdk.getVersion() });
 };
 
 run();
