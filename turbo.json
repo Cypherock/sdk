@@ -3,7 +3,7 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**", "wasm/**"]
     },
     "lint": {
       "outputs": []
@@ -12,22 +12,23 @@
       "cache": false
     },
     "start:node": {
-      "dependsOn": ["build", "^start:node"]
+      "dependsOn": ["^build"]
     },
     "nodejs-test#start:node": {
       "cache": false
     },
     "dev:browser": {
-      "dependsOn": ["build", "^dev:browser"]
+      "dependsOn": ["^dev:browser"],
+      "cache": false
     },
     "browser-test#dev:browser": {
-      "cache": false
+      "dependsOn": ["^build"]
     },
     "start:browser": {
-      "dependsOn": ["build", "^start:browser"]
+      "dependsOn": ["^start:browser"]
     },
     "browser-test#start:browser": {
-      "cache": false
+      "dependsOn": ["^build", "browser-test#build"]
     }
   }
 }

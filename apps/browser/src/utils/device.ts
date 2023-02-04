@@ -5,7 +5,7 @@ export default async function run() {
   // const connection = await DeviceConnection.create();
 
   const sdk = await SDK.create({
-    url: "http://127.0.0.1:8081/packages/core-rust/wasm",
+    url: "http://127.0.0.1:8080/packages/core-rust/wasm",
   });
   console.log(sdk);
   sdk.run();
