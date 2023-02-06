@@ -5,7 +5,6 @@ build:
 	rm -rf src/generated/*.js
 	rm -rf src/generated/*.wasm
 	jsct transpile ./rust/core.wasm -o src/generated -O -I
-	node scripts/patch.js
 	pnpm build:ts
 	mkdir -p wasm
 	cp -r ./src/generated/*.wasm ./wasm/

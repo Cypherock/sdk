@@ -1,3 +1,4 @@
+import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { instantiate, Core } from './generated/core';
 
 const isNode =
@@ -17,8 +18,6 @@ const createCompileCore = (params?: IWASMOptions) => {
   if (!isNode && !params?.url) {
     throw new Error('Please provide a WASM folder or URL');
   }
-
-  console.log({ params, isNode });
 
   return async (name: string) => {
     if (params?.url) {
@@ -43,17 +42,29 @@ const createCompileCore = (params?: IWASMOptions) => {
 export default class SDK {
   private wasm: typeof Core;
 
-  private constructor(wasm: typeof Core) {
+  private connection: IDeviceConnection;
+
+  private constructor(connection: IDeviceConnection, wasm: typeof Core) {
     this.wasm = wasm;
+    this.connection = connection;
   }
 
-  public static async create(params?: IWASMOptions) {
+  public static async create(
+    connection: IDeviceConnection,
+    params?: IWASMOptions
+  ) {
     const wasm = await instantiate(createCompileCore(params), {
-      print: msg => {
-        console.log(msg);
-      }
+      connection
     });
-    return new SDK(wasm);
+    return new SDK(connection, wasm);
+  }
+
+  public getNewSequenceNumber() {
+    return this.connection.getNewSequenceNumber();
+  }
+
+  public getSequenceNumber() {
+    return this.connection.getSequenceNumber();
   }
 
   public run() {

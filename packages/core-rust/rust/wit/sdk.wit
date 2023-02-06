@@ -1,0 +1,12 @@
+interface connection {
+  get-connection-type: func() -> string
+  is-connected: func() -> bool
+  get-sequence-number: func() -> u32
+  get-new-sequence-number: func() -> u32
+}
+
+default world sdk {
+  import connection: self.connection
+
+  export run: func()
+}

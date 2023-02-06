@@ -1,25 +1,18 @@
-// use wasm_bindgen::prelude::*;
-
-// #[wasm_bindgen]
-// pub fn add(a: u32, b: u32) -> u32 {
-//     a + b
-// }
-
-// src/lib.rs
-
-// Use a procedural macro to generate bindings for the world we specified in
-// `host.wit`
-wit_bindgen_guest_rust::generate!("host");
+wit_bindgen_guest_rust::generate!("sdk");
 
 // Define a custom type and implement the generated `Host` trait for it which
 // represents implementing all the necesssary exported interfaces for this
 // component.
-struct MyHost;
+struct MySdk;
 
-impl Host for MyHost {
+impl Sdk for MySdk {
     fn run() {
-        print("Hello, world!");
+        connection::is_connected();
+        connection::get_connection_type();
+        connection::get_sequence_number();
+        connection::get_new_sequence_number();
+        // Do nothing
     }
 }
 
-export_host!(MyHost);
+export_sdk!(MySdk);
