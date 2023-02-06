@@ -1,32 +1,38 @@
-import { compare } from 'compare-versions';
+import { compare, compareVersions } from 'compare-versions';
 
 import { PacketVersion, PacketVersionMap } from './versions';
 
-// Supported version from order older to newer
-export const ALL_SUPPORTED_SDK_VERSIONS = ['2.5.0'];
-
-export const LATEST_SUPPORTED_SDK_VERSION =
-  ALL_SUPPORTED_SDK_VERSIONS[ALL_SUPPORTED_SDK_VERSIONS.length - 1];
-
-export const OLDEST_SUPPORTED_SDK_VERSION = ALL_SUPPORTED_SDK_VERSIONS[0];
+// from is inclusive and to is exclusive
+const supportedVersionRange = { from: '2.5.0', to: '2.6.0' };
 
 export const isSDKSupported = (version: string) => {
-  const isSupported =
-    ALL_SUPPORTED_SDK_VERSIONS.findIndex(ver => compare(ver, version, '=')) !==
-    -1;
+  const isNewer = compare(version, supportedVersionRange.to, '>=');
+  const isOlder = compare(version, supportedVersionRange.from, '<');
 
-  const isNewer = compare(version, LATEST_SUPPORTED_SDK_VERSION, '>');
+  const isSupported = !isNewer && !isOlder;
 
   return { isSupported, isNewer };
 };
 
-export const SDK_TO_PACKET_VERSION: Record<string, PacketVersion | undefined> =
-  {
-    '1.0.0': PacketVersionMap.v2,
-    '2.0.0': PacketVersionMap.v3,
-    '2.1.0': PacketVersionMap.v3,
-    '2.2.0': PacketVersionMap.v3,
-    '2.3.0': PacketVersionMap.v3,
-    '2.4.0': PacketVersionMap.v3,
-    '2.5.0': PacketVersionMap.v3
-  };
+// We need to maintain older sdk versions so that we can update them
+// from is inclusive and to is exclusive
+const SdkToPacketVersionMap: Array<{
+  from: string;
+  to?: string;
+  packetVersion: PacketVersion;
+}> = [
+  { from: '1.0.0', to: '2.0.0', packetVersion: PacketVersionMap.v2 },
+  { from: '2.0.0', to: '3.0.0', packetVersion: PacketVersionMap.v3 }
+];
+
+export const getPacketVersionFromSDK = (
+  sdkVersion: string
+): PacketVersion | undefined => {
+  for (const elem of SdkToPacketVersionMap) {
+    let enabled = compareVersions(elem.from, sdkVersion) < 1;
+    if (elem.to) enabled = enabled && compareVersions(elem.to, sdkVersion) > 0;
+    if (enabled) return elem.packetVersion;
+  }
+
+  return undefined;
+};

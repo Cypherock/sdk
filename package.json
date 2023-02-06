@@ -10,9 +10,9 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "start:node": "turbo run start:node",
-    "start:browser": "turbo run start:browser",
-    "dev:browser": "turbo run dev:browser",
+    "start:node": "turbo run build && turbo run start:node",
+    "start:browser": "turbo run build && turbo run start:browser",
+    "dev:browser": "turbo run build && turbo run dev:browser",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {

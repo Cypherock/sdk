@@ -12,23 +12,16 @@
       "cache": false
     },
     "start:node": {
-      "dependsOn": ["^build"]
-    },
-    "nodejs-test#start:node": {
+      "dependsOn": ["^start:node"],
       "cache": false
     },
     "dev:browser": {
       "dependsOn": ["^dev:browser"],
       "cache": false
     },
-    "browser-test#dev:browser": {
-      "dependsOn": ["^build"]
-    },
     "start:browser": {
-      "dependsOn": ["^start:browser"]
-    },
-    "browser-test#start:browser": {
-      "dependsOn": ["^build", "browser-test#build"]
+      "dependsOn": ["^start:browser"],
+      "cache": false
     }
   }
 }

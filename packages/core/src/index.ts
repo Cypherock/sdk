@@ -1,6 +1,6 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { sendData, receiveCommand } from './legacy';
-import { isSDKSupported, SDK_TO_PACKET_VERSION } from './utils/sdkVersions';
+import { isSDKSupported, getPacketVersionFromSDK } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/versions';
 
 const formatSDKVersion = (version: string) => {
@@ -100,10 +100,7 @@ export default class SDK {
 
         const sdkVersion = formatSDKVersion(sdkVersionData.data);
 
-        let packetVersion: PacketVersion | undefined;
-        if (SDK_TO_PACKET_VERSION[sdkVersion]) {
-          packetVersion = SDK_TO_PACKET_VERSION[sdkVersion];
-        }
+        const packetVersion = getPacketVersionFromSDK(sdkVersion);
 
         await connection.afterOperation();
         return {
