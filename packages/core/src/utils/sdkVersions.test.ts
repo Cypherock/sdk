@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import { isSDKSupported, getPacketVersionFromSDK } from './sdkVersions';
-import { PacketVersionMap } from './versions';
+import { PacketVersionMap } from './packetVersions';
 
 interface Range {
   min: number;

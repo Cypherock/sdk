@@ -1,11 +1,11 @@
 import {
   DeviceError,
   DeviceErrorType,
-  IDeviceConnection,
+  IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import { commands, constants } from '../config';
+import * as config from '../config';
 import { logger } from '../utils';
-import { PacketVersion, PacketVersionMap } from '../utils/versions';
+import { PacketVersion, PacketVersionMap } from '../utils/packetVersions';
 import { xmodemEncode, xmodemDecode } from '../xmodem/legacy';
 
 /**
@@ -18,15 +18,14 @@ export const writePacket = (
   version: PacketVersion,
   skipPacketIds: string[]
 ) => {
-  let usableConstants = constants.v1;
-  const usableCommands = commands.v1;
+  let usableConfig = config.v1;
 
   if (!connection.isConnected()) {
     throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
   }
 
   if (version === PacketVersionMap.v2) {
-    usableConstants = constants.v2;
+    usableConfig = config.v2;
   }
 
   console.log({ skipPacketIds });
@@ -78,12 +77,12 @@ export const writePacket = (
           for (const packet of packetList) {
             console.log(packet);
             switch (packet.commandType) {
-              case usableCommands.ACK_PACKET:
+              case usableConfig.commands.ACK_PACKET:
                 console.log('ACK PACKET');
                 cleanUp();
                 resolve();
                 return;
-              case usableCommands.NACK_PACKET:
+              case usableConfig.commands.NACK_PACKET:
                 logger.warn('Received NACK');
                 cleanUp();
                 reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
@@ -95,7 +94,10 @@ export const writePacket = (
           }
         }
 
-        recheckTimeout = setTimeout(recheckAck, usableConstants.RECHECK_TIME);
+        recheckTimeout = setTimeout(
+          recheckAck,
+          usableConfig.constants.RECHECK_TIME
+        );
       } catch (error) {
         console.log(error);
         cleanUp();
@@ -108,7 +110,10 @@ export const writePacket = (
       .send(packet)
       .then(() => {
         logger.info(`Writing packet done: ${packet}`);
-        recheckTimeout = setTimeout(recheckAck, usableConstants.RECHECK_TIME);
+        recheckTimeout = setTimeout(
+          recheckAck,
+          usableConfig.constants.RECHECK_TIME
+        );
       })
       .catch(error => {
         logger.info(`Writing packet error: ${error}`);
@@ -121,7 +126,7 @@ export const writePacket = (
       logger.info('Timeout triggred');
       cleanUp();
       reject(new DeviceError(DeviceErrorType.WRITE_TIMEOUT));
-    }, usableConstants.ACK_TIME);
+    }, usableConfig.constants.ACK_TIME);
   });
 };
 

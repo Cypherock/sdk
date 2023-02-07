@@ -1,6 +1,6 @@
 import { compare, compareVersions } from 'compare-versions';
 
-import { PacketVersion, PacketVersionMap } from './versions';
+import { PacketVersion, PacketVersionMap } from './packetVersions';
 
 // from is inclusive and to is exclusive
 const supportedVersionRange = { from: '2.5.0', to: '2.6.0' };

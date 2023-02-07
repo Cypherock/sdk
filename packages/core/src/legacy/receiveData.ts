@@ -3,17 +3,16 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import { PacketVersion } from '../utils/versions';
+import { PacketVersion } from '../utils/packetVersions';
 import { logger } from '../utils';
 import { xmodemDecode, LegacyDecodedPacketData } from '../xmodem/legacy';
-import { constants } from '../config';
+import * as config from '../config';
 
 const DEFAULT_RECEIVE_TIMEOUT = 15000;
 
 /**
  * waits for the hardware to send a message with one of the specified command numbers and returns the data in hex
  */
-// eslint-disable-next-line
 export const receiveCommand = (
   connection: IDeviceConnection,
   allAcceptableCommands: number[],
@@ -89,7 +88,7 @@ export const receiveCommand = (
           if (!data) {
             recheckTimeout = setTimeout(
               recheckPacket,
-              constants.default.RECHECK_TIME
+              config.v1.constants.RECHECK_TIME
             );
             return;
           }
@@ -99,7 +98,6 @@ export const receiveCommand = (
           const packetList = xmodemDecode(data, version);
           let isDone = false;
 
-          // eslint-disable-next-line
           for (const packet of packetList) {
             isDone = processPacket(packet);
             if (isDone) break;
@@ -108,7 +106,7 @@ export const receiveCommand = (
           if (!isDone) {
             recheckTimeout = setTimeout(
               recheckPacket,
-              constants.default.RECHECK_TIME
+              config.v1.constants.RECHECK_TIME
             );
           }
         } catch (error) {
@@ -119,7 +117,7 @@ export const receiveCommand = (
 
       recheckTimeout = setTimeout(
         recheckPacket,
-        constants.default.RECHECK_TIME
+        config.v1.constants.RECHECK_TIME
       );
     }
   );

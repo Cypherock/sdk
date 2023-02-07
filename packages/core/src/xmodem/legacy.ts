@@ -1,8 +1,7 @@
 import { byteStuffing, byteUnstuffing, intToUintByte } from '../bytes';
-import { constants, radix } from '../config';
-import { hexToUint8Array, padStart, uint8ArrayToHex } from '../utils';
-import { crc16 } from '../utils/crc';
-import { PacketVersion, PacketVersionMap } from '../utils/versions';
+import * as config from '../config';
+import { hexToUint8Array, padStart, uint8ArrayToHex, crc16 } from '../utils';
+import { PacketVersion, PacketVersionMap } from '../utils/packetVersions';
 
 export interface LegacyDecodedPacketData {
   startOfFrame: string;
@@ -28,24 +27,22 @@ export const xmodemEncode = (
   commandType: number,
   version: PacketVersion
 ) => {
-  let usableConstants = constants.v1;
-  let usableRadix = radix.v1;
+  let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
-    usableConstants = constants.v2;
-    usableRadix = radix.v2;
+    usableConfig = config.v2;
   }
 
-  const { CHUNK_SIZE, START_OF_FRAME } = usableConstants;
+  const { CHUNK_SIZE, START_OF_FRAME } = usableConfig.constants;
 
   const rounds = Math.ceil(data.length / CHUNK_SIZE);
   const packetList: string[] = [];
   for (let i = 1; i <= rounds; i += 1) {
     const currentPacketNumber = intToUintByte(
       i,
-      usableRadix.currentPacketNumber
+      usableConfig.radix.currentPacketNumber
     );
-    const totalPacket = intToUintByte(rounds, usableRadix.totalPacket);
+    const totalPacket = intToUintByte(rounds, usableConfig.radix.totalPacket);
     const dataChunk = data.slice(
       (i - 1) * CHUNK_SIZE,
       (i - 1) * CHUNK_SIZE + CHUNK_SIZE
@@ -55,8 +52,8 @@ export const xmodemEncode = (
     const stuffedData = byteStuffing(hexToUint8Array(commData + crc), version);
     const commHeader =
       START_OF_FRAME +
-      intToUintByte(commandType, usableRadix.commandType) +
-      intToUintByte(stuffedData.length / 2, usableRadix.dataSize);
+      intToUintByte(commandType, usableConfig.radix.commandType) +
+      intToUintByte(stuffedData.length / 2, usableConfig.radix.dataSize);
     const packet = commHeader + stuffedData;
     packetList.push(packet);
   }
@@ -85,15 +82,13 @@ export const xmodemDecode = (
   param: Uint8Array,
   version: PacketVersion
 ): LegacyDecodedPacketData[] => {
-  let usableConstants = constants.v1;
-  let usableRadix = radix.v1;
+  let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
-    usableConstants = constants.v2;
-    usableRadix = radix.v2;
+    usableConfig = config.v2;
   }
 
-  const { CHUNK_SIZE, START_OF_FRAME } = usableConstants;
+  const { CHUNK_SIZE, START_OF_FRAME } = usableConfig.constants;
 
   let data = uint8ArrayToHex(param).toUpperCase();
 
@@ -111,38 +106,41 @@ export const xmodemDecode = (
     const startOfFrame = data.slice(offset, offset + START_OF_FRAME.length);
     offset += START_OF_FRAME.length;
     const commandType = parseInt(
-      `0x${data.slice(offset, offset + usableRadix.commandType / 4)}`,
+      `0x${data.slice(offset, offset + usableConfig.radix.commandType / 4)}`,
       16
     );
-    offset += usableRadix.commandType / 4;
+    offset += usableConfig.radix.commandType / 4;
     const dataSize = parseInt(
-      data.slice(offset, offset + usableRadix.dataSize / 4),
+      data.slice(offset, offset + usableConfig.radix.dataSize / 4),
       16
     );
-    offset += usableRadix.dataSize / 4;
+    offset += usableConfig.radix.dataSize / 4;
     const stuffedData = data.slice(offset, offset + dataSize * 2);
     data = data.slice(offset + dataSize * 2);
     const unStuffedData = byteUnstuffing(hexToUint8Array(stuffedData), version);
     offset = 0;
     const currentPacketNumber = unStuffedData.slice(
       offset,
-      offset + usableRadix.currentPacketNumber / 4
+      offset + usableConfig.radix.currentPacketNumber / 4
     );
-    offset += usableRadix.currentPacketNumber / 4;
+    offset += usableConfig.radix.currentPacketNumber / 4;
     const totalPacket = unStuffedData.slice(
       offset,
-      offset + usableRadix.totalPacket / 4
+      offset + usableConfig.radix.totalPacket / 4
     );
-    offset += usableRadix.totalPacket / 4;
+    offset += usableConfig.radix.totalPacket / 4;
     const dataChunk = unStuffedData.slice(
       offset,
       offset + unStuffedData.length - 6 * 2
     );
     offset += unStuffedData.length - 6 * 2;
-    const crc = unStuffedData.slice(offset, offset + usableRadix.crc / 4);
+    const crc = unStuffedData.slice(
+      offset,
+      offset + usableConfig.radix.crc / 4
+    );
     const crcInput = unStuffedData.slice(
       0,
-      unStuffedData.length - usableRadix.crc / 4
+      unStuffedData.length - usableConfig.radix.crc / 4
     );
     const actualCRC = padStart(
       crc16(hexToUint8Array(crcInput)).toString(16),
@@ -183,22 +181,20 @@ export const createAckPacket = (
   packetNumber: string,
   version: PacketVersion
 ) => {
-  let usableConstants = constants.v1;
-  let usableRadix = radix.v1;
+  let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
-    usableConstants = constants.v2;
-    usableRadix = radix.v2;
+    usableConfig = config.v2;
   }
 
-  const { START_OF_FRAME } = usableConstants;
+  const { START_OF_FRAME } = usableConfig.constants;
 
   const currentPacketNumber = intToUintByte(
     packetNumber,
-    usableRadix.currentPacketNumber
+    usableConfig.radix.currentPacketNumber
   );
 
-  const totalPacket = intToUintByte(0, usableRadix.totalPacket);
+  const totalPacket = intToUintByte(0, usableConfig.radix.totalPacket);
   const dataChunk = '00000000';
   const commData = currentPacketNumber + totalPacket + dataChunk;
   const crc = padStart(crc16(hexToUint8Array(commData)).toString(16), 4, '0');
@@ -207,8 +203,8 @@ export const createAckPacket = (
 
   const commHeader =
     START_OF_FRAME +
-    intToUintByte(commandType, usableRadix.commandType) +
-    intToUintByte(stuffedData.length / 2, usableRadix.dataSize);
+    intToUintByte(commandType, usableConfig.radix.commandType) +
+    intToUintByte(stuffedData.length / 2, usableConfig.radix.dataSize);
 
   return commHeader + stuffedData;
 };

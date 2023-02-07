@@ -1,7 +1,7 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { sendData, receiveCommand } from './legacy';
 import { isSDKSupported, getPacketVersionFromSDK } from './utils/sdkVersions';
-import { PacketVersion, PacketVersionMap } from './utils/versions';
+import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 
 const formatSDKVersion = (version: string) => {
   if (version.length < 12) {
