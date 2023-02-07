@@ -3,10 +3,9 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import * as config from '../config';
-import { logger } from '../utils';
-import { PacketVersion, PacketVersionMap } from '../utils/packetVersions';
-import { xmodemEncode, xmodemDecode } from '../xmodem/legacy';
+import * as config from '../../config';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { xmodemEncode, xmodemDecode } from '../../xmodem/legacy';
 
 /**
  * Writes the packet to the SerialPort on the given connection,

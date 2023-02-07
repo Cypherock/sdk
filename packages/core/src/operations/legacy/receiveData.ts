@@ -3,10 +3,9 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import { PacketVersion } from '../utils/packetVersions';
-import { logger } from '../utils';
-import { xmodemDecode, LegacyDecodedPacketData } from '../xmodem/legacy';
-import * as config from '../config';
+import { PacketVersion, logger } from '../../utils';
+import { xmodemDecode, LegacyDecodedPacketData } from '../../xmodem/legacy';
+import * as config from '../../config';
 
 const DEFAULT_RECEIVE_TIMEOUT = 15000;
 

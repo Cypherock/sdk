@@ -1,5 +1,6 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
-import { sendData, receiveCommand } from './legacy';
+import { sendData, receiveCommand } from './operations/legacy';
+import * as operations from './operations';
 import { isSDKSupported, getPacketVersionFromSDK } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 
@@ -58,7 +59,6 @@ export default class SDK {
 
   // public sendQuery({data: string; sequenceNumber: number, maxTries?: number}): Promise<void>;
   // public getResult({ sequenceNumber: number; }): Promise<Status | Result>;
-  // public getStatus(): Promise<Status>;
 
   public async sendLegacyCommand(command: number, data: string) {
     return sendData(this.connection, command, data, PacketVersionMap.v1);
@@ -79,6 +79,71 @@ export default class SDK {
 
   public getNewSequenceNumber() {
     return this.connection.getNewSequenceNumber();
+  }
+
+  public async sendCommand(params: {
+    commandType: number;
+    data: string;
+    sequenceNumber: number;
+    maxTries?: number;
+  }): Promise<void> {
+    if (this.packetVersion !== PacketVersionMap.v3) {
+      throw new Error('Only v3 packets are supported');
+    }
+
+    await operations.sendCommand({
+      connection: this.connection,
+      data: params.data,
+      commandType: params.commandType,
+      sequenceNumber: params.sequenceNumber,
+      version: this.packetVersion,
+      maxTries: params.maxTries
+    });
+  }
+
+  public async getCommandOutput(sequenceNumber: number) {
+    if (this.packetVersion !== PacketVersionMap.v3) {
+      throw new Error('Only v3 packets are supported');
+    }
+
+    const resp = await operations.getCommandOutput({
+      connection: this.connection,
+      sequenceNumber,
+      version: this.packetVersion
+    });
+
+    if (!resp) {
+      throw new Error('Did not receive the expected data');
+    }
+
+    return resp;
+  }
+
+  public async waitForCommandOutput(params: {
+    sequenceNumber: operations.IWaitForCommandOutputParams['sequenceNumber'];
+    expectedCommandTypes: operations.IWaitForCommandOutputParams['expectedCommandTypes'];
+    onStatus: operations.IWaitForCommandOutputParams['onStatus'];
+    maxTries?: operations.IWaitForCommandOutputParams['maxTries'];
+    options?: operations.IWaitForCommandOutputParams['options'];
+  }) {
+    if (this.packetVersion !== PacketVersionMap.v3) {
+      throw new Error('Only v3 packets are supported');
+    }
+
+    const resp = await operations.waitForCommandOutput({
+      connection: this.connection,
+      version: this.packetVersion,
+      ...params
+    });
+
+    return resp;
+  }
+
+  public getStatus() {
+    return operations.getStatus({
+      connection: this.connection,
+      version: this.packetVersion
+    });
   }
 
   private static async getSDKVersion(connection: IDeviceConnection) {

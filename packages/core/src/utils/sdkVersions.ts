@@ -3,7 +3,7 @@ import { compare, compareVersions } from 'compare-versions';
 import { PacketVersion, PacketVersionMap } from './packetVersions';
 
 // from is inclusive and to is exclusive
-const supportedVersionRange = { from: '2.5.0', to: '2.6.0' };
+const supportedVersionRange = { from: '2.5.0', to: '2.7.0' };
 
 export const isSDKSupported = (version: string) => {
   const isNewer = compare(version, supportedVersionRange.to, '>=');
