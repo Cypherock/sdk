@@ -27,7 +27,6 @@ export const writePacket = (
     usableConfig = config.v2;
   }
 
-  console.log({ skipPacketIds });
 
   /**
    * Be sure to remove all listeners and timeout.
@@ -47,14 +46,12 @@ export const writePacket = (
 
     async function recheckAck() {
       try {
-        logger.info('Recheck triggred');
         if (!connection.isConnected()) {
           reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
           return;
         }
 
         const pool = await connection.peek();
-        console.log({ pool });
 
         // eslint-disable-next-line
         for (const poolItem of pool) {
@@ -70,14 +67,11 @@ export const writePacket = (
           logger.info(`Received: ${data}`);
 
           const packetList = xmodemDecode(data, version);
-          console.log(packetList);
 
           // eslint-disable-next-line
           for (const packet of packetList) {
-            console.log(packet);
             switch (packet.commandType) {
               case usableConfig.commands.ACK_PACKET:
-                console.log('ACK PACKET');
                 cleanUp();
                 resolve();
                 return;
@@ -98,7 +92,6 @@ export const writePacket = (
           usableConfig.constants.RECHECK_TIME
         );
       } catch (error) {
-        console.log(error);
         cleanUp();
         reject(new DeviceError(DeviceErrorType.UNKNOWN_COMMUNICATION_ERROR));
       }

@@ -48,7 +48,6 @@ export class DataListener {
    * Starts listening to all the events
    */
   private startListening() {
-    console.log('Started listening');
     this.listening = true;
 
     this.connection.addListener('data', this.onData.bind(this));
@@ -60,7 +59,6 @@ export class DataListener {
    * Stop listening to all the events
    */
   private stopListening() {
-    console.log('Stopped listening');
     if (this.connection) {
       this.connection.removeListener('data', this.onData.bind(this));
       this.connection.removeListener('close', this.onClose.bind(this));
@@ -75,19 +73,16 @@ export class DataListener {
   }
 
   private async onData(data: Buffer) {
-    console.log({ data, pool: this.pool });
     this.pool.push({ id: uuid.v4(), data: Uint8Array.from(data) });
   }
 
   private async onClose() {
-    console.log('Connection closed');
     if (this.onCloseCallback) {
       this.onCloseCallback();
     }
   }
 
   private onSerialPortError(error: any) {
-    console.log('Serialport error');
     if (this.onErrorCallback) {
       this.onErrorCallback(error);
     }

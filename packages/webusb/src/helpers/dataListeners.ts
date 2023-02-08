@@ -35,7 +35,6 @@ export class DataListener {
     let endpointIn = 0;
     let endpointOut = 0;
 
-    console.log('Starting device connection');
     await connection.open();
 
     if (connection.configuration === null) {
@@ -66,7 +65,6 @@ export class DataListener {
     await connection.claimInterface(interfaceNumber);
     await connection.selectAlternateInterface(interfaceNumber, 0);
 
-    console.log('Controlling transfer out');
     await connection.controlTransferOut({
       requestType: 'class',
       recipient: 'interface',
@@ -88,9 +86,7 @@ export class DataListener {
   }
 
   public async receive() {
-    console.log({ pool: this.pool });
     const existingData = this.pool.shift();
-    console.log({ pool: this.pool, existingData });
     if (existingData) return existingData.data;
 
     return this.receiveNew();

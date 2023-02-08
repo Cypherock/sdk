@@ -3,7 +3,7 @@ import { compare, compareVersions } from 'compare-versions';
 import { PacketVersion, PacketVersionMap } from './packetVersions';
 
 // from is inclusive and to is exclusive
-const supportedVersionRange = { from: '2.5.0', to: '2.7.0' };
+const supportedVersionRange = { from: '2.5.0', to: '3.1.0' };
 
 export const isSDKSupported = (version: string) => {
   const isNewer = compare(version, supportedVersionRange.to, '>=');
@@ -22,7 +22,8 @@ const SdkToPacketVersionMap: Array<{
   packetVersion: PacketVersion;
 }> = [
   { from: '1.0.0', to: '2.0.0', packetVersion: PacketVersionMap.v2 },
-  { from: '2.0.0', to: '3.0.0', packetVersion: PacketVersionMap.v3 }
+  { from: '2.0.0', to: '3.0.0', packetVersion: PacketVersionMap.v3 },
+  { from: '3.0.0', to: '4.0.0', packetVersion: PacketVersionMap.v3 },
 ];
 
 export const getPacketVersionFromSDK = (

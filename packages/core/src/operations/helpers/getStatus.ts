@@ -3,39 +3,36 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import * as config from '../config';
-import { logger, PacketVersion, PacketVersionMap } from '../utils';
-import {
-  decodePayloadData,
-  decodeStatus,
-  encodePacket,
-  StatusData
-} from '../xmodem';
+import * as config from '../../config';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { decodePayloadData, encodePacket } from '../../xmodem';
 
-import { writeCommand } from './helpers/writeCommand';
+import { writeCommand } from './writeCommand';
 
-export const sendAbort = async ({
+export const getStatus = async ({
   connection,
   version,
-  sequenceNumber,
-  maxTries = 2
+  maxTries = 5,
+  logsDisabled = false
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
-  sequenceNumber: number;
   maxTries?: number;
-}): Promise<StatusData> => {
+  logsDisabled?: boolean;
+}) => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
+
+  if (!logsDisabled) logger.info('Getting status');
 
   const usableConfig = config.v3;
 
   const packetsList = encodePacket({
     data: '',
     version,
-    sequenceNumber,
-    packetType: usableConfig.commands.PACKET_TYPE.ABORT,
+    sequenceNumber: -1,
+    packetType: usableConfig.commands.PACKET_TYPE.STATUS_REQ,
     isProto: false
   });
 
@@ -44,7 +41,7 @@ export const sendAbort = async ({
   }
 
   if (packetsList.length > 1) {
-    throw new Error('Abort command has multiple packets');
+    throw new Error('Status command has multiple packets');
   }
 
   let firstError: Error | undefined;
@@ -53,7 +50,7 @@ export const sendAbort = async ({
   const innerMaxTries = maxTries;
   firstError = undefined;
   let isSuccess = false;
-  let status: StatusData | undefined;
+  let finalData = '';
 
   const packet = packetsList[0];
   while (tries <= innerMaxTries && !isSuccess) {
@@ -62,20 +59,10 @@ export const sendAbort = async ({
         connection,
         packet,
         version,
-        sequenceNumber,
+        sequenceNumber: -1,
         ackPacketTypes: [usableConfig.commands.PACKET_TYPE.STATUS]
       });
-
-      const { rawData } = decodePayloadData(
-        receivedPacket.payloadData,
-        version
-      );
-      status = decodeStatus(rawData, version);
-
-      if (status.currentCmdSeq !== sequenceNumber) {
-        throw new Error('Abort rejected by device');
-      }
-
+      finalData = receivedPacket.payloadData;
       isSuccess = true;
     } catch (e) {
       // Don't retry if connection closed
@@ -98,8 +85,7 @@ export const sendAbort = async ({
         firstError = e as Error;
       }
 
-      logger.warn('Error in sending data for abort');
-      logger.warn(e);
+      logger.warn('Error in sending data', e);
     }
     tries += 1;
   }
@@ -108,9 +94,5 @@ export const sendAbort = async ({
     throw firstError;
   }
 
-  if (!status) {
-    throw new Error('Did not found status');
-  }
-
-  return status;
+  return decodePayloadData(finalData, version);
 };

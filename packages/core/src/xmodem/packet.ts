@@ -129,12 +129,14 @@ export const encodePacket = ({
   data,
   version,
   sequenceNumber,
-  packetType
+  packetType,
+  isProto
 }: {
   data: string;
   version: PacketVersion;
   sequenceNumber: number;
   packetType: number;
+  isProto: boolean;
 }) => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
@@ -153,7 +155,12 @@ export const encodePacket = ({
 
   const { CHUNK_SIZE, START_OF_FRAME } = usableConfig.constants;
 
-  const serializedData = encodePayloadData(data, '', version);
+  let serializedData: string;
+  if (isProto) {
+    serializedData = encodePayloadData('', data, version);
+  } else {
+    serializedData = encodePayloadData(data, '', version);
+  }
 
   let rounds = Math.ceil(serializedData.length / CHUNK_SIZE);
 

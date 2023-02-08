@@ -1,6 +1,7 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
-import { sendData, receiveCommand } from './operations/legacy';
-import * as operations from './operations';
+import * as legacyOperations from './operations/legacy';
+import * as operations from './operations/withProto';
+import * as noProtoOperations from './operations/noProto';
 import { isSDKSupported, getPacketVersionFromSDK } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 
@@ -61,11 +62,11 @@ export default class SDK {
   // public getResult({ sequenceNumber: number; }): Promise<Status | Result>;
 
   public async sendLegacyCommand(command: number, data: string) {
-    return sendData(this.connection, command, data, PacketVersionMap.v1);
+    return legacyOperations.sendData(this.connection, command, data, PacketVersionMap.v1);
   }
 
   public async receiveLegacyCommand(commands: number[], timeout?: number) {
-    return receiveCommand(
+    return legacyOperations.receiveCommand(
       this.connection,
       commands,
       PacketVersionMap.v1,
@@ -87,11 +88,7 @@ export default class SDK {
     sequenceNumber: number;
     maxTries?: number;
   }): Promise<void> {
-    if (this.packetVersion !== PacketVersionMap.v3) {
-      throw new Error('Only v3 packets are supported');
-    }
-
-    await operations.sendCommand({
+    await noProtoOperations.sendCommand({
       connection: this.connection,
       data: params.data,
       commandType: params.commandType,
@@ -102,11 +99,7 @@ export default class SDK {
   }
 
   public async getCommandOutput(sequenceNumber: number) {
-    if (this.packetVersion !== PacketVersionMap.v3) {
-      throw new Error('Only v3 packets are supported');
-    }
-
-    const resp = await operations.getCommandOutput({
+    const resp = await noProtoOperations.getCommandOutput({
       connection: this.connection,
       sequenceNumber,
       version: this.packetVersion
@@ -120,17 +113,13 @@ export default class SDK {
   }
 
   public async waitForCommandOutput(params: {
-    sequenceNumber: operations.IWaitForCommandOutputParams['sequenceNumber'];
-    expectedCommandTypes: operations.IWaitForCommandOutputParams['expectedCommandTypes'];
-    onStatus: operations.IWaitForCommandOutputParams['onStatus'];
-    maxTries?: operations.IWaitForCommandOutputParams['maxTries'];
-    options?: operations.IWaitForCommandOutputParams['options'];
+    sequenceNumber: noProtoOperations.IWaitForCommandOutputParams['sequenceNumber'];
+    expectedCommandTypes: noProtoOperations.IWaitForCommandOutputParams['expectedCommandTypes'];
+    onStatus: noProtoOperations.IWaitForCommandOutputParams['onStatus'];
+    maxTries?: noProtoOperations.IWaitForCommandOutputParams['maxTries'];
+    options?: noProtoOperations.IWaitForCommandOutputParams['options'];
   }) {
-    if (this.packetVersion !== PacketVersionMap.v3) {
-      throw new Error('Only v3 packets are supported');
-    }
-
-    const resp = await operations.waitForCommandOutput({
+    const resp = await noProtoOperations.waitForCommandOutput({
       connection: this.connection,
       version: this.packetVersion,
       ...params
@@ -154,9 +143,9 @@ export default class SDK {
     await connection.beforeOperation();
     while (retries < maxTries) {
       try {
-        await sendData(connection, 88, '00', PacketVersionMap.v1, 2);
+        await legacyOperations.sendData(connection, 88, '00', PacketVersionMap.v1, 2);
 
-        const sdkVersionData = await receiveCommand(
+        const sdkVersionData = await legacyOperations.receiveCommand(
           connection,
           [88],
           PacketVersionMap.v1,

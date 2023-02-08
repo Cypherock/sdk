@@ -8,80 +8,11 @@ import {
   logger,
   PacketVersion,
   PacketVersionMap
-} from '../utils';
-import * as config from '../config';
-import {
-  DecodedPacketData,
-  decodePayloadData,
-  decodeRawData,
-  decodeStatus,
-  encodePacket,
-  RawData,
-  StatusData
-} from '../xmodem';
+} from '../../utils';
+import * as config from '../../config';
+import { decodePayloadData, encodePacket } from '../../xmodem';
 
-import { waitForPacket } from './waitForPacket';
-
-const writeCommand = async ({
-  connection,
-  packet,
-  version,
-  sequenceNumber
-}: {
-  connection: IDeviceConnection;
-  packet: Uint8Array;
-  version: PacketVersion;
-  sequenceNumber: number;
-}): Promise<DecodedPacketData> => {
-  if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
-  }
-
-  const usableConfig = config.v3;
-
-  if (!connection.isConnected()) {
-    throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
-  }
-
-  // eslint-disable-next-line no-async-promise-executor
-  return new Promise<DecodedPacketData>(async (resolve, reject) => {
-    const ackPromise = waitForPacket({
-      connection,
-      version,
-      packetTypes: [
-        usableConfig.commands.PACKET_TYPE.CMD_OUTPUT,
-        usableConfig.commands.PACKET_TYPE.STATUS
-      ],
-      sequenceNumber
-    });
-
-    connection.send(packet).catch(error => {
-      logger.error(error);
-      if (!connection.isConnected()) {
-        reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
-      } else {
-        reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
-      }
-      ackPromise.cancel();
-    });
-
-    ackPromise
-      .then(res => {
-        if (ackPromise.isCancelled()) {
-          return;
-        }
-
-        resolve(res);
-      })
-      .catch(error => {
-        if (ackPromise.isCancelled()) {
-          return;
-        }
-
-        reject(error);
-      });
-  });
-};
+import { writeCommand } from './writeCommand';
 
 export const getCommandOutput = async ({
   connection,
@@ -93,7 +24,7 @@ export const getCommandOutput = async ({
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
-}): Promise<StatusData | RawData> => {
+}) => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -109,7 +40,7 @@ export const getCommandOutput = async ({
 
   while (currentPacket <= totalPackets) {
     let tries = 1;
-    const _maxTries = maxTries;
+    const innerMaxTries = maxTries;
     firstError = undefined;
     let isSuccess = false;
 
@@ -117,7 +48,8 @@ export const getCommandOutput = async ({
       data: intToUintByte(currentPacket, 16),
       version,
       sequenceNumber,
-      packetType: usableConfig.commands.PACKET_TYPE.CMD_OUTPUT_REQ
+      packetType: usableConfig.commands.PACKET_TYPE.CMD_OUTPUT_REQ,
+      isProto: false
     });
 
     if (packetsList.length > 1) {
@@ -126,13 +58,17 @@ export const getCommandOutput = async ({
 
     const packet = packetsList[0];
 
-    while (tries <= _maxTries && !isSuccess) {
+    while (tries <= innerMaxTries && !isSuccess) {
       try {
         const receivedPacket = await writeCommand({
           connection,
           packet,
           version,
-          sequenceNumber
+          sequenceNumber,
+          ackPacketTypes: [
+            usableConfig.commands.PACKET_TYPE.CMD_OUTPUT,
+            usableConfig.commands.PACKET_TYPE.STATUS
+          ]
         });
         dataList[receivedPacket.currentPacketNumber - 1] =
           receivedPacket.payloadData;
@@ -155,7 +91,7 @@ export const getCommandOutput = async ({
               DeviceErrorType.PROCESS_ABORTED_BY_USER
             ].includes(e.errorType)
           ) {
-            tries = _maxTries;
+            tries = innerMaxTries;
           }
         }
 
@@ -175,18 +111,8 @@ export const getCommandOutput = async ({
 
   const finalData = dataList.join('');
 
-  const { rawData } = decodePayloadData(finalData, version);
-
-  let output: StatusData | RawData;
-  if (isStatusResponse) {
-    output = decodeStatus(rawData, version);
-  } else {
-    output = decodeRawData(rawData, version);
-
-    if (output.commandType === 42 && output.data.startsWith('04')) {
-      throw new DeviceError(DeviceErrorType.DEVICE_ABORT);
-    }
-  }
-
-  return output;
+  return {
+    ...decodePayloadData(finalData, version),
+    isStatus: isStatusResponse
+  };
 };

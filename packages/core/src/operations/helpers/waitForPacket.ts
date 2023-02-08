@@ -3,15 +3,15 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import * as config from '../config';
-import { logger, PacketVersion, PacketVersionMap } from '../utils';
+import * as config from '../../config';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import {
   DecodedPacketData,
   decodePacket,
   decodePayloadData,
   ErrorPacketRejectReason,
   RejectReasonToMsgMap
-} from '../xmodem';
+} from '../../xmodem';
 
 export interface CancellablePromise<T> extends Promise<T> {
   cancel: () => void;

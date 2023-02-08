@@ -3,73 +3,11 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import * as config from '../config';
-import { logger, PacketVersion, PacketVersionMap } from '../utils';
-import { encodePacket, encodeRawData } from '../xmodem';
+import * as config from '../../config';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { encodePacket } from '../../xmodem';
 
-import { waitForPacket } from './waitForPacket';
-
-const writeCommand = async ({
-  connection,
-  packet,
-  version,
-  sequenceNumber
-}: {
-  connection: IDeviceConnection;
-  packet: Uint8Array;
-  version: PacketVersion;
-  sequenceNumber: number;
-}): Promise<void> => {
-  if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
-  }
-
-  const usableConfig = config.v3;
-
-  if (!connection.isConnected()) {
-    throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
-  }
-
-  // eslint-disable-next-line no-async-promise-executor
-  return new Promise<void>(async (resolve, reject) => {
-    try {
-      const ackPromise = waitForPacket({
-        connection,
-        version,
-        packetTypes: [usableConfig.commands.PACKET_TYPE.CMD_ACK],
-        sequenceNumber
-      });
-
-      connection.send(packet).catch(error => {
-        logger.error(error);
-        if (!connection.isConnected()) {
-          reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
-        } else {
-          reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
-        }
-        ackPromise.cancel();
-      });
-
-      ackPromise
-        .then(() => {
-          if (ackPromise.isCancelled()) {
-            return;
-          }
-
-          resolve();
-        })
-        .catch(error => {
-          if (ackPromise.isCancelled()) {
-            return;
-          }
-
-          reject(error);
-        });
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
+import { writeCommand } from './writeCommand';
 
 export const sendCommand = async ({
   connection,
@@ -77,7 +15,8 @@ export const sendCommand = async ({
   data,
   version,
   maxTries = 5,
-  sequenceNumber
+  sequenceNumber,
+  isProto
 }: {
   connection: IDeviceConnection;
   commandType: number;
@@ -85,6 +24,7 @@ export const sendCommand = async ({
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
+  isProto: boolean;
 }): Promise<void> => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
@@ -93,10 +33,11 @@ export const sendCommand = async ({
   const usableConfig = config.v3;
 
   const packetsList = encodePacket({
-    data: encodeRawData({ commandType, data }, version),
+    data,
     version,
     sequenceNumber,
-    packetType: usableConfig.commands.PACKET_TYPE.CMD
+    packetType: usableConfig.commands.PACKET_TYPE.CMD,
+    isProto
   });
 
   logger.info(`Sending command ${commandType} : ${data}`);
@@ -115,7 +56,8 @@ export const sendCommand = async ({
           connection,
           packet,
           version,
-          sequenceNumber
+          sequenceNumber,
+          ackPacketTypes: [usableConfig.commands.PACKET_TYPE.CMD_ACK]
         });
         isSuccess = true;
       } catch (e) {

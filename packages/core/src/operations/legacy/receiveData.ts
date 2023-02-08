@@ -77,7 +77,6 @@ export const receiveCommand = (
 
       async function recheckPacket() {
         try {
-          logger.info('Recheck triggred for receive');
           if (!connection.isConnected()) {
             reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
             return;

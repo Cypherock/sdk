@@ -3,8 +3,8 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import { logger, PacketVersion, PacketVersionMap } from '../utils';
-import { CmdState, DeviceIdleState, RawData, StatusData } from '../xmodem';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { CmdState, DeviceIdleState, RawData, StatusData } from '../../xmodem';
 
 import { getCommandOutput } from './getCommandOutput';
 
