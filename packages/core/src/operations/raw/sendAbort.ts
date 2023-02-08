@@ -3,16 +3,12 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import * as config from '../config';
-import { logger, PacketVersion, PacketVersionMap } from '../utils';
-import {
-  decodePayloadData,
-  decodeStatus,
-  encodePacket,
-  StatusData
-} from '../xmodem';
+import * as config from '../../config';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { decodePayloadData, encodePacket } from '../../encoders/packet';
+import { decodeStatus, StatusData } from '../../encoders/raw';
 
-import { writeCommand } from './helpers/writeCommand';
+import { writeCommand } from '../helpers/writeCommand';
 
 export const sendAbort = async ({
   connection,

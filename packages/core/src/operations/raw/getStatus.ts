@@ -1,6 +1,6 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { PacketVersion } from '../../utils';
-import { decodeStatus, StatusData } from '../../xmodem';
+import { decodeStatus, StatusData } from '../../encoders/raw';
 import { getStatus as getStatusHelper } from '../helpers';
 
 export const getStatus = async ({

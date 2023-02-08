@@ -3,8 +3,8 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import { hexToUint8Array, logger, uint8ArrayToHex } from '../utils';
-import * as config from '../config';
+import { hexToUint8Array, logger, uint8ArrayToHex } from '../../utils';
+import * as config from '../../config';
 
 const ACK_PACKET = '18';
 /*

@@ -1,6 +1,11 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { PacketVersion } from '../../utils';
-import { decodeRawData, decodeStatus, RawData, StatusData } from '../../xmodem';
+import {
+  decodeRawData,
+  decodeStatus,
+  RawData,
+  StatusData
+} from '../../encoders/raw';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
 
 export const getCommandOutput = async ({

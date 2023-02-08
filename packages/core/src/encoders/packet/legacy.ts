@@ -1,4 +1,4 @@
-import * as config from '../config';
+import * as config from '../../config';
 import {
   hexToUint8Array,
   padStart,
@@ -6,11 +6,10 @@ import {
   crc16,
   byteStuffing,
   byteUnstuffing,
-  intToUintByte
-} from '../utils';
-import { PacketVersion, PacketVersionMap } from '../utils/packetVersions';
-
-export * from './stm';
+  intToUintByte,
+  PacketVersion,
+  PacketVersionMap
+} from '../../utils';
 
 export interface LegacyDecodedPacketData {
   startOfFrame: string;

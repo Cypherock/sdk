@@ -5,7 +5,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
-import { xmodemEncode, xmodemDecode } from '../../xmodem/legacy';
+import { xmodemEncode, xmodemDecode } from '../../encoders/packet/legacy';
 
 /**
  * Writes the packet to the SerialPort on the given connection,
@@ -26,7 +26,6 @@ export const writePacket = (
   if (version === PacketVersionMap.v2) {
     usableConfig = config.v2;
   }
-
 
   /**
    * Be sure to remove all listeners and timeout.

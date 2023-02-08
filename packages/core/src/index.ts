@@ -1,21 +1,9 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as legacyOperations from './operations/legacy';
-import * as operations from './operations/withProto';
-import * as noProtoOperations from './operations/noProto';
-import { isSDKSupported, getPacketVersionFromSDK } from './utils/sdkVersions';
+import * as operations from './operations/proto';
+import * as rawOperations from './operations/raw';
+import { isSDKSupported, getPacketVersionFromSDK, formatSDKVersion } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
-
-const formatSDKVersion = (version: string) => {
-  if (version.length < 12) {
-    throw new Error('SDK version should be atleast 6 bytes.');
-  }
-
-  const major = parseInt(version.slice(0, 4), 16);
-  const minor = parseInt(version.slice(4, 8), 16);
-  const patch = parseInt(version.slice(8, 12), 16);
-
-  return `${major}.${minor}.${patch}`;
-};
 
 export default class SDK {
   private version: string;
@@ -88,7 +76,7 @@ export default class SDK {
     sequenceNumber: number;
     maxTries?: number;
   }): Promise<void> {
-    await noProtoOperations.sendCommand({
+    await rawOperations.sendCommand({
       connection: this.connection,
       data: params.data,
       commandType: params.commandType,
@@ -99,7 +87,7 @@ export default class SDK {
   }
 
   public async getCommandOutput(sequenceNumber: number) {
-    const resp = await noProtoOperations.getCommandOutput({
+    const resp = await rawOperations.getCommandOutput({
       connection: this.connection,
       sequenceNumber,
       version: this.packetVersion
@@ -113,13 +101,13 @@ export default class SDK {
   }
 
   public async waitForCommandOutput(params: {
-    sequenceNumber: noProtoOperations.IWaitForCommandOutputParams['sequenceNumber'];
-    expectedCommandTypes: noProtoOperations.IWaitForCommandOutputParams['expectedCommandTypes'];
-    onStatus: noProtoOperations.IWaitForCommandOutputParams['onStatus'];
-    maxTries?: noProtoOperations.IWaitForCommandOutputParams['maxTries'];
-    options?: noProtoOperations.IWaitForCommandOutputParams['options'];
+    sequenceNumber: rawOperations.IWaitForCommandOutputParams['sequenceNumber'];
+    expectedCommandTypes: rawOperations.IWaitForCommandOutputParams['expectedCommandTypes'];
+    onStatus: rawOperations.IWaitForCommandOutputParams['onStatus'];
+    maxTries?: rawOperations.IWaitForCommandOutputParams['maxTries'];
+    options?: rawOperations.IWaitForCommandOutputParams['options'];
   }) {
-    const resp = await noProtoOperations.waitForCommandOutput({
+    const resp = await rawOperations.waitForCommandOutput({
       connection: this.connection,
       version: this.packetVersion,
       ...params

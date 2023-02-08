@@ -1,6 +1,6 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { PacketVersion } from '../../utils';
-import { encodeRawData } from '../../xmodem';
+import { encodeRawData } from '../../encoders/raw';
 import { sendCommand as sendCommandHelper } from '../helpers';
 
 export const sendCommand = async ({

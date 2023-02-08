@@ -5,8 +5,8 @@ import {
   PacketVersionMap,
   uint8ArrayToHex,
   hexToUint8Array
-} from '../utils';
-import { v1 as config } from '../config';
+} from '../../utils';
+import { v1 as config } from '../../config';
 
 const START_OF_FRAME = '01';
 const END_OF_TRANSMISSION = '04';

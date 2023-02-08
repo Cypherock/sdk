@@ -10,7 +10,7 @@ import {
 } from '../../utils';
 import {
   DecodedPacketData,
-} from '../../xmodem';
+} from '../../encoders/packet';
 
 import { waitForPacket } from './waitForPacket';
 

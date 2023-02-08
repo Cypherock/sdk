@@ -10,7 +10,7 @@ import {
   PacketVersionMap
 } from '../../utils';
 import * as config from '../../config';
-import { decodePayloadData, encodePacket } from '../../xmodem';
+import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
 

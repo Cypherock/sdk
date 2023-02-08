@@ -5,7 +5,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
-import { decodePayloadData, encodePacket } from '../../xmodem';
+import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
 

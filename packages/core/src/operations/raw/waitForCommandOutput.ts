@@ -4,7 +4,12 @@ import {
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
-import { CmdState, DeviceIdleState, RawData, StatusData } from '../../xmodem';
+import {
+  CmdState,
+  DeviceIdleState,
+  RawData,
+  StatusData
+} from '../../encoders/raw';
 
 import { getCommandOutput } from './getCommandOutput';
 

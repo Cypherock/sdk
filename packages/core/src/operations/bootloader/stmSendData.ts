@@ -3,9 +3,9 @@ import {
   DeviceErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
-import { hexToUint8Array, logger, uint8ArrayToHex } from '../utils';
-import { stmXmodemEncode } from '../xmodem/legacy';
-import * as config from '../config';
+import { hexToUint8Array, logger, uint8ArrayToHex } from '../../utils';
+import { stmXmodemEncode } from '../../encoders/packet/bootloader';
+import * as config from '../../config';
 
 const ACK_PACKET = '06';
 const RECEIVING_MODE_PACKET = '43';

@@ -37,3 +37,16 @@ export const getPacketVersionFromSDK = (
 
   return undefined;
 };
+
+export const formatSDKVersion = (version: string) => {
+  if (version.length < 12) {
+    throw new Error('SDK version should be atleast 6 bytes.');
+  }
+
+  const major = parseInt(version.slice(0, 4), 16);
+  const minor = parseInt(version.slice(4, 8), 16);
+  const patch = parseInt(version.slice(8, 12), 16);
+
+  return `${major}.${minor}.${patch}`;
+};
+

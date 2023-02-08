@@ -11,7 +11,7 @@ import {
   decodePayloadData,
   ErrorPacketRejectReason,
   RejectReasonToMsgMap
-} from '../../xmodem';
+} from '../../encoders/packet';
 
 export interface CancellablePromise<T> extends Promise<T> {
   cancel: () => void;
