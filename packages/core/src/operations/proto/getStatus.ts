@@ -1,6 +1,7 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
-import { PacketVersion } from '../../utils';
+import { hexToUint8Array, PacketVersion } from '../../utils';
 import { getStatus as getStatusHelper } from '../helpers';
+import { Status } from '../../encoders/proto/generated/core';
 
 export const getStatus = async ({
   connection,
@@ -20,5 +21,6 @@ export const getStatus = async ({
     logsDisabled
   });
 
-  return protobufData;
+  console.log({ protobufData });
+  return Status.decode(hexToUint8Array(protobufData));
 };

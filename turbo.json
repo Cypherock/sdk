@@ -15,6 +15,14 @@
     "dev": {
       "cache": false
     },
+    "@cypherock/sdk-core#build": {
+      "dependsOn": ["prebuild"]
+    },
+    "@cypherock/sdk-core#prebuild": {
+      "cache": true,
+      "outputs": ["src/encoders/proto/**"],
+      "inputs": ["../../submodules/common/proto/**"]
+    },
     "start:node": {
       "dependsOn": ["^start:node"],
       "cache": false
