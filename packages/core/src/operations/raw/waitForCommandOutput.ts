@@ -1,15 +1,13 @@
 import {
   DeviceError,
   DeviceErrorType,
-  IDeviceConnection
-} from '@cypherock/sdk-interfaces';
-import { logger, PacketVersion, PacketVersionMap } from '../../utils';
-import {
+  IDeviceConnection,
   CmdState,
   DeviceIdleState,
-  RawData,
-  StatusData
-} from '../../encoders/raw';
+  IRawData,
+  IStatusData
+} from '@cypherock/sdk-interfaces';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 
 import { getCommandOutput } from './getCommandOutput';
 
@@ -23,7 +21,7 @@ export interface IWaitForCommandOutputParams {
   connection: IDeviceConnection;
   sequenceNumber: number;
   expectedCommandTypes: number[];
-  onStatus: (status: StatusData) => void;
+  onStatus: (status: IStatusData) => void;
   version: PacketVersion;
   maxTries?: number;
   options?: { interval?: number };
@@ -37,7 +35,7 @@ export const waitForCommandOutput = async ({
   options,
   version,
   maxTries = 5
-}: IWaitForCommandOutputParams): Promise<RawData> => {
+}: IWaitForCommandOutputParams): Promise<IRawData> => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -48,7 +46,8 @@ export const waitForCommandOutput = async ({
 
   let lastStatus = -1;
   let lastState = -1;
-  let lastDeviceState = '';
+  let lastDeviceIdleState = 0;
+  let lastDeviceWaitingOn = 0;
 
   while (true) {
     const response = await getCommandOutput({
@@ -59,7 +58,7 @@ export const waitForCommandOutput = async ({
     });
 
     if (response.isRawData) {
-      const resp = response as RawData;
+      const resp = response as IRawData;
       logger.info('Output received', response);
 
       if (
@@ -75,19 +74,21 @@ export const waitForCommandOutput = async ({
       return resp;
     }
 
-    const status = response as StatusData;
+    const status = response as IStatusData;
 
     if (
       lastState !== status.cmdState ||
       lastStatus !== status.flowStatus ||
-      lastDeviceState !== status.deviceState
+      lastDeviceIdleState !== status.deviceIdleState ||
+      lastDeviceWaitingOn !== status.deviceWaitingOn
     ) {
       logger.info(status);
     }
 
     lastState = status.cmdState;
     lastStatus = status.flowStatus;
-    lastDeviceState = status.deviceState;
+    lastDeviceIdleState = status.deviceIdleState;
+    lastDeviceWaitingOn = status.deviceWaitingOn;
 
     if (status.currentCmdSeq !== sequenceNumber) {
       throw new DeviceError(DeviceErrorType.EXECUTING_OTHER_COMMAND);
@@ -106,7 +107,7 @@ export const waitForCommandOutput = async ({
     }
 
     if (status.deviceIdleState === DeviceIdleState.USB) {
-      onStatus(response as StatusData);
+      onStatus(response as IStatusData);
     }
 
     await sleep(options?.interval || 200);

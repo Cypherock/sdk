@@ -1,11 +1,10 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
-import { PacketVersion } from '../../utils';
 import {
-  decodeRawData,
-  decodeStatus,
-  RawData,
-  StatusData
-} from '../../encoders/raw';
+  IDeviceConnection,
+  IRawData,
+  IStatusData
+} from '@cypherock/sdk-interfaces';
+import { PacketVersion } from '../../utils';
+import { decodeRawData, decodeStatus } from '../../encoders/raw';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
 
 export const getCommandOutput = async ({
@@ -26,7 +25,7 @@ export const getCommandOutput = async ({
     sequenceNumber
   });
 
-  let output: RawData | StatusData;
+  let output: IRawData | IStatusData;
   if (isStatus) {
     output = decodeStatus(rawData, version);
   } else {

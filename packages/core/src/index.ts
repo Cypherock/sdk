@@ -1,11 +1,11 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
+import { IDeviceConnection, ISdk } from '@cypherock/sdk-interfaces';
 import * as legacyOperations from './operations/legacy';
 import * as operations from './operations/proto';
 import * as rawOperations from './operations/raw';
 import { isSDKSupported, getPacketVersionFromSDK, formatSDKVersion } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 
-export default class SDK {
+export default class SDK implements ISdk {
   private version: string;
 
   private packetVersion: PacketVersion;

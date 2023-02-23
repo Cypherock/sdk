@@ -1,12 +1,13 @@
 import {
   DeviceError,
   DeviceErrorType,
-  IDeviceConnection
+  IDeviceConnection,
+  IStatusData
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
-import { decodeStatus, StatusData } from '../../encoders/raw';
+import { decodeStatus } from '../../encoders/raw';
 
 import { writeCommand } from '../helpers/writeCommand';
 
@@ -20,7 +21,7 @@ export const sendAbort = async ({
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
-}): Promise<StatusData> => {
+}): Promise<IStatusData> => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -49,7 +50,7 @@ export const sendAbort = async ({
   const innerMaxTries = maxTries;
   firstError = undefined;
   let isSuccess = false;
-  let status: StatusData | undefined;
+  let status: IStatusData | undefined;
 
   const packet = packetsList[0];
   while (tries <= innerMaxTries && !isSuccess) {

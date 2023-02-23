@@ -1,6 +1,6 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
+import { IDeviceConnection, IStatusData } from '@cypherock/sdk-interfaces';
 import { PacketVersion } from '../../utils';
-import { decodeStatus, StatusData } from '../../encoders/raw';
+import { decodeStatus } from '../../encoders/raw';
 import { getStatus as getStatusHelper } from '../helpers';
 
 export const getStatus = async ({
@@ -13,7 +13,7 @@ export const getStatus = async ({
   version: PacketVersion;
   maxTries?: number;
   logsDisabled?: boolean;
-}): Promise<StatusData> => {
+}): Promise<IStatusData> => {
   const { rawData } = await getStatusHelper({
     connection,
     version,
