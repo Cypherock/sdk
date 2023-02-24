@@ -2,18 +2,7 @@
 
 Coins operations are divided into different coin families:
 
-1. [Bitcoin]()
-
-## 1. Bitcoin
-
-### 1.1 Get Extended Public Key
-
-- Description: Get the details of the connected device
-- Parameters: `None`
-- Result:
-  ```ts
-  {
-    deviceSerial: string; // Unique identifier of the device
-    firmwareVersion: string; // Firmware version which is installed
-  }
-  ```
+1. [Bitcoin](./bitcoin.md)
+2. [EVM](./evm.md)
+3. [Near](./near.md)
+4. [Solana](./solana.md)

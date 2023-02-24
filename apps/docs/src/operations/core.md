@@ -25,4 +25,3 @@
     hasPassphrase: boolean; // If the wallet has passphrase enabled
   }>
   ```
-
