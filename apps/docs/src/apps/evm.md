@@ -106,7 +106,7 @@ Supported coins from the evm family are:
     message: string;
 
     // Set this if the message is human readable
-    humanReadable?: boolean;
+    isHumanReadable?: boolean;
   }
   ```
 

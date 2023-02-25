@@ -14,7 +14,7 @@ Contains all the common operations present on Cypherock X1 hardware wallet.
   }
   ```
 
-## 2. Import Wallet
+## 2. Import Wallets
 
 **Wallet**: Represents a BIP39 wallet present on Cypherock X1 hardware.
 Each Cypherock X1 hardware can contain upto 4 wallets
