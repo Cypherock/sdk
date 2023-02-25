@@ -1,15 +1,10 @@
 # Introduction
 
 Cypherock SDK will allow crypto assets **service providers** to connect with
-**Cypherock X1** hardware wallet and access it's capabilities without exposing
+**Cypherock X1** hardware wallet and access its capabilities without exposing
 the seed phrase.
 
 Programming Language: `JavaScript`
-
-## Terminologies
-
-- **Wallet**: Represents a BIP39 wallet present on Cypherock X1 hardware.
-  Each Cypherock X1 hardware can contain upto 4 wallets
 
 ## Connectivity
 

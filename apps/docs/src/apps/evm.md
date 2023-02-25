@@ -1,4 +1,4 @@
-# EVM
+# EVM Application
 
 Supported coins from the evm family are:
 

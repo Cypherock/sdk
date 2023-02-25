@@ -1,4 +1,4 @@
-# Bitcoin operations
+# Bitcoin Application
 
 Supported coins from the bitcoin family are:
 

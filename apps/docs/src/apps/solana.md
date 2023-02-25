@@ -1,4 +1,4 @@
-# Near
+# Solana Application
 
 ## 1. Generate Address
 
@@ -12,7 +12,7 @@
 
     /**
      * Specify the Derivation path to use.
-     * Ex: m/44'/397'/0'/0'/1'
+     * Ex: m/44’/501’/0’
      */
     derivationPath: string;
   }
@@ -38,7 +38,7 @@
 
     /**
      * Specify the Derivation path to use.
-     * Ex: m/44'/397'/0'/0'/1'
+     * Ex: m/44’/501’/0’
      */
     derivationPath: string;
 
