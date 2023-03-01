@@ -1,4 +1,10 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
+import {
+  DeviceAppError,
+  DeviceAppErrorType,
+  DeviceCommunicationError,
+  DeviceCommunicationErrorType,
+  IDeviceConnection
+} from '@cypherock/sdk-interfaces';
 import * as bootloaderOperations from './operations/bootloader';
 import * as legacyOperations from './operations/legacy';
 import * as operations from './operations/proto';
@@ -111,7 +117,7 @@ export default class SDK {
     });
 
     if (!resp) {
-      throw new Error('Did not receive the expected data');
+      throw new DeviceAppError(DeviceAppErrorType.INVALID_RESULT);
     }
 
     return resp;
@@ -219,7 +225,9 @@ export default class SDK {
   private static async getSDKVersion(connection: IDeviceConnection) {
     let retries = 0;
     const maxTries = 2;
-    let firstError: Error = new Error('Could not get SDK version');
+    let firstError: Error = new DeviceCommunicationError(
+      DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR
+    );
 
     await connection.beforeOperation();
     while (retries < maxTries) {

@@ -1,7 +1,11 @@
 import {
-  DeviceError,
-  DeviceErrorType,
-  IDeviceConnection
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
+  DeviceCommunicationError,
+  DeviceCommunicationErrorType,
+  IDeviceConnection,
+  DeviceAppError,
+  DeviceAppErrorType
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
@@ -36,7 +40,9 @@ export const waitForPacket = ({
   const usableConfig = config.v3;
 
   if (!connection.isConnected()) {
-    throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
+    throw new DeviceConnectionError(
+      DeviceConnectionErrorType.CONNECTION_CLOSED
+    );
   }
 
   let isCancelled = false;
@@ -65,7 +71,11 @@ export const waitForPacket = ({
     async function recheckPacket() {
       try {
         if (!connection.isConnected()) {
-          reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
+          reject(
+            new DeviceConnectionError(
+              DeviceConnectionErrorType.CONNECTION_CLOSED
+            )
+          );
           return;
         }
 
@@ -88,7 +98,9 @@ export const waitForPacket = ({
           if (packet.errorList.length === 0) {
             if (packet.packetType === usableConfig.commands.PACKET_TYPE.ERROR) {
               logger.warn('Error packet', packet);
-              error = new DeviceError(DeviceErrorType.WRITE_REJECTED);
+              error = new DeviceCommunicationError(
+                DeviceCommunicationErrorType.WRITE_REJECTED
+              );
 
               const { rawData } = decodePayloadData(
                 packet.payloadData,
@@ -101,9 +113,7 @@ export const waitForPacket = ({
                 rejectStatus === ErrorPacketRejectReason.INVALID_SEQUENCE_NO &&
                 latestSeqNumber !== sequenceNumber
               ) {
-                error = new DeviceError(
-                  DeviceErrorType.PROCESS_ABORTED_BY_USER
-                );
+                error = new DeviceAppError(DeviceAppErrorType.PROCESS_ABORTED);
                 break;
               }
 
@@ -164,16 +174,24 @@ export const waitForPacket = ({
     }
 
     if (!connection.isConnected()) {
-      throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
+      throw new DeviceConnectionError(
+        DeviceConnectionErrorType.CONNECTION_CLOSED
+      );
     }
 
     timeout = setTimeout(() => {
       cleanUp();
 
       if (!connection.isConnected()) {
-        reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
+        reject(
+          new DeviceConnectionError(DeviceConnectionErrorType.CONNECTION_CLOSED)
+        );
       } else {
-        reject(new DeviceError(DeviceErrorType.READ_TIMEOUT));
+        reject(
+          new DeviceCommunicationError(
+            DeviceCommunicationErrorType.READ_TIMEOUT
+          )
+        );
       }
     }, usableConfig.constants.ACK_TIME);
 

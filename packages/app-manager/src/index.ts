@@ -1,4 +1,8 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
+import {
+  DeviceAppError,
+  DeviceAppErrorType,
+  IDeviceConnection
+} from '@cypherock/sdk-interfaces';
 import SDK from '@cypherock/sdk-core';
 import { Query, Result } from './proto/generated/manager/core';
 
@@ -37,7 +41,7 @@ export default class ManagerApp {
     const result = Result.decode(data);
 
     if (!result.getDeviceInfo) {
-      throw new Error('Invalid data');
+      throw new DeviceAppError(DeviceAppErrorType.INVALID_RESULT);
     }
 
     return result.getDeviceInfo;

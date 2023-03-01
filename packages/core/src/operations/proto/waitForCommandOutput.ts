@@ -1,7 +1,7 @@
 import {
-  DeviceError,
-  DeviceErrorType,
-  IDeviceConnection
+  IDeviceConnection,
+  DeviceAppError,
+  DeviceAppErrorType
 } from '@cypherock/sdk-interfaces';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import {
@@ -78,7 +78,7 @@ export const waitForCommandOutput = async ({
     lastDeviceWaitingOn = status.deviceWaitingOn;
 
     if (status.currentCmdSeq !== sequenceNumber) {
-      throw new DeviceError(DeviceErrorType.EXECUTING_OTHER_COMMAND);
+      throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
     }
 
     if (

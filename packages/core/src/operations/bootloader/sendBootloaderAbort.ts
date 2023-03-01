@@ -1,10 +1,13 @@
 import {
-  DeviceError,
-  DeviceErrorType,
+  DeviceCommunicationError,
+  DeviceCommunicationErrorType,
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
 import { hexToUint8Array, logger, uint8ArrayToHex } from '../../utils';
 import * as config from '../../config';
+import canRetry from '../helpers/canRetry';
 
 const ACK_PACKET = '18';
 /*
@@ -15,7 +18,7 @@ const writePacket = (
   connection: IDeviceConnection,
   packet: Uint8Array,
   options?: { timeout?: number }
-): Promise<DeviceError | undefined> =>
+): Promise<Error | undefined> =>
   new Promise((resolve, reject) => {
     /**
      * Ensure is listener is activated first before writing
@@ -33,13 +36,19 @@ const writePacket = (
     }
 
     if (!connection.isConnected()) {
-      throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
+      throw new DeviceConnectionError(
+        DeviceConnectionErrorType.CONNECTION_CLOSED
+      );
     }
 
     async function recheckPacket() {
       try {
         if (!connection.isConnected()) {
-          reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
+          reject(
+            new DeviceConnectionError(
+              DeviceConnectionErrorType.CONNECTION_CLOSED
+            )
+          );
           return;
         }
         const rawPacket = await connection.receive();
@@ -79,7 +88,9 @@ const writePacket = (
 
     timeout = setTimeout(() => {
       cleanUp();
-      reject(new DeviceError(DeviceErrorType.WRITE_TIMEOUT));
+      reject(
+        new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_TIMEOUT)
+      );
     }, options?.timeout || 2000);
 
     recheckTimeout = setTimeout(
@@ -114,19 +125,8 @@ export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
           }
           return;
         } catch (e) {
-          if (e instanceof DeviceError) {
-            if (
-              [
-                DeviceErrorType.CONNECTION_CLOSED,
-                DeviceErrorType.CONNECTION_NOT_OPEN,
-                DeviceErrorType.NOT_CONNECTED,
-                DeviceErrorType.WRITE_REJECTED,
-                DeviceErrorType.DEVICE_ABORT,
-                DeviceErrorType.PROCESS_ABORTED_BY_USER
-              ].includes(e.errorType)
-            ) {
-              tries = innerMaxTries;
-            }
+          if (!canRetry(e)) {
+            tries = innerMaxTries;
           }
 
           if (!firstError) {
@@ -139,7 +139,9 @@ export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
       if (firstError) {
         reject(firstError);
       } else {
-        reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
+        reject(
+          new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_ERROR)
+        );
       }
     }
   );

@@ -1,13 +1,10 @@
-import {
-  DeviceError,
-  DeviceErrorType,
-  IDeviceConnection
-} from '@cypherock/sdk-interfaces';
+import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
+import canRetry from './canRetry';
 
 export const getStatus = async ({
   connection,
@@ -66,19 +63,8 @@ export const getStatus = async ({
       isSuccess = true;
     } catch (e) {
       // Don't retry if connection closed
-      if (e instanceof DeviceError) {
-        if (
-          [
-            DeviceErrorType.CONNECTION_CLOSED,
-            DeviceErrorType.CONNECTION_NOT_OPEN,
-            DeviceErrorType.NOT_CONNECTED,
-            DeviceErrorType.WRITE_REJECTED,
-            DeviceErrorType.DEVICE_ABORT,
-            DeviceErrorType.PROCESS_ABORTED_BY_USER
-          ].includes(e.errorType)
-        ) {
-          tries = innerMaxTries;
-        }
+      if (!canRetry(e)) {
+        tries = innerMaxTries;
       }
 
       if (!firstError) {

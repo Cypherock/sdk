@@ -1,7 +1,7 @@
 import SerialPort from 'serialport';
 import {
-  DeviceError,
-  DeviceErrorType,
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
   DeviceState
 } from '@cypherock/sdk-interfaces';
 
@@ -117,7 +117,7 @@ export const createPort = async () => {
   const connectionInfo = await getAvailableConnectionInfo();
 
   if (!connectionInfo) {
-    throw new DeviceError(DeviceErrorType.NOT_CONNECTED);
+    throw new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED);
   }
 
   return connectionInfo;

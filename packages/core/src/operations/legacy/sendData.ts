@@ -1,6 +1,8 @@
 import {
-  DeviceError,
-  DeviceErrorType,
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
+  DeviceCommunicationError,
+  DeviceCommunicationErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
@@ -20,7 +22,9 @@ export const writePacket = (
   let usableConfig = config.v1;
 
   if (!connection.isConnected()) {
-    throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
+    throw new DeviceConnectionError(
+      DeviceConnectionErrorType.CONNECTION_CLOSED
+    );
   }
 
   if (version === PacketVersionMap.v2) {
@@ -46,7 +50,11 @@ export const writePacket = (
     async function recheckAck() {
       try {
         if (!connection.isConnected()) {
-          reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
+          reject(
+            new DeviceConnectionError(
+              DeviceConnectionErrorType.CONNECTION_CLOSED
+            )
+          );
           return;
         }
 
@@ -77,7 +85,11 @@ export const writePacket = (
               case usableConfig.commands.NACK_PACKET:
                 logger.warn('Received NACK');
                 cleanUp();
-                reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
+                reject(
+                  new DeviceCommunicationError(
+                    DeviceCommunicationErrorType.WRITE_ERROR
+                  )
+                );
                 // eslint-disable-next-line
                 return;
               default:
@@ -92,7 +104,11 @@ export const writePacket = (
         );
       } catch (error) {
         cleanUp();
-        reject(new DeviceError(DeviceErrorType.UNKNOWN_COMMUNICATION_ERROR));
+        reject(
+          new DeviceCommunicationError(
+            DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR
+          )
+        );
       }
     }
 
@@ -110,13 +126,17 @@ export const writePacket = (
         logger.info(`Writing packet error: ${error}`);
         cleanUp();
         logger.error(error);
-        reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
+        reject(
+          new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_ERROR)
+        );
       });
 
     timeout = setTimeout(() => {
       logger.info('Timeout triggred');
       cleanUp();
-      reject(new DeviceError(DeviceErrorType.WRITE_TIMEOUT));
+      reject(
+        new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_TIMEOUT)
+      );
     }, usableConfig.constants.ACK_TIME);
   });
 };
@@ -170,16 +190,8 @@ export const sendData = async (
         logger.info('Write packet exit');
       } catch (e) {
         // Don't retry if connection closed
-        if (e instanceof DeviceError) {
-          if (
-            [
-              DeviceErrorType.CONNECTION_CLOSED,
-              DeviceErrorType.CONNECTION_NOT_OPEN,
-              DeviceErrorType.NOT_CONNECTED
-            ].includes(e.code)
-          ) {
-            tries = localMaxTries;
-          }
+        if (e instanceof DeviceConnectionError) {
+          tries = localMaxTries;
         }
 
         if (!firstError) {
@@ -194,7 +206,9 @@ export const sendData = async (
       if (firstError) {
         throw firstError;
       } else {
-        throw new DeviceError(DeviceErrorType.WRITE_TIMEOUT);
+        throw new DeviceCommunicationError(
+          DeviceCommunicationErrorType.WRITE_TIMEOUT
+        );
       }
     }
   }

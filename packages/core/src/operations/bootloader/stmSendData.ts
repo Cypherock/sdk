@@ -1,6 +1,10 @@
 import {
-  DeviceError,
-  DeviceErrorType,
+  DeviceBootloaderError,
+  DeviceBootloaderErrorType,
+  DeviceCommunicationError,
+  DeviceCommunicationErrorType,
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
 import { hexToUint8Array, logger, uint8ArrayToHex } from '../../utils';
@@ -13,39 +17,39 @@ const RECEIVING_MODE_PACKET = '43';
 const ERROR_CODES = [
   {
     code: '07',
-    errorObj: DeviceErrorType.FIRMWARE_SIZE_LIMIT_EXCEEDED
+    errorObj: DeviceBootloaderErrorType.FIRMWARE_SIZE_LIMIT_EXCEEDED
   },
   {
     code: '08',
-    errorObj: DeviceErrorType.WRONG_HARDWARE_VERSION
+    errorObj: DeviceBootloaderErrorType.WRONG_HARDWARE_VERSION
   },
   {
     code: '09',
-    errorObj: DeviceErrorType.LOWER_FIRMWARE_VERSION
+    errorObj: DeviceBootloaderErrorType.LOWER_FIRMWARE_VERSION
   },
   {
     code: '0a',
-    errorObj: DeviceErrorType.WRONG_MAGIC_NUMBER
+    errorObj: DeviceBootloaderErrorType.WRONG_MAGIC_NUMBER
   },
   {
     code: '0b',
-    errorObj: DeviceErrorType.SIGNATURE_NOT_VERIFIED
+    errorObj: DeviceBootloaderErrorType.SIGNATURE_NOT_VERIFIED
   },
   {
     code: '0c',
-    errorObj: DeviceErrorType.FLASH_WRITE_ERROR
+    errorObj: DeviceBootloaderErrorType.FLASH_WRITE_ERROR
   },
   {
     code: '0d',
-    errorObj: DeviceErrorType.FLASH_CRC_MISMATCH
+    errorObj: DeviceBootloaderErrorType.FLASH_CRC_MISMATCH
   },
   {
     code: '0e',
-    errorObj: DeviceErrorType.FLASH_TIMEOUT_ERROR
+    errorObj: DeviceBootloaderErrorType.FLASH_TIMEOUT_ERROR
   },
   {
     code: '15',
-    errorObj: DeviceErrorType.FLASH_NACK
+    errorObj: DeviceBootloaderErrorType.FLASH_NACK
   }
 ];
 
@@ -57,7 +61,7 @@ const writePacket = (
   connection: IDeviceConnection,
   packet: Uint8Array,
   options?: { timeout?: number }
-): Promise<DeviceError | undefined> =>
+): Promise<Error | undefined> =>
   new Promise((resolve, reject) => {
     /**
      * Ensure is listener is activated first before writing
@@ -75,13 +79,19 @@ const writePacket = (
     }
 
     if (!connection.isConnected()) {
-      throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
+      throw new DeviceConnectionError(
+        DeviceConnectionErrorType.CONNECTION_CLOSED
+      );
     }
 
     async function recheckPacket() {
       try {
         if (!connection.isConnected()) {
-          reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
+          reject(
+            new DeviceConnectionError(
+              DeviceConnectionErrorType.CONNECTION_CLOSED
+            )
+          );
           return;
         }
 
@@ -100,7 +110,7 @@ const writePacket = (
         for (const error of ERROR_CODES) {
           if (ePacketData.includes(error.code)) {
             cleanUp();
-            resolve(new DeviceError(error.errorObj));
+            resolve(new DeviceBootloaderError(error.errorObj));
             return;
           }
         }
@@ -132,7 +142,9 @@ const writePacket = (
 
     timeout = setTimeout(() => {
       cleanUp();
-      reject(new DeviceError(DeviceErrorType.WRITE_TIMEOUT));
+      reject(
+        new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_TIMEOUT)
+      );
     }, options?.timeout || 2000);
 
     recheckTimeout = setTimeout(
@@ -162,13 +174,19 @@ const checkIfInReceivingMode = async (
     }
 
     if (!connection.isConnected()) {
-      throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
+      throw new DeviceConnectionError(
+        DeviceConnectionErrorType.CONNECTION_CLOSED
+      );
     }
 
     async function recheckPacket() {
       try {
         if (!connection.isConnected()) {
-          reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
+          reject(
+            new DeviceConnectionError(
+              DeviceConnectionErrorType.CONNECTION_CLOSED
+            )
+          );
           return;
         }
         const rawPacket = await connection.receive();
@@ -204,7 +222,11 @@ const checkIfInReceivingMode = async (
 
     timeout = setTimeout(() => {
       cleanUp();
-      reject(new DeviceError(DeviceErrorType.NOT_IN_RECEIVING_MODE));
+      reject(
+        new DeviceBootloaderError(
+          DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE
+        )
+      );
     }, options?.timeout || 2000);
 
     recheckTimeout = setTimeout(
@@ -254,16 +276,8 @@ export const stmUpdateSendData = async (
           }
           return;
         } catch (e) {
-          if (e instanceof DeviceError) {
-            if (
-              [
-                DeviceErrorType.CONNECTION_CLOSED,
-                DeviceErrorType.CONNECTION_NOT_OPEN,
-                DeviceErrorType.NOT_CONNECTED
-              ].includes(e.errorType)
-            ) {
-              tries = innerMaxTries;
-            }
+          if (e instanceof DeviceConnectionError) {
+            tries = innerMaxTries;
           }
 
           if (!firstError) {
@@ -276,7 +290,9 @@ export const stmUpdateSendData = async (
       if (firstError) {
         reject(firstError);
       } else {
-        reject(new DeviceError(DeviceErrorType.WRITE_ERROR));
+        reject(
+          new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_ERROR)
+        );
       }
     }
   );

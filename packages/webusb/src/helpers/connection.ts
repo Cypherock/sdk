@@ -1,4 +1,7 @@
-import { DeviceError, DeviceErrorType } from '@cypherock/sdk-interfaces';
+import {
+  DeviceConnectionError,
+  DeviceConnectionErrorType
+} from '@cypherock/sdk-interfaces';
 
 const supportedDevices: USBDeviceFilter[] = [
   { vendorId: 0x3503, productId: 259 }
@@ -11,7 +14,7 @@ export const createPort = async () => {
   });
 
   if (!connectionInfo) {
-    throw new DeviceError(DeviceErrorType.NOT_CONNECTED);
+    throw new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED);
   }
 
   return connectionInfo;

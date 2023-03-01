@@ -1,4 +1,8 @@
-import { PoolData } from '@cypherock/sdk-interfaces';
+import {
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
+  PoolData
+} from '@cypherock/sdk-interfaces';
 import * as uuid from 'uuid';
 
 // eslint-disable-next-line
@@ -42,7 +46,9 @@ export class DataListener {
     }
 
     if (!connection.configuration) {
-      throw new Error('Failed to configure device');
+      throw new DeviceConnectionError(
+        DeviceConnectionErrorType.FAILED_TO_CONNECT
+      );
     }
 
     const { interfaces } = connection.configuration;

@@ -1,6 +1,8 @@
 import {
-  DeviceError,
-  DeviceErrorType,
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
+  DeviceCommunicationError,
+  DeviceCommunicationErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
 import { PacketVersion, logger } from '../../utils';
@@ -24,13 +26,17 @@ export const receiveCommand = (
   const resData: any = [];
 
   if (!connection.isConnected()) {
-    throw new DeviceError(DeviceErrorType.CONNECTION_CLOSED);
+    throw new DeviceConnectionError(
+      DeviceConnectionErrorType.CONNECTION_CLOSED
+    );
   }
 
   return new Promise<{ commandType: number; data: string }>(
     (resolve, reject) => {
       if (!connection.isConnected()) {
-        reject(new DeviceError(DeviceErrorType.NOT_CONNECTED));
+        reject(
+          new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED)
+        );
         return;
       }
 
@@ -49,7 +55,11 @@ export const receiveCommand = (
       if (timeout) {
         timeoutIdentifier = setTimeout(() => {
           cleanUp();
-          reject(new DeviceError(DeviceErrorType.READ_TIMEOUT));
+          reject(
+            new DeviceCommunicationError(
+              DeviceCommunicationErrorType.READ_TIMEOUT
+            )
+          );
         }, timeout);
       }
 
@@ -81,7 +91,11 @@ export const receiveCommand = (
       async function recheckPacket() {
         try {
           if (!connection.isConnected()) {
-            reject(new DeviceError(DeviceErrorType.CONNECTION_CLOSED));
+            reject(
+              new DeviceConnectionError(
+                DeviceConnectionErrorType.CONNECTION_CLOSED
+              )
+            );
             return;
           }
 
@@ -112,7 +126,11 @@ export const receiveCommand = (
           }
         } catch (error) {
           cleanUp();
-          reject(new DeviceError(DeviceErrorType.UNKNOWN_COMMUNICATION_ERROR));
+          reject(
+            new DeviceCommunicationError(
+              DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR
+            )
+          );
         }
       }
 

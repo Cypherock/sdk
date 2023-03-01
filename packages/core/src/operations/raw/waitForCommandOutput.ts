@@ -1,6 +1,6 @@
 import {
-  DeviceError,
-  DeviceErrorType,
+  DeviceAppError,
+  DeviceAppErrorType,
   IDeviceConnection
 } from '@cypherock/sdk-interfaces';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
@@ -66,11 +66,7 @@ export const waitForCommandOutput = async ({
         expectedCommandTypes.length > 0 &&
         !expectedCommandTypes.includes(resp.commandType)
       ) {
-        throw new Error(
-          `Invalid commandType. Expected commandTypes: ${expectedCommandTypes.join(
-            ','
-          )}`
-        );
+        throw new DeviceAppError(DeviceAppErrorType.INVALID_RESULT);
       }
       return resp;
     }
@@ -90,7 +86,7 @@ export const waitForCommandOutput = async ({
     lastDeviceState = status.deviceState;
 
     if (status.currentCmdSeq !== sequenceNumber) {
-      throw new DeviceError(DeviceErrorType.EXECUTING_OTHER_COMMAND);
+      throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
     }
 
     if (

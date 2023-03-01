@@ -1,8 +1,4 @@
-import {
-  DeviceError,
-  DeviceErrorType,
-  IDeviceConnection
-} from '@cypherock/sdk-interfaces';
+import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import {
   intToUintByte,
   logger,
@@ -13,6 +9,7 @@ import * as config from '../../config';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
+import canRetry from './canRetry';
 
 export const getCommandOutput = async ({
   connection,
@@ -79,20 +76,8 @@ export const getCommandOutput = async ({
           receivedPacket.packetType ===
           usableConfig.commands.PACKET_TYPE.STATUS;
       } catch (e) {
-        // Don't retry if connection closed
-        if (e instanceof DeviceError) {
-          if (
-            [
-              DeviceErrorType.CONNECTION_CLOSED,
-              DeviceErrorType.CONNECTION_NOT_OPEN,
-              DeviceErrorType.NOT_CONNECTED,
-              DeviceErrorType.WRITE_REJECTED,
-              DeviceErrorType.DEVICE_ABORT,
-              DeviceErrorType.PROCESS_ABORTED_BY_USER
-            ].includes(e.errorType)
-          ) {
-            tries = innerMaxTries;
-          }
+        if (!canRetry(e)) {
+          tries = innerMaxTries;
         }
 
         if (!firstError) {

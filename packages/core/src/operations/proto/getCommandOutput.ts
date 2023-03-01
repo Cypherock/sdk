@@ -1,4 +1,8 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
+import {
+  DeviceAppError,
+  DeviceAppErrorType,
+  IDeviceConnection
+} from '@cypherock/sdk-interfaces';
 import { hexToUint8Array, PacketVersion } from '../../utils';
 import { Status, Result } from '../../encoders/proto/generated/core';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
@@ -29,7 +33,7 @@ export const getCommandOutput = async ({
   } else {
     const result = Result.decode(hexToUint8Array(rawData));
     if (result.cmd?.appletId !== appletId) {
-      throw new Error(`Invalid result. Expected appletId: ${appletId}`);
+      throw new DeviceAppError(DeviceAppErrorType.INVALID_APP_ID);
     }
 
     output = result.cmd.data;

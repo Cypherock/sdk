@@ -1,14 +1,18 @@
-import {
-  DeviceError,
-  DeviceErrorType,
-  IDeviceConnection
-} from '@cypherock/sdk-interfaces';
+import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
-import { hexToUint8Array, logger, PacketVersion, PacketVersionMap } from '../../utils';
+import {
+  hexToUint8Array,
+  logger,
+  PacketVersion,
+  PacketVersionMap
+} from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 import { Status } from '../../encoders/proto/generated/core';
 
 import { writeCommand } from '../helpers/writeCommand';
+import canRetry from '../helpers/canRetry';
+import { DeviceAppError } from '@cypherock/sdk-interfaces';
+import { DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 
 export const sendAbort = async ({
   connection,
@@ -69,25 +73,14 @@ export const sendAbort = async ({
       status = Status.decode(hexToUint8Array(protobufData));
 
       if (status.currentCmdSeq !== sequenceNumber) {
-        throw new Error('Abort rejected by device');
+        throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
       }
 
       isSuccess = true;
     } catch (e) {
       // Don't retry if connection closed
-      if (e instanceof DeviceError) {
-        if (
-          [
-            DeviceErrorType.CONNECTION_CLOSED,
-            DeviceErrorType.CONNECTION_NOT_OPEN,
-            DeviceErrorType.NOT_CONNECTED,
-            DeviceErrorType.WRITE_REJECTED,
-            DeviceErrorType.DEVICE_ABORT,
-            DeviceErrorType.PROCESS_ABORTED_BY_USER
-          ].includes(e.errorType)
-        ) {
-          tries = innerMaxTries;
-        }
+      if (!canRetry(e)) {
+        tries = innerMaxTries;
       }
 
       if (!firstError) {
