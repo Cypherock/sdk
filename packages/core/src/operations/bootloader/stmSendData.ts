@@ -216,7 +216,7 @@ const checkIfInReceivingMode = async (
 export const stmUpdateSendData = async (
   connection: IDeviceConnection,
   data: string,
-  onProgress: (percent: number) => void
+  onProgress?: (percent: number) => void
 ) => {
   const packetsList = stmXmodemEncode(data);
 
@@ -245,7 +245,9 @@ export const stmUpdateSendData = async (
             index === 0 ? { timeout: 10000 } : undefined
           );
           if (!errorMsg) {
-            onProgress((index * 100) / packetsList.length);
+            if (onProgress) {
+              onProgress((index * 100) / packetsList.length);
+            }
             resolve(true);
           } else {
             reject(errorMsg);

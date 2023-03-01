@@ -10,7 +10,7 @@
     "pretty": "prettier --write 'src/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts'",
     "build:ts": "rimraf dist && tsc -p tsconfig.json",
-    "build": "make"
+    "build:all": "make"
   },
   "devDependencies": {
     "@types/node": "18.11.18",

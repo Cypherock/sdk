@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cypherock/sdk-app-manager": "workspace:^0.0.0",
     "@cypherock/sdk-core": "workspace:^0.0.0",
     "@cypherock/sdk-core-rust": "workspace:^0.0.0",
     "@cypherock/sdk-hw-webusb": "workspace:^0.0.0",

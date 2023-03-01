@@ -1,24 +1,26 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
-import { PacketVersion } from '../../utils';
-import { encodeRawData } from '../../encoders/raw';
+import { PacketVersion, uint8ArrayToHex } from '../../utils';
+import { Query } from '../../encoders/proto/generated/core';
 import { sendCommand as sendCommandHelper } from '../helpers';
 
 export const sendCommand = async ({
   connection,
-  commandType,
+  appletId,
   data,
   version,
   maxTries = 5,
   sequenceNumber
 }: {
   connection: IDeviceConnection;
-  commandType: number;
-  data: string;
+  appletId: number;
+  data: Uint8Array;
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
 }): Promise<void> => {
-  const rawEncodedData = encodeRawData({ commandType, data }, version);
+  const rawEncodedData = uint8ArrayToHex(
+    Query.encode(Query.create({ cmd: { appletId, data } })).finish()
+  );
 
   return sendCommandHelper({
     connection,
@@ -26,6 +28,6 @@ export const sendCommand = async ({
     version,
     maxTries,
     sequenceNumber,
-    isProto: false
+    isProto: true
   });
 };

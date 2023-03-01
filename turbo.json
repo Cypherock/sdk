@@ -1,8 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
+    "prebuild": {
+      "cache": true,
+      "inputs": ["scripts/prebuild.sh"]
+    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["prebuild", "^build"],
       "outputs": ["dist/**", ".next/**", "wasm/**"]
     },
     "test": {
@@ -15,12 +19,14 @@
     "dev": {
       "cache": false
     },
-    "@cypherock/sdk-core#build": {
-      "dependsOn": ["prebuild"]
-    },
     "@cypherock/sdk-core#prebuild": {
       "cache": true,
       "outputs": ["src/encoders/proto/**"],
+      "inputs": ["../../submodules/common/proto/**"]
+    },
+    "@cypherock/sdk-app-manager#prebuild": {
+      "cache": true,
+      "outputs": ["src/proto/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
     "start:node": {

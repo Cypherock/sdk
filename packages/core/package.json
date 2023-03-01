@@ -10,7 +10,7 @@
     "lint:check": "eslint --ext .ts,tsx,js,jsx,js src/",
     "pretty": "prettier --write 'src/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts'",
-    "prebuild": "protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./src/encoders/proto/generated ../../submodules/common/proto/*.proto -I../../submodules/common/proto",
+    "prebuild": "./scripts/prebuild.sh",
     "build": "rimraf dist && tsc -p tsconfig.json"
   },
   "devDependencies": {

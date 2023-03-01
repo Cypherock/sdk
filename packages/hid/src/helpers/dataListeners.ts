@@ -52,7 +52,7 @@ export class DataListener {
 
     this.connection.addListener('data', this.onData.bind(this));
     this.connection.addListener('close', this.onClose.bind(this));
-    this.connection.addListener('error', this.onSerialPortError.bind(this));
+    this.connection.addListener('error', this.onError.bind(this));
   }
 
   /**
@@ -64,7 +64,7 @@ export class DataListener {
       this.connection.removeListener('close', this.onClose.bind(this));
       this.connection.removeListener(
         'error',
-        this.onSerialPortError.bind(this)
+        this.onError.bind(this)
       );
       this.connection.removeAllListeners();
     }
@@ -82,7 +82,7 @@ export class DataListener {
     }
   }
 
-  private onSerialPortError(error: any) {
+  private onError(error: any) {
     if (this.onErrorCallback) {
       this.onErrorCallback(error);
     }

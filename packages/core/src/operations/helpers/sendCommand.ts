@@ -11,7 +11,6 @@ import { writeCommand } from './writeCommand';
 
 export const sendCommand = async ({
   connection,
-  commandType,
   data,
   version,
   maxTries = 5,
@@ -19,7 +18,6 @@ export const sendCommand = async ({
   isProto
 }: {
   connection: IDeviceConnection;
-  commandType: number;
   data: string;
   version: PacketVersion;
   sequenceNumber: number;
@@ -39,8 +37,6 @@ export const sendCommand = async ({
     packetType: usableConfig.commands.PACKET_TYPE.CMD,
     isProto
   });
-
-  logger.info(`Sending command ${commandType} : ${data}`);
 
   let firstError: Error | undefined;
 
@@ -90,8 +86,4 @@ export const sendCommand = async ({
       throw firstError;
     }
   }
-
-  logger.info(
-    `Sent command ${commandType} : containing ${packetsList.length} packets.`
-  );
 };
