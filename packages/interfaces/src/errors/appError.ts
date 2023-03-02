@@ -46,7 +46,7 @@ const errorObjects: CodeToErrorMap = {
     message: 'Invalid result received from device',
     doRetry: false
   },
-  [DeviceAppErrorType.INVALID_RESULT]: {
+  [DeviceAppErrorType.INVALID_APP_ID]: {
     message: 'Invalid appId received from device',
     doRetry: false
   },

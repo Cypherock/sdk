@@ -17,12 +17,12 @@ function generateRandomVersion(major: Range, minor: Range, patch: Range) {
 
 describe('SDK Version', () => {
   describe('isSDKSupported', () => {
-    test('should support 2.5.*', () => {
-      const versions = new Array(500).fill(0).map(() => {
+    test('should support 2.6.*', () => {
+      const versions = new Array(100).fill(0).map(() => {
         const minorVersion = getRandomInt({ min: 0, max: 9999 });
-        return `2.5.${minorVersion}`;
+        return `2.6.${minorVersion}`;
       });
-      versions.push('2.5.0');
+      versions.push('2.6.0');
 
       for (const version of versions) {
         const result = isSDKSupported(version);
@@ -32,7 +32,7 @@ describe('SDK Version', () => {
       }
     });
 
-    test('should not support higher than 2.5.*', () => {
+    test('should support higher than 2.6.* and less than 3.1.0', () => {
       const versions = new Array(200)
         .fill(0)
         .map(() =>
@@ -42,16 +42,36 @@ describe('SDK Version', () => {
             { min: 0, max: 999 }
           )
         );
+      versions.push(
+        ...new Array(200)
+          .fill(0)
+          .map(() =>
+            generateRandomVersion(
+              { min: 3, max: 3 },
+              { min: 0, max: 0 },
+              { min: 0, max: 999 }
+            )
+          )
+      );
 
-      for (let i = 0; i < 200; i += 1) {
-        versions.push(
+      for (const version of versions) {
+        const result = isSDKSupported(version);
+        expect(result).toBeDefined();
+        expect(result.isNewer).toEqual(false);
+        expect(result.isSupported).toEqual(true);
+      }
+    });
+
+    test('should not support higher than 3.1.0', () => {
+      const versions = new Array(200)
+        .fill(0)
+        .map(() =>
           generateRandomVersion(
             { min: 3, max: 100 },
-            { min: 0, max: 999 },
+            { min: 1, max: 999 },
             { min: 0, max: 999 }
           )
         );
-      }
 
       for (const version of versions) {
         const result = isSDKSupported(version);
@@ -61,13 +81,13 @@ describe('SDK Version', () => {
       }
     });
 
-    test('should not support lower than 2.5.*', () => {
+    test('should not support lower than 2.6.*', () => {
       const versions = new Array(200)
         .fill(0)
         .map(() =>
           generateRandomVersion(
             { min: 2, max: 2 },
-            { min: 0, max: 4 },
+            { min: 0, max: 5 },
             { min: 0, max: 999 }
           )
         );
@@ -110,12 +130,12 @@ describe('SDK Version', () => {
       }
     });
 
-    test('should return v3 for 2.*.*', () => {
+    test('should return v3 for 2.*.*, 3.*.*)', () => {
       const versions = new Array(200)
         .fill(0)
         .map(() =>
           generateRandomVersion(
-            { min: 2, max: 2 },
+            { min: 2, max: 3 },
             { min: 0, max: 999 },
             { min: 0, max: 999 }
           )
@@ -133,7 +153,7 @@ describe('SDK Version', () => {
         .fill(0)
         .map(() =>
           generateRandomVersion(
-            { min: 3, max: 999 },
+            { min: 4, max: 999 },
             { min: 0, max: 999 },
             { min: 0, max: 999 }
           )

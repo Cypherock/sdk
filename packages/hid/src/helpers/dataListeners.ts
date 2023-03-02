@@ -82,7 +82,7 @@ export class DataListener {
     }
   }
 
-  private onError(error: any) {
+  private onError(error: Error) {
     if (this.onErrorCallback) {
       this.onErrorCallback(error);
     }

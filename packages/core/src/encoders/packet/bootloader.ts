@@ -13,6 +13,17 @@ const END_OF_TRANSMISSION = '04';
 const CHUNK_SIZE = 256;
 const { radix } = config;
 
+export interface StmPacket {
+  startOfFrame: string;
+  commandType: number;
+  currentPacketNumber: number;
+  totalPacket: number;
+  dataSize: number;
+  dataChunk: string;
+  crc: string;
+  errorList: string;
+}
+
 export const stmXmodemEncode = (data: string) => {
   const rounds = Math.ceil(data.length / CHUNK_SIZE);
   const packetList: string[] = [];
@@ -43,7 +54,7 @@ export const stmXmodemEncode = (data: string) => {
 
 export const stmXmodemDecode = (param: Uint8Array) => {
   let data = uint8ArrayToHex(param).toUpperCase();
-  const packetList: any[] = [];
+  const packetList: StmPacket[] = [];
   let offset = data.indexOf(START_OF_FRAME);
 
   while (data.length > 0) {

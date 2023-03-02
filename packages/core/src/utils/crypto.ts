@@ -24,19 +24,24 @@ export const crc16 = (dataBuff: Uint8Array) => {
   return crc & 0xffff;
 };
 
+export const isHex = (maybeHex: string) =>
+  maybeHex.length % 2 === 0 && !/[^a-fA-F0-9]/u.test(maybeHex);
 
 export const hexToUint8Array = (data: string) => {
-  const isHex = (maybeHex: string) =>
-    maybeHex.length !== 0 &&
-    maybeHex.length % 2 === 0 &&
-    !/[^a-fA-F0-9]/u.test(maybeHex);
+  let hex = data;
 
-  if (!isHex(data)) {
+  if (hex.startsWith('0x')) {
+    hex = hex.slice(2);
+  }
+
+  if (hex.length <= 0) return new Uint8Array([]);
+
+  if (!isHex(hex)) {
     throw new Error(`Invalid hex string: ${data}`);
   } else {
-    const match = data.match(/.{1,2}/g);
+    const match = hex.match(/.{1,2}/g);
     if (!match) {
-      throw new Error('Invalid hex string');
+      throw new Error(`Invalid hex string: ${data}`);
     }
     return Uint8Array.from(match.map(byte => parseInt(byte, 16)));
   }
@@ -58,6 +63,10 @@ export function padStart(str: string, targetLength: number, padString: string) {
 
   if (str.length > targetLength) {
     return String(str);
+  }
+
+  if (innerPadString.length <= 0) {
+    throw new Error('padString should not be empty');
   }
 
   innerTargetLength -= str.length;
@@ -127,23 +136,32 @@ export const byteStuffing = (inputBuff: Uint8Array, version: PacketVersion) => {
   return uint8ArrayToHex(Uint8Array.from(outputData));
 };
 
-export const intToUintByte = (ele: string | number, radix: number) => {
-  let num = Number(ele);
-  if (Number.isNaN(num)) {
-    throw new Error('Invalid number');
+/**
+ * Converts the given number to hex string within the given radix.
+ *
+ * @param num Number to be converted
+ * @param radix No of bits (only in multiples of 8)
+ */
+export const intToUintByte = (num: string | number, radix: number) => {
+  let numCopy = Number(num);
+  if (Number.isNaN(numCopy)) {
+    throw new Error(`Invalid number: ${num}`);
+  }
+  if (radix % 8 !== 0) {
+    throw new Error(`Invalid radix: ${radix}`);
   }
 
-  if (num < 0) {
+  if (numCopy < 0) {
     const maxNumber = parseInt(new Array(radix / 4).fill('f').join(''), 16);
-    num = maxNumber - Math.abs(num) + 1;
+    numCopy = maxNumber - Math.abs(numCopy) + 1;
   }
 
-  const val = num.toString(16);
+  const val = numCopy.toString(16);
   const noOfZeroes = radix / 4 - val.length;
   let res = '';
   if (noOfZeroes < 0) {
     throw new Error(
-      `Invalid serialization of data: ${ele} with radix ${radix}`
+      `Invalid serialization of data: ${num} with radix ${radix}`
     );
   }
   for (let i = 0; i < noOfZeroes; i += 1) {
@@ -153,7 +171,16 @@ export const intToUintByte = (ele: string | number, radix: number) => {
 };
 
 export const hexToAscii = (str1: string) => {
-  const hex = str1.toString();
+  let hex = str1.toString();
+
+  if (hex.startsWith('0x')) {
+    hex = hex.slice(2);
+  }
+
+  if (!isHex(hex)) {
+    throw new Error(`Invalid hex string: ${hex}`);
+  }
+
   let str = '';
   for (let n = 0; n < hex.length; n += 2) {
     str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));

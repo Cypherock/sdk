@@ -1,4 +1,4 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
+import { IDeviceConnection , DeviceAppError , DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import {
   hexToUint8Array,
@@ -11,8 +11,6 @@ import { Status } from '../../encoders/proto/generated/core';
 
 import { writeCommand } from '../helpers/writeCommand';
 import canRetry from '../helpers/canRetry';
-import { DeviceAppError } from '@cypherock/sdk-interfaces';
-import { DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 
 export const sendAbort = async ({
   connection,

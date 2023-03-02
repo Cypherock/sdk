@@ -21,6 +21,5 @@ export const getStatus = async ({
     logsDisabled
   });
 
-  console.log({ protobufData });
   return Status.decode(hexToUint8Array(protobufData));
 };

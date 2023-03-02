@@ -54,7 +54,7 @@ export const waitForPacket = ({
    */
   const promiseFunc = (
     resolve: (val: DecodedPacketData) => void,
-    reject: (reason?: any) => void
+    reject: (reason?: Error) => void
   ) => {
     let timeout: NodeJS.Timeout;
     let recheckTimeout: NodeJS.Timeout;

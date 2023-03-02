@@ -6,7 +6,7 @@ import {
   DeviceConnectionError
 } from '@cypherock/sdk-interfaces';
 
-const canRetry = (error: any) => {
+const canRetry = (error: Error) => {
   let dontRetry = false;
   // Don't retry if connection closed
   dontRetry ||= error instanceof DeviceConnectionError;
@@ -14,13 +14,14 @@ const canRetry = (error: any) => {
   // Don't retry if write was rejected
   dontRetry ||=
     error instanceof DeviceCommunicationError &&
-    error.code === DeviceCommunicationErrorType.WRITE_REJECTED;
+    (error as DeviceCommunicationError).code ===
+      DeviceCommunicationErrorType.WRITE_REJECTED;
   dontRetry ||=
     error instanceof DeviceAppError &&
     [
       DeviceAppErrorType.PROCESS_ABORTED,
       DeviceAppErrorType.DEVICE_ABORT
-    ].includes(error.code);
+    ].includes((error as DeviceAppError).code);
 
   return !dontRetry;
 };

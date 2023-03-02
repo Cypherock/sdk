@@ -82,7 +82,7 @@ export class DataListener {
     }
   }
 
-  private onSerialPortError(error: any) {
+  private onSerialPortError(error: Error) {
     if (this.onErrorCallback) {
       this.onErrorCallback(error);
     }

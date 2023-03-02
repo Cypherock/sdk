@@ -23,5 +23,10 @@ module.exports = {
     "no-restricted-syntax": 0,
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "import/no-extraneous-dependencies": [
+      "error",
+      { devDependencies: ["**/*.test.ts", "**/*.test.tsx"] },
+    ],
   },
 };

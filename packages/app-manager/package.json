@@ -6,7 +6,6 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint --ext .ts,tsx,js,jsx,js src/ --fix",
-    "test": "jest",
     "lint:check": "eslint --ext .ts,tsx,js,jsx,js src/",
     "pretty": "prettier --write 'src/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts'",

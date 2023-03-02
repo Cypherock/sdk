@@ -23,7 +23,7 @@ export const receiveCommand = (
   version: PacketVersion,
   timeout: number = DEFAULT_RECEIVE_TIMEOUT
 ) => {
-  const resData: any = [];
+  const resData: string[] = [];
 
   if (!connection.isConnected()) {
     throw new DeviceConnectionError(

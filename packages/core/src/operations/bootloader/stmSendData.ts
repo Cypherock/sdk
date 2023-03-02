@@ -135,7 +135,7 @@ const writePacket = (
       }
     }
 
-    connection.send(packet).catch(err => {
+    connection.send(packet).catch((err: Error) => {
       cleanUp();
       reject(err);
     });
@@ -253,48 +253,54 @@ export const stmUpdateSendData = async (
    * Create a list of each packet and self contained retries and listener
    */
   const dataList = packetsList.map(
-    (d, index) => async (resolve: any, reject: any) => {
-      let tries = 1;
-      const innerMaxTries = 5;
-      let firstError: Error | undefined;
-      while (tries <= innerMaxTries) {
-        try {
-          const errorMsg = await writePacket(
-            connection,
-            hexToUint8Array(d),
-            // Wait for 10 sec for the 1st packet ACK, there may be heavy processing task
-            // in device after 1st packet.
-            index === 0 ? { timeout: 10000 } : undefined
-          );
-          if (!errorMsg) {
-            if (onProgress) {
-              onProgress((index * 100) / packetsList.length);
+    (d, index) =>
+      async (
+        resolve: (val: boolean) => void,
+        reject: (err?: Error) => void
+      ) => {
+        let tries = 1;
+        const innerMaxTries = 5;
+        let firstError: Error | undefined;
+        while (tries <= innerMaxTries) {
+          try {
+            const errorMsg = await writePacket(
+              connection,
+              hexToUint8Array(d),
+              // Wait for 10 sec for the 1st packet ACK, there may be heavy processing task
+              // in device after 1st packet.
+              index === 0 ? { timeout: 10000 } : undefined
+            );
+            if (!errorMsg) {
+              if (onProgress) {
+                onProgress((index * 100) / packetsList.length);
+              }
+              resolve(true);
+            } else {
+              reject(errorMsg);
             }
-            resolve(true);
-          } else {
-            reject(errorMsg);
-          }
-          return;
-        } catch (e) {
-          if (e instanceof DeviceConnectionError) {
-            tries = innerMaxTries;
-          }
+            return;
+          } catch (e) {
+            if (e instanceof DeviceConnectionError) {
+              tries = innerMaxTries;
+            }
 
-          if (!firstError) {
-            firstError = e as Error;
+            if (!firstError) {
+              firstError = e as Error;
+            }
+            logger.warn('Error in sending data', e);
           }
-          logger.warn('Error in sending data', e);
+          tries += 1;
         }
-        tries += 1;
+        if (firstError) {
+          reject(firstError);
+        } else {
+          reject(
+            new DeviceCommunicationError(
+              DeviceCommunicationErrorType.WRITE_ERROR
+            )
+          );
+        }
       }
-      if (firstError) {
-        reject(firstError);
-      } else {
-        reject(
-          new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_ERROR)
-        );
-      }
-    }
   );
 
   for (const j of dataList) {
