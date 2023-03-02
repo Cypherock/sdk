@@ -105,6 +105,6 @@ export const waitForCommandOutput = async ({
       onStatus(response as StatusData);
     }
 
-    await sleep(options?.interval || 200);
+    await sleep(options?.interval ?? 200);
   }
 };

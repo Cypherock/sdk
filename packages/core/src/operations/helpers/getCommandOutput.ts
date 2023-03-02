@@ -75,7 +75,7 @@ export const getCommandOutput = async ({
         isStatusResponse =
           receivedPacket.packetType ===
           usableConfig.commands.PACKET_TYPE.STATUS;
-      } catch (e) {
+      } catch (e: any) {
         if (!canRetry(e)) {
           tries = innerMaxTries;
         }

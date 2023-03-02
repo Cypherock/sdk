@@ -56,8 +56,8 @@ export const waitForPacket = ({
     resolve: (val: DecodedPacketData) => void,
     reject: (reason?: Error) => void
   ) => {
-    let timeout: NodeJS.Timeout;
-    let recheckTimeout: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout | undefined;
+    let recheckTimeout: NodeJS.Timeout | undefined;
 
     function cleanUp() {
       if (timeout) {

@@ -16,11 +16,11 @@ export const isSDKSupported = (version: string) => {
 
 // We need to maintain older sdk versions so that we can update them
 // from is inclusive and to is exclusive
-const SdkToPacketVersionMap: Array<{
+const SdkToPacketVersionMap: {
   from: string;
   to?: string;
   packetVersion: PacketVersion;
-}> = [
+}[] = [
   { from: '1.0.0', to: '2.0.0', packetVersion: PacketVersionMap.v2 },
   { from: '2.0.0', to: '3.0.0', packetVersion: PacketVersionMap.v3 },
   { from: '3.0.0', to: '4.0.0', packetVersion: PacketVersionMap.v3 },

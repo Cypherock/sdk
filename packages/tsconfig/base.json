@@ -17,7 +17,8 @@
     "strict": true,
     "module": "CommonJS",
     "target": "ES2015",
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "strictNullChecks": true
   },
   "exclude": ["node_modules"]
 }

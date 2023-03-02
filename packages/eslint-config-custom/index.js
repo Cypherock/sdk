@@ -8,6 +8,7 @@ module.exports = {
     "airbnb-base",
     "plugin:import/typescript",
     "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/strict",
     "prettier",
   ],
   parser: "@typescript-eslint/parser",
@@ -24,9 +25,12 @@ module.exports = {
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/prefer-nullish-coalescing": "error",
+    "@typescript-eslint/no-unused-vars": "error",
     "import/no-extraneous-dependencies": [
       "error",
       { devDependencies: ["**/*.test.ts", "**/*.test.tsx"] },
     ],
+    "@typescript-eslint/prefer-readonly": "error"
   },
 };

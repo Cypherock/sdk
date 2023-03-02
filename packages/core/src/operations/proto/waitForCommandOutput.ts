@@ -99,6 +99,6 @@ export const waitForCommandOutput = async ({
       }
     }
 
-    await sleep(options?.interval || 200);
+    await sleep(options?.interval ?? 200);
   }
 };

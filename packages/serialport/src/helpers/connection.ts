@@ -84,7 +84,7 @@ export const getAvailableConnectionInfo = async (): Promise<
     if (exists) break;
   }
 
-  if (port && port.path && deviceState !== undefined) {
+  if (port.path && deviceState !== undefined) {
     const { serialNumber: deviceSerialNumber } = port;
 
     return {

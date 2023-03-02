@@ -66,8 +66,8 @@ const writePacket = (
     /**
      * Ensure is listener is activated first before writing
      */
-    let timeout: NodeJS.Timeout;
-    let recheckTimeout: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout | undefined;
+    let recheckTimeout: NodeJS.Timeout | undefined;
 
     function cleanUp() {
       if (timeout) {
@@ -145,7 +145,7 @@ const writePacket = (
       reject(
         new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_TIMEOUT)
       );
-    }, options?.timeout || 2000);
+    }, options?.timeout ?? 2000);
 
     recheckTimeout = setTimeout(
       recheckPacket,
@@ -161,8 +161,8 @@ const checkIfInReceivingMode = async (
     /**
      * Ensure is listener is activated first before writing
      */
-    let timeout: NodeJS.Timeout;
-    let recheckTimeout: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout | undefined;
+    let recheckTimeout: NodeJS.Timeout | undefined;
 
     function cleanUp() {
       if (timeout) {
@@ -227,7 +227,7 @@ const checkIfInReceivingMode = async (
           DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE
         )
       );
-    }, options?.timeout || 2000);
+    }, options?.timeout ?? 2000);
 
     recheckTimeout = setTimeout(
       recheckPacket,

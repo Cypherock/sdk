@@ -93,7 +93,7 @@ export default class DeviceConnection implements IDeviceConnection {
    * Returns if the device is connected or not
    */
   public isConnected() {
-    return this.connection && this.isPortOpen;
+    return this.isPortOpen;
   }
 
   /**

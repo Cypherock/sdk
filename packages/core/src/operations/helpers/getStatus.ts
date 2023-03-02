@@ -61,7 +61,7 @@ export const getStatus = async ({
       });
       finalData = receivedPacket.payloadData;
       isSuccess = true;
-    } catch (e) {
+    } catch (e: any) {
       // Don't retry if connection closed
       if (!canRetry(e)) {
         tries = innerMaxTries;

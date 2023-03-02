@@ -53,7 +53,7 @@ export const sendCommand = async ({
           ackPacketTypes: [usableConfig.commands.PACKET_TYPE.CMD_ACK]
         });
         isSuccess = true;
-      } catch (e) {
+      } catch (e: any) {
         if (!canRetry(e)) {
           tries = innerMaxTries;
         }

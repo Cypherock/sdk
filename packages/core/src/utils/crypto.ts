@@ -15,8 +15,7 @@ const updateCRC16 = (crcParam: number, byte: number) => {
 
 export const crc16 = (dataBuff: Uint8Array) => {
   let crc = 0;
-  for (let index = 0; index < dataBuff.length; index += 1) {
-    const i = dataBuff[index];
+  for (const i of dataBuff) {
     crc = updateCRC16(crc, i);
   }
   crc = updateCRC16(crc, 0);

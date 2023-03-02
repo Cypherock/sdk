@@ -4,15 +4,15 @@ import { PoolData } from '@cypherock/sdk-interfaces';
 
 // eslint-disable-next-line
 export class DataListener {
-  private connection: HID.HID;
+  private readonly connection: HID.HID;
 
   private listening: boolean;
 
-  private pool: PoolData[];
+  private readonly pool: PoolData[];
 
-  private onCloseCallback?: () => void;
+  private readonly onCloseCallback?: () => void;
 
-  private onErrorCallback?: (err: Error) => void;
+  private readonly onErrorCallback?: (err: Error) => void;
 
   constructor(params: {
     connection: HID.HID;
@@ -59,15 +59,10 @@ export class DataListener {
    * Stop listening to all the events
    */
   private stopListening() {
-    if (this.connection) {
-      this.connection.removeListener('data', this.onData.bind(this));
-      this.connection.removeListener('close', this.onClose.bind(this));
-      this.connection.removeListener(
-        'error',
-        this.onError.bind(this)
-      );
-      this.connection.removeAllListeners();
-    }
+    this.connection.removeListener('data', this.onData.bind(this));
+    this.connection.removeListener('close', this.onClose.bind(this));
+    this.connection.removeListener('error', this.onError.bind(this));
+    this.connection.removeAllListeners();
 
     this.listening = false;
   }

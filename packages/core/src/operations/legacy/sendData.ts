@@ -35,8 +35,8 @@ export const writePacket = (
    * Be sure to remove all listeners and timeout.
    */
   return new Promise<void>((resolve, reject) => {
-    let timeout: NodeJS.Timeout;
-    let recheckTimeout: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout | undefined;
+    let recheckTimeout: NodeJS.Timeout | undefined;
 
     function cleanUp() {
       if (timeout) {

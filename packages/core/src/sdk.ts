@@ -1,6 +1,4 @@
 import {
-  DeviceAppError,
-  DeviceAppErrorType,
   DeviceCommunicationError,
   DeviceCommunicationErrorType,
   IDeviceConnection
@@ -17,17 +15,17 @@ import {
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 
 export default class SDK {
-  private version: string;
+  private readonly version: string;
 
-  private packetVersion: PacketVersion;
+  private readonly packetVersion: PacketVersion;
 
-  private connection: IDeviceConnection;
+  private readonly connection: IDeviceConnection;
 
-  private isSDKSupported: boolean;
+  private readonly isSDKSupported: boolean;
 
-  private isNewer: boolean;
+  private readonly isNewer: boolean;
 
-  private appletId?: number;
+  private readonly appletId?: number;
 
   private constructor(
     connection: IDeviceConnection,
@@ -115,10 +113,6 @@ export default class SDK {
       sequenceNumber,
       version: this.packetVersion
     });
-
-    if (!resp) {
-      throw new DeviceAppError(DeviceAppErrorType.INVALID_RESULT);
-    }
 
     return resp;
   }
@@ -254,7 +248,7 @@ export default class SDK {
         await connection.afterOperation();
         return {
           sdkVersion,
-          packetVersion: packetVersion || PacketVersionMap.v1
+          packetVersion: packetVersion ?? PacketVersionMap.v1
         };
       } catch (error) {
         retries += 1;

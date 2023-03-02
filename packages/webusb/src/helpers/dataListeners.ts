@@ -7,9 +7,9 @@ import * as uuid from 'uuid';
 
 // eslint-disable-next-line
 export class DataListener {
-  private connection: USBDevice;
+  private readonly connection: USBDevice;
 
-  private listening: boolean;
+  private readonly listening: boolean;
 
   private readonly interfaceNumber: number;
 
@@ -41,7 +41,7 @@ export class DataListener {
 
     await connection.open();
 
-    if (connection.configuration === null) {
+    if (!connection.configuration) {
       await connection.selectConfiguration(1);
     }
 
