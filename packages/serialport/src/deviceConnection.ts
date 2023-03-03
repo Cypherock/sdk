@@ -1,7 +1,7 @@
 import {
   IDeviceConnection,
   DeviceState,
-  ConnectionTypeMap
+  ConnectionTypeMap,
 } from '@cypherock/sdk-interfaces';
 import SerialPort from 'serialport';
 import * as uuid from 'uuid';
@@ -11,7 +11,7 @@ import {
   getAvailableConnectionInfo,
   closeConnection,
   openConnection,
-  DataListener
+  DataListener,
 } from './helpers';
 import { IConnectionInfo } from './types';
 
@@ -45,7 +45,7 @@ export default class DeviceConnection implements IDeviceConnection {
 
     this.connection = new SerialPort(this.port, {
       baudRate: 115200,
-      autoOpen: false
+      autoOpen: false,
     });
     this.initialized = true;
     this.dataListener = new DataListener({ connection: this.connection });

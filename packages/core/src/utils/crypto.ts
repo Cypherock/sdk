@@ -1,7 +1,11 @@
 import * as config from '../config';
+import assert from './assert';
 import { PacketVersion, PacketVersionMap } from './packetVersions';
 
 const updateCRC16 = (crcParam: number, byte: number) => {
+  assert(crcParam, 'Invalid crcParam');
+  assert(byte, 'Invalid byte');
+
   let input = byte | 0x100;
   let crc = crcParam;
   do {
@@ -14,6 +18,8 @@ const updateCRC16 = (crcParam: number, byte: number) => {
 };
 
 export const crc16 = (dataBuff: Uint8Array) => {
+  assert(dataBuff, 'Data buffer cannot be empty');
+
   let crc = 0;
   for (const i of dataBuff) {
     crc = updateCRC16(crc, i);
@@ -23,10 +29,14 @@ export const crc16 = (dataBuff: Uint8Array) => {
   return crc & 0xffff;
 };
 
-export const isHex = (maybeHex: string) =>
-  maybeHex.length % 2 === 0 && !/[^a-fA-F0-9]/u.test(maybeHex);
+export const isHex = (maybeHex: string) => {
+  assert(maybeHex, 'Data cannot be empty');
+  return maybeHex.length % 2 === 0 && !/[^a-fA-F0-9]/u.test(maybeHex);
+};
 
 export const hexToUint8Array = (data: string) => {
+  assert(data, 'Invalid data');
+
   let hex = data;
 
   if (hex.startsWith('0x')) {
@@ -47,6 +57,8 @@ export const hexToUint8Array = (data: string) => {
 };
 
 export const uint8ArrayToHex = (data: Uint8Array) => {
+  assert(data, 'Invalid data');
+
   function i2hex(i: number) {
     return `0${i.toString(16)}`.slice(-2);
   }
@@ -55,9 +67,13 @@ export const uint8ArrayToHex = (data: Uint8Array) => {
 };
 
 export function padStart(str: string, targetLength: number, padString: string) {
+  assert(str, 'Invalid string');
+  assert(targetLength, 'Invalid targetLength');
+  assert(padString, 'Invalid padString');
+
   let innerTargetLength = targetLength;
   let innerPadString = String(
-    typeof padString !== 'undefined' ? padString : ' '
+    typeof padString !== 'undefined' ? padString : ' ',
   );
 
   if (str.length > targetLength) {
@@ -71,7 +87,7 @@ export function padStart(str: string, targetLength: number, padString: string) {
   innerTargetLength -= str.length;
   if (innerTargetLength > innerPadString.length) {
     innerPadString += innerPadString.repeat(
-      innerTargetLength / innerPadString.length
+      innerTargetLength / innerPadString.length,
     );
   }
 
@@ -80,8 +96,11 @@ export function padStart(str: string, targetLength: number, padString: string) {
 
 export const byteUnstuffing = (
   inputBuff: Uint8Array,
-  version: PacketVersion
+  version: PacketVersion,
 ): string => {
+  assert(inputBuff, 'Invalid inputBuff');
+  assert(version, 'Invalid version');
+
   let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
@@ -112,6 +131,9 @@ export const byteUnstuffing = (
 };
 
 export const byteStuffing = (inputBuff: Uint8Array, version: PacketVersion) => {
+  assert(inputBuff, 'Invalid inputBuff');
+  assert(version, 'Invalid version');
+
   let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
@@ -142,6 +164,9 @@ export const byteStuffing = (inputBuff: Uint8Array, version: PacketVersion) => {
  * @param radix No of bits (only in multiples of 8)
  */
 export const intToUintByte = (num: string | number, radix: number) => {
+  assert(num, 'Invalid number');
+  assert(radix, 'Invalid radix');
+
   let numCopy = Number(num);
   if (Number.isNaN(numCopy)) {
     throw new Error(`Invalid number: ${num}`);
@@ -160,7 +185,7 @@ export const intToUintByte = (num: string | number, radix: number) => {
   let res = '';
   if (noOfZeroes < 0) {
     throw new Error(
-      `Invalid serialization of data: ${num} with radix ${radix}`
+      `Invalid serialization of data: ${num} with radix ${radix}`,
     );
   }
   for (let i = 0; i < noOfZeroes; i += 1) {
@@ -170,6 +195,8 @@ export const intToUintByte = (num: string | number, radix: number) => {
 };
 
 export const hexToAscii = (str1: string) => {
+  assert(str1, 'Invalid string');
+
   let hex = str1.toString();
 
   if (hex.startsWith('0x')) {

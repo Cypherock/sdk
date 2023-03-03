@@ -5,8 +5,10 @@ import {
   PacketVersion,
   PacketVersionMap,
   uint8ArrayToHex,
-  intToUintByte
+  intToUintByte,
+  isHex,
 } from '../../utils';
+import assert from '../../utils/assert';
 
 export interface DecodedPacketData {
   startOfFrame: string;
@@ -32,7 +34,7 @@ export enum ErrorPacketRejectReason {
   NO_MORE_CHUNKS = 8,
   INVALID_PACKET_TYPE = 9,
   INVALID_CHUNK_NO = 10,
-  INCOMPLETE_PACKET = 11
+  INCOMPLETE_PACKET = 11,
 }
 
 export const RejectReasonToMsgMap: Record<
@@ -51,14 +53,20 @@ export const RejectReasonToMsgMap: Record<
   [ErrorPacketRejectReason.NO_MORE_CHUNKS]: 'No more chunks',
   [ErrorPacketRejectReason.INVALID_PACKET_TYPE]: 'Invalid packet type',
   [ErrorPacketRejectReason.INVALID_CHUNK_NO]: 'Invalid chunk number',
-  [ErrorPacketRejectReason.INCOMPLETE_PACKET]: 'Incomplete packet'
+  [ErrorPacketRejectReason.INCOMPLETE_PACKET]: 'Incomplete packet',
 };
 
 export const encodePayloadData = (
   rawData: string,
   protobufData: string,
-  version: PacketVersion
+  version: PacketVersion,
 ) => {
+  assert(rawData, 'Invalid rawData');
+  assert(protobufData, 'Invalid protobufData');
+  assert(version, 'Invalid version');
+  assert(isHex(rawData), 'Invalid hex in rawData');
+  assert(isHex(protobufData), 'Invalid hex in protobufData');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -69,11 +77,11 @@ export const encodePayloadData = (
 
   const serializedRawDataLength = intToUintByte(
     rawData.length / 2,
-    usableConfig.radix.dataSize
+    usableConfig.radix.dataSize,
   );
   const serializedProtobufDataLength = intToUintByte(
     protobufData.length / 2,
-    usableConfig.radix.dataSize
+    usableConfig.radix.dataSize,
   );
 
   return (
@@ -89,7 +97,7 @@ export const encodePacket = ({
   version,
   sequenceNumber,
   packetType,
-  isProto
+  isProto,
 }: {
   data: string;
   version: PacketVersion;
@@ -97,6 +105,14 @@ export const encodePacket = ({
   packetType: number;
   isProto: boolean;
 }) => {
+  assert(data, 'Invalid data');
+  assert(version, 'Invalid version');
+  assert(sequenceNumber, 'Invalid sequenceNumber');
+  assert(packetType, 'Invalid packetType');
+
+  assert(isHex(data), 'Invalid hex in data');
+  assert(packetType > 0, 'Packet type cannot be negative');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -105,11 +121,11 @@ export const encodePacket = ({
 
   const serializedSequenceNumber = intToUintByte(
     sequenceNumber,
-    usableConfig.radix.sequenceNumber
+    usableConfig.radix.sequenceNumber,
   );
   const serializedPacketType = intToUintByte(
     packetType,
-    usableConfig.radix.packetType
+    usableConfig.radix.packetType,
   );
 
   const { CHUNK_SIZE, START_OF_FRAME } = usableConfig.constants;
@@ -134,29 +150,28 @@ export const encodePacket = ({
   for (let i = 1; i <= rounds; i += 1) {
     const currentPacketNumber = intToUintByte(
       i,
-      usableConfig.radix.currentPacketNumber
+      usableConfig.radix.currentPacketNumber,
     );
     const totalPacketNumber = intToUintByte(
       rounds,
-      usableConfig.radix.totalPacket
+      usableConfig.radix.totalPacket,
     );
     const dataChunk = serializedData.slice(
       (i - 1) * CHUNK_SIZE,
-      (i - 1) * CHUNK_SIZE + CHUNK_SIZE
+      (i - 1) * CHUNK_SIZE + CHUNK_SIZE,
     );
 
     const payload = dataChunk;
     const payloadLength = intToUintByte(
       dataChunk.length / 2,
-      usableConfig.radix.payloadLength
+      usableConfig.radix.payloadLength,
     );
 
     const serializedTimestamp = intToUintByte(
-      new Date()
-        .getTime()
+      Date.now()
         .toString()
         .slice(0, usableConfig.radix.timestampLength / 4),
-      usableConfig.radix.timestampLength
+      usableConfig.radix.timestampLength,
     );
 
     const commData =
@@ -169,7 +184,7 @@ export const encodePacket = ({
       payload;
     const crc = intToUintByte(
       crc16(Buffer.from(commData, 'hex')),
-      usableConfig.radix.crc
+      usableConfig.radix.crc,
     );
     const packet = START_OF_FRAME + crc + commData;
 
@@ -180,7 +195,7 @@ export const encodePacket = ({
 
 export const decodePacket = (
   param: Uint8Array,
-  version: PacketVersion
+  version: PacketVersion,
 ): DecodedPacketData[] => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
@@ -190,7 +205,7 @@ export const decodePacket = (
 
   const { START_OF_FRAME } = usableConfig.constants;
 
-  let data = uint8ArrayToHex(param).toUpperCase();
+  let data = uint8ArrayToHex(param).toLowerCase();
   const packetList: DecodedPacketData[] = [];
   let offset = data.indexOf(START_OF_FRAME);
 
@@ -211,42 +226,42 @@ export const decodePacket = (
     const currentPacketNumber = parseInt(
       `0x${data.slice(
         offset,
-        offset + usableConfig.radix.currentPacketNumber / 4
+        offset + usableConfig.radix.currentPacketNumber / 4,
       )}`,
-      16
+      16,
     );
     offset += usableConfig.radix.currentPacketNumber / 4;
 
     const totalPacketNumber = parseInt(
       `0x${data.slice(offset, offset + usableConfig.radix.totalPacket / 4)}`,
-      16
+      16,
     );
     offset += usableConfig.radix.totalPacket / 4;
 
     const sequenceNumber = parseInt(
       `0x${data.slice(offset, offset + usableConfig.radix.sequenceNumber / 4)}`,
-      16
+      16,
     );
     offset += usableConfig.radix.sequenceNumber / 4;
 
     const packetType = parseInt(
       `0x${data.slice(offset, offset + usableConfig.radix.packetType / 4)}`,
-      16
+      16,
     );
     offset += usableConfig.radix.packetType / 4;
 
     const timestamp = parseInt(
       `0x${data.slice(
         offset,
-        offset + usableConfig.radix.timestampLength / 4
+        offset + usableConfig.radix.timestampLength / 4,
       )}`,
-      16
+      16,
     );
     offset += usableConfig.radix.timestampLength / 4;
 
     const payloadLength = parseInt(
       `0x${data.slice(offset, offset + usableConfig.radix.payloadLength / 4)}`,
-      16
+      16,
     );
     offset += usableConfig.radix.payloadLength / 4;
 
@@ -261,7 +276,7 @@ export const decodePacket = (
     const commData =
       intToUintByte(
         currentPacketNumber,
-        usableConfig.radix.currentPacketNumber
+        usableConfig.radix.currentPacketNumber,
       ) +
       intToUintByte(totalPacketNumber, usableConfig.radix.totalPacket) +
       intToUintByte(sequenceNumber, usableConfig.radix.sequenceNumber) +
@@ -271,11 +286,11 @@ export const decodePacket = (
       payloadData;
     const actualCRC = intToUintByte(
       crc16(Buffer.from(commData, 'hex')),
-      usableConfig.radix.crc
+      usableConfig.radix.crc,
     );
 
     const errorList = [];
-    if (startOfFrame.toUpperCase() !== START_OF_FRAME) {
+    if (startOfFrame.toUpperCase() !== START_OF_FRAME.toUpperCase()) {
       errorList.push('Invalid Start of frame');
     }
     if (currentPacketNumber > totalPacketNumber) {
@@ -293,13 +308,17 @@ export const decodePacket = (
       errorList,
       sequenceNumber,
       packetType,
-      timestamp
+      timestamp,
     });
   }
   return packetList;
 };
 
 export const decodePayloadData = (payload: string, version: PacketVersion) => {
+  assert(payload, 'Invalid payload');
+  assert(version, 'Invalid version');
+  assert(isHex(payload), 'Invalid hex in payload');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -311,24 +330,24 @@ export const decodePayloadData = (payload: string, version: PacketVersion) => {
   const protobufDataSize = parseInt(
     `0x${payload.slice(
       payloadOffset,
-      payloadOffset + usableConfig.radix.dataSize / 4
+      payloadOffset + usableConfig.radix.dataSize / 4,
     )}`,
-    16
+    16,
   );
   payloadOffset += usableConfig.radix.dataSize / 4;
 
   const rawDataSize = parseInt(
     `0x${payload.slice(
       payloadOffset,
-      payloadOffset + usableConfig.radix.dataSize / 4
+      payloadOffset + usableConfig.radix.dataSize / 4,
     )}`,
-    16
+    16,
   );
   payloadOffset += usableConfig.radix.dataSize / 4;
 
   const protobufData = payload.slice(
     payloadOffset,
-    payloadOffset + protobufDataSize * 2
+    payloadOffset + protobufDataSize * 2,
   );
   payloadOffset += protobufDataSize * 2;
 
@@ -337,6 +356,6 @@ export const decodePayloadData = (payload: string, version: PacketVersion) => {
 
   return {
     protobufData,
-    rawData
+    rawData,
   };
 };

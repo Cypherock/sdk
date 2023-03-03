@@ -1,7 +1,7 @@
 import {
   DeviceCommunicationError,
   DeviceCommunicationErrorType,
-  IDeviceConnection
+  IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import * as bootloaderOperations from './operations/bootloader';
 import * as legacyOperations from './operations/legacy';
@@ -10,7 +10,7 @@ import * as rawOperations from './operations/raw';
 import {
   isSDKSupported,
   getPacketVersionFromSDK,
-  formatSDKVersion
+  formatSDKVersion,
 } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 
@@ -31,7 +31,7 @@ export default class SDK {
     connection: IDeviceConnection,
     version: string,
     packetVersion: PacketVersion,
-    appletId?: number
+    appletId?: number,
   ) {
     this.connection = connection;
     this.version = version;
@@ -49,7 +49,7 @@ export default class SDK {
       connection,
       sdkData.sdkVersion,
       sdkData.packetVersion,
-      appletId
+      appletId,
     );
   }
 
@@ -70,7 +70,7 @@ export default class SDK {
       this.connection,
       command,
       data,
-      PacketVersionMap.v1
+      PacketVersionMap.v1,
     );
   }
 
@@ -79,7 +79,7 @@ export default class SDK {
       this.connection,
       commands,
       PacketVersionMap.v1,
-      timeout
+      timeout,
     );
   }
 
@@ -103,7 +103,7 @@ export default class SDK {
       commandType: params.commandType,
       sequenceNumber: params.sequenceNumber,
       version: this.packetVersion,
-      maxTries: params.maxTries
+      maxTries: params.maxTries,
     });
   }
 
@@ -111,7 +111,7 @@ export default class SDK {
     const resp = await rawOperations.getCommandOutput({
       connection: this.connection,
       sequenceNumber,
-      version: this.packetVersion
+      version: this.packetVersion,
     });
 
     return resp;
@@ -127,7 +127,7 @@ export default class SDK {
     const resp = await rawOperations.waitForCommandOutput({
       connection: this.connection,
       version: this.packetVersion,
-      ...params
+      ...params,
     });
 
     return resp;
@@ -136,7 +136,7 @@ export default class SDK {
   public getCommandStatus() {
     return rawOperations.getStatus({
       connection: this.connection,
-      version: this.packetVersion
+      version: this.packetVersion,
     });
   }
 
@@ -155,7 +155,7 @@ export default class SDK {
       appletId: this.appletId,
       sequenceNumber: params.sequenceNumber,
       version: this.packetVersion,
-      maxTries: params.maxTries
+      maxTries: params.maxTries,
     });
   }
 
@@ -168,7 +168,7 @@ export default class SDK {
       connection: this.connection,
       appletId: this.appletId,
       sequenceNumber,
-      version: this.packetVersion
+      version: this.packetVersion,
     });
 
     return resp;
@@ -188,7 +188,7 @@ export default class SDK {
       connection: this.connection,
       version: this.packetVersion,
       appletId: this.appletId,
-      ...params
+      ...params,
     });
 
     return resp;
@@ -197,7 +197,7 @@ export default class SDK {
   public getStatus() {
     return operations.getStatus({
       connection: this.connection,
-      version: this.packetVersion
+      version: this.packetVersion,
     });
   }
 
@@ -207,12 +207,12 @@ export default class SDK {
 
   public sendBootloaderData(
     data: string,
-    onProgress?: (progress: number) => void
+    onProgress?: (progress: number) => void,
   ) {
     return bootloaderOperations.stmUpdateSendData(
       this.connection,
       data,
-      onProgress
+      onProgress,
     );
   }
 
@@ -220,7 +220,7 @@ export default class SDK {
     let retries = 0;
     const maxTries = 2;
     let firstError: Error = new DeviceCommunicationError(
-      DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR
+      DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR,
     );
 
     await connection.beforeOperation();
@@ -231,14 +231,14 @@ export default class SDK {
           88,
           '00',
           PacketVersionMap.v1,
-          2
+          2,
         );
 
         const sdkVersionData = await legacyOperations.receiveCommand(
           connection,
           [88],
           PacketVersionMap.v1,
-          5000
+          5000,
         );
 
         const sdkVersion = formatSDKVersion(sdkVersionData.data);
@@ -248,7 +248,7 @@ export default class SDK {
         await connection.afterOperation();
         return {
           sdkVersion,
-          packetVersion: packetVersion ?? PacketVersionMap.v1
+          packetVersion: packetVersion ?? PacketVersionMap.v1,
         };
       } catch (error) {
         retries += 1;

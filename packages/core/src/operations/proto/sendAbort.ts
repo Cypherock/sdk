@@ -1,10 +1,14 @@
-import { IDeviceConnection , DeviceAppError , DeviceAppErrorType } from '@cypherock/sdk-interfaces';
+import {
+  IDeviceConnection,
+  DeviceAppError,
+  DeviceAppErrorType,
+} from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import {
   hexToUint8Array,
   logger,
   PacketVersion,
-  PacketVersionMap
+  PacketVersionMap,
 } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 import { Status } from '../../encoders/proto/generated/core';
@@ -16,7 +20,7 @@ export const sendAbort = async ({
   connection,
   version,
   sequenceNumber,
-  maxTries = 2
+  maxTries = 2,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
@@ -34,7 +38,7 @@ export const sendAbort = async ({
     version,
     sequenceNumber,
     packetType: usableConfig.commands.PACKET_TYPE.ABORT,
-    isProto: false
+    isProto: false,
   });
 
   if (packetsList.length === 0) {
@@ -61,12 +65,12 @@ export const sendAbort = async ({
         packet,
         version,
         sequenceNumber,
-        ackPacketTypes: [usableConfig.commands.PACKET_TYPE.STATUS]
+        ackPacketTypes: [usableConfig.commands.PACKET_TYPE.STATUS],
       });
 
       const { protobufData } = decodePayloadData(
         receivedPacket.payloadData,
-        version
+        version,
       );
       status = Status.decode(hexToUint8Array(protobufData));
 

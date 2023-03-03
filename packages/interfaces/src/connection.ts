@@ -1,13 +1,13 @@
 export const ConnectionTypeMap = {
   SERIAL_PORT: 'serial',
   HID: 'hid',
-  WEBUSB: 'webusb'
+  WEBUSB: 'webusb',
 };
 
 export enum DeviceState {
   BOOTLOADER,
   INITIAL,
-  MAIN
+  MAIN,
 }
 
 export interface PoolData {

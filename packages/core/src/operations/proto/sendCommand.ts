@@ -9,7 +9,7 @@ export const sendCommand = async ({
   data,
   version,
   maxTries = 5,
-  sequenceNumber
+  sequenceNumber,
 }: {
   connection: IDeviceConnection;
   appletId: number;
@@ -19,7 +19,7 @@ export const sendCommand = async ({
   maxTries?: number;
 }): Promise<void> => {
   const rawEncodedData = uint8ArrayToHex(
-    Query.encode(Query.create({ cmd: { appletId, data } })).finish()
+    Query.encode(Query.create({ cmd: { appletId, data } })).finish(),
   );
 
   return sendCommandHelper({
@@ -28,6 +28,6 @@ export const sendCommand = async ({
     version,
     maxTries,
     sequenceNumber,
-    isProto: true
+    isProto: true,
   });
 };

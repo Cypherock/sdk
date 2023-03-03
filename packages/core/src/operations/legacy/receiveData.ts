@@ -3,12 +3,12 @@ import {
   DeviceConnectionErrorType,
   DeviceCommunicationError,
   DeviceCommunicationErrorType,
-  IDeviceConnection
+  IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { PacketVersion, logger } from '../../utils';
 import {
   xmodemDecode,
-  LegacyDecodedPacketData
+  LegacyDecodedPacketData,
 } from '../../encoders/packet/legacy';
 import * as config from '../../config';
 
@@ -21,13 +21,13 @@ export const receiveCommand = (
   connection: IDeviceConnection,
   allAcceptableCommands: number[],
   version: PacketVersion,
-  timeout: number = DEFAULT_RECEIVE_TIMEOUT
+  timeout: number = DEFAULT_RECEIVE_TIMEOUT,
 ) => {
   const resData: string[] = [];
 
   if (!connection.isConnected()) {
     throw new DeviceConnectionError(
-      DeviceConnectionErrorType.CONNECTION_CLOSED
+      DeviceConnectionErrorType.CONNECTION_CLOSED,
     );
   }
 
@@ -35,7 +35,7 @@ export const receiveCommand = (
     (resolve, reject) => {
       if (!connection.isConnected()) {
         reject(
-          new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED)
+          new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED),
         );
         return;
       }
@@ -57,8 +57,8 @@ export const receiveCommand = (
           cleanUp();
           reject(
             new DeviceCommunicationError(
-              DeviceCommunicationErrorType.READ_TIMEOUT
-            )
+              DeviceCommunicationErrorType.READ_TIMEOUT,
+            ),
           );
         }, timeout);
       }
@@ -72,11 +72,11 @@ export const receiveCommand = (
             if (commandType === 49) {
               logger.info(`Received command (${commandType})`);
               logger.debug(
-                `Received command (${commandType}) : ${resData.join('')}`
+                `Received command (${commandType}) : ${resData.join('')}`,
               );
             } else {
               logger.info(
-                `Received command (${commandType}) : ${resData.join('')}`
+                `Received command (${commandType}) : ${resData.join('')}`,
               );
             }
             cleanUp();
@@ -93,8 +93,8 @@ export const receiveCommand = (
           if (!connection.isConnected()) {
             reject(
               new DeviceConnectionError(
-                DeviceConnectionErrorType.CONNECTION_CLOSED
-              )
+                DeviceConnectionErrorType.CONNECTION_CLOSED,
+              ),
             );
             return;
           }
@@ -103,7 +103,7 @@ export const receiveCommand = (
           if (!data) {
             recheckTimeout = setTimeout(
               recheckPacket,
-              config.v1.constants.RECHECK_TIME
+              config.v1.constants.RECHECK_TIME,
             );
             return;
           }
@@ -121,23 +121,23 @@ export const receiveCommand = (
           if (!isDone) {
             recheckTimeout = setTimeout(
               recheckPacket,
-              config.v1.constants.RECHECK_TIME
+              config.v1.constants.RECHECK_TIME,
             );
           }
         } catch (error) {
           cleanUp();
           reject(
             new DeviceCommunicationError(
-              DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR
-            )
+              DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR,
+            ),
           );
         }
       }
 
       recheckTimeout = setTimeout(
         recheckPacket,
-        config.v1.constants.RECHECK_TIME
+        config.v1.constants.RECHECK_TIME,
       );
-    }
+    },
   );
 };

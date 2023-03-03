@@ -3,7 +3,7 @@ import {
   DeviceCommunicationErrorType,
   DeviceConnectionError,
   DeviceConnectionErrorType,
-  IDeviceConnection
+  IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { DecodedPacketData } from '../../encoders/packet';
@@ -15,7 +15,7 @@ export const writeCommand = async ({
   packet,
   version,
   sequenceNumber,
-  ackPacketTypes: packetTypes
+  ackPacketTypes: packetTypes,
 }: {
   connection: IDeviceConnection;
   packet: Uint8Array;
@@ -29,7 +29,7 @@ export const writeCommand = async ({
 
   if (!connection.isConnected()) {
     throw new DeviceConnectionError(
-      DeviceConnectionErrorType.CONNECTION_CLOSED
+      DeviceConnectionErrorType.CONNECTION_CLOSED,
     );
   }
 
@@ -39,18 +39,22 @@ export const writeCommand = async ({
       connection,
       version,
       packetTypes,
-      sequenceNumber
+      sequenceNumber,
     });
 
     connection.send(packet).catch(error => {
       logger.error(error);
       if (!connection.isConnected()) {
         reject(
-          new DeviceConnectionError(DeviceConnectionErrorType.CONNECTION_CLOSED)
+          new DeviceConnectionError(
+            DeviceConnectionErrorType.CONNECTION_CLOSED,
+          ),
         );
       } else {
         reject(
-          new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_ERROR)
+          new DeviceCommunicationError(
+            DeviceCommunicationErrorType.WRITE_ERROR,
+          ),
         );
       }
       ackPromise.cancel();

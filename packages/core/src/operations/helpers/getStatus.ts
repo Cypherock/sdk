@@ -10,7 +10,7 @@ export const getStatus = async ({
   connection,
   version,
   maxTries = 5,
-  logsDisabled = false
+  logsDisabled = false,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
@@ -30,7 +30,7 @@ export const getStatus = async ({
     version,
     sequenceNumber: -1,
     packetType: usableConfig.commands.PACKET_TYPE.STATUS_REQ,
-    isProto: false
+    isProto: false,
   });
 
   if (packetsList.length === 0) {
@@ -57,7 +57,7 @@ export const getStatus = async ({
         packet,
         version,
         sequenceNumber: -1,
-        ackPacketTypes: [usableConfig.commands.PACKET_TYPE.STATUS]
+        ackPacketTypes: [usableConfig.commands.PACKET_TYPE.STATUS],
       });
       finalData = receivedPacket.payloadData;
       isSuccess = true;

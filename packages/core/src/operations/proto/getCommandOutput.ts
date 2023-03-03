@@ -1,7 +1,7 @@
 import {
   DeviceAppError,
   DeviceAppErrorType,
-  IDeviceConnection
+  IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { hexToUint8Array, PacketVersion } from '../../utils';
 import { Status, Result } from '../../encoders/proto/generated/core';
@@ -12,7 +12,7 @@ export const getCommandOutput = async ({
   version,
   maxTries = 5,
   sequenceNumber,
-  appletId
+  appletId,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
@@ -24,7 +24,7 @@ export const getCommandOutput = async ({
     connection,
     version,
     maxTries,
-    sequenceNumber
+    sequenceNumber,
   });
 
   let output: Uint8Array | Status;

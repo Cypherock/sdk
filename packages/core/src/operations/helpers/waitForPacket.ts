@@ -5,7 +5,7 @@ import {
   DeviceCommunicationErrorType,
   IDeviceConnection,
   DeviceAppError,
-  DeviceAppErrorType
+  DeviceAppErrorType,
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
@@ -14,7 +14,7 @@ import {
   decodePacket,
   decodePayloadData,
   ErrorPacketRejectReason,
-  RejectReasonToMsgMap
+  RejectReasonToMsgMap,
 } from '../../encoders/packet';
 
 export interface CancellablePromise<T> extends Promise<T> {
@@ -26,7 +26,7 @@ export const waitForPacket = ({
   connection,
   version,
   packetTypes,
-  sequenceNumber
+  sequenceNumber,
 }: {
   connection: IDeviceConnection;
   sequenceNumber: number;
@@ -41,7 +41,7 @@ export const waitForPacket = ({
 
   if (!connection.isConnected()) {
     throw new DeviceConnectionError(
-      DeviceConnectionErrorType.CONNECTION_CLOSED
+      DeviceConnectionErrorType.CONNECTION_CLOSED,
     );
   }
 
@@ -54,7 +54,7 @@ export const waitForPacket = ({
    */
   const promiseFunc = (
     resolve: (val: DecodedPacketData) => void,
-    reject: (reason?: Error) => void
+    reject: (reason?: Error) => void,
   ) => {
     let timeout: NodeJS.Timeout | undefined;
     let recheckTimeout: NodeJS.Timeout | undefined;
@@ -73,8 +73,8 @@ export const waitForPacket = ({
         if (!connection.isConnected()) {
           reject(
             new DeviceConnectionError(
-              DeviceConnectionErrorType.CONNECTION_CLOSED
-            )
+              DeviceConnectionErrorType.CONNECTION_CLOSED,
+            ),
           );
           return;
         }
@@ -83,7 +83,7 @@ export const waitForPacket = ({
         if (!rawPacket) {
           recheckTimeout = setTimeout(
             recheckPacket,
-            usableConfig.constants.RECHECK_TIME
+            usableConfig.constants.RECHECK_TIME,
           );
           return;
         }
@@ -99,12 +99,12 @@ export const waitForPacket = ({
             if (packet.packetType === usableConfig.commands.PACKET_TYPE.ERROR) {
               logger.warn('Error packet', packet);
               error = new DeviceCommunicationError(
-                DeviceCommunicationErrorType.WRITE_REJECTED
+                DeviceCommunicationErrorType.WRITE_REJECTED,
               );
 
               const { rawData } = decodePayloadData(
                 packet.payloadData,
-                version
+                version,
               );
 
               const rejectStatus = parseInt(`0x${rawData}`, 16);
@@ -160,7 +160,7 @@ export const waitForPacket = ({
         } else {
           recheckTimeout = setTimeout(
             recheckPacket,
-            usableConfig.constants.RECHECK_TIME
+            usableConfig.constants.RECHECK_TIME,
           );
         }
       } catch (error) {
@@ -168,14 +168,14 @@ export const waitForPacket = ({
         logger.error(error);
         recheckTimeout = setTimeout(
           recheckPacket,
-          usableConfig.constants.RECHECK_TIME
+          usableConfig.constants.RECHECK_TIME,
         );
       }
     }
 
     if (!connection.isConnected()) {
       throw new DeviceConnectionError(
-        DeviceConnectionErrorType.CONNECTION_CLOSED
+        DeviceConnectionErrorType.CONNECTION_CLOSED,
       );
     }
 
@@ -184,20 +184,22 @@ export const waitForPacket = ({
 
       if (!connection.isConnected()) {
         reject(
-          new DeviceConnectionError(DeviceConnectionErrorType.CONNECTION_CLOSED)
+          new DeviceConnectionError(
+            DeviceConnectionErrorType.CONNECTION_CLOSED,
+          ),
         );
       } else {
         reject(
           new DeviceCommunicationError(
-            DeviceCommunicationErrorType.READ_TIMEOUT
-          )
+            DeviceCommunicationErrorType.READ_TIMEOUT,
+          ),
         );
       }
     }, usableConfig.constants.ACK_TIME);
 
     recheckTimeout = setTimeout(
       recheckPacket,
-      usableConfig.constants.RECHECK_TIME
+      usableConfig.constants.RECHECK_TIME,
     );
 
     onCancel = () => {
@@ -210,7 +212,7 @@ export const waitForPacket = ({
   const promise = new Promise<DecodedPacketData>(promiseFunc);
   const cancelablePromise = Object.assign(promise, {
     cancel: onCancel,
-    isCancelled: () => isCancelled
+    isCancelled: () => isCancelled,
   });
 
   return cancelablePromise;

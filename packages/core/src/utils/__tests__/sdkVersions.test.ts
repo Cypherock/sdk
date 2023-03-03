@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
-import { isSDKSupported, getPacketVersionFromSDK } from './sdkVersions';
-import { PacketVersionMap } from './packetVersions';
+import { isSDKSupported, getPacketVersionFromSDK } from '../sdkVersions';
+import { PacketVersionMap } from '../packetVersions';
 
 interface Range {
   min: number;
@@ -39,8 +39,8 @@ describe('SDK Version', () => {
           generateRandomVersion(
             { min: 2, max: 2 },
             { min: 6, max: 999 },
-            { min: 0, max: 999 }
-          )
+            { min: 0, max: 999 },
+          ),
         );
       versions.push(
         ...new Array(200)
@@ -49,9 +49,9 @@ describe('SDK Version', () => {
             generateRandomVersion(
               { min: 3, max: 3 },
               { min: 0, max: 0 },
-              { min: 0, max: 999 }
-            )
-          )
+              { min: 0, max: 999 },
+            ),
+          ),
       );
 
       for (const version of versions) {
@@ -69,8 +69,8 @@ describe('SDK Version', () => {
           generateRandomVersion(
             { min: 3, max: 100 },
             { min: 1, max: 999 },
-            { min: 0, max: 999 }
-          )
+            { min: 0, max: 999 },
+          ),
         );
 
       for (const version of versions) {
@@ -88,8 +88,8 @@ describe('SDK Version', () => {
           generateRandomVersion(
             { min: 2, max: 2 },
             { min: 0, max: 5 },
-            { min: 0, max: 999 }
-          )
+            { min: 0, max: 999 },
+          ),
         );
 
       for (let i = 0; i < 200; i += 1) {
@@ -97,8 +97,8 @@ describe('SDK Version', () => {
           generateRandomVersion(
             { min: 0, max: 1 },
             { min: 0, max: 999 },
-            { min: 0, max: 999 }
-          )
+            { min: 0, max: 999 },
+          ),
         );
       }
 
@@ -107,6 +107,14 @@ describe('SDK Version', () => {
         expect(result).toBeDefined();
         expect(result.isNewer).toEqual(false);
         expect(result.isSupported).toEqual(false);
+      }
+    });
+
+    test('should throw error with invalid arguments', () => {
+      const testCases: any[] = [null, undefined, '', 'asd', '1.asd'];
+
+      for (const testCase of testCases) {
+        expect(() => isSDKSupported(testCase)).toThrow();
       }
     });
   });
@@ -119,8 +127,8 @@ describe('SDK Version', () => {
           generateRandomVersion(
             { min: 1, max: 1 },
             { min: 0, max: 999 },
-            { min: 0, max: 999 }
-          )
+            { min: 0, max: 999 },
+          ),
         );
 
       for (const version of versions) {
@@ -137,8 +145,8 @@ describe('SDK Version', () => {
           generateRandomVersion(
             { min: 2, max: 3 },
             { min: 0, max: 999 },
-            { min: 0, max: 999 }
-          )
+            { min: 0, max: 999 },
+          ),
         );
 
       for (const version of versions) {
@@ -155,8 +163,8 @@ describe('SDK Version', () => {
           generateRandomVersion(
             { min: 4, max: 999 },
             { min: 0, max: 999 },
-            { min: 0, max: 999 }
-          )
+            { min: 0, max: 999 },
+          ),
         );
 
       for (let i = 0; i < 200; i += 1) {
@@ -164,14 +172,21 @@ describe('SDK Version', () => {
           generateRandomVersion(
             { min: 0, max: 0 },
             { min: 0, max: 999 },
-            { min: 0, max: 999 }
-          )
+            { min: 0, max: 999 },
+          ),
         );
       }
 
       for (const version of versions) {
         const result = getPacketVersionFromSDK(version);
         expect(result).toBeUndefined();
+      }
+    });
+
+    test('should throw error with invalid arguments', () => {
+      const testCases: any[] = [null, undefined, '', 'asd', '1.asd'];
+      for (const testCase of testCases) {
+        expect(() => getPacketVersionFromSDK(testCase)).toThrow();
       }
     });
   });

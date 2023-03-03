@@ -1,7 +1,7 @@
 import {
   DeviceConnectionError,
   DeviceConnectionErrorType,
-  PoolData
+  PoolData,
 } from '@cypherock/sdk-interfaces';
 import * as uuid from 'uuid';
 
@@ -47,7 +47,7 @@ export class DataListener {
 
     if (!connection.configuration) {
       throw new DeviceConnectionError(
-        DeviceConnectionErrorType.FAILED_TO_CONNECT
+        DeviceConnectionErrorType.FAILED_TO_CONNECT,
       );
     }
 
@@ -76,14 +76,14 @@ export class DataListener {
       recipient: 'interface',
       request: 0x22,
       value: 0x01,
-      index: interfaceNumber
+      index: interfaceNumber,
     });
 
     return new DataListener({
       connection,
       interfaceNumber,
       endpointIn,
-      endpointOut
+      endpointOut,
     });
   }
 

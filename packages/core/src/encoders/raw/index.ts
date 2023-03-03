@@ -6,7 +6,7 @@ export * from './types';
 
 export const decodeStatus = (
   data: string,
-  version: PacketVersion
+  version: PacketVersion,
 ): StatusData => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
@@ -19,9 +19,9 @@ export const decodeStatus = (
   const deviceState = parseInt(
     `0x${data.slice(
       offset,
-      offset + usableConfig.radix.status.deviceState / 4
+      offset + usableConfig.radix.status.deviceState / 4,
     )}`,
-    16
+    16,
   );
   offset += usableConfig.radix.status.deviceState / 4;
 
@@ -33,33 +33,33 @@ export const decodeStatus = (
     parseInt(
       `0x${data.slice(
         offset,
-        offset + usableConfig.radix.status.abortDisabled / 4
+        offset + usableConfig.radix.status.abortDisabled / 4,
       )}`,
-      16
+      16,
     ) === 1;
   offset += usableConfig.radix.status.abortDisabled / 4;
 
   const currentCmdSeq = parseInt(
     `0x${data.slice(
       offset,
-      offset + usableConfig.radix.status.currentCmdSeq / 4
+      offset + usableConfig.radix.status.currentCmdSeq / 4,
     )}`,
-    16
+    16,
   );
   offset += usableConfig.radix.status.currentCmdSeq / 4;
 
   const cmdState = parseInt(
     `0x${data.slice(offset, offset + usableConfig.radix.status.cmdState / 4)}`,
-    16
+    16,
   );
   offset += usableConfig.radix.status.cmdState / 4;
 
   const flowStatus = parseInt(
     `0x${data.slice(
       offset,
-      offset + usableConfig.radix.status.flowStatus / 4
+      offset + usableConfig.radix.status.flowStatus / 4,
     )}`,
-    16
+    16,
   );
   offset += usableConfig.radix.status.flowStatus / 4;
 
@@ -71,7 +71,7 @@ export const decodeStatus = (
     currentCmdSeq,
     cmdState,
     flowStatus,
-    isStatus: true
+    isStatus: true,
   };
 
   return status;
@@ -79,7 +79,7 @@ export const decodeStatus = (
 
 export const encodeRawData = (
   params: RawData,
-  version: PacketVersion
+  version: PacketVersion,
 ): string => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
@@ -95,7 +95,7 @@ export const encodeRawData = (
 
 export const decodeRawData = (
   params: string,
-  version: PacketVersion
+  version: PacketVersion,
 ): RawData => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
@@ -107,7 +107,7 @@ export const decodeRawData = (
 
   const receivedCommandType = parseInt(
     params.slice(offset, offset + usableConfig.radix.commandType / 4),
-    16
+    16,
   );
   offset += usableConfig.radix.commandType / 4;
 
@@ -116,6 +116,6 @@ export const decodeRawData = (
   return {
     commandType: receivedCommandType,
     data: receivedData,
-    isRawData: true
+    isRawData: true,
   };
 };

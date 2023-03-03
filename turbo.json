@@ -17,6 +17,10 @@
       "inputs": ["."],
       "outputs": []
     },
+    "pretty": {
+      "inputs": ["."],
+      "outputs": []
+    },
     "dev": {
       "cache": false
     },

@@ -8,7 +8,7 @@ export enum DeviceBootloaderErrorType {
   FLASH_WRITE_ERROR = 'BTL_0106',
   FLASH_CRC_MISMATCH = 'BTL_0107',
   FLASH_TIMEOUT_ERROR = 'BTL_0108',
-  FLASH_NACK = 'BTL_0109'
+  FLASH_NACK = 'BTL_0109',
 }
 
 type CodeToErrorMap = {
@@ -21,44 +21,44 @@ type CodeToErrorMap = {
 const errorObjects: CodeToErrorMap = {
   [DeviceBootloaderErrorType.FIRMWARE_SIZE_LIMIT_EXCEEDED]: {
     message: 'Firmware Size Limit Exceed',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceBootloaderErrorType.WRONG_HARDWARE_VERSION]: {
     message: 'Wrong Hardware version',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceBootloaderErrorType.WRONG_MAGIC_NUMBER]: {
     message: 'Wrong Magic Number',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceBootloaderErrorType.SIGNATURE_NOT_VERIFIED]: {
     message: 'Signature not verified',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceBootloaderErrorType.LOWER_FIRMWARE_VERSION]: {
     message: 'Lower Firmware version',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceBootloaderErrorType.FLASH_WRITE_ERROR]: {
     message: 'Flash Write Error',
-    doRetry: true
+    doRetry: true,
   },
   [DeviceBootloaderErrorType.FLASH_CRC_MISMATCH]: {
     message: 'Flash CRC Mismatch',
-    doRetry: true
+    doRetry: true,
   },
   [DeviceBootloaderErrorType.FLASH_TIMEOUT_ERROR]: {
     message: 'Flash Timeout Error',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceBootloaderErrorType.FLASH_NACK]: {
     message: 'Flash Negative Acknowledgement',
-    doRetry: true
+    doRetry: true,
   },
   [DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE]: {
     message: 'The device is in fault state',
-    doRetry: false
-  }
+    doRetry: false,
+  },
 };
 
 export class DeviceBootloaderError extends Error {

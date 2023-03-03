@@ -14,12 +14,12 @@ export const v1 = {
   addCoins: {
     wallet: 128,
     noOfCoins: 8,
-    coinType: 32
+    coinType: 32,
   },
   receiveAddress: {
     coinType: 32,
-    accountIndex: 32
-  }
+    accountIndex: 32,
+  },
 };
 
 export const v2 = {
@@ -38,12 +38,12 @@ export const v2 = {
   addCoins: {
     wallet: 128,
     noOfCoins: 8,
-    coinType: 32
+    coinType: 32,
   },
   receiveAddress: {
     coinType: 32,
-    accountIndex: 32
-  }
+    accountIndex: 32,
+  },
 };
 
 export const v3 = {
@@ -61,8 +61,8 @@ export const v3 = {
     abortDisabled: 8,
     currentCmdSeq: 16,
     cmdState: 8,
-    flowStatus: 16
-  }
+    flowStatus: 16,
+  },
 };
 
 export default v1;

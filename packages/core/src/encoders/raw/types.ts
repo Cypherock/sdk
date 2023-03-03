@@ -5,19 +5,19 @@ export enum CmdState {
   CMD_STATE_EXECUTING = 3,
   CMD_STATE_DONE = 4,
   CMD_STATE_FAILED = 5,
-  CMD_STATE_INVALID_CMD = 6
+  CMD_STATE_INVALID_CMD = 6,
 }
 
 export enum DeviceWaitOn {
   IDLE = 1,
   BUSY_IP_CARD = 2,
-  BUSY_IP_KEY = 3
+  BUSY_IP_KEY = 3,
 }
 
 export enum DeviceIdleState {
   IDLE = 1,
   USB = 2,
-  DEVICE = 3
+  DEVICE = 3,
 }
 
 export interface StatusData {

@@ -3,7 +3,7 @@ import {
   DeviceAppErrorType,
   DeviceCommunicationError,
   DeviceCommunicationErrorType,
-  DeviceConnectionError
+  DeviceConnectionError,
 } from '@cypherock/sdk-interfaces';
 
 const canRetry = (error: Error) => {
@@ -20,7 +20,7 @@ const canRetry = (error: Error) => {
     error instanceof DeviceAppError &&
     [
       DeviceAppErrorType.PROCESS_ABORTED,
-      DeviceAppErrorType.DEVICE_ABORT
+      DeviceAppErrorType.DEVICE_ABORT,
     ].includes((error as DeviceAppError).code);
 
   return !dontRetry;

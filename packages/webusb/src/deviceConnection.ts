@@ -1,10 +1,11 @@
-import { IDeviceConnection, DeviceState, ConnectionTypeMap } from '@cypherock/sdk-interfaces';
+import {
+  IDeviceConnection,
+  DeviceState,
+  ConnectionTypeMap,
+} from '@cypherock/sdk-interfaces';
 import * as uuid from 'uuid';
 
-import {
-  createPort,
-  DataListener
-} from './helpers';
+import { createPort, DataListener } from './helpers';
 
 export default class DeviceConnection implements IDeviceConnection {
   protected deviceState: DeviceState;
@@ -36,7 +37,7 @@ export default class DeviceConnection implements IDeviceConnection {
   public getConnectionType() {
     return ConnectionTypeMap.WEBUSB;
   }
-  
+
   public static async connect(connection: USBDevice) {
     const dataListener = await DataListener.create(connection);
     return new DeviceConnection(connection, dataListener);

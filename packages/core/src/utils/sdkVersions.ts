@@ -1,4 +1,5 @@
-import { compare, compareVersions } from 'compare-versions';
+import { compare, compareVersions, validate } from 'compare-versions';
+import assert from './assert';
 
 import { PacketVersion, PacketVersionMap } from './packetVersions';
 
@@ -6,6 +7,9 @@ import { PacketVersion, PacketVersionMap } from './packetVersions';
 const supportedVersionRange = { from: '2.6.0', to: '3.1.0' };
 
 export const isSDKSupported = (version: string) => {
+  assert(version, 'Invalid version');
+  assert(validate(version), 'Invalid version');
+
   const isNewer = compare(version, supportedVersionRange.to, '>=');
   const isOlder = compare(version, supportedVersionRange.from, '<');
 
@@ -27,8 +31,11 @@ const SdkToPacketVersionMap: {
 ];
 
 export const getPacketVersionFromSDK = (
-  sdkVersion: string
+  sdkVersion: string,
 ): PacketVersion | undefined => {
+  assert(sdkVersion, 'Invalid sdkVersion');
+  assert(validate(sdkVersion), 'Invalid sdkVersion');
+
   for (const elem of SdkToPacketVersionMap) {
     let enabled = compareVersions(elem.from, sdkVersion) < 1;
     if (elem.to) enabled = enabled && compareVersions(elem.to, sdkVersion) > 0;

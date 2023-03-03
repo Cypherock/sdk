@@ -3,7 +3,7 @@ import {
   DeviceCommunicationErrorType,
   DeviceConnectionError,
   DeviceConnectionErrorType,
-  IDeviceConnection
+  IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { hexToUint8Array, logger, uint8ArrayToHex } from '../../utils';
 import * as config from '../../config';
@@ -17,7 +17,7 @@ const ACK_PACKET = '18';
 const writePacket = (
   connection: IDeviceConnection,
   packet: Uint8Array,
-  options?: { timeout?: number }
+  options?: { timeout?: number },
 ): Promise<Error | undefined> =>
   new Promise((resolve, reject) => {
     /**
@@ -37,7 +37,7 @@ const writePacket = (
 
     if (!connection.isConnected()) {
       throw new DeviceConnectionError(
-        DeviceConnectionErrorType.CONNECTION_CLOSED
+        DeviceConnectionErrorType.CONNECTION_CLOSED,
       );
     }
 
@@ -46,8 +46,8 @@ const writePacket = (
         if (!connection.isConnected()) {
           reject(
             new DeviceConnectionError(
-              DeviceConnectionErrorType.CONNECTION_CLOSED
-            )
+              DeviceConnectionErrorType.CONNECTION_CLOSED,
+            ),
           );
           return;
         }
@@ -55,7 +55,7 @@ const writePacket = (
         if (!rawPacket) {
           recheckTimeout = setTimeout(
             recheckPacket,
-            config.v1.constants.RECHECK_TIME
+            config.v1.constants.RECHECK_TIME,
           );
           return;
         }
@@ -69,14 +69,14 @@ const writePacket = (
 
         recheckTimeout = setTimeout(
           recheckPacket,
-          config.v1.constants.RECHECK_TIME
+          config.v1.constants.RECHECK_TIME,
         );
       } catch (error) {
         logger.error('Error while processing data from device');
         logger.error(error);
         recheckTimeout = setTimeout(
           recheckPacket,
-          config.v1.constants.RECHECK_TIME
+          config.v1.constants.RECHECK_TIME,
         );
       }
     }
@@ -89,13 +89,15 @@ const writePacket = (
     timeout = setTimeout(() => {
       cleanUp();
       reject(
-        new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_TIMEOUT)
+        new DeviceCommunicationError(
+          DeviceCommunicationErrorType.WRITE_TIMEOUT,
+        ),
       );
     }, options?.timeout ?? 2000);
 
     recheckTimeout = setTimeout(
       recheckPacket,
-      config.v1.constants.RECHECK_TIME
+      config.v1.constants.RECHECK_TIME,
     );
   });
 
@@ -108,7 +110,7 @@ export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
     (d, index) =>
       async (
         resolve: (val: boolean) => void,
-        reject: (err?: Error) => void
+        reject: (err?: Error) => void,
       ) => {
         let tries = 1;
         const innerMaxTries = 5;
@@ -120,7 +122,7 @@ export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
               hexToUint8Array(d),
               // Wait for 10 sec for the 1st packet ACK, there may be heavy processing task
               // in device after 1st packet.
-              index === 0 ? { timeout: 10000 } : undefined
+              index === 0 ? { timeout: 10000 } : undefined,
             );
             if (!errorMsg) {
               resolve(true);
@@ -145,11 +147,11 @@ export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
         } else {
           reject(
             new DeviceCommunicationError(
-              DeviceCommunicationErrorType.WRITE_ERROR
-            )
+              DeviceCommunicationErrorType.WRITE_ERROR,
+            ),
           );
         }
-      }
+      },
   );
 
   for (const j of dataList) {

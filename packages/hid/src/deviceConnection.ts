@@ -1,7 +1,7 @@
 import {
   IDeviceConnection,
   DeviceState,
-  ConnectionTypeMap
+  ConnectionTypeMap,
 } from '@cypherock/sdk-interfaces';
 import HID from 'node-hid';
 import * as uuid from 'uuid';
@@ -10,7 +10,7 @@ import {
   createPort,
   getAvailableConnectionInfo,
   DataListener,
-  formatDeviceInfo
+  formatDeviceInfo,
 } from './helpers';
 import { IConnectionInfo } from './types';
 
@@ -43,7 +43,7 @@ export default class DeviceConnection implements IDeviceConnection {
     this.isPortOpen = true;
     this.dataListener = new DataListener({
       connection: this.connection,
-      onClose: this.onClose.bind(this)
+      onClose: this.onClose.bind(this),
     });
   }
 

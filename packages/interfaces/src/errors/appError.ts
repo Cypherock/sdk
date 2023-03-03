@@ -14,7 +14,7 @@ export enum DeviceAppErrorType {
   CARD_OPERATION_FAILED = 'APP_0400',
   CARD_NOT_PAIRED = 'APP_0401',
 
-  USER_REJECTION = 'APP_0501'
+  USER_REJECTION = 'APP_0501',
 }
 
 type CodeToErrorMap = {
@@ -27,54 +27,54 @@ type CodeToErrorMap = {
 const errorObjects: CodeToErrorMap = {
   [DeviceAppErrorType.NO_WORKING_PACKET_VERSION]: {
     message: 'No working packet version found',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceAppErrorType.EXECUTING_OTHER_COMMAND]: {
     message: 'The device is executing some other command',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceAppErrorType.PROCESS_ABORTED]: {
     message: 'The process was aborted',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceAppErrorType.DEVICE_ABORT]: {
     message: 'The request was timed out on the device',
-    doRetry: true
+    doRetry: true,
   },
 
   [DeviceAppErrorType.INVALID_RESULT]: {
     message: 'Invalid result received from device',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceAppErrorType.INVALID_APP_ID]: {
     message: 'Invalid appId received from device',
-    doRetry: false
+    doRetry: false,
   },
 
   [DeviceAppErrorType.WALLET_NOT_FOUND]: {
     message: 'Selected wallet is not present on the device',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceAppErrorType.WALLET_PARTIAL_STATE]: {
     message: 'Selected wallet is in partial state',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceAppErrorType.NO_WALLET_EXISTS]: {
     message: 'No wallet exists on the device',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceAppErrorType.CARD_OPERATION_FAILED]: {
     message: 'Card operation failed',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceAppErrorType.CARD_NOT_PAIRED]: {
     message: 'Card is not paired',
-    doRetry: false
+    doRetry: false,
   },
   [DeviceAppErrorType.USER_REJECTION]: {
     message: 'User rejected the operation',
-    doRetry: false
-  }
+    doRetry: false,
+  },
 };
 
 export class DeviceAppError extends Error {

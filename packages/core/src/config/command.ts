@@ -1,7 +1,7 @@
 export const v1 = {
   ACK_PACKET: 1,
   NACK_PACKET: 7,
-  USB_CONNECTION_STATE_PACKET: 8
+  USB_CONNECTION_STATE_PACKET: 8,
 };
 
 export const v3 = {
@@ -13,8 +13,8 @@ export const v3 = {
     CMD_ACK: 5,
     CMD_OUTPUT: 6,
     ERROR: 7,
-    ABORT: 8
-  }
+    ABORT: 8,
+  },
 };
 
 export default v1;

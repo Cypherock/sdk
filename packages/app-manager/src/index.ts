@@ -1,7 +1,7 @@
 import {
   DeviceAppError,
   DeviceAppErrorType,
-  IDeviceConnection
+  IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import SDK from '@cypherock/sdk-core';
 import { Query, Result } from './proto/generated/manager/core';
@@ -23,19 +23,19 @@ export default class ManagerApp {
   public async getDeviceInfo() {
     const sequenceNumber = this.sdk.getNewSequenceNumber();
     const query = Query.encode(
-      Query.create({ getDeviceInfo: { dummy: true } })
+      Query.create({ getDeviceInfo: { dummy: true } }),
     ).finish();
 
     await this.sdk.sendQuery({
       data: query,
-      sequenceNumber
+      sequenceNumber,
     });
 
     const data = await this.sdk.waitForResult({
       sequenceNumber,
       onStatus: () => {
         // empty
-      }
+      },
     });
 
     const result = Result.decode(data);

@@ -3,7 +3,7 @@ import {
   DeviceConnectionErrorType,
   DeviceCommunicationError,
   DeviceCommunicationErrorType,
-  IDeviceConnection
+  IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
@@ -17,13 +17,13 @@ export const writePacket = (
   connection: IDeviceConnection,
   packet: Uint8Array,
   version: PacketVersion,
-  skipPacketIds: string[]
+  skipPacketIds: string[],
 ) => {
   let usableConfig = config.v1;
 
   if (!connection.isConnected()) {
     throw new DeviceConnectionError(
-      DeviceConnectionErrorType.CONNECTION_CLOSED
+      DeviceConnectionErrorType.CONNECTION_CLOSED,
     );
   }
 
@@ -52,8 +52,8 @@ export const writePacket = (
         if (!connection.isConnected()) {
           reject(
             new DeviceConnectionError(
-              DeviceConnectionErrorType.CONNECTION_CLOSED
-            )
+              DeviceConnectionErrorType.CONNECTION_CLOSED,
+            ),
           );
           return;
         }
@@ -87,8 +87,8 @@ export const writePacket = (
                 cleanUp();
                 reject(
                   new DeviceCommunicationError(
-                    DeviceCommunicationErrorType.WRITE_ERROR
-                  )
+                    DeviceCommunicationErrorType.WRITE_ERROR,
+                  ),
                 );
                 // eslint-disable-next-line
                 return;
@@ -100,14 +100,14 @@ export const writePacket = (
 
         recheckTimeout = setTimeout(
           recheckAck,
-          usableConfig.constants.RECHECK_TIME
+          usableConfig.constants.RECHECK_TIME,
         );
       } catch (error) {
         cleanUp();
         reject(
           new DeviceCommunicationError(
-            DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR
-          )
+            DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR,
+          ),
         );
       }
     }
@@ -119,7 +119,7 @@ export const writePacket = (
         logger.info(`Writing packet done: ${packet}`);
         recheckTimeout = setTimeout(
           recheckAck,
-          usableConfig.constants.RECHECK_TIME
+          usableConfig.constants.RECHECK_TIME,
         );
       })
       .catch(error => {
@@ -127,7 +127,9 @@ export const writePacket = (
         cleanUp();
         logger.error(error);
         reject(
-          new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_ERROR)
+          new DeviceCommunicationError(
+            DeviceCommunicationErrorType.WRITE_ERROR,
+          ),
         );
       });
 
@@ -135,7 +137,9 @@ export const writePacket = (
       logger.info('Timeout triggred');
       cleanUp();
       reject(
-        new DeviceCommunicationError(DeviceCommunicationErrorType.WRITE_TIMEOUT)
+        new DeviceCommunicationError(
+          DeviceCommunicationErrorType.WRITE_TIMEOUT,
+        ),
       );
     }, usableConfig.constants.ACK_TIME);
   });
@@ -164,12 +168,12 @@ export const sendData = async (
   command: number,
   data: string,
   version: PacketVersion,
-  maxTries = 5
+  maxTries = 5,
 ) => {
   const skipPacketIds: string[] = [];
   const packetsList = xmodemEncode(data, command, version);
   logger.info(
-    `Sending command ${command} : containing ${packetsList.length} packets.`
+    `Sending command ${command} : containing ${packetsList.length} packets.`,
   );
   /**
    * Create a list of each packet and self contained retries and listener
@@ -207,7 +211,7 @@ export const sendData = async (
         throw firstError;
       } else {
         throw new DeviceCommunicationError(
-          DeviceCommunicationErrorType.WRITE_TIMEOUT
+          DeviceCommunicationErrorType.WRITE_TIMEOUT,
         );
       }
     }

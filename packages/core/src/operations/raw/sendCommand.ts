@@ -9,7 +9,7 @@ export const sendCommand = async ({
   data,
   version,
   maxTries = 5,
-  sequenceNumber
+  sequenceNumber,
 }: {
   connection: IDeviceConnection;
   commandType: number;
@@ -26,6 +26,6 @@ export const sendCommand = async ({
     version,
     maxTries,
     sequenceNumber,
-    isProto: false
+    isProto: false,
   });
 };

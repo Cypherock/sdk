@@ -2,7 +2,7 @@ import HID from 'node-hid';
 import {
   DeviceConnectionError,
   DeviceConnectionErrorType,
-  DeviceState
+  DeviceState,
 } from '@cypherock/sdk-interfaces';
 
 import { IConnectionInfo } from '../types';
@@ -13,11 +13,11 @@ const supportedVersionsToDeviceState: Record<string, DeviceState> = {
   // Intiial
   '02': DeviceState.INITIAL,
   // Main
-  '03': DeviceState.MAIN
+  '03': DeviceState.MAIN,
 };
 
 export const formatDeviceInfo = (
-  device: HID.Device
+  device: HID.Device,
 ): IConnectionInfo | undefined => {
   const { vendorId, productId } = device;
 
@@ -38,7 +38,7 @@ export const formatDeviceInfo = (
     ) {
       return {
         path: device.path,
-        deviceState: supportedVersionsToDeviceState[internalDeviceState]
+        deviceState: supportedVersionsToDeviceState[internalDeviceState],
       };
     }
   }

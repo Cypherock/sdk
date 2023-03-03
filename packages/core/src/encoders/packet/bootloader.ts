@@ -4,9 +4,11 @@ import {
   crc16,
   PacketVersionMap,
   uint8ArrayToHex,
-  hexToUint8Array
+  hexToUint8Array,
+  isHex,
 } from '../../utils';
 import { v1 as config } from '../../config';
+import assert from '../../utils/assert';
 
 const START_OF_FRAME = '01';
 const END_OF_TRANSMISSION = '04';
@@ -25,14 +27,25 @@ export interface StmPacket {
 }
 
 export const stmXmodemEncode = (data: string) => {
-  const rounds = Math.ceil(data.length / CHUNK_SIZE);
+  assert(data, 'Invalid data');
+
+  let hexData = data;
+
+  if (hexData.startsWith('0x')) {
+    hexData = hexData.slice(2);
+  }
+
+  assert(!!hexData, 'Data cannot be empty');
+  assert(isHex(hexData), `Invalid hex: ${data}`);
+
+  const rounds = Math.ceil(hexData.length / CHUNK_SIZE);
   const packetList: string[] = [];
   for (let i = 1; i <= rounds; i += 1) {
     const currentPacketNumber = intToUintByte(i % 255, 8);
     const packetNumberXor = intToUintByte(i % 255 ^ 255, 8);
-    const dataChunkSlice = data.slice(
+    const dataChunkSlice = hexData.slice(
       (i - 1) * CHUNK_SIZE,
-      (i - 1) * CHUNK_SIZE + CHUNK_SIZE
+      (i - 1) * CHUNK_SIZE + CHUNK_SIZE,
     );
     let dataChunk = dataChunkSlice;
 
@@ -63,40 +76,40 @@ export const stmXmodemDecode = (param: Uint8Array) => {
     offset += 2;
     const commandType = parseInt(
       `0x${data.slice(offset, offset + radix.commandType / 4)}`,
-      16
+      16,
     );
     offset += radix.commandType / 4;
     const dataSize = parseInt(
       data.slice(offset, offset + radix.dataSize / 4),
-      16
+      16,
     );
     offset += radix.dataSize / 4;
     const stuffedData = data.slice(offset, offset + dataSize * 2);
     data = data.slice(offset + dataSize * 2);
     const unStuffedData = byteUnstuffing(
       hexToUint8Array(stuffedData),
-      PacketVersionMap.v1
+      PacketVersionMap.v1,
     );
     offset = 0;
     const currentPacketNumber = unStuffedData.slice(
       offset,
-      offset + radix.currentPacketNumber / 4
+      offset + radix.currentPacketNumber / 4,
     );
     offset += radix.currentPacketNumber / 4;
     const totalPacket = unStuffedData.slice(
       offset,
-      offset + radix.totalPacket / 4
+      offset + radix.totalPacket / 4,
     );
     offset += radix.totalPacket / 4;
     const dataChunk = unStuffedData.slice(
       offset,
-      offset + unStuffedData.length - 6 * 2
+      offset + unStuffedData.length - 6 * 2,
     );
     offset += unStuffedData.length - 6 * 2;
     const crc = unStuffedData.slice(offset, offset + radix.crc / 4);
     const crcInput = unStuffedData.slice(
       0,
-      unStuffedData.length - radix.crc / 4
+      unStuffedData.length - radix.crc / 4,
     );
     const actualCRC = crc16(Buffer.from(crcInput, 'hex'))
       .toString(16)
@@ -119,7 +132,7 @@ export const stmXmodemDecode = (param: Uint8Array) => {
       dataSize,
       dataChunk,
       crc,
-      errorList
+      errorList,
     });
   }
   return packetList;

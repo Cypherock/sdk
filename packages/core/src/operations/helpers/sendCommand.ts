@@ -12,7 +12,7 @@ export const sendCommand = async ({
   version,
   maxTries = 5,
   sequenceNumber,
-  isProto
+  isProto,
 }: {
   connection: IDeviceConnection;
   data: string;
@@ -32,7 +32,7 @@ export const sendCommand = async ({
     version,
     sequenceNumber,
     packetType: usableConfig.commands.PACKET_TYPE.CMD,
-    isProto
+    isProto,
   });
 
   let firstError: Error | undefined;
@@ -50,7 +50,7 @@ export const sendCommand = async ({
           packet,
           version,
           sequenceNumber,
-          ackPacketTypes: [usableConfig.commands.PACKET_TYPE.CMD_ACK]
+          ackPacketTypes: [usableConfig.commands.PACKET_TYPE.CMD_ACK],
         });
         isSuccess = true;
       } catch (e: any) {

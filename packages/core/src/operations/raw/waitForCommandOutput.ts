@@ -1,14 +1,14 @@
 import {
   DeviceAppError,
   DeviceAppErrorType,
-  IDeviceConnection
+  IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import {
   CmdState,
   DeviceIdleState,
   RawData,
-  StatusData
+  StatusData,
 } from '../../encoders/raw';
 
 import { getCommandOutput } from './getCommandOutput';
@@ -36,14 +36,14 @@ export const waitForCommandOutput = async ({
   onStatus,
   options,
   version,
-  maxTries = 5
+  maxTries = 5,
 }: IWaitForCommandOutputParams): Promise<RawData> => {
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
 
   logger.info(
-    `Trying to receive output with command ${expectedCommandTypes.join(' ')}`
+    `Trying to receive output with command ${expectedCommandTypes.join(' ')}`,
   );
 
   let lastStatus = -1;
@@ -55,7 +55,7 @@ export const waitForCommandOutput = async ({
       connection,
       version,
       maxTries,
-      sequenceNumber
+      sequenceNumber,
     });
 
     if (response.isRawData) {
@@ -93,11 +93,11 @@ export const waitForCommandOutput = async ({
       [
         CmdState.CMD_STATE_DONE,
         CmdState.CMD_STATE_FAILED,
-        CmdState.CMD_STATE_INVALID_CMD
+        CmdState.CMD_STATE_INVALID_CMD,
       ].includes(status.cmdState)
     ) {
       throw new Error(
-        'Command status is done or rejected, but no output is received'
+        'Command status is done or rejected, but no output is received',
       );
     }
 

@@ -4,7 +4,7 @@ import {
   decodeRawData,
   decodeStatus,
   RawData,
-  StatusData
+  StatusData,
 } from '../../encoders/raw';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
 
@@ -12,7 +12,7 @@ export const getCommandOutput = async ({
   connection,
   version,
   maxTries = 5,
-  sequenceNumber
+  sequenceNumber,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
@@ -23,7 +23,7 @@ export const getCommandOutput = async ({
     connection,
     version,
     maxTries,
-    sequenceNumber
+    sequenceNumber,
   });
 
   let output: RawData | StatusData;

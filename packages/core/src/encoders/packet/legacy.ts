@@ -8,8 +8,10 @@ import {
   byteUnstuffing,
   intToUintByte,
   PacketVersion,
-  PacketVersionMap
+  PacketVersionMap,
+  isHex,
 } from '../../utils';
+import assert from '../../utils/assert';
 
 export interface LegacyDecodedPacketData {
   startOfFrame: string;
@@ -33,8 +35,16 @@ export interface LegacyDecodedPacketData {
 export const xmodemEncode = (
   data: string,
   commandType: number,
-  version: PacketVersion
+  version: PacketVersion,
 ) => {
+  assert(data, 'Invalid data');
+  assert(data.length > 0, 'Invalid cannot be empty');
+  assert(commandType, 'Invalid commandType');
+  assert(version, 'Invalid version');
+
+  assert(isHex(data), 'Invalid hex data');
+  assert(commandType >= 0, 'Command type should not be negative');
+
   let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
@@ -48,12 +58,12 @@ export const xmodemEncode = (
   for (let i = 1; i <= rounds; i += 1) {
     const currentPacketNumber = intToUintByte(
       i,
-      usableConfig.radix.currentPacketNumber
+      usableConfig.radix.currentPacketNumber,
     );
     const totalPacket = intToUintByte(rounds, usableConfig.radix.totalPacket);
     const dataChunk = data.slice(
       (i - 1) * CHUNK_SIZE,
-      (i - 1) * CHUNK_SIZE + CHUNK_SIZE
+      (i - 1) * CHUNK_SIZE + CHUNK_SIZE,
     );
     const commData = currentPacketNumber + totalPacket + dataChunk;
     const crc = intToUintByte(crc16(hexToUint8Array(commData)), 16);
@@ -83,13 +93,16 @@ export const xmodemEncode = (
  *   }
  *
  *
- * @param param - Data in buffer object
+ * @packetData packetData - Data in buffer object
  * @return list of decoded packets
  */
 export const xmodemDecode = (
-  param: Uint8Array,
-  version: PacketVersion
+  packetData: Uint8Array,
+  version: PacketVersion,
 ): LegacyDecodedPacketData[] => {
+  assert(packetData, "Invalid packetData")
+  assert(version, "Invalid version")
+
   let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
@@ -98,7 +111,7 @@ export const xmodemDecode = (
 
   const { CHUNK_SIZE, START_OF_FRAME } = usableConfig.constants;
 
-  let data = uint8ArrayToHex(param).toUpperCase();
+  let data = uint8ArrayToHex(packetData).toUpperCase();
 
   const packetList: LegacyDecodedPacketData[] = [];
   let offset = data.indexOf(START_OF_FRAME);
@@ -115,12 +128,12 @@ export const xmodemDecode = (
     offset += START_OF_FRAME.length;
     const commandType = parseInt(
       `0x${data.slice(offset, offset + usableConfig.radix.commandType / 4)}`,
-      16
+      16,
     );
     offset += usableConfig.radix.commandType / 4;
     const dataSize = parseInt(
       data.slice(offset, offset + usableConfig.radix.dataSize / 4),
-      16
+      16,
     );
     offset += usableConfig.radix.dataSize / 4;
     const stuffedData = data.slice(offset, offset + dataSize * 2);
@@ -129,31 +142,31 @@ export const xmodemDecode = (
     offset = 0;
     const currentPacketNumber = unStuffedData.slice(
       offset,
-      offset + usableConfig.radix.currentPacketNumber / 4
+      offset + usableConfig.radix.currentPacketNumber / 4,
     );
     offset += usableConfig.radix.currentPacketNumber / 4;
     const totalPacket = unStuffedData.slice(
       offset,
-      offset + usableConfig.radix.totalPacket / 4
+      offset + usableConfig.radix.totalPacket / 4,
     );
     offset += usableConfig.radix.totalPacket / 4;
     const dataChunk = unStuffedData.slice(
       offset,
-      offset + unStuffedData.length - 6 * 2
+      offset + unStuffedData.length - 6 * 2,
     );
     offset += unStuffedData.length - 6 * 2;
     const crc = unStuffedData.slice(
       offset,
-      offset + usableConfig.radix.crc / 4
+      offset + usableConfig.radix.crc / 4,
     );
     const crcInput = unStuffedData.slice(
       0,
-      unStuffedData.length - usableConfig.radix.crc / 4
+      unStuffedData.length - usableConfig.radix.crc / 4,
     );
     const actualCRC = padStart(
       crc16(hexToUint8Array(crcInput)).toString(16),
       4,
-      '0'
+      '0',
     );
 
     const errorList = [];
@@ -178,7 +191,7 @@ export const xmodemDecode = (
       dataSize,
       dataChunk,
       crc,
-      errorList
+      errorList,
     });
   }
   return packetList;
@@ -187,8 +200,14 @@ export const xmodemDecode = (
 export const createAckPacket = (
   commandType: number,
   packetNumber: string,
-  version: PacketVersion
+  version: PacketVersion,
 ) => {
+  assert(commandType, 'Invalid commandType');
+  assert(packetNumber, 'Invalid packetNumber');
+  assert(version, 'Invalid version');
+
+  assert(commandType >= 0, 'Command type cannot be negative');
+
   let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
@@ -199,7 +218,7 @@ export const createAckPacket = (
 
   const currentPacketNumber = intToUintByte(
     packetNumber,
-    usableConfig.radix.currentPacketNumber
+    usableConfig.radix.currentPacketNumber,
   );
 
   const totalPacket = intToUintByte(0, usableConfig.radix.totalPacket);
@@ -214,5 +233,5 @@ export const createAckPacket = (
     intToUintByte(commandType, usableConfig.radix.commandType) +
     intToUintByte(stuffedData.length / 2, usableConfig.radix.dataSize);
 
-  return commHeader + stuffedData;
+  return (commHeader + stuffedData).toLowerCase();
 };

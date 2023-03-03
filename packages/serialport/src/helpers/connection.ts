@@ -2,7 +2,7 @@ import SerialPort from 'serialport';
 import {
   DeviceConnectionError,
   DeviceConnectionErrorType,
-  DeviceState
+  DeviceState,
 } from '@cypherock/sdk-interfaces';
 
 import { IConnectionInfo } from '../types';
@@ -13,7 +13,7 @@ const legacySupportedVersionsToDeviceState: Record<string, DeviceState> = {
   // Intiial
   '01': DeviceState.INITIAL,
   // Main
-  '02': DeviceState.MAIN
+  '02': DeviceState.MAIN,
 };
 
 const supportedVersionsToDeviceState: Record<string, DeviceState> = {
@@ -22,7 +22,7 @@ const supportedVersionsToDeviceState: Record<string, DeviceState> = {
   // Intiial
   '02': DeviceState.INITIAL,
   // Main
-  '03': DeviceState.MAIN
+  '03': DeviceState.MAIN,
 };
 
 export const getAvailableConnectionInfo = async (): Promise<
@@ -53,7 +53,7 @@ export const getAvailableConnectionInfo = async (): Promise<
           if (
             internalHardwareVersion === '02' &&
             Object.keys(legacySupportedVersionsToDeviceState).includes(
-              internalDeviceState
+              internalDeviceState,
             )
           ) {
             port = portParam;
@@ -67,7 +67,7 @@ export const getAvailableConnectionInfo = async (): Promise<
           if (
             internalHardwareVersion === '01' &&
             Object.keys(supportedVersionsToDeviceState).includes(
-              internalDeviceState
+              internalDeviceState,
             )
           ) {
             port = portParam;
@@ -93,7 +93,7 @@ export const getAvailableConnectionInfo = async (): Promise<
       hardwareVersion,
       inBootloader: deviceState === DeviceState.BOOTLOADER,
       // 00: Bootloader, 01: Initial app, 02: Main app
-      deviceState
+      deviceState,
     };
   }
 

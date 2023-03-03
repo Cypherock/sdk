@@ -3,7 +3,7 @@ import {
   intToUintByte,
   logger,
   PacketVersion,
-  PacketVersionMap
+  PacketVersionMap,
 } from '../../utils';
 import * as config from '../../config';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
@@ -15,7 +15,7 @@ export const getCommandOutput = async ({
   connection,
   version,
   maxTries = 5,
-  sequenceNumber
+  sequenceNumber,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
@@ -46,7 +46,7 @@ export const getCommandOutput = async ({
       version,
       sequenceNumber,
       packetType: usableConfig.commands.PACKET_TYPE.CMD_OUTPUT_REQ,
-      isProto: false
+      isProto: false,
     });
 
     if (packetsList.length > 1) {
@@ -64,8 +64,8 @@ export const getCommandOutput = async ({
           sequenceNumber,
           ackPacketTypes: [
             usableConfig.commands.PACKET_TYPE.CMD_OUTPUT,
-            usableConfig.commands.PACKET_TYPE.STATUS
-          ]
+            usableConfig.commands.PACKET_TYPE.STATUS,
+          ],
         });
         dataList[receivedPacket.currentPacketNumber - 1] =
           receivedPacket.payloadData;
@@ -98,6 +98,6 @@ export const getCommandOutput = async ({
 
   return {
     ...decodePayloadData(finalData, version),
-    isStatus: isStatusResponse
+    isStatus: isStatusResponse,
   };
 };

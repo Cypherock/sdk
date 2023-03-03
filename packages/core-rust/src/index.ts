@@ -29,12 +29,12 @@ const createCompileCore = (params?: IWASMOptions) => {
 
     if (params?.folder) {
       return WebAssembly.compile(
-        await _fs.readFile(_path.join(params.folder, name))
+        await _fs.readFile(_path.join(params.folder, name)),
       );
     }
 
     return WebAssembly.compile(
-      await _fs.readFile(_path.join(__dirname, '..', 'wasm', name))
+      await _fs.readFile(_path.join(__dirname, '..', 'wasm', name)),
     );
   };
 };
@@ -51,10 +51,10 @@ export default class SDK {
 
   public static async create(
     connection: IDeviceConnection,
-    params?: IWASMOptions
+    params?: IWASMOptions,
   ) {
     const wasm = await instantiate(createCompileCore(params), {
-      connection
+      connection,
     });
     return new SDK(connection, wasm);
   }

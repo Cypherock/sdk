@@ -7,7 +7,7 @@ export const getStatus = async ({
   connection,
   version,
   maxTries = 5,
-  logsDisabled = false
+  logsDisabled = false,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
@@ -18,7 +18,7 @@ export const getStatus = async ({
     connection,
     version,
     maxTries,
-    logsDisabled
+    logsDisabled,
   });
 
   return Status.decode(hexToUint8Array(protobufData));

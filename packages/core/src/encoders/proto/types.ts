@@ -2,5 +2,5 @@ export {
   Status,
   DeviceIdleState,
   DeviceWaitingOn,
-  CmdState
+  CmdState,
 } from './generated/core';
