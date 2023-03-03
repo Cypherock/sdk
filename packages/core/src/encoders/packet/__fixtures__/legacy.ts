@@ -416,6 +416,24 @@ export const xmodemEncodeTestCases = {
 export const xmodemDecodeTestCases = {
   validV1: [
     {
+      data: '28936489172381',
+      rawPackets: new Uint8Array([
+        170, 10, 13, 0, 1, 0, 1, 40, 147, 100, 137, 23, 35, 129, 127, 243,
+      ]),
+      packetList: [
+        {
+          startOfFrame: 'AA',
+          commandType: 10,
+          currentPacketNumber: 1,
+          totalPacket: 1,
+          dataSize: 13,
+          dataChunk: '28936489172381',
+          crc: '7ff3',
+          errorList: [],
+        },
+      ],
+    },
+    {
       data: 'd22af07f965ab9f4d37fcb59708d74ebbfac8f4303a46397f0b62a70cae5e87660f25f0b59b84551d1f4965f14e97b1dc3520e',
       rawPackets: new Uint8Array([
         170, 6, 38, 0, 1, 0, 2, 210, 42, 240, 127, 150, 90, 185, 244, 211, 127,
@@ -444,24 +462,6 @@ export const xmodemDecodeTestCases = {
           dataSize: 25,
           dataChunk: '60f25f0b59b84551d1f4965f14e97b1dc3520e',
           crc: '0b86',
-          errorList: [],
-        },
-      ],
-    },
-    {
-      data: '28936489172381',
-      rawPackets: new Uint8Array([
-        170, 10, 13, 0, 1, 0, 1, 40, 147, 100, 137, 23, 35, 129, 127, 243,
-      ]),
-      packetList: [
-        {
-          startOfFrame: 'AA',
-          commandType: 10,
-          currentPacketNumber: 1,
-          totalPacket: 1,
-          dataSize: 13,
-          dataChunk: '28936489172381',
-          crc: '7ff3',
           errorList: [],
         },
       ],
@@ -906,6 +906,18 @@ export const xmodemDecodeTestCases = {
         127, 247,
       ]),
       version: PacketVersionMap.v2,
+    },
+    {
+      rawPackets: new Uint8Array([
+        170, 10, 13, 0, 2, 0, 1, 40, 147, 100, 137, 23, 35, 129, 206, 60,
+      ]),
+      version: PacketVersionMap.v1,
+    },
+    {
+      rawPackets: new Uint8Array([
+        170, 10, 78, 0, 1, 0, 1, 40, 147, 100, 137, 23, 35, 129, 127, 243,
+      ]),
+      version: PacketVersionMap.v1,
     },
   ],
 };

@@ -100,8 +100,8 @@ export const xmodemDecode = (
   packetData: Uint8Array,
   version: PacketVersion,
 ): LegacyDecodedPacketData[] => {
-  assert(packetData, "Invalid packetData")
-  assert(version, "Invalid version")
+  assert(packetData, 'Invalid packetData');
+  assert(version, 'Invalid version');
 
   let usableConfig = config.v1;
 

@@ -65,6 +65,7 @@ export const stmXmodemEncode = (data: string) => {
   return packetList;
 };
 
+/* istanbul ignore next */
 export const stmXmodemDecode = (param: Uint8Array) => {
   let data = uint8ArrayToHex(param).toUpperCase();
   const packetList: StmPacket[] = [];

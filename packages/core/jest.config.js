@@ -3,5 +3,6 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   rootDir: 'src',
-  collectCoverage: true
+  collectCoverage: true,
+  testPathIgnorePatterns: ['/node_modules/', '/__fixtures__/'],
 };

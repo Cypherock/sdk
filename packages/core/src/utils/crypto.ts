@@ -43,17 +43,15 @@ export const hexToUint8Array = (data: string) => {
     hex = hex.slice(2);
   }
 
+  assert(isHex(hex), `Invalid hex string: ${data}`);
+
   if (hex.length <= 0) return new Uint8Array([]);
 
-  if (!isHex(hex)) {
+  const match = hex.match(/.{1,2}/g);
+  if (!match) {
     throw new Error(`Invalid hex string: ${data}`);
-  } else {
-    const match = hex.match(/.{1,2}/g);
-    if (!match) {
-      throw new Error(`Invalid hex string: ${data}`);
-    }
-    return Uint8Array.from(match.map(byte => parseInt(byte, 16)));
   }
+  return Uint8Array.from(match.map(byte => parseInt(byte, 16)));
 };
 
 export const uint8ArrayToHex = (data: Uint8Array) => {
@@ -101,13 +99,13 @@ export const byteUnstuffing = (
   assert(inputBuff, 'Invalid inputBuff');
   assert(version, 'Invalid version');
 
+  assert(inputBuff.length > 0, 'Byte unstuffing failed: 0 size');
+
   let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
     usableConfig = config.v2;
   }
-
-  if (inputBuff.length <= 0) throw new Error('Byte unstuffing failed: 0 size');
 
   const size = inputBuff.length;
   const outputData: number[] = [];
@@ -134,13 +132,17 @@ export const byteStuffing = (inputBuff: Uint8Array, version: PacketVersion) => {
   assert(inputBuff, 'Invalid inputBuff');
   assert(version, 'Invalid version');
 
+  assert(
+    inputBuff.length > 0,
+    `Byte stuffing failed: ${inputBuff.length} size`,
+  );
+
   let usableConfig = config.v1;
 
   if (version === PacketVersionMap.v2) {
     usableConfig = config.v2;
   }
 
-  if (inputBuff.length <= 0) throw new Error('Byte stuffing failed: 0 size');
   const outputData: number[] = [];
   inputBuff.forEach(byte => {
     if (byte === usableConfig.constants.STUFFING_BYTE) {

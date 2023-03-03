@@ -144,7 +144,7 @@ describe('Legacy Packet Encoder', () => {
         const result = xmodemDecode(testCase.rawPackets, testCase.version);
         expect(Array.isArray(result)).toBeTruthy();
         for (const packet of result) {
-          expect(packet.errorList.length).toBeGreaterThan(0);
+          expect(packet.errorList.length).toEqual(1);
         }
       }
     });

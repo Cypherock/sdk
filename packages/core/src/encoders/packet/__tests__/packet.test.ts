@@ -140,6 +140,16 @@ describe('Packet Encoder', () => {
       }
     });
 
+    test('should return error when invalid packet', () => {
+      for (const testCase of decodePacketTestCases.errorPackets) {
+        const result = decodePacket(testCase, PacketVersionMap.v3);
+        expect(Array.isArray(result)).toBeTruthy();
+        for (const packet of result) {
+          expect(packet.errorList.length).toEqual(1);
+        }
+      }
+    });
+
     test('should throw error with invalid data', () => {
       for (const testCase of decodePacketTestCases.invalid) {
         expect(() =>

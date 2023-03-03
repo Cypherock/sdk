@@ -1,5 +1,11 @@
 import * as config from '../../config';
-import { intToUintByte, PacketVersion, PacketVersionMap } from '../../utils';
+import {
+  intToUintByte,
+  isHex,
+  PacketVersion,
+  PacketVersionMap,
+} from '../../utils';
+import assert from '../../utils/assert';
 import { RawData, StatusData } from './types';
 
 export * from './types';
@@ -8,6 +14,11 @@ export const decodeStatus = (
   data: string,
   version: PacketVersion,
 ): StatusData => {
+  assert(data, 'Invalid data');
+  assert(version, 'Invalid version');
+
+  assert(isHex(data), 'Invalid hex in data');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -16,13 +27,14 @@ export const decodeStatus = (
 
   let offset = 0;
 
-  const deviceState = parseInt(
-    `0x${data.slice(
-      offset,
-      offset + usableConfig.radix.status.deviceState / 4,
-    )}`,
-    16,
-  );
+  const deviceState =
+    parseInt(
+      `0x${data.slice(
+        offset,
+        offset + usableConfig.radix.status.deviceState / 4,
+      )}`,
+      16,
+    ) || 0;
   offset += usableConfig.radix.status.deviceState / 4;
 
   const num = deviceState & 0xff;
@@ -39,28 +51,34 @@ export const decodeStatus = (
     ) === 1;
   offset += usableConfig.radix.status.abortDisabled / 4;
 
-  const currentCmdSeq = parseInt(
-    `0x${data.slice(
-      offset,
-      offset + usableConfig.radix.status.currentCmdSeq / 4,
-    )}`,
-    16,
-  );
+  const currentCmdSeq =
+    parseInt(
+      `0x${data.slice(
+        offset,
+        offset + usableConfig.radix.status.currentCmdSeq / 4,
+      )}`,
+      16,
+    ) || 0;
   offset += usableConfig.radix.status.currentCmdSeq / 4;
 
-  const cmdState = parseInt(
-    `0x${data.slice(offset, offset + usableConfig.radix.status.cmdState / 4)}`,
-    16,
-  );
+  const cmdState =
+    parseInt(
+      `0x${data.slice(
+        offset,
+        offset + usableConfig.radix.status.cmdState / 4,
+      )}`,
+      16,
+    ) || 0;
   offset += usableConfig.radix.status.cmdState / 4;
 
-  const flowStatus = parseInt(
-    `0x${data.slice(
-      offset,
-      offset + usableConfig.radix.status.flowStatus / 4,
-    )}`,
-    16,
-  );
+  const flowStatus =
+    parseInt(
+      `0x${data.slice(
+        offset,
+        offset + usableConfig.radix.status.flowStatus / 4,
+      )}`,
+      16,
+    ) || 0;
   offset += usableConfig.radix.status.flowStatus / 4;
 
   const status = {
@@ -81,6 +99,13 @@ export const encodeRawData = (
   params: RawData,
   version: PacketVersion,
 ): string => {
+  assert(params, 'Invalid params');
+  assert(params.commandType, 'Invalid commandType');
+  assert(params.data, 'Invalid data');
+  assert(version, 'Invalid version');
+
+  assert(params.commandType > 0, 'Commnd type cannot be negative');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -94,9 +119,14 @@ export const encodeRawData = (
 };
 
 export const decodeRawData = (
-  params: string,
+  payload: string,
   version: PacketVersion,
 ): RawData => {
+  assert(payload, 'Invalid payload');
+  assert(version, 'Invalid version');
+
+  assert(isHex(payload), 'Invalid hex in payload');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -105,17 +135,19 @@ export const decodeRawData = (
 
   let offset = 0;
 
-  const receivedCommandType = parseInt(
-    params.slice(offset, offset + usableConfig.radix.commandType / 4),
-    16,
-  );
+  const receivedCommandType =
+    parseInt(
+      payload.slice(offset, offset + usableConfig.radix.commandType / 4),
+      16,
+    ) || 0;
   offset += usableConfig.radix.commandType / 4;
 
-  const receivedData = params.slice(offset);
+  const receivedData = payload.slice(offset);
 
   return {
     commandType: receivedCommandType,
     data: receivedData,
     isRawData: true,
+    isStatus: false,
   };
 };

@@ -1,5 +1,9 @@
 import { describe, expect, test } from '@jest/globals';
-import { isSDKSupported, getPacketVersionFromSDK } from '../sdkVersions';
+import {
+  isSDKSupported,
+  getPacketVersionFromSDK,
+  formatSDKVersion,
+} from '../sdkVersions';
 import { PacketVersionMap } from '../packetVersions';
 
 interface Range {
@@ -187,6 +191,37 @@ describe('SDK Version', () => {
       const testCases: any[] = [null, undefined, '', 'asd', '1.asd'];
       for (const testCase of testCases) {
         expect(() => getPacketVersionFromSDK(testCase)).toThrow();
+      }
+    });
+  });
+
+  describe('formatSDKVersion', () => {
+    test('it should return valid versions', () => {
+      const testCases = [
+        { raw: '000000000000', formatted: '0.0.0' },
+        { raw: '000100020032', formatted: '1.2.50' },
+        { raw: '000000f200a2', formatted: '0.242.162' },
+        { raw: '020010000010', formatted: '512.4096.16' },
+      ];
+
+      for (const testCase of testCases) {
+        const result = formatSDKVersion(testCase.raw);
+        expect(result).toEqual(testCase.formatted);
+      }
+    });
+
+    test('it should throw error with invalid parameters', () => {
+      const testCases = [
+        null,
+        undefined,
+        '',
+        '0x1287612121',
+        '3212',
+        'asdgawvaseaw',
+      ];
+
+      for (const testCase of testCases) {
+        expect(() => formatSDKVersion(testCase as any)).toThrow();
       }
     });
   });

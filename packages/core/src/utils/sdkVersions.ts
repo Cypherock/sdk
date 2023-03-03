@@ -1,5 +1,6 @@
 import { compare, compareVersions, validate } from 'compare-versions';
 import assert from './assert';
+import { isHex } from './crypto';
 
 import { PacketVersion, PacketVersionMap } from './packetVersions';
 
@@ -46,9 +47,10 @@ export const getPacketVersionFromSDK = (
 };
 
 export const formatSDKVersion = (version: string) => {
-  if (version.length < 12) {
-    throw new Error('SDK version should be atleast 6 bytes.');
-  }
+  assert(version, 'Invalid version');
+
+  assert(isHex(version), 'Invalid hex in version');
+  assert(version.length >= 12, 'SDK version should be atleast 6 bytes.');
 
   const major = parseInt(version.slice(0, 4), 16);
   const minor = parseInt(version.slice(4, 8), 16);
