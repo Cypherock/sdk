@@ -16,6 +16,7 @@ import {
   ErrorPacketRejectReason,
   RejectReasonToMsgMap,
 } from '../../encoders/packet';
+import assert from '../../utils/assert';
 
 export interface CancellablePromise<T> extends Promise<T> {
   cancel: () => void;
@@ -33,6 +34,16 @@ export const waitForPacket = ({
   packetTypes: number[];
   version: PacketVersion;
 }): CancellablePromise<DecodedPacketData> => {
+  assert(connection, 'Invalid connection');
+  assert(version, 'Invalid version');
+  assert(packetTypes, 'Invalid packetTypes');
+  assert(sequenceNumber, 'Invalid sequenceNumber');
+
+  assert(
+    packetTypes.length > 0,
+    'packetTypes should contain atleast 1 element',
+  );
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -97,7 +108,6 @@ export const waitForPacket = ({
         for (const packet of packetList) {
           if (packet.errorList.length === 0) {
             if (packet.packetType === usableConfig.commands.PACKET_TYPE.ERROR) {
-              logger.warn('Error packet', packet);
               error = new DeviceCommunicationError(
                 DeviceCommunicationErrorType.WRITE_REJECTED,
               );

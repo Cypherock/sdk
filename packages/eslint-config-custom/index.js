@@ -31,6 +31,7 @@ module.exports = {
       "error",
       { devDependencies: ["**/*.test.ts", "**/*.test.tsx"] },
     ],
-    "@typescript-eslint/prefer-readonly": "error"
+    "@typescript-eslint/prefer-readonly": "error",
   },
+  ignorePatterns: ["src/coverage/*"],
 };

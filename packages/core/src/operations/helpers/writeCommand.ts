@@ -9,13 +9,14 @@ import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { DecodedPacketData } from '../../encoders/packet';
 
 import { waitForPacket } from './waitForPacket';
+import assert from '../../utils/assert';
 
 export const writeCommand = async ({
   connection,
   packet,
   version,
   sequenceNumber,
-  ackPacketTypes: packetTypes,
+  ackPacketTypes,
 }: {
   connection: IDeviceConnection;
   packet: Uint8Array;
@@ -23,6 +24,18 @@ export const writeCommand = async ({
   sequenceNumber: number;
   ackPacketTypes: number[];
 }): Promise<DecodedPacketData> => {
+  assert(connection, 'Invalid connection');
+  assert(packet, 'Invalid packet');
+  assert(version, 'Invalid version');
+  assert(ackPacketTypes, 'Invalid ackPacketTypes');
+  assert(sequenceNumber, 'Invalid sequenceNumber');
+
+  assert(
+    ackPacketTypes.length > 0,
+    'ackPacketTypes should contain atleast 1 element',
+  );
+  assert(packet.length > 0, 'packet cannot be empty');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -38,11 +51,11 @@ export const writeCommand = async ({
     const ackPromise = waitForPacket({
       connection,
       version,
-      packetTypes,
+      packetTypes: ackPacketTypes,
       sequenceNumber,
     });
 
-    connection.send(packet).catch(error => {
+    connection.send(packet).catch((error: any) => {
       logger.error(error);
       if (!connection.isConnected()) {
         reject(

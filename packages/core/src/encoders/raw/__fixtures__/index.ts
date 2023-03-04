@@ -215,7 +215,7 @@ export const decodeStatusTestCases = {
         currentCmdSeq: 50,
         cmdState: 7,
         flowStatus: 132,
-        isStatus: true
+        isStatus: true,
       },
     },
   ],

@@ -3,7 +3,7 @@ import {
   DeviceAppErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { logger, PacketVersion, PacketVersionMap, sleep } from '../../utils';
 import {
   CmdState,
   DeviceIdleState,
@@ -12,12 +12,6 @@ import {
 } from '../../encoders/raw';
 
 import { getCommandOutput } from './getCommandOutput';
-
-export function sleep(ms: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
-}
 
 export interface IWaitForCommandOutputParams {
   connection: IDeviceConnection;

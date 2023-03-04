@@ -13,6 +13,7 @@
     "start": "node dist/index.js"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.0",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
     "prettier-config-custom": "workspace:^0.0.0",
@@ -22,6 +23,7 @@
   },
   "dependencies": {
     "@types/events": "^3.0.0",
-    "events": "^3.3.0"
+    "events": "^3.3.0",
+    "uuid": "^9.0.0"
   }
 }
