@@ -7,6 +7,8 @@
   "scripts": {
     "lint": "eslint --ext .ts,tsx,js,jsx,js src/ --fix",
     "test": "jest",
+    "test:unit": "jest --selectProjects unit",
+    "test:e2e": "jest --selectProjects e2e",
     "lint:check": "eslint --ext .ts,tsx,js,jsx,js src/",
     "pretty": "prettier --write 'src/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts'",

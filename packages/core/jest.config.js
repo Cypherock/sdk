@@ -1,8 +1,5 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  rootDir: 'src',
   collectCoverage: true,
-  testPathIgnorePatterns: ['/node_modules/', '/__fixtures__/'],
+  projects: ['<rootDir>/jest.unit.config.js', '<rootDir>/jest.e2e.config.js'],
+  testTimeout: 10000,
 };

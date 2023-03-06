@@ -6,8 +6,9 @@ import {
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
-import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { isHex, logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { xmodemEncode, xmodemDecode } from '../../encoders/packet/legacy';
+import assert from '../../utils/assert';
 
 /**
  * Writes the packet to the SerialPort on the given connection,
@@ -64,14 +65,11 @@ export const writePacket = (
         for (const poolItem of pool) {
           const { data } = poolItem;
           if (skipPacketIds.includes(poolItem.id)) {
-            logger.info(`Skipped: ${data}`);
             // eslint-disable-next-line
             continue;
           }
 
           skipPacketIds.push(poolItem.id);
-
-          logger.info(`Received: ${data}`);
 
           const packetList = xmodemDecode(data, version);
 
@@ -83,7 +81,6 @@ export const writePacket = (
                 resolve();
                 return;
               case usableConfig.commands.NACK_PACKET:
-                logger.warn('Received NACK');
                 cleanUp();
                 reject(
                   new DeviceCommunicationError(
@@ -112,18 +109,15 @@ export const writePacket = (
       }
     }
 
-    logger.info(`Writing packet: ${packet}`);
     connection
       .send(packet)
       .then(() => {
-        logger.info(`Writing packet done: ${packet}`);
         recheckTimeout = setTimeout(
           recheckAck,
           usableConfig.constants.RECHECK_TIME,
         );
       })
       .catch(error => {
-        logger.info(`Writing packet error: ${error}`);
         cleanUp();
         logger.error(error);
         reject(
@@ -134,7 +128,6 @@ export const writePacket = (
       });
 
     timeout = setTimeout(() => {
-      logger.info('Timeout triggred');
       cleanUp();
       reject(
         new DeviceCommunicationError(
@@ -170,11 +163,17 @@ export const sendData = async (
   version: PacketVersion,
   maxTries = 5,
 ) => {
+  assert(connection, 'Invalid connection');
+  assert(command, 'Invalid command');
+  assert(data, 'Invalid data');
+  assert(version, 'Invalid version');
+
+  assert(command > 0, 'Command cannot be negative');
+  assert(isHex(data), 'Index hex in data');
+  assert(!maxTries || maxTries > 0, 'Max tries cannot be negative');
+
   const skipPacketIds: string[] = [];
   const packetsList = xmodemEncode(data, command, version);
-  logger.info(
-    `Sending command ${command} : containing ${packetsList.length} packets.`,
-  );
   /**
    * Create a list of each packet and self contained retries and listener
    */
@@ -191,7 +190,6 @@ export const sendData = async (
         // eslint-disable-next-line
         await writePacket(connection, packet, version, skipPacketIds);
         isDone = true;
-        logger.info('Write packet exit');
       } catch (e) {
         // Don't retry if connection closed
         if (e instanceof DeviceConnectionError) {
@@ -201,7 +199,6 @@ export const sendData = async (
         if (!firstError) {
           firstError = e as Error;
         }
-        logger.warn('Error in sending data', e);
       }
       tries += 1;
     }
@@ -216,6 +213,4 @@ export const sendData = async (
       }
     }
   }
-
-  logger.info(`Sent command ${command} : ${data}`);
 };

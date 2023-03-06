@@ -43,8 +43,8 @@ describe('Operation Helpers: writeCommand', () => {
       });
 
       for (const ackPacket of testCase.ackPackets) {
-        await sleep(50);
-        connection.mockDeviceSend(ackPacket);
+        await sleep(20);
+        await connection.mockDeviceSend(ackPacket);
       }
 
       const result = await resultPromise;
@@ -78,8 +78,8 @@ describe('Operation Helpers: writeCommand', () => {
       });
 
       for (const ackPacket of testCase.ackPackets) {
-        await sleep(50);
-        connection.mockDeviceSend(ackPacket);
+        await sleep(20);
+        await connection.mockDeviceSend(ackPacket);
       }
 
       await resultPromise;
@@ -142,7 +142,7 @@ describe('Operation Helpers: writeCommand', () => {
 
       for (let i = 0; i < testCase.ackPackets.length; i += 1) {
         const ackPacket = testCase.ackPackets[i];
-        await sleep(50);
+        await sleep(20);
 
         if (i === testCase.ackPacketTypes.length - 1) {
           await connection.destroy();
@@ -169,8 +169,7 @@ describe('Operation Helpers: writeCommand', () => {
         params.connection = connection;
       }
 
-      const result = writeCommand(params);
-      await expect(result).rejects.toBeInstanceOf(Error);
+      await expect(writeCommand(params)).rejects.toBeInstanceOf(Error);
     }
   });
 });

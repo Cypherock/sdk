@@ -5,34 +5,44 @@ import {
   DeviceCommunicationErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { PacketVersion, logger } from '../../utils';
+import { PacketVersion } from '../../utils';
 import {
   xmodemDecode,
   LegacyDecodedPacketData,
 } from '../../encoders/packet/legacy';
 import * as config from '../../config';
+import assert from '../../utils/assert';
 
 const DEFAULT_RECEIVE_TIMEOUT = 15000;
 
 /**
  * waits for the hardware to send a message with one of the specified command numbers and returns the data in hex
  */
-export const receiveCommand = (
+export const receiveData = (
   connection: IDeviceConnection,
   allAcceptableCommands: number[],
   version: PacketVersion,
   timeout: number = DEFAULT_RECEIVE_TIMEOUT,
-) => {
-  const resData: string[] = [];
+) =>
+  new Promise<{ commandType: number; data: string }>((resolve, reject) => {
+    try {
+      assert(connection, 'Invalid connection');
+      assert(allAcceptableCommands, 'Invalid allAcceptableCommands');
+      assert(version, 'Invalid version');
 
-  if (!connection.isConnected()) {
-    throw new DeviceConnectionError(
-      DeviceConnectionErrorType.CONNECTION_CLOSED,
-    );
-  }
+      assert(
+        allAcceptableCommands.length > 0,
+        'allAcceptableCommands should not be empty',
+      );
 
-  return new Promise<{ commandType: number; data: string }>(
-    (resolve, reject) => {
+      const resData: string[] = [];
+
+      if (!connection.isConnected()) {
+        throw new DeviceConnectionError(
+          DeviceConnectionErrorType.CONNECTION_CLOSED,
+        );
+      }
+
       if (!connection.isConnected()) {
         reject(
           new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED),
@@ -43,6 +53,7 @@ export const receiveCommand = (
       let timeoutIdentifier: NodeJS.Timeout | null = null;
       let recheckTimeout: NodeJS.Timeout | null = null;
 
+      // eslint-disable-next-line
       function cleanUp() {
         if (timeoutIdentifier) {
           clearTimeout(timeoutIdentifier);
@@ -63,22 +74,13 @@ export const receiveCommand = (
         }, timeout);
       }
 
+      // eslint-disable-next-line
       function processPacket(packet: LegacyDecodedPacketData) {
         const { commandType, currentPacketNumber, totalPacket, dataChunk } =
           packet;
         if (allAcceptableCommands.includes(commandType)) {
           resData[currentPacketNumber - 1] = dataChunk;
           if (currentPacketNumber === totalPacket) {
-            if (commandType === 49) {
-              logger.info(`Received command (${commandType})`);
-              logger.debug(
-                `Received command (${commandType}) : ${resData.join('')}`,
-              );
-            } else {
-              logger.info(
-                `Received command (${commandType}) : ${resData.join('')}`,
-              );
-            }
             cleanUp();
             resolve({ commandType, data: resData.join('') });
             return true;
@@ -88,6 +90,7 @@ export const receiveCommand = (
         return false;
       }
 
+      // eslint-disable-next-line
       async function recheckPacket() {
         try {
           if (!connection.isConnected()) {
@@ -107,8 +110,6 @@ export const receiveCommand = (
             );
             return;
           }
-
-          logger.info(`Received: ${data}`);
 
           const packetList = xmodemDecode(data, version);
           let isDone = false;
@@ -138,6 +139,7 @@ export const receiveCommand = (
         recheckPacket,
         config.v1.constants.RECHECK_TIME,
       );
-    },
-  );
-};
+    } catch (error) {
+      reject(error);
+    }
+  });

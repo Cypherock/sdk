@@ -13,6 +13,7 @@ import {
   formatSDKVersion,
 } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
+import assert from './utils/assert';
 
 export default class SDK {
   private readonly version: string;
@@ -75,7 +76,7 @@ export default class SDK {
   }
 
   public async receiveLegacyCommand(commands: number[], timeout?: number) {
-    return legacyOperations.receiveCommand(
+    return legacyOperations.receiveData(
       this.connection,
       commands,
       PacketVersionMap.v1,
@@ -216,7 +217,9 @@ export default class SDK {
     );
   }
 
-  private static async getSDKVersion(connection: IDeviceConnection) {
+  public static async getSDKVersion(connection: IDeviceConnection) {
+    assert(connection, "Invalid connection");
+
     let retries = 0;
     const maxTries = 2;
     let firstError: Error = new DeviceCommunicationError(
@@ -234,7 +237,7 @@ export default class SDK {
           2,
         );
 
-        const sdkVersionData = await legacyOperations.receiveCommand(
+        const sdkVersionData = await legacyOperations.receiveData(
           connection,
           [88],
           PacketVersionMap.v1,
