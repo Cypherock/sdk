@@ -218,7 +218,7 @@ export default class SDK {
   }
 
   public static async getSDKVersion(connection: IDeviceConnection) {
-    assert(connection, "Invalid connection");
+    assert(connection, 'Invalid connection');
 
     let retries = 0;
     const maxTries = 2;

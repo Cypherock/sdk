@@ -1,4 +1,5 @@
-import { DeviceConnectionError ,
+import {
+  DeviceConnectionError,
   ConnectionTypeMap,
   DeviceState,
   MockDeviceConnection,

@@ -5,6 +5,7 @@ import { encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
 import canRetry from './canRetry';
+import assert from '../../utils/assert';
 
 export const sendCommand = async ({
   connection,
@@ -21,6 +22,11 @@ export const sendCommand = async ({
   maxTries?: number;
   isProto: boolean;
 }): Promise<void> => {
+  assert(connection, 'Invalid connection');
+  assert(data, 'Invalid data');
+  assert(version, 'Invalid version');
+  assert(sequenceNumber, 'Invalid sequenceNumber');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -67,7 +73,7 @@ export const sendCommand = async ({
       tries += 1;
     }
 
-    if (firstError) {
+    if (!isSuccess && firstError) {
       throw firstError;
     }
   }

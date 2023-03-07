@@ -23,7 +23,7 @@ export const v3 = {
 const config = {
   v1,
   v2,
-  v3
-}
+  v3,
+};
 
 export default config;
