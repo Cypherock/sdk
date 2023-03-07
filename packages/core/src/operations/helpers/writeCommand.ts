@@ -57,6 +57,7 @@ export const writeCommand = async ({
 
     connection.send(packet).catch((error: any) => {
       logger.error(error);
+      ackPromise.cancel();
       if (!connection.isConnected()) {
         reject(
           new DeviceConnectionError(
@@ -70,7 +71,6 @@ export const writeCommand = async ({
           ),
         );
       }
-      ackPromise.cancel();
     });
 
     ackPromise

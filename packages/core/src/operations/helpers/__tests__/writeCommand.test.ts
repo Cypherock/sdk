@@ -1,5 +1,4 @@
-import { DeviceConnectionError } from '@cypherock/sdk-interfaces';
-import {
+import { DeviceConnectionError ,
   ConnectionTypeMap,
   DeviceState,
   MockDeviceConnection,

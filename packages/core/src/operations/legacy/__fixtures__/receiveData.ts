@@ -1,4 +1,3 @@
-import { xmodemEncode } from '../../../encoders/packet/legacy';
 import { PacketVersionMap } from '../../../utils';
 
 export const legacyReceiveDataTestCases = {

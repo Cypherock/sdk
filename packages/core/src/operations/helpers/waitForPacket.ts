@@ -92,6 +92,7 @@ export const waitForPacket = ({
 
         const rawPacket = await connection.receive();
         if (!rawPacket) {
+          clearTimeout(recheckTimeout);
           recheckTimeout = setTimeout(
             recheckPacket,
             usableConfig.constants.RECHECK_TIME,
@@ -168,6 +169,7 @@ export const waitForPacket = ({
 
           resolve(receivedPacket);
         } else {
+          clearTimeout(recheckTimeout);
           recheckTimeout = setTimeout(
             recheckPacket,
             usableConfig.constants.RECHECK_TIME,
@@ -176,6 +178,7 @@ export const waitForPacket = ({
       } catch (error) {
         logger.error('Error while processing data from device');
         logger.error(error);
+        clearTimeout(recheckTimeout);
         recheckTimeout = setTimeout(
           recheckPacket,
           usableConfig.constants.RECHECK_TIME,

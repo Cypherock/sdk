@@ -1,3 +1,5 @@
+import * as uuid from 'uuid';
+
 export enum DeviceCommunicationErrorType {
   UNKNOWN_COMMUNICATION_ERROR = 'COM_0100',
   WRITE_ERROR = 'COM_0101',
@@ -53,7 +55,7 @@ export class DeviceCommunicationError extends Error {
     super();
     this.code =
       errorCode || DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR;
-    this.message = errorObjects[this.code].message;
+    this.message = errorObjects[this.code].message + uuid.v4();
     this.doRetry = errorObjects[this.code].doRetry;
 
     if ((<any>Object).setPrototypeOf) {

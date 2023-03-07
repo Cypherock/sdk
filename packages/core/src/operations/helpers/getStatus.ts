@@ -5,23 +5,23 @@ import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
 import canRetry from './canRetry';
+import assert from '../../utils/assert';
 
 export const getStatus = async ({
   connection,
   version,
   maxTries = 5,
-  logsDisabled = false,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
   maxTries?: number;
-  logsDisabled?: boolean;
 }) => {
+  assert(connection, 'Invalid connection');
+  assert(version, 'Invalid version');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
-
-  if (!logsDisabled) logger.info('Getting status');
 
   const usableConfig = config.v3;
 
@@ -76,7 +76,7 @@ export const getStatus = async ({
     tries += 1;
   }
 
-  if (firstError) {
+  if (!isSuccess && firstError) {
     throw firstError;
   }
 
