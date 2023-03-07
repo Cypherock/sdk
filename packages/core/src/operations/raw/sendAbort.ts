@@ -10,6 +10,7 @@ import { decodeStatus, StatusData } from '../../encoders/raw';
 
 import { writeCommand } from '../helpers/writeCommand';
 import canRetry from '../helpers/canRetry';
+import assert from '../../utils/assert';
 
 export const sendAbort = async ({
   connection,
@@ -22,6 +23,10 @@ export const sendAbort = async ({
   sequenceNumber: number;
   maxTries?: number;
 }): Promise<StatusData> => {
+  assert(connection, 'Invalid connection');
+  assert(version, 'Invalid version');
+  assert(sequenceNumber, 'Invalid sequenceNumber');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -90,7 +95,7 @@ export const sendAbort = async ({
     tries += 1;
   }
 
-  if (firstError) {
+  if (!isSuccess && firstError) {
     throw firstError;
   }
 
