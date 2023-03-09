@@ -5,9 +5,10 @@ import {
   DeviceConnectionErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { hexToUint8Array, logger, uint8ArrayToHex } from '../../utils';
+import { hexToUint8Array, uint8ArrayToHex } from '../../utils';
 import * as config from '../../config';
 import canRetry from '../helpers/canRetry';
+import assert from '../../utils/assert';
 
 const ACK_PACKET = '18';
 /*
@@ -44,6 +45,7 @@ const writePacket = (
     async function recheckPacket() {
       try {
         if (!connection.isConnected()) {
+          cleanUp();
           reject(
             new DeviceConnectionError(
               DeviceConnectionErrorType.CONNECTION_CLOSED,
@@ -72,8 +74,6 @@ const writePacket = (
           config.v1.constants.RECHECK_TIME,
         );
       } catch (error) {
-        logger.error('Error while processing data from device');
-        logger.error(error);
         recheckTimeout = setTimeout(
           recheckPacket,
           config.v1.constants.RECHECK_TIME,
@@ -101,7 +101,13 @@ const writePacket = (
     );
   });
 
-export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
+export const sendBootloaderAbort = async (
+  connection: IDeviceConnection,
+  maxTries?: number,
+  options?: { timeout?: number; firstTimeout?: number },
+) => {
+  assert(connection, 'Invalid connection');
+
   const packetsList = ['41'];
   /**
    * Create a list of each packet and self contained retries and listener
@@ -113,7 +119,7 @@ export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
         reject: (err?: Error) => void,
       ) => {
         let tries = 1;
-        const innerMaxTries = 5;
+        const innerMaxTries = maxTries ?? 5;
         let firstError: Error | undefined;
         while (tries <= innerMaxTries) {
           try {
@@ -122,7 +128,9 @@ export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
               hexToUint8Array(d),
               // Wait for 10 sec for the 1st packet ACK, there may be heavy processing task
               // in device after 1st packet.
-              index === 0 ? { timeout: 10000 } : undefined,
+              index === 0
+                ? { timeout: options?.firstTimeout ?? 10000 }
+                : { timeout: options?.timeout },
             );
             if (!errorMsg) {
               resolve(true);
@@ -138,7 +146,6 @@ export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
             if (!firstError) {
               firstError = e as Error;
             }
-            logger.warn('Error in sending data', e);
           }
           tries += 1;
         }
@@ -155,13 +162,8 @@ export const sendBootloaderAbort = async (connection: IDeviceConnection) => {
   );
 
   for (const j of dataList) {
-    try {
-      await new Promise((res, rej) => {
-        j(res, rej);
-      });
-    } catch (e) {
-      logger.error(e);
-      throw e;
-    }
+    await new Promise((res, rej) => {
+      j(res, rej);
+    });
   }
 };

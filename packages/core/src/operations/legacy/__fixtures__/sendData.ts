@@ -27,6 +27,13 @@ export const legacySendDataTestCases = {
       maxTries: 2,
     },
     {
+      connection: null,
+      command: 2,
+      data: '12',
+      version: PacketVersionMap.v1,
+      maxTries: 2,
+    },
+    {
       command: undefined,
       data: '12',
       version: PacketVersionMap.v1,
@@ -42,6 +49,13 @@ export const legacySendDataTestCases = {
       command: 2,
       data: '12',
       version: undefined,
+      maxTries: 2,
+    },
+    {
+      connection: undefined,
+      command: 2,
+      data: '12',
+      version: PacketVersionMap.v1,
       maxTries: 2,
     },
     {

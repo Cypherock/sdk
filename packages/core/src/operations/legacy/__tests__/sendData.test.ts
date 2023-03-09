@@ -171,13 +171,25 @@ describe('Legacy Operations: sendData', () => {
 
   test('should throw error with invalid arguments', async () => {
     for (const testCase of legacySendDataTestCases.invalidArgs) {
+      const params = {
+        connection: testCase.connection as any,
+        command: testCase.command as any,
+        data: testCase.data as any,
+        version: testCase.version as any,
+        maxTries: testCase.maxTries as any,
+      };
+
+      if (!Object.prototype.hasOwnProperty.call(testCase, 'connection')) {
+        params.connection = connection;
+      }
+
       await expect(
         sendData(
-          connection,
-          testCase.command as any,
-          testCase.data as any,
-          testCase.version as any,
-          testCase.maxTries as any,
+          params.connection,
+          params.command,
+          params.data,
+          params.version,
+          params.maxTries,
         ),
       ).rejects.toThrow();
     }
