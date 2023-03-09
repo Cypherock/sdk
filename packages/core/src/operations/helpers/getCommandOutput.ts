@@ -1,4 +1,8 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
+import {
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
+  IDeviceConnection,
+} from '@cypherock/sdk-interfaces';
 import {
   intToUintByte,
   logger,
@@ -10,6 +14,7 @@ import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
 import canRetry from './canRetry';
+import assert from '../../utils/assert';
 
 export const getCommandOutput = async ({
   connection,
@@ -22,8 +27,18 @@ export const getCommandOutput = async ({
   sequenceNumber: number;
   maxTries?: number;
 }) => {
+  assert(connection, 'Invalid connection');
+  assert(version, 'Invalid version');
+  assert(sequenceNumber, 'Invalid sequenceNumber');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
+  }
+
+  if (!connection.isConnected()) {
+    throw new DeviceConnectionError(
+      DeviceConnectionErrorType.CONNECTION_CLOSED,
+    );
   }
 
   const usableConfig = config.v3;
@@ -70,7 +85,7 @@ export const getCommandOutput = async ({
         dataList[receivedPacket.currentPacketNumber - 1] =
           receivedPacket.payloadData;
         totalPackets = receivedPacket.totalPacketNumber;
-        currentPacket += 1;
+        currentPacket = receivedPacket.currentPacketNumber + 1;
         isSuccess = true;
         isStatusResponse =
           receivedPacket.packetType ===
@@ -89,7 +104,7 @@ export const getCommandOutput = async ({
       tries += 1;
     }
 
-    if (firstError) {
+    if (!isSuccess && firstError) {
       throw firstError;
     }
   }

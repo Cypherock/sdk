@@ -3,17 +3,17 @@ import {
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { describe, expect, afterEach, jest } from '@jest/globals';
-import { sendCommand } from '../sendCommand';
-import { rawSendCommandTestCases } from '../__fixtures__/sendCommand';
+import { getCommandOutput } from '../getCommandOutput';
+import { rawGetCommandOutputTestCases } from '../__fixtures__/getCommandOutput';
 
-describe('Raw Operations: sendCommand', () => {
+describe('Raw Operations: getCommandOutput', () => {
   let connection: MockDeviceConnection;
 
   const RealDate = Date.now;
 
   beforeEach(async () => {
     global.Date.now = jest.fn(() =>
-      rawSendCommandTestCases.constantDate.getTime(),
+      rawGetCommandOutputTestCases.constantDate.getTime(),
     );
     connection = await MockDeviceConnection.create();
     await connection.beforeOperation();
@@ -24,7 +24,7 @@ describe('Raw Operations: sendCommand', () => {
     await connection.afterOperation();
   });
 
-  test('should be able to send command', async () => {
+  test('should be able to get send command', async () => {
     const getOnData =
       (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[][] }) =>
       async (data: Uint8Array) => {
@@ -38,20 +38,21 @@ describe('Raw Operations: sendCommand', () => {
         }
       };
 
-    for (const testCase of rawSendCommandTestCases.valid) {
+    for (const testCase of rawGetCommandOutputTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
       connection.removeListeners();
 
       connection.configureListeners(getOnData(testCase));
-      await sendCommand({
+      const output = await getCommandOutput({
         connection,
-        data: testCase.data,
-        commandType: testCase.commandType,
         sequenceNumber: testCase.sequenceNumber,
         version: testCase.version,
+        maxTries: 1,
       });
+
+      expect(output).toEqual(testCase.output);
 
       await connection.destroy();
     }
@@ -74,7 +75,6 @@ describe('Raw Operations: sendCommand', () => {
         expect(packetIndex).toBeGreaterThanOrEqual(0);
 
         const currentRetry = (retries[packetIndex] ?? 0) + 1;
-
         const doTriggerError =
           Math.random() < 0.5 &&
           currentRetry < maxTries &&
@@ -88,9 +88,12 @@ describe('Raw Operations: sendCommand', () => {
           totalTimeoutTriggers += 1;
           retries[packetIndex] = currentRetry;
         }
+        for (const ackPacket of testCase.ackPackets[packetIndex]) {
+          await connection.mockDeviceSend(ackPacket);
+        }
       };
 
-    for (const testCase of rawSendCommandTestCases.valid) {
+    for (const testCase of rawGetCommandOutputTestCases.valid) {
       retries = {};
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
@@ -98,14 +101,14 @@ describe('Raw Operations: sendCommand', () => {
       connection.removeListeners();
 
       connection.configureListeners(getOnData(testCase));
-      await sendCommand({
+      const output = await getCommandOutput({
         connection,
-        data: testCase.data,
-        commandType: testCase.commandType,
         sequenceNumber: testCase.sequenceNumber,
         version: testCase.version,
         maxTries,
       });
+
+      expect(output).toEqual(testCase.output);
 
       await connection.destroy();
     }
@@ -125,7 +128,7 @@ describe('Raw Operations: sendCommand', () => {
         }
       };
 
-    for (const testCase of rawSendCommandTestCases.valid) {
+    for (const testCase of rawGetCommandOutputTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -134,12 +137,11 @@ describe('Raw Operations: sendCommand', () => {
       connection.configureListeners(getOnData(testCase));
       await connection.destroy();
       await expect(
-        sendCommand({
+        getCommandOutput({
           connection,
-          data: testCase.data,
-          commandType: testCase.commandType,
           sequenceNumber: testCase.sequenceNumber,
           version: testCase.version,
+          maxTries: 1,
         }),
       ).rejects.toThrow(DeviceConnectionError);
 
@@ -167,20 +169,20 @@ describe('Raw Operations: sendCommand', () => {
         }
       };
 
-    for (const testCase of rawSendCommandTestCases.valid) {
+    for (const testCase of rawGetCommandOutputTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
       connection.removeListeners();
 
       connection.configureListeners(getOnData(testCase));
+      await connection.destroy();
       await expect(
-        sendCommand({
+        getCommandOutput({
           connection,
-          data: testCase.data,
-          commandType: testCase.commandType,
           sequenceNumber: testCase.sequenceNumber,
           version: testCase.version,
+          maxTries: 1,
         }),
       ).rejects.toThrow(DeviceConnectionError);
 
@@ -202,7 +204,7 @@ describe('Raw Operations: sendCommand', () => {
         }
       };
 
-    for (const testCase of rawSendCommandTestCases.error) {
+    for (const testCase of rawGetCommandOutputTestCases.error) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -210,10 +212,8 @@ describe('Raw Operations: sendCommand', () => {
 
       connection.configureListeners(getOnData(testCase));
       await expect(
-        sendCommand({
+        getCommandOutput({
           connection,
-          data: testCase.data,
-          commandType: testCase.commandType,
           sequenceNumber: testCase.sequenceNumber,
           version: testCase.version,
           maxTries: 1,
@@ -225,11 +225,9 @@ describe('Raw Operations: sendCommand', () => {
   });
 
   test('should throw error with invalid arguments', async () => {
-    for (const testCase of rawSendCommandTestCases.invalidArgs) {
+    for (const testCase of rawGetCommandOutputTestCases.invalidArgs) {
       const params = {
         connection: testCase.connection as any,
-        commandType: testCase.commandType as any,
-        data: testCase.data as any,
         sequenceNumber: testCase.sequenceNumber as any,
         version: testCase.version as any,
       };
@@ -238,7 +236,7 @@ describe('Raw Operations: sendCommand', () => {
         params.connection = connection;
       }
 
-      await expect(sendCommand(params)).rejects.toBeInstanceOf(Error);
+      await expect(getCommandOutput(params)).rejects.toBeInstanceOf(Error);
     }
   });
 });

@@ -1,4 +1,8 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
+import {
+  DeviceAppError,
+  DeviceAppErrorType,
+  IDeviceConnection,
+} from '@cypherock/sdk-interfaces';
 import { PacketVersion } from '../../utils';
 import {
   decodeRawData,
@@ -28,7 +32,12 @@ export const getCommandOutput = async ({
 
   let output: RawData | StatusData;
   if (isStatus) {
-    output = decodeStatus(rawData, version);
+    const status = decodeStatus(rawData, version);
+    if (status.currentCmdSeq !== sequenceNumber) {
+      throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
+    }
+
+    output = status;
   } else {
     output = decodeRawData(rawData, version);
   }

@@ -24,7 +24,7 @@ describe('Raw Operations: sendAbort', () => {
     await connection.afterOperation();
   });
 
-  test('should be able to get send abort', async () => {
+  test('should be able to send abort', async () => {
     const getOnData =
       (testCase: { abortRequest: Uint8Array; ackPackets: Uint8Array[] }) =>
       async (data: Uint8Array) => {
