@@ -24,7 +24,7 @@ describe('Raw Operations: getCommandOutput', () => {
     await connection.afterOperation();
   });
 
-  test('should be able to get send command', async () => {
+  test('should be able to get command', async () => {
     const getOnData =
       (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[][] }) =>
       async (data: Uint8Array) => {
@@ -87,9 +87,6 @@ describe('Raw Operations: getCommandOutput', () => {
         } else {
           totalTimeoutTriggers += 1;
           retries[packetIndex] = currentRetry;
-        }
-        for (const ackPacket of testCase.ackPackets[packetIndex]) {
-          await connection.mockDeviceSend(ackPacket);
         }
       };
 

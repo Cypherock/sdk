@@ -12,12 +12,13 @@ import {
 } from '../../encoders/raw';
 
 import { getCommandOutput } from './getCommandOutput';
+import assert from '../../utils/assert';
 
 export interface IWaitForCommandOutputParams {
   connection: IDeviceConnection;
   sequenceNumber: number;
   expectedCommandTypes: number[];
-  onStatus: (status: StatusData) => void;
+  onStatus?: (status: StatusData) => void;
   version: PacketVersion;
   maxTries?: number;
   options?: { interval?: number };
@@ -32,6 +33,16 @@ export const waitForCommandOutput = async ({
   version,
   maxTries = 5,
 }: IWaitForCommandOutputParams): Promise<RawData> => {
+  assert(connection, 'Invalid connection');
+  assert(expectedCommandTypes, 'Invalid expectedCommandTypes');
+  assert(sequenceNumber, 'Invalid sequenceNumber');
+  assert(version, 'Invalid version');
+
+  assert(
+    expectedCommandTypes.length > 0,
+    'expectedCommandTypes should not be empty',
+  );
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
@@ -96,7 +107,9 @@ export const waitForCommandOutput = async ({
     }
 
     if (status.deviceIdleState === DeviceIdleState.USB) {
-      onStatus(response as StatusData);
+      if (onStatus) {
+        onStatus(response as StatusData);
+      }
     }
 
     await sleep(options?.interval ?? 200);
