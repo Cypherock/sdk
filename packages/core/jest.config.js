@@ -5,6 +5,7 @@ module.exports = {
     'src/**/*.ts',
     '!src/**/*.test.ts',
     '!src/**/__fixtures__/*',
+    '!src/encoders/proto/generated/*',
   ],
   testTimeout: 10000,
 };

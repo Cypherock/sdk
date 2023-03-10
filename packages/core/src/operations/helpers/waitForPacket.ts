@@ -82,6 +82,7 @@ export const waitForPacket = ({
     async function recheckPacket() {
       try {
         if (!connection.isConnected()) {
+          cleanUp();
           reject(
             new DeviceConnectionError(
               DeviceConnectionErrorType.CONNECTION_CLOSED,

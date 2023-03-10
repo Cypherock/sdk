@@ -118,7 +118,7 @@ describe('Proto Operations: getStatus', () => {
 
       connection.configureListeners(getOnData(testCase));
       await connection.destroy();
-      expect(
+      await expect(
         getStatus({
           connection,
           version: testCase.version,
@@ -152,7 +152,7 @@ describe('Proto Operations: getStatus', () => {
       connection.removeListeners();
 
       connection.configureListeners(getOnData(testCase));
-      expect(
+      await expect(
         getStatus({
           connection,
           version: testCase.version,

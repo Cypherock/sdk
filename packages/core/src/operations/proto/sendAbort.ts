@@ -95,7 +95,7 @@ export const sendAbort = async ({
     tries += 1;
   }
 
-  if (firstError) {
+  if (!isSuccess && firstError) {
     throw firstError;
   }
 
