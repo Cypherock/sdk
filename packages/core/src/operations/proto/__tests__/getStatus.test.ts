@@ -6,7 +6,7 @@ import { describe, expect, afterEach, jest } from '@jest/globals';
 import { getStatus } from '../getStatus';
 import { rawGetStatusTestCases } from '../__fixtures__/getStatus';
 
-describe('Raw Operations: getStatus', () => {
+describe('Proto Operations: getStatus', () => {
   let connection: MockDeviceConnection;
 
   const RealDate = Date.now;

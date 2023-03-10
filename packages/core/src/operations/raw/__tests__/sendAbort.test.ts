@@ -80,7 +80,7 @@ describe('Raw Operations: sendAbort', () => {
         }
       };
 
-    for (const testCase of [rawSendAbortTestCases.valid[0]]) {
+    for (const testCase of rawSendAbortTestCases.valid) {
       retries = 0;
 
       connection = await MockDeviceConnection.create();
