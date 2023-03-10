@@ -165,7 +165,7 @@ export default class SDK {
       throw new Error('No appletId found in SDK Core');
     }
 
-    const resp = await operations.getCommandOutput({
+    const resp = await operations.getResult({
       connection: this.connection,
       appletId: this.appletId,
       sequenceNumber,

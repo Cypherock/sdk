@@ -10,7 +10,7 @@ import {
   Status,
 } from '../../encoders/proto/generated/core';
 
-import { getCommandOutput } from './getCommandOutput';
+import { getResult } from './getResult';
 
 export interface IWaitForCommandOutputParams {
   connection: IDeviceConnection;
@@ -41,7 +41,7 @@ export const waitForCommandOutput = async ({
   let lastDeviceWaitingOn = -1;
 
   while (true) {
-    const response = await getCommandOutput({
+    const response = await getResult({
       connection,
       version,
       appletId,

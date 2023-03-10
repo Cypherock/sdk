@@ -3,17 +3,17 @@ import {
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { describe, expect, afterEach, jest } from '@jest/globals';
-import { getCommandOutput } from '../getCommandOutput';
-import { rawGetCommandOutputTestCases } from '../__fixtures__/getCommandOutput';
+import { getResult } from '../getResult';
+import { rawGetResultTestCases } from '../__fixtures__/getResult';
 
-describe('Raw Operations: getCommandOutput', () => {
+describe('Proto Operations: getResult', () => {
   let connection: MockDeviceConnection;
 
   const RealDate = Date.now;
 
   beforeEach(async () => {
     global.Date.now = jest.fn(() =>
-      rawGetCommandOutputTestCases.constantDate.getTime(),
+      rawGetResultTestCases.constantDate.getTime(),
     );
     connection = await MockDeviceConnection.create();
     await connection.beforeOperation();
@@ -24,7 +24,7 @@ describe('Raw Operations: getCommandOutput', () => {
     await connection.afterOperation();
   });
 
-  test('should be able to get command', async () => {
+  test('should be able to get result', async () => {
     const getOnData =
       (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[][] }) =>
       async (data: Uint8Array) => {
@@ -38,16 +38,17 @@ describe('Raw Operations: getCommandOutput', () => {
         }
       };
 
-    for (const testCase of rawGetCommandOutputTestCases.valid) {
+    for (const testCase of rawGetResultTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
       connection.removeListeners();
 
       connection.configureListeners(getOnData(testCase));
-      const output = await getCommandOutput({
+      const output = await getResult({
         connection,
         sequenceNumber: testCase.sequenceNumber,
+        appletId: testCase.appletId,
         version: testCase.version,
         maxTries: 1,
       });
@@ -90,7 +91,7 @@ describe('Raw Operations: getCommandOutput', () => {
         }
       };
 
-    for (const testCase of rawGetCommandOutputTestCases.valid) {
+    for (const testCase of rawGetResultTestCases.valid) {
       retries = {};
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
@@ -98,9 +99,10 @@ describe('Raw Operations: getCommandOutput', () => {
       connection.removeListeners();
 
       connection.configureListeners(getOnData(testCase));
-      const output = await getCommandOutput({
+      const output = await getResult({
         connection,
         sequenceNumber: testCase.sequenceNumber,
+        appletId: testCase.appletId,
         version: testCase.version,
         maxTries,
       });
@@ -125,7 +127,7 @@ describe('Raw Operations: getCommandOutput', () => {
         }
       };
 
-    for (const testCase of rawGetCommandOutputTestCases.valid) {
+    for (const testCase of rawGetResultTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -134,9 +136,10 @@ describe('Raw Operations: getCommandOutput', () => {
       connection.configureListeners(getOnData(testCase));
       await connection.destroy();
       await expect(
-        getCommandOutput({
+        getResult({
           connection,
           sequenceNumber: testCase.sequenceNumber,
+          appletId: testCase.appletId,
           version: testCase.version,
           maxTries: 1,
         }),
@@ -166,7 +169,7 @@ describe('Raw Operations: getCommandOutput', () => {
         }
       };
 
-    for (const testCase of rawGetCommandOutputTestCases.valid) {
+    for (const testCase of rawGetResultTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -174,9 +177,10 @@ describe('Raw Operations: getCommandOutput', () => {
 
       connection.configureListeners(getOnData(testCase));
       await expect(
-        getCommandOutput({
+        getResult({
           connection,
           sequenceNumber: testCase.sequenceNumber,
+          appletId: testCase.appletId,
           version: testCase.version,
           maxTries: 1,
         }),
@@ -200,7 +204,7 @@ describe('Raw Operations: getCommandOutput', () => {
         }
       };
 
-    for (const testCase of rawGetCommandOutputTestCases.error) {
+    for (const testCase of rawGetResultTestCases.error) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -208,9 +212,10 @@ describe('Raw Operations: getCommandOutput', () => {
 
       connection.configureListeners(getOnData(testCase));
       await expect(
-        getCommandOutput({
+        getResult({
           connection,
           sequenceNumber: testCase.sequenceNumber,
+          appletId: testCase.appletId,
           version: testCase.version,
           maxTries: 1,
         }),
@@ -221,9 +226,10 @@ describe('Raw Operations: getCommandOutput', () => {
   });
 
   test('should throw error with invalid arguments', async () => {
-    for (const testCase of rawGetCommandOutputTestCases.invalidArgs) {
+    for (const testCase of rawGetResultTestCases.invalidArgs) {
       const params = {
         connection: testCase.connection as any,
+        appletId: testCase.appletId as any,
         sequenceNumber: testCase.sequenceNumber as any,
         version: testCase.version as any,
       };
@@ -232,7 +238,7 @@ describe('Raw Operations: getCommandOutput', () => {
         params.connection = connection;
       }
 
-      await expect(getCommandOutput(params)).rejects.toBeInstanceOf(Error);
+      await expect(getResult(params)).rejects.toBeInstanceOf(Error);
     }
   });
 });

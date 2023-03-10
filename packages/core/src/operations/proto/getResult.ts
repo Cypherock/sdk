@@ -6,8 +6,9 @@ import {
 import { hexToUint8Array, PacketVersion } from '../../utils';
 import { Status, Result } from '../../encoders/proto/generated/core';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
+import assert from '../../utils/assert';
 
-export const getCommandOutput = async ({
+export const getResult = async ({
   connection,
   version,
   maxTries = 5,
@@ -20,7 +21,9 @@ export const getCommandOutput = async ({
   appletId: number;
   maxTries?: number;
 }) => {
-  const { isStatus, rawData } = await getCommandOutputHelper({
+  assert(appletId, 'Invalid appletId');
+
+  const { isStatus, protobufData } = await getCommandOutputHelper({
     connection,
     version,
     maxTries,
@@ -29,9 +32,12 @@ export const getCommandOutput = async ({
 
   let output: Uint8Array | Status;
   if (isStatus) {
-    output = Status.decode(hexToUint8Array(rawData));
+    output = Status.decode(hexToUint8Array(protobufData));
+    if (output.currentCmdSeq !== sequenceNumber) {
+      throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
+    }
   } else {
-    const result = Result.decode(hexToUint8Array(rawData));
+    const result = Result.decode(hexToUint8Array(protobufData));
     if (result.cmd?.appletId !== appletId) {
       throw new DeviceAppError(DeviceAppErrorType.INVALID_APP_ID);
     }
