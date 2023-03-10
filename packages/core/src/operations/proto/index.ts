@@ -1,5 +1,5 @@
 export * from './getStatus';
 export * from './getCommandOutput';
-export * from './sendCommand';
+export * from './sendQuery';
 export * from './waitForCommandOutput';
 export * from './sendAbort';

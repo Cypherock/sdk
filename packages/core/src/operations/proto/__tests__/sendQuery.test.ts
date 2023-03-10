@@ -3,17 +3,17 @@ import {
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { describe, expect, afterEach, jest } from '@jest/globals';
-import { sendAbort } from '../sendAbort';
-import { protoSendAbortTestCases } from '../__fixtures__/sendAbort';
+import { sendQuery } from '../sendQuery';
+import { protoSendQueryTestCases } from '../__fixtures__/sendQuery';
 
-describe('Proto Operations: sendAbort', () => {
+describe('Proto Operations: sendQuery', () => {
   let connection: MockDeviceConnection;
 
   const RealDate = Date.now;
 
   beforeEach(async () => {
     global.Date.now = jest.fn(() =>
-      protoSendAbortTestCases.constantDate.getTime(),
+      protoSendQueryTestCases.constantDate.getTime(),
     );
     connection = await MockDeviceConnection.create();
     await connection.beforeOperation();
@@ -24,30 +24,34 @@ describe('Proto Operations: sendAbort', () => {
     await connection.afterOperation();
   });
 
-  test('should be able to send abort', async () => {
+  test('should be able to send query', async () => {
     const getOnData =
-      (testCase: { abortRequest: Uint8Array; ackPackets: Uint8Array[] }) =>
+      (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[][] }) =>
       async (data: Uint8Array) => {
-        expect(testCase.abortRequest).toEqual(data);
-        for (const ackPacket of testCase.ackPackets) {
+        const packetIndex = testCase.packets.findIndex(
+          elem => elem.toString() === data.toString(),
+        );
+        expect(testCase.packets).toContainEqual(data);
+        expect(packetIndex).toBeGreaterThanOrEqual(0);
+        for (const ackPacket of testCase.ackPackets[packetIndex]) {
           await connection.mockDeviceSend(ackPacket);
         }
       };
 
-    for (const testCase of protoSendAbortTestCases.valid) {
+    for (const testCase of protoSendQueryTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
       connection.removeListeners();
 
       connection.configureListeners(getOnData(testCase));
-      const status = await sendAbort({
+      await sendQuery({
         connection,
-        version: testCase.version,
+        data: testCase.data,
+        appletId: testCase.appletId,
         sequenceNumber: testCase.sequenceNumber,
+        version: testCase.version,
       });
-
-      expect(status).toEqual(testCase.status);
 
       await connection.destroy();
     }
@@ -58,45 +62,50 @@ describe('Proto Operations: sendAbort', () => {
     let totalTimeoutTriggers = 0;
 
     const maxTries = 3;
-    let retries = 0;
+    let retries: Record<number, number | undefined> = {};
 
     const getOnData =
-      (testCase: { abortRequest: Uint8Array; ackPackets: Uint8Array[] }) =>
-      async () => {
-        const currentRetry = retries + 1;
+      (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[][] }) =>
+      async (data: Uint8Array) => {
+        const packetIndex = testCase.packets.findIndex(
+          elem => elem.toString() === data.toString(),
+        );
+        expect(testCase.packets).toContainEqual(data);
+        expect(packetIndex).toBeGreaterThanOrEqual(0);
+
+        const currentRetry = (retries[packetIndex] ?? 0) + 1;
 
         const doTriggerError =
-          Math.random() > 0.5 &&
+          Math.random() < 0.5 &&
           currentRetry < maxTries &&
           totalTimeoutTriggers < maxTimeoutTriggers;
 
         if (!doTriggerError) {
-          for (const ackPacket of testCase.ackPackets) {
+          for (const ackPacket of testCase.ackPackets[packetIndex]) {
             await connection.mockDeviceSend(ackPacket);
           }
         } else {
           totalTimeoutTriggers += 1;
-          retries = currentRetry;
+          retries[packetIndex] = currentRetry;
         }
       };
 
-    for (const testCase of protoSendAbortTestCases.valid) {
-      retries = 0;
-
+    for (const testCase of protoSendQueryTestCases.valid) {
+      retries = {};
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
       connection.removeListeners();
 
       connection.configureListeners(getOnData(testCase));
-      const status = await sendAbort({
+      await sendQuery({
         connection,
-        version: testCase.version,
+        data: testCase.data,
+        appletId: testCase.appletId,
         sequenceNumber: testCase.sequenceNumber,
+        version: testCase.version,
         maxTries,
       });
-
-      expect(status).toEqual(testCase.status);
 
       await connection.destroy();
     }
@@ -104,15 +113,19 @@ describe('Proto Operations: sendAbort', () => {
 
   test('should return valid errors when device is disconnected', async () => {
     const getOnData =
-      (testCase: { abortRequest: Uint8Array; ackPackets: Uint8Array[] }) =>
+      (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[][] }) =>
       async (data: Uint8Array) => {
-        expect(testCase.abortRequest).toEqual(data);
-        for (const ackPacket of testCase.ackPackets) {
+        const packetIndex = testCase.packets.findIndex(
+          elem => elem.toString() === data.toString(),
+        );
+        expect(testCase.packets).toContainEqual(data);
+        expect(packetIndex).toBeGreaterThanOrEqual(0);
+        for (const ackPacket of testCase.ackPackets[packetIndex]) {
           await connection.mockDeviceSend(ackPacket);
         }
       };
 
-    for (const testCase of protoSendAbortTestCases.valid) {
+    for (const testCase of protoSendQueryTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -121,8 +134,10 @@ describe('Proto Operations: sendAbort', () => {
       connection.configureListeners(getOnData(testCase));
       await connection.destroy();
       await expect(
-        sendAbort({
+        sendQuery({
           connection,
+          data: testCase.data,
+          appletId: testCase.appletId,
           sequenceNumber: testCase.sequenceNumber,
           version: testCase.version,
         }),
@@ -134,12 +149,16 @@ describe('Proto Operations: sendAbort', () => {
 
   test('should return valid errors when device is disconnected in between', async () => {
     const getOnData =
-      (testCase: { abortRequest: Uint8Array; ackPackets: Uint8Array[] }) =>
+      (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[][] }) =>
       async (data: Uint8Array) => {
-        expect(testCase.abortRequest).toEqual(data);
+        const packetIndex = testCase.packets.findIndex(
+          elem => elem.toString() === data.toString(),
+        );
+        expect(testCase.packets).toContainEqual(data);
+        expect(packetIndex).toBeGreaterThanOrEqual(0);
         let i = 0;
-        for (const ackPacket of testCase.ackPackets) {
-          if (i >= testCase.ackPackets.length - 1) {
+        for (const ackPacket of testCase.ackPackets[packetIndex]) {
+          if (i >= testCase.ackPackets[packetIndex].length - 1) {
             await connection.destroy();
           } else {
             await connection.mockDeviceSend(ackPacket);
@@ -148,7 +167,7 @@ describe('Proto Operations: sendAbort', () => {
         }
       };
 
-    for (const testCase of protoSendAbortTestCases.valid) {
+    for (const testCase of protoSendQueryTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -156,8 +175,10 @@ describe('Proto Operations: sendAbort', () => {
 
       connection.configureListeners(getOnData(testCase));
       await expect(
-        sendAbort({
+        sendQuery({
           connection,
+          data: testCase.data,
+          appletId: testCase.appletId,
           sequenceNumber: testCase.sequenceNumber,
           version: testCase.version,
         }),
@@ -169,15 +190,19 @@ describe('Proto Operations: sendAbort', () => {
 
   test('should return valid errors when device returns invalid data', async () => {
     const getOnData =
-      (testCase: { abortRequest: Uint8Array; ackPackets: Uint8Array[] }) =>
+      (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[][] }) =>
       async (data: Uint8Array) => {
-        expect(testCase.abortRequest).toEqual(data);
-        for (const ackPacket of testCase.ackPackets) {
+        const packetIndex = testCase.packets.findIndex(
+          elem => elem.toString() === data.toString(),
+        );
+        expect(testCase.packets).toContainEqual(data);
+        expect(packetIndex).toBeGreaterThanOrEqual(0);
+        for (const ackPacket of testCase.ackPackets[packetIndex]) {
           await connection.mockDeviceSend(ackPacket);
         }
       };
 
-    for (const testCase of protoSendAbortTestCases.error) {
+    for (const testCase of protoSendQueryTestCases.error) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -185,10 +210,13 @@ describe('Proto Operations: sendAbort', () => {
 
       connection.configureListeners(getOnData(testCase));
       await expect(
-        sendAbort({
+        sendQuery({
           connection,
+          data: testCase.data,
+          appletId: testCase.appletId,
           sequenceNumber: testCase.sequenceNumber,
           version: testCase.version,
+          maxTries: 1,
         }),
       ).rejects.toThrow(testCase.errorInstance);
 
@@ -197,18 +225,20 @@ describe('Proto Operations: sendAbort', () => {
   });
 
   test('should throw error with invalid arguments', async () => {
-    for (const testCase of protoSendAbortTestCases.invalidArgs) {
+    for (const testCase of protoSendQueryTestCases.invalidArgs) {
       const params = {
         connection: testCase.connection as any,
-        version: testCase.version as any,
+        appletId: testCase.appletId as any,
+        data: testCase.data as any,
         sequenceNumber: testCase.sequenceNumber as any,
+        version: testCase.version as any,
       };
 
       if (!Object.prototype.hasOwnProperty.call(testCase, 'connection')) {
         params.connection = connection;
       }
 
-      await expect(sendAbort(params)).rejects.toBeInstanceOf(Error);
+      await expect(sendQuery(params)).rejects.toBeInstanceOf(Error);
     }
   });
 });

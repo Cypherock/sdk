@@ -4,7 +4,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { PacketVersionMap } from '../../../utils';
 
-export const rawSendAbortTestCases = {
+export const protoSendAbortTestCases = {
   constantDate: new Date('2023-03-07T09:43:48.755Z'),
   invalidArgs: [
     {

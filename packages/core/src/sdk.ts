@@ -150,7 +150,7 @@ export default class SDK {
       throw new Error('No appletId found in SDK Core');
     }
 
-    await operations.sendCommand({
+    await operations.sendQuery({
       connection: this.connection,
       data: params.data,
       appletId: this.appletId,

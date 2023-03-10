@@ -4,7 +4,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { describe, expect, afterEach, jest } from '@jest/globals';
 import { getStatus } from '../getStatus';
-import { rawGetStatusTestCases } from '../__fixtures__/getStatus';
+import { protoGetStatusTestCases } from '../__fixtures__/getStatus';
 
 describe('Proto Operations: getStatus', () => {
   let connection: MockDeviceConnection;
@@ -13,7 +13,7 @@ describe('Proto Operations: getStatus', () => {
 
   beforeEach(async () => {
     global.Date.now = jest.fn(() =>
-      rawGetStatusTestCases.constantDate.getTime(),
+      protoGetStatusTestCases.constantDate.getTime(),
     );
     connection = await MockDeviceConnection.create();
     await connection.beforeOperation();
@@ -34,7 +34,7 @@ describe('Proto Operations: getStatus', () => {
         }
       };
 
-    for (const testCase of rawGetStatusTestCases.valid) {
+    for (const testCase of protoGetStatusTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -79,7 +79,7 @@ describe('Proto Operations: getStatus', () => {
         }
       };
 
-    for (const testCase of rawGetStatusTestCases.valid) {
+    for (const testCase of protoGetStatusTestCases.valid) {
       retries = 0;
 
       connection = await MockDeviceConnection.create();
@@ -110,7 +110,7 @@ describe('Proto Operations: getStatus', () => {
         }
       };
 
-    for (const testCase of rawGetStatusTestCases.valid) {
+    for (const testCase of protoGetStatusTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -145,7 +145,7 @@ describe('Proto Operations: getStatus', () => {
         }
       };
 
-    for (const testCase of rawGetStatusTestCases.valid) {
+    for (const testCase of protoGetStatusTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -164,7 +164,7 @@ describe('Proto Operations: getStatus', () => {
   });
 
   test('should throw error with invalid arguments', async () => {
-    for (const testCase of rawGetStatusTestCases.invalidArgs) {
+    for (const testCase of protoGetStatusTestCases.invalidArgs) {
       const params = {
         connection: testCase.connection as any,
         version: testCase.version as any,
