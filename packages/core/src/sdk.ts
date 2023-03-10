@@ -210,7 +210,7 @@ export default class SDK {
     data: string,
     onProgress?: (progress: number) => void,
   ) {
-    return bootloaderOperations.stmUpdateSendData(
+    return bootloaderOperations.sendBootloaderData(
       this.connection,
       data,
       onProgress,

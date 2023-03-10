@@ -10,6 +10,7 @@ import {
 import { hexToUint8Array, logger, uint8ArrayToHex } from '../../utils';
 import { stmXmodemEncode } from '../../encoders/packet/bootloader';
 import * as config from '../../config';
+import assert from '../../utils/assert';
 
 const ACK_PACKET = '06';
 const RECEIVING_MODE_PACKET = '43';
@@ -87,6 +88,7 @@ const writePacket = (
     async function recheckPacket() {
       try {
         if (!connection.isConnected()) {
+          cleanUp();
           reject(
             new DeviceConnectionError(
               DeviceConnectionErrorType.CONNECTION_CLOSED,
@@ -184,6 +186,7 @@ const checkIfInReceivingMode = async (
     async function recheckPacket() {
       try {
         if (!connection.isConnected()) {
+          cleanUp();
           reject(
             new DeviceConnectionError(
               DeviceConnectionErrorType.CONNECTION_CLOSED,
@@ -237,19 +240,18 @@ const checkIfInReceivingMode = async (
     );
   });
 
-export const stmUpdateSendData = async (
+export const sendBootloaderData = async (
   connection: IDeviceConnection,
   data: string,
   onProgress?: (percent: number) => void,
+  maxTries?: number,
+  options?: { firstTimeout?: number; timeout?: number },
 ) => {
+  assert(connection, 'Invalid connection');
+
   const packetsList = stmXmodemEncode(data);
 
-  try {
-    await checkIfInReceivingMode(connection);
-  } catch (error) {
-    logger.error(error);
-    throw error;
-  }
+  await checkIfInReceivingMode(connection, options);
 
   /**
    * Create a list of each packet and self contained retries and listener
@@ -261,7 +263,7 @@ export const stmUpdateSendData = async (
         reject: (err?: Error) => void,
       ) => {
         let tries = 1;
-        const innerMaxTries = 5;
+        const innerMaxTries = maxTries ?? 5;
         let firstError: Error | undefined;
         while (tries <= innerMaxTries) {
           try {
@@ -270,7 +272,9 @@ export const stmUpdateSendData = async (
               hexToUint8Array(d),
               // Wait for 10 sec for the 1st packet ACK, there may be heavy processing task
               // in device after 1st packet.
-              index === 0 ? { timeout: 10000 } : undefined,
+              index === 0
+                ? { timeout: options?.firstTimeout ?? 10000 }
+                : { timeout: options?.timeout },
             );
             if (!errorMsg) {
               if (onProgress) {

@@ -1,2 +1,2 @@
 export * from './sendBootloaderAbort';
-export * from './stmSendData';
+export * from './sendBootloaderData';
