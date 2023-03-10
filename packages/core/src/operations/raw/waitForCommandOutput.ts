@@ -3,7 +3,7 @@ import {
   DeviceAppErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { logger, PacketVersion, PacketVersionMap, sleep } from '../../utils';
+import { PacketVersion, PacketVersionMap, sleep } from '../../utils';
 import {
   CmdState,
   DeviceIdleState,
@@ -47,14 +47,6 @@ export const waitForCommandOutput = async ({
     throw new Error('Only v3 packets are supported');
   }
 
-  logger.info(
-    `Trying to receive output with command ${expectedCommandTypes.join(' ')}`,
-  );
-
-  let lastStatus = -1;
-  let lastState = -1;
-  let lastDeviceState = '';
-
   while (true) {
     const response = await getCommandOutput({
       connection,
@@ -65,7 +57,6 @@ export const waitForCommandOutput = async ({
 
     if (response.isRawData) {
       const resp = response as RawData;
-      logger.info('Output received', response);
 
       if (
         expectedCommandTypes.length > 0 &&
@@ -77,18 +68,6 @@ export const waitForCommandOutput = async ({
     }
 
     const status = response as StatusData;
-
-    if (
-      lastState !== status.cmdState ||
-      lastStatus !== status.flowStatus ||
-      lastDeviceState !== status.deviceState
-    ) {
-      logger.info(status);
-    }
-
-    lastState = status.cmdState;
-    lastStatus = status.flowStatus;
-    lastDeviceState = status.deviceState;
 
     if (status.currentCmdSeq !== sequenceNumber) {
       throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);

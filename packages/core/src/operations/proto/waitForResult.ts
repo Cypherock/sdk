@@ -3,7 +3,7 @@ import {
   DeviceAppError,
   DeviceAppErrorType,
 } from '@cypherock/sdk-interfaces';
-import { logger, PacketVersion, PacketVersionMap, sleep } from '../../utils';
+import { PacketVersion, PacketVersionMap, sleep } from '../../utils';
 import {
   CmdState,
   DeviceIdleState,
@@ -11,6 +11,7 @@ import {
 } from '../../encoders/proto/generated/core';
 
 import { getResult } from './getResult';
+import assert from '../../utils/assert';
 
 export interface IWaitForCommandOutputParams {
   connection: IDeviceConnection;
@@ -22,7 +23,7 @@ export interface IWaitForCommandOutputParams {
   options?: { interval?: number };
 }
 
-export const waitForCommandOutput = async ({
+export const waitForResult = async ({
   connection,
   sequenceNumber,
   appletId,
@@ -31,14 +32,16 @@ export const waitForCommandOutput = async ({
   version,
   maxTries = 5,
 }: IWaitForCommandOutputParams): Promise<Uint8Array> => {
+  assert(connection, 'Invalid connection');
+  assert(sequenceNumber, 'Invalid sequenceNumber');
+  assert(appletId, 'Invalid appletId');
+  assert(version, 'Invalid version');
+
+  assert(appletId >= 0, 'appletId cannot be negative');
+
   if (version !== PacketVersionMap.v3) {
     throw new Error('Only v3 packets are supported');
   }
-
-  let lastStatus = -1;
-  let lastState = -1;
-  let lastDeviceIdleState = -1;
-  let lastDeviceWaitingOn = -1;
 
   while (true) {
     const response = await getResult({
@@ -51,25 +54,10 @@ export const waitForCommandOutput = async ({
 
     if (!response.isStatus) {
       const resp = response.result as Uint8Array;
-      logger.info('Output received', resp);
       return resp;
     }
 
     const status = response.result as Status;
-
-    if (
-      lastState !== status.cmdState ||
-      lastStatus !== status.flowStatus ||
-      lastDeviceIdleState !== status.deviceIdleState ||
-      lastDeviceWaitingOn !== status.deviceWaitingOn
-    ) {
-      logger.info(status);
-    }
-
-    lastState = status.cmdState;
-    lastStatus = status.flowStatus;
-    lastDeviceIdleState = status.deviceIdleState;
-    lastDeviceWaitingOn = status.deviceWaitingOn;
 
     if (status.currentCmdSeq !== sequenceNumber) {
       throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);

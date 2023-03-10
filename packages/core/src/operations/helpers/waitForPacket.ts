@@ -102,7 +102,6 @@ export const waitForPacket = ({
         }
 
         const packetList = decodePacket(rawPacket, version);
-        console.log(packetList);
 
         let isSuccess = false;
         let receivedPacket: DecodedPacketData | undefined;

@@ -22,7 +22,7 @@ export const sendQuery = async ({
   assert(appletId, 'Invalid appletId');
   assert(data, 'Invalid data');
 
-  assert(appletId > 0, 'appletId cannot be negative');
+  assert(appletId >= 0, 'appletId cannot be negative');
   assert(data.length > 0, 'data cannot be empty');
 
   const rawEncodedData = uint8ArrayToHex(
