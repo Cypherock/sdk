@@ -217,31 +217,35 @@ export default class SDK {
     );
   }
 
-  public static async getSDKVersion(connection: IDeviceConnection) {
+  public static async getSDKVersion(
+    connection: IDeviceConnection,
+    maxTries?: number,
+    options?: { timeout?: number },
+  ) {
     assert(connection, 'Invalid connection');
 
     let retries = 0;
-    const maxTries = 2;
+    const innerMaxTries = maxTries ?? 2;
     let firstError: Error = new DeviceCommunicationError(
       DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR,
     );
 
     await connection.beforeOperation();
-    while (retries < maxTries) {
+    while (retries < innerMaxTries) {
       try {
         await legacyOperations.sendData(
           connection,
           88,
           '00',
           PacketVersionMap.v1,
-          2,
+          innerMaxTries,
         );
 
         const sdkVersionData = await legacyOperations.receiveData(
           connection,
           [88],
           PacketVersionMap.v1,
-          5000,
+          options?.timeout ?? 5000,
         );
 
         const sdkVersion = formatSDKVersion(sdkVersionData.data);

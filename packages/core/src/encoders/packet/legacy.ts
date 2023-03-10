@@ -38,7 +38,7 @@ export const xmodemEncode = (
   version: PacketVersion,
 ) => {
   assert(data, 'Invalid data');
-  assert(data.length > 0, 'Invalid cannot be empty');
+  assert(data.length > 0, 'data cannot be empty');
   assert(commandType, 'Invalid commandType');
   assert(version, 'Invalid version');
 
