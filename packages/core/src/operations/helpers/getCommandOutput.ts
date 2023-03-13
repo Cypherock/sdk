@@ -1,4 +1,6 @@
 import {
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
   DeviceConnectionError,
   DeviceConnectionErrorType,
   IDeviceConnection,
@@ -32,7 +34,9 @@ export const getCommandOutput = async ({
   assert(sequenceNumber, 'Invalid sequenceNumber');
 
   if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
   }
 
   if (!connection.isConnected()) {

@@ -13,7 +13,7 @@ type CodeToErrorMap = {
   };
 };
 
-const errorObjects: CodeToErrorMap = {
+export const deviceConnectionErrorTypeDetails: CodeToErrorMap = {
   [DeviceConnectionErrorType.NOT_CONNECTED]: {
     message: 'No device connected',
     doRetry: false,
@@ -46,8 +46,8 @@ export class DeviceConnectionError extends Error {
   constructor(errorCode: DeviceConnectionErrorType) {
     super();
     this.code = errorCode;
-    this.message = errorObjects[this.code].message;
-    this.doRetry = errorObjects[this.code].doRetry;
+    this.message = deviceConnectionErrorTypeDetails[this.code].message;
+    this.doRetry = deviceConnectionErrorTypeDetails[this.code].doRetry;
 
     if ((<any>Object).setPrototypeOf) {
       (<any>Object).setPrototypeOf(this, DeviceConnectionError.prototype);

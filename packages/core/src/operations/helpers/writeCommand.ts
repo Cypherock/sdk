@@ -1,6 +1,8 @@
 import {
   DeviceCommunicationError,
   DeviceCommunicationErrorType,
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
   DeviceConnectionError,
   DeviceConnectionErrorType,
   IDeviceConnection,
@@ -37,7 +39,9 @@ export const writeCommand = async ({
   assert(packet.length > 0, 'packet cannot be empty');
 
   if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
   }
 
   if (!connection.isConnected()) {

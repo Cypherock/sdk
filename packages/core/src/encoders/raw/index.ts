@@ -1,3 +1,7 @@
+import {
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
+} from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import {
   intToUintByte,
@@ -20,7 +24,9 @@ export const decodeStatus = (
   assert(isHex(data), 'Invalid hex in data');
 
   if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
   }
 
   const usableConfig = config.v3;
@@ -107,7 +113,9 @@ export const encodeRawData = (
   assert(params.commandType > 0, 'Commnd type cannot be negative');
 
   if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
   }
 
   const usableConfig = config.v3;
@@ -128,7 +136,9 @@ export const decodeRawData = (
   assert(isHex(payload), 'Invalid hex in payload');
 
   if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
   }
 
   const usableConfig = config.v3;

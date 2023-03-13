@@ -14,7 +14,7 @@ type CodeToErrorMap = {
   };
 };
 
-const errorObjects: CodeToErrorMap = {
+export const deviceCommunicationErrorTypeDetails: CodeToErrorMap = {
   [DeviceCommunicationErrorType.WRITE_REJECTED]: {
     message: 'The write packet operation was rejected by the device',
     doRetry: false,
@@ -53,8 +53,8 @@ export class DeviceCommunicationError extends Error {
     super();
     this.code =
       errorCode || DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR;
-    this.message = errorObjects[this.code].message;
-    this.doRetry = errorObjects[this.code].doRetry;
+    this.message = deviceCommunicationErrorTypeDetails[this.code].message;
+    this.doRetry = deviceCommunicationErrorTypeDetails[this.code].doRetry;
 
     if ((<any>Object).setPrototypeOf) {
       (<any>Object).setPrototypeOf(this, DeviceCommunicationError.prototype);

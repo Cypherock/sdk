@@ -1,6 +1,8 @@
 import {
   DeviceAppError,
   DeviceAppErrorType,
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { PacketVersion, PacketVersionMap, sleep } from '../../utils';
@@ -44,7 +46,9 @@ export const waitForCommandOutput = async ({
   );
 
   if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
   }
 
   while (true) {

@@ -31,17 +31,6 @@ describe('Legacy Packet Encoder', () => {
       }
     });
 
-    test('should fallback to v1 for other packet versions', () => {
-      for (const testCase of createAckPacketTestCases.validOthers) {
-        const result = createAckPacket(
-          testCase.params.commandType,
-          testCase.params.packetNumber,
-          testCase.params.version,
-        );
-        expect(result).toEqual(testCase.result);
-      }
-    });
-
     test('should throw error with invalid data', () => {
       for (const testCase of createAckPacketTestCases.invalid) {
         expect(() =>
@@ -73,17 +62,6 @@ describe('Legacy Packet Encoder', () => {
           testCase.params.data,
           testCase.params.commandType,
           PacketVersionMap.v2,
-        );
-        expect(result).toEqual(testCase.packets);
-      }
-    });
-
-    test('should fallback to v1 for other packet versions', () => {
-      for (const testCase of xmodemEncodeTestCases.validOthers) {
-        const result = xmodemEncode(
-          testCase.params.data,
-          testCase.params.commandType,
-          testCase.params.version,
         );
         expect(result).toEqual(testCase.packets);
       }

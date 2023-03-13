@@ -1,6 +1,8 @@
 import {
   DeviceCommunicationError,
   DeviceCommunicationErrorType,
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import * as bootloaderOperations from './operations/bootloader';
@@ -14,6 +16,7 @@ import {
 } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 import assert from './utils/assert';
+import { FeatureName, isFeatureEnabled } from './utils/featureMap';
 
 export default class SDK {
   private readonly version: string;
@@ -26,13 +29,13 @@ export default class SDK {
 
   private readonly isNewer: boolean;
 
-  private readonly appletId?: number;
+  private readonly appletId: number;
 
   private constructor(
     connection: IDeviceConnection,
     version: string,
     packetVersion: PacketVersion,
-    appletId?: number,
+    appletId: number,
   ) {
     this.connection = connection;
     this.version = version;
@@ -44,7 +47,7 @@ export default class SDK {
     this.isNewer = supportData.isNewer;
   }
 
-  public static async create(connection: IDeviceConnection, appletId?: number) {
+  public static async create(connection: IDeviceConnection, appletId: number) {
     const sdkData = await SDK.getSDKVersion(connection);
     return new SDK(
       connection,
@@ -58,30 +61,16 @@ export default class SDK {
     return this.version;
   }
 
+  public getPacketVersion() {
+    return this.packetVersion;
+  }
+
   public isSupported() {
     return this.isSDKSupported;
   }
 
   public isSDKNewer() {
     return this.isNewer;
-  }
-
-  public async sendLegacyCommand(command: number, data: string) {
-    return legacyOperations.sendData(
-      this.connection,
-      command,
-      data,
-      PacketVersionMap.v1,
-    );
-  }
-
-  public async receiveLegacyCommand(commands: number[], timeout?: number) {
-    return legacyOperations.receiveData(
-      this.connection,
-      commands,
-      PacketVersionMap.v1,
-      timeout,
-    );
   }
 
   public getSequenceNumber() {
@@ -92,13 +81,39 @@ export default class SDK {
     return this.connection.getNewSequenceNumber();
   }
 
+  // ************** v1/v2 Packet Version ****************
+  public async sendLegacyCommand(command: number, data: string) {
+    return legacyOperations.sendData(
+      this.connection,
+      command,
+      data,
+      this.packetVersion,
+    );
+  }
+
+  public async receiveLegacyCommand(commands: number[], timeout?: number) {
+    return legacyOperations.receiveData(
+      this.connection,
+      commands,
+      this.packetVersion,
+      timeout,
+    );
+  }
+
+  // ************** v3 Packet Version ****************
   public async sendCommand(params: {
     commandType: number;
     data: string;
     sequenceNumber: number;
     maxTries?: number;
   }): Promise<void> {
-    await rawOperations.sendCommand({
+    if (!isFeatureEnabled(FeatureName.RawCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
+    return rawOperations.sendCommand({
       connection: this.connection,
       data: params.data,
       commandType: params.commandType,
@@ -108,49 +123,82 @@ export default class SDK {
     });
   }
 
-  public async getCommandOutput(sequenceNumber: number) {
-    const resp = await rawOperations.getCommandOutput({
+  public async getCommandOutput(sequenceNumber: number, maxTries?: number) {
+    if (!isFeatureEnabled(FeatureName.RawCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
+    return rawOperations.getCommandOutput({
       connection: this.connection,
       sequenceNumber,
       version: this.packetVersion,
+      maxTries,
     });
-
-    return resp;
   }
 
   public async waitForCommandOutput(params: {
     sequenceNumber: rawOperations.IWaitForCommandOutputParams['sequenceNumber'];
     expectedCommandTypes: rawOperations.IWaitForCommandOutputParams['expectedCommandTypes'];
-    onStatus: rawOperations.IWaitForCommandOutputParams['onStatus'];
+    onStatus?: rawOperations.IWaitForCommandOutputParams['onStatus'];
     maxTries?: rawOperations.IWaitForCommandOutputParams['maxTries'];
     options?: rawOperations.IWaitForCommandOutputParams['options'];
   }) {
-    const resp = await rawOperations.waitForCommandOutput({
+    if (!isFeatureEnabled(FeatureName.RawCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
+    return rawOperations.waitForCommandOutput({
       connection: this.connection,
       version: this.packetVersion,
       ...params,
     });
-
-    return resp;
   }
 
-  public getCommandStatus() {
+  public async getCommandStatus() {
+    if (!isFeatureEnabled(FeatureName.RawCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
     return rawOperations.getStatus({
       connection: this.connection,
       version: this.packetVersion,
     });
   }
 
+  public async sendCommandAbort(sequenceNumber: number, maxTries?: number) {
+    if (!isFeatureEnabled(FeatureName.RawCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
+    return rawOperations.sendAbort({
+      connection: this.connection,
+      version: this.packetVersion,
+      sequenceNumber,
+      maxTries,
+    });
+  }
+
+  // ************** v3 Packet Version with protobuf ****************
   public async sendQuery(params: {
     data: Uint8Array;
     sequenceNumber: number;
     maxTries?: number;
   }): Promise<void> {
-    if (!this.appletId) {
-      throw new Error('No appletId found in SDK Core');
+    if (!isFeatureEnabled(FeatureName.ProtoCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
     }
 
-    await operations.sendQuery({
+    return operations.sendQuery({
       connection: this.connection,
       data: params.data,
       appletId: this.appletId,
@@ -161,18 +209,18 @@ export default class SDK {
   }
 
   public async getResult(sequenceNumber: number) {
-    if (!this.appletId) {
-      throw new Error('No appletId found in SDK Core');
+    if (!isFeatureEnabled(FeatureName.ProtoCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
     }
 
-    const resp = await operations.getResult({
+    return operations.getResult({
       connection: this.connection,
       appletId: this.appletId,
       sequenceNumber,
       version: this.packetVersion,
     });
-
-    return resp;
   }
 
   public async waitForResult(params: {
@@ -181,23 +229,43 @@ export default class SDK {
     maxTries?: operations.IWaitForCommandOutputParams['maxTries'];
     options?: operations.IWaitForCommandOutputParams['options'];
   }) {
-    if (!this.appletId) {
-      throw new Error('No appletId found in SDK Core');
+    if (!isFeatureEnabled(FeatureName.ProtoCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
     }
 
-    const resp = await operations.waitForResult({
+    return operations.waitForResult({
       connection: this.connection,
       version: this.packetVersion,
       appletId: this.appletId,
       ...params,
     });
-
-    return resp;
   }
 
-  public getStatus() {
+  public async getStatus() {
+    if (!isFeatureEnabled(FeatureName.ProtoCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
     return operations.getStatus({
       connection: this.connection,
+      version: this.packetVersion,
+    });
+  }
+
+  public async sendAbort(sequenceNumber: number) {
+    if (!isFeatureEnabled(FeatureName.ProtoCommand, this.version)) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
+    return operations.sendAbort({
+      connection: this.connection,
+      sequenceNumber,
       version: this.packetVersion,
     });
   }

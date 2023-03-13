@@ -1,3 +1,7 @@
+import {
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
+} from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import {
   hexToUint8Array,
@@ -44,6 +48,12 @@ export const xmodemEncode = (
 
   assert(isHex(data), 'Invalid hex data');
   assert(commandType >= 0, 'Command type should not be negative');
+
+  if (![PacketVersionMap.v1, PacketVersionMap.v2].includes(version)) {
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
+  }
 
   let usableConfig = config.v1;
 
@@ -102,6 +112,12 @@ export const xmodemDecode = (
 ): LegacyDecodedPacketData[] => {
   assert(packetData, 'Invalid packetData');
   assert(version, 'Invalid version');
+
+  if (![PacketVersionMap.v1, PacketVersionMap.v2].includes(version)) {
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
+  }
 
   let usableConfig = config.v1;
 
@@ -207,6 +223,12 @@ export const createAckPacket = (
   assert(version, 'Invalid version');
 
   assert(commandType >= 0, 'Command type cannot be negative');
+
+  if (![PacketVersionMap.v1, PacketVersionMap.v2].includes(version)) {
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
+  }
 
   let usableConfig = config.v1;
 

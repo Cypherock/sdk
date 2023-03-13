@@ -4,8 +4,10 @@ import {
   DeviceCommunicationError,
   DeviceCommunicationErrorType,
   IDeviceConnection,
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
-import { PacketVersion } from '../../utils';
+import { PacketVersion, PacketVersionMap } from '../../utils';
 import {
   xmodemDecode,
   LegacyDecodedPacketData,
@@ -29,6 +31,12 @@ export const receiveData = (
       assert(connection, 'Invalid connection');
       assert(allAcceptableCommands, 'Invalid allAcceptableCommands');
       assert(version, 'Invalid version');
+
+      if (![PacketVersionMap.v1, PacketVersionMap.v2].includes(version)) {
+        throw new DeviceCompatibilityError(
+          DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+        );
+      }
 
       assert(
         allAcceptableCommands.length > 0,

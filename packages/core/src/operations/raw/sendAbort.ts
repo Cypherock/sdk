@@ -1,6 +1,8 @@
 import {
   DeviceAppError,
   DeviceAppErrorType,
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
@@ -28,7 +30,9 @@ export const sendAbort = async ({
   assert(sequenceNumber, 'Invalid sequenceNumber');
 
   if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
   }
 
   const usableConfig = config.v3;

@@ -18,7 +18,7 @@ type CodeToErrorMap = {
   };
 };
 
-const errorObjects: CodeToErrorMap = {
+export const deviceBootloaderErrorTypeDetails: CodeToErrorMap = {
   [DeviceBootloaderErrorType.FIRMWARE_SIZE_LIMIT_EXCEEDED]: {
     message: 'Firmware Size Limit Exceed',
     doRetry: false,
@@ -71,8 +71,8 @@ export class DeviceBootloaderError extends Error {
   constructor(errorCode: DeviceBootloaderErrorType) {
     super();
     this.code = errorCode;
-    this.message = errorObjects[this.code].message;
-    this.doRetry = errorObjects[this.code].doRetry;
+    this.message = deviceBootloaderErrorTypeDetails[this.code].message;
+    this.doRetry = deviceBootloaderErrorTypeDetails[this.code].doRetry;
 
     if ((<any>Object).setPrototypeOf) {
       (<any>Object).setPrototypeOf(this, DeviceBootloaderError.prototype);

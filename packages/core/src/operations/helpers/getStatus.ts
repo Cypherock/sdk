@@ -1,4 +1,8 @@
-import { IDeviceConnection } from '@cypherock/sdk-interfaces';
+import {
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
+  IDeviceConnection,
+} from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
@@ -20,7 +24,9 @@ export const getStatus = async ({
   assert(version, 'Invalid version');
 
   if (version !== PacketVersionMap.v3) {
-    throw new Error('Only v3 packets are supported');
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
   }
 
   const usableConfig = config.v3;

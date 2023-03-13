@@ -24,7 +24,7 @@ type CodeToErrorMap = {
   };
 };
 
-const errorObjects: CodeToErrorMap = {
+const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.NO_WORKING_PACKET_VERSION]: {
     message: 'No working packet version found',
     doRetry: false,
@@ -87,8 +87,8 @@ export class DeviceAppError extends Error {
   constructor(errorCode: DeviceAppErrorType) {
     super();
     this.code = errorCode;
-    this.message = errorObjects[this.code].message;
-    this.doRetry = errorObjects[this.code].doRetry;
+    this.message = deviceAppErrorTypeDetails[this.code].message;
+    this.doRetry = deviceAppErrorTypeDetails[this.code].doRetry;
 
     if ((<any>Object).setPrototypeOf) {
       (<any>Object).setPrototypeOf(this, DeviceAppError.prototype);

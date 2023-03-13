@@ -47,32 +47,6 @@ export const createAckPacketTestCases = {
       result: '5a5a000000660a004e000000000000ef64',
     },
   ],
-  validOthers: [
-    {
-      params: {
-        commandType: 10,
-        packetNumber: '1',
-        version: PacketVersionMap.v3,
-      },
-      result: 'aa0a0a0001000000000000b861',
-    },
-    {
-      params: {
-        commandType: 16,
-        packetNumber: '2',
-        version: 'invalid packet version' as any,
-      },
-      result: 'aa100a000200000000000060e3',
-    },
-    {
-      params: {
-        commandType: 102,
-        packetNumber: '78',
-        version: PacketVersionMap.v3,
-      },
-      result: 'aa660a004e000000000000ef64',
-    },
-  ],
   invalid: [
     {
       commandType: null,
@@ -128,6 +102,11 @@ export const createAckPacketTestCases = {
       commandType: -12,
       packetNumber: '2',
       version: PacketVersionMap.v1,
+    },
+    {
+      commandType: 12,
+      packetNumber: '2',
+      version: PacketVersionMap.v3,
     },
   ],
 };
@@ -327,38 +306,6 @@ export const xmodemEncodeTestCases = {
       ],
     },
   ],
-  validOthers: [
-    {
-      params: {
-        commandType: 6,
-        data: 'd22af07f965ab9f4d37fcb59708d74ebbfac8f4303a46397f0b62a70cae5e87660f25f0b59b84551d1f4965f14e97b1dc3520e',
-        version: PacketVersionMap.v3,
-      },
-      packets: [
-        new Uint8Array([
-          170, 6, 38, 0, 1, 0, 2, 210, 42, 240, 127, 150, 90, 185, 244, 211,
-          127, 203, 89, 112, 141, 116, 235, 191, 172, 143, 67, 3, 164, 99, 151,
-          240, 182, 42, 112, 202, 229, 232, 118, 162, 248,
-        ]),
-        new Uint8Array([
-          170, 6, 25, 0, 2, 0, 2, 96, 242, 95, 11, 89, 184, 69, 81, 209, 244,
-          150, 95, 20, 233, 123, 29, 195, 82, 14, 11, 134,
-        ]),
-      ],
-    },
-    {
-      params: {
-        commandType: 10,
-        data: '28936489172381',
-        version: 'invalid packet version' as any,
-      },
-      packets: [
-        new Uint8Array([
-          170, 10, 13, 0, 1, 0, 1, 40, 147, 100, 137, 23, 35, 129, 127, 243,
-        ]),
-      ],
-    },
-  ],
   invalid: [
     {
       commandType: 20,
@@ -409,6 +356,11 @@ export const xmodemEncodeTestCases = {
       commandType: 10,
       data: '0x1233',
       version: PacketVersionMap.v1,
+    },
+    {
+      commandType: 10,
+      data: '01',
+      version: PacketVersionMap.v3,
     },
   ],
 };

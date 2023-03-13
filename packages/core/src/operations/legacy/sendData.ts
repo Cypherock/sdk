@@ -4,6 +4,8 @@ import {
   DeviceCommunicationError,
   DeviceCommunicationErrorType,
   IDeviceConnection,
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
 import * as config from '../../config';
 import { isHex, logger, PacketVersion, PacketVersionMap } from '../../utils';
@@ -171,6 +173,12 @@ export const sendData = async (
   assert(command > 0, 'Command cannot be negative');
   assert(isHex(data), 'Index hex in data');
   assert(!maxTries || maxTries > 0, 'Max tries cannot be negative');
+
+  if (![PacketVersionMap.v1, PacketVersionMap.v2].includes(version)) {
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
+  }
 
   const skipPacketIds: string[] = [];
   const packetsList = xmodemEncode(data, command, version);
