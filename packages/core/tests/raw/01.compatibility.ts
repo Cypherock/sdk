@@ -11,7 +11,8 @@ import {
   jest,
   test,
 } from '@jest/globals';
-import SDK from '../src/sdk';
+import SDK from '../../src/sdk';
+import { PacketVersionMap } from '../../src/utils';
 
 describe('Device Raw Operation: v3', () => {
   let connection: MockDeviceConnection;
@@ -45,6 +46,11 @@ describe('Device Raw Operation: v3', () => {
   afterEach(async () => {
     global.Date.now = RealDate;
     await connection.destroy();
+  });
+
+  test('should have the right sdk version and packet version', () => {
+    expect(sdk.getVersion()).toEqual('2.7.1');
+    expect(sdk.getPacketVersion()).toEqual(PacketVersionMap.v3);
   });
 
   test('should be able to get status', async () => {

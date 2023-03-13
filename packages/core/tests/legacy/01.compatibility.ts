@@ -4,7 +4,8 @@ import {
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
-import SDK from '../src/sdk';
+import SDK from '../../src/sdk';
+import {PacketVersionMap} from '../../src/utils';
 
 describe('Legacy Device Operation: v1', () => {
   let connection: MockDeviceConnection;
@@ -32,6 +33,11 @@ describe('Legacy Device Operation: v1', () => {
 
   afterEach(async () => {
     await connection.destroy();
+  });
+
+  test('should have the right sdk version and packet version', () => {
+    expect(sdk.getVersion()).toEqual('0.1.16');
+    expect(sdk.getPacketVersion()).toEqual(PacketVersionMap.v1);
   });
 
   test('should be able to send data', async () => {

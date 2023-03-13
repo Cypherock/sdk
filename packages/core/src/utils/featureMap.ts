@@ -1,4 +1,5 @@
 import { compareVersions } from 'compare-versions';
+
 export enum FeatureName {
   RawCommand,
   ProtoCommand,

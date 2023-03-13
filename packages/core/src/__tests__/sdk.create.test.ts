@@ -67,7 +67,7 @@ describe('SDK: create', () => {
       expect(sdk.isSupported()).toEqual(testCase.isSupported);
       expect(sdk.isSDKNewer()).toEqual(testCase.isNewer);
 
-      for (let i= 0; i < 100; i += 1) {
+      for (let i = 0; i < 100; i += 1) {
         expect(sdk.getSequenceNumber()).toEqual(i);
         expect(sdk.getNewSequenceNumber()).toEqual(i + 1);
       }
