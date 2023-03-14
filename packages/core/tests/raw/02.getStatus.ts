@@ -25,7 +25,7 @@ describe('sdk.getCommandStatus', () => {
 
     connection = await MockDeviceConnection.create();
 
-    const getOnData = async () => {
+    const onData = async () => {
       // SDK Version: 2.7.1, Packet Version: v3
       await connection.mockDeviceSend(
         new Uint8Array([
@@ -34,7 +34,7 @@ describe('sdk.getCommandStatus', () => {
         ]),
       );
     };
-    connection.configureListeners(getOnData);
+    connection.configureListeners(onData);
 
     sdk = await SDK.create(connection, appletId);
     await sdk.beforeOperation();
@@ -50,16 +50,14 @@ describe('sdk.getCommandStatus', () => {
   describe('should be able to get status', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        const getOnData =
-          (testCase: { statusRequest: Uint8Array; ackPackets: Uint8Array[] }) =>
-          async (data: Uint8Array) => {
-            expect(testCase.statusRequest).toEqual(data);
-            for (const ackPacket of testCase.ackPackets) {
-              await connection.mockDeviceSend(ackPacket);
-            }
-          };
+        const onData = async (data: Uint8Array) => {
+          expect(testCase.statusRequest).toEqual(data);
+          for (const ackPacket of testCase.ackPackets) {
+            await connection.mockDeviceSend(ackPacket);
+          }
+        };
 
-        connection.configureListeners(getOnData(testCase));
+        connection.configureListeners(onData);
         const status = await sdk.getCommandStatus(1);
 
         expect(status).toEqual(testCase.status);
@@ -76,27 +74,25 @@ describe('sdk.getCommandStatus', () => {
         const maxTries = 3;
         let retries = 0;
 
-        const getOnData =
-          (testCase: { statusRequest: Uint8Array; ackPackets: Uint8Array[] }) =>
-          async () => {
-            const currentRetry = retries + 1;
+        const onData = async () => {
+          const currentRetry = retries + 1;
 
-            const doTriggerError =
-              Math.random() > 0.5 &&
-              currentRetry < maxTries &&
-              totalTimeoutTriggers < maxTimeoutTriggers;
+          const doTriggerError =
+            Math.random() > 0.5 &&
+            currentRetry < maxTries &&
+            totalTimeoutTriggers < maxTimeoutTriggers;
 
-            if (!doTriggerError) {
-              for (const ackPacket of testCase.ackPackets) {
-                await connection.mockDeviceSend(ackPacket);
-              }
-            } else {
-              totalTimeoutTriggers += 1;
-              retries = currentRetry;
+          if (!doTriggerError) {
+            for (const ackPacket of testCase.ackPackets) {
+              await connection.mockDeviceSend(ackPacket);
             }
-          };
+          } else {
+            totalTimeoutTriggers += 1;
+            retries = currentRetry;
+          }
+        };
 
-        connection.configureListeners(getOnData(testCase));
+        connection.configureListeners(onData);
         const status = await sdk.getCommandStatus(maxTries);
 
         expect(status).toEqual(testCase.status);
@@ -107,11 +103,11 @@ describe('sdk.getCommandStatus', () => {
   describe('should throw error when device is disconnected', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        const getOnData = () => async (data: Uint8Array) => {
+        const onData = async (data: Uint8Array) => {
           expect(data).toEqual(undefined);
         };
 
-        connection.configureListeners(getOnData());
+        connection.configureListeners(onData);
         await connection.destroy();
         await expect(sdk.getCommandStatus(1)).rejects.toThrow(
           DeviceConnectionError,
@@ -123,22 +119,20 @@ describe('sdk.getCommandStatus', () => {
   describe('should throw error when device is disconnected in between', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        const getOnData =
-          (testCase: { statusRequest: Uint8Array; ackPackets: Uint8Array[] }) =>
-          async (data: Uint8Array) => {
-            expect(testCase.statusRequest).toEqual(data);
-            let i = 0;
-            for (const ackPacket of testCase.ackPackets) {
-              if (i >= testCase.ackPackets.length - 1) {
-                await connection.destroy();
-              } else {
-                await connection.mockDeviceSend(ackPacket);
-              }
-              i += 1;
+        const onData = async (data: Uint8Array) => {
+          expect(testCase.statusRequest).toEqual(data);
+          let i = 0;
+          for (const ackPacket of testCase.ackPackets) {
+            if (i >= testCase.ackPackets.length - 1) {
+              await connection.destroy();
+            } else {
+              await connection.mockDeviceSend(ackPacket);
             }
-          };
+            i += 1;
+          }
+        };
 
-        connection.configureListeners(getOnData(testCase));
+        connection.configureListeners(onData);
         await expect(sdk.getCommandStatus(1)).rejects.toThrow(
           DeviceConnectionError,
         );

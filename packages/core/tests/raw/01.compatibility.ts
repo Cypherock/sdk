@@ -27,7 +27,7 @@ describe('Device Raw Operation: v3', () => {
 
     connection = await MockDeviceConnection.create();
 
-    const getOnData = async () => {
+    const onData = async () => {
       // SDK Version: 2.7.1, Packet Version: v3
       await connection.mockDeviceSend(
         new Uint8Array([
@@ -36,9 +36,10 @@ describe('Device Raw Operation: v3', () => {
         ]),
       );
     };
-    connection.configureListeners(getOnData);
+    connection.configureListeners(onData);
 
     sdk = await SDK.create(connection, appletId);
+    await sdk.beforeOperation();
 
     connection.removeListeners();
   });
@@ -68,7 +69,6 @@ describe('Device Raw Operation: v3', () => {
       );
     });
 
-    await connection.beforeOperation();
     const status = await sdk.getCommandStatus();
     expect(status).toEqual({
       deviceState: '23',
@@ -80,7 +80,6 @@ describe('Device Raw Operation: v3', () => {
       flowStatus: 132,
       isStatus: true,
     });
-    await connection.afterOperation();
   });
 
   test('should be able to send command', async () => {
@@ -106,12 +105,9 @@ describe('Device Raw Operation: v3', () => {
       sequenceNumber: 16,
       maxTries: 1,
     });
-    await connection.afterOperation();
   });
 
   test('should be able to get command output', async () => {
-    await connection.beforeOperation();
-
     connection.configureListeners(data => {
       expect(data).toEqual(
         new Uint8Array([
@@ -135,13 +131,9 @@ describe('Device Raw Operation: v3', () => {
       data: '626e0158eabd6778b018e7b75c86d50b',
       commandType: 12,
     });
-
-    await connection.afterOperation();
   });
 
   test('should be able to wait for command output', async () => {
-    await connection.beforeOperation();
-
     connection.configureListeners(data => {
       expect(data).toEqual(
         new Uint8Array([
@@ -169,13 +161,9 @@ describe('Device Raw Operation: v3', () => {
       data: '626e0158eabd6778b018e7b75c86d50b',
       commandType: 12,
     });
-
-    await connection.afterOperation();
   });
 
   test('should be able to send abort', async () => {
-    await connection.beforeOperation();
-
     connection.configureListeners(data => {
       expect(data).toEqual(
         new Uint8Array([
@@ -201,8 +189,6 @@ describe('Device Raw Operation: v3', () => {
       flowStatus: 132,
       isStatus: true,
     });
-
-    await connection.afterOperation();
   });
 
   test('should throw error when accessing functions for v1', async () => {

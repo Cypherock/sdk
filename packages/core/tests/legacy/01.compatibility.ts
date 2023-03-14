@@ -15,7 +15,7 @@ describe('Legacy Device Operation: v1', () => {
   beforeEach(async () => {
     connection = await MockDeviceConnection.create();
 
-    const getOnData = async () => {
+    const onData = async () => {
       // SDK Version: 0.1.16, PacketVersion: v1
       await connection.mockDeviceSend(
         new Uint8Array([
@@ -24,9 +24,10 @@ describe('Legacy Device Operation: v1', () => {
         ]),
       );
     };
-    connection.configureListeners(getOnData);
+    connection.configureListeners(onData);
 
     sdk = await SDK.create(connection, appletId);
+    await connection.beforeOperation();
 
     connection.removeListeners();
   });
@@ -51,14 +52,10 @@ describe('Legacy Device Operation: v1', () => {
       connection.mockDeviceSend(new Uint8Array([170, 1, 6, 0, 0, 0, 0, 0]));
     });
 
-    await connection.beforeOperation();
     await sdk.sendLegacyCommand(41, '5b615a3dc38e46b754f15176');
-    await connection.afterOperation();
   });
 
   test('should be able to receive data', async () => {
-    await connection.beforeOperation();
-
     await connection.mockDeviceSend(
       new Uint8Array([
         170, 8, 38, 0, 1, 0, 1, 15, 172, 244, 76, 162, 3, 152, 84, 158, 82, 205,
@@ -72,8 +69,6 @@ describe('Legacy Device Operation: v1', () => {
     expect(result.data).toEqual(
       '0facf44ca20398549e52cdbcca0cbf8359ae3c103b6cb46be7a604a6d977f916',
     );
-
-    await connection.afterOperation();
   });
 
   test('should throw error when accessing functions for v3', async () => {

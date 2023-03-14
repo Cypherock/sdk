@@ -14,7 +14,7 @@ describe('sdk.sendLegacyCommand', () => {
   beforeEach(async () => {
     connection = await MockDeviceConnection.create();
 
-    const getOnData = async () => {
+    const onData = async () => {
       // SDK Version: 0.1.16, PacketVersion: v1
       await connection.mockDeviceSend(
         new Uint8Array([
@@ -23,7 +23,7 @@ describe('sdk.sendLegacyCommand', () => {
         ]),
       );
     };
-    connection.configureListeners(getOnData);
+    connection.configureListeners(onData);
 
     sdk = await SDK.create(connection, appletId);
     await sdk.beforeOperation();
@@ -38,18 +38,16 @@ describe('sdk.sendLegacyCommand', () => {
   describe('should be able to send data', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        const getOnData =
-          (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[] }) =>
-          async (data: Uint8Array) => {
-            const packetIndex = testCase.packets.findIndex(
-              elem => elem.toString() === data.toString(),
-            );
-            expect(testCase.packets).toContainEqual(data);
-            expect(packetIndex).toBeGreaterThanOrEqual(0);
-            await connection.mockDeviceSend(testCase.ackPackets[packetIndex]);
-          };
+        const onData = async (data: Uint8Array) => {
+          const packetIndex = testCase.packets.findIndex(
+            elem => elem.toString() === data.toString(),
+          );
+          expect(testCase.packets).toContainEqual(data);
+          expect(packetIndex).toBeGreaterThanOrEqual(0);
+          await connection.mockDeviceSend(testCase.ackPackets[packetIndex]);
+        };
 
-        connection.configureListeners(getOnData(testCase));
+        connection.configureListeners(onData);
         await sdk.sendLegacyCommand(
           testCase.params.command,
           testCase.params.data,
@@ -68,31 +66,29 @@ describe('sdk.sendLegacyCommand', () => {
         const maxTries = 3;
         let retries: Record<number, number | undefined> = {};
 
-        const getOnData =
-          (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[] }) =>
-          async (data: Uint8Array) => {
-            const packetIndex = testCase.packets.findIndex(
-              elem => elem.toString() === data.toString(),
-            );
-            expect(testCase.packets).toContainEqual(data);
-            expect(packetIndex).toBeGreaterThanOrEqual(0);
+        const onData = async (data: Uint8Array) => {
+          const packetIndex = testCase.packets.findIndex(
+            elem => elem.toString() === data.toString(),
+          );
+          expect(testCase.packets).toContainEqual(data);
+          expect(packetIndex).toBeGreaterThanOrEqual(0);
 
-            const currentRetry = (retries[packetIndex] ?? 0) + 1;
+          const currentRetry = (retries[packetIndex] ?? 0) + 1;
 
-            const doTriggerError =
-              true &&
-              currentRetry < maxTries &&
-              totalTimeoutTriggers < maxTimeoutTriggers;
+          const doTriggerError =
+            true &&
+            currentRetry < maxTries &&
+            totalTimeoutTriggers < maxTimeoutTriggers;
 
-            if (!doTriggerError) {
-              await connection.mockDeviceSend(testCase.ackPackets[packetIndex]);
-            } else {
-              totalTimeoutTriggers += 1;
-              retries[packetIndex] = currentRetry;
-            }
-          };
+          if (!doTriggerError) {
+            await connection.mockDeviceSend(testCase.ackPackets[packetIndex]);
+          } else {
+            totalTimeoutTriggers += 1;
+            retries[packetIndex] = currentRetry;
+          }
+        };
 
-        connection.configureListeners(getOnData(testCase));
+        connection.configureListeners(onData);
         await sdk.sendLegacyCommand(
           testCase.params.command,
           testCase.params.data,
@@ -108,11 +104,11 @@ describe('sdk.sendLegacyCommand', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         expect.assertions(1);
-        const getOnData = () => async (data: Uint8Array) => {
+        const onData = async (data: Uint8Array) => {
           expect(data).toEqual(undefined);
         };
 
-        connection.configureListeners(getOnData());
+        connection.configureListeners(onData);
 
         await connection.destroy();
         await sdk
@@ -128,19 +124,17 @@ describe('sdk.sendLegacyCommand', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         expect.assertions(1);
-        const getOnData =
-          (testCase: { packets: Uint8Array[]; ackPackets: Uint8Array[] }) =>
-          async (data: Uint8Array) => {
-            const packetIndex = testCase.packets.findIndex(
-              elem => elem.toString() === data.toString(),
-            );
-            if (packetIndex >= testCase.ackPackets.length - 1) {
-              await connection.destroy();
-            }
-            await connection.mockDeviceSend(testCase.ackPackets[packetIndex]);
-          };
+        const onData = async (data: Uint8Array) => {
+          const packetIndex = testCase.packets.findIndex(
+            elem => elem.toString() === data.toString(),
+          );
+          if (packetIndex >= testCase.ackPackets.length - 1) {
+            await connection.destroy();
+          }
+          await connection.mockDeviceSend(testCase.ackPackets[packetIndex]);
+        };
 
-        connection.configureListeners(getOnData(testCase));
+        connection.configureListeners(onData);
 
         await connection.destroy();
         await sdk

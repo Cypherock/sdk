@@ -27,7 +27,7 @@ describe('Device Proto Operation: v3', () => {
 
     connection = await MockDeviceConnection.create();
 
-    const getOnData = async () => {
+    const onData = async () => {
       // SDK Version: 3.0.1, Packet Version: v3
       await connection.mockDeviceSend(
         new Uint8Array([
@@ -36,9 +36,10 @@ describe('Device Proto Operation: v3', () => {
         ]),
       );
     };
-    connection.configureListeners(getOnData);
+    connection.configureListeners(onData);
 
     sdk = await SDK.create(connection, appletId);
+    await sdk.beforeOperation();
 
     connection.removeListeners();
   });
@@ -68,7 +69,6 @@ describe('Device Proto Operation: v3', () => {
       );
     });
 
-    await connection.beforeOperation();
     const status = await sdk.getStatus();
     expect(status).toEqual({
       deviceIdleState: 3,
@@ -78,7 +78,6 @@ describe('Device Proto Operation: v3', () => {
       cmdState: 7,
       flowStatus: 132,
     });
-    await connection.afterOperation();
   });
 
   test('should be able to send query', async () => {
@@ -97,7 +96,6 @@ describe('Device Proto Operation: v3', () => {
       );
     });
 
-    await connection.beforeOperation();
     await sdk.sendQuery({
       data: new Uint8Array([
         98, 110, 1, 88, 234, 189, 103, 120, 176, 24, 231, 183, 92, 134, 213, 11,
@@ -105,12 +103,9 @@ describe('Device Proto Operation: v3', () => {
       sequenceNumber: 16,
       maxTries: 1,
     });
-    await connection.afterOperation();
   });
 
   test('should be able to get result', async () => {
-    await connection.beforeOperation();
-
     connection.configureListeners(data => {
       expect(data).toEqual(
         new Uint8Array([
@@ -134,13 +129,9 @@ describe('Device Proto Operation: v3', () => {
         98, 110, 1, 88, 234, 189, 103, 120, 176, 24, 231, 183, 92, 134, 213, 11,
       ]),
     });
-
-    await connection.afterOperation();
   });
 
   test('should be able to wait for result', async () => {
-    await connection.beforeOperation();
-
     connection.configureListeners(data => {
       expect(data).toEqual(
         new Uint8Array([
@@ -166,13 +157,9 @@ describe('Device Proto Operation: v3', () => {
         98, 110, 1, 88, 234, 189, 103, 120, 176, 24, 231, 183, 92, 134, 213, 11,
       ]),
     );
-
-    await connection.afterOperation();
   });
 
   test('should be able to send abort', async () => {
-    await connection.beforeOperation();
-
     connection.configureListeners(data => {
       expect(data).toEqual(
         new Uint8Array([
@@ -196,8 +183,6 @@ describe('Device Proto Operation: v3', () => {
       cmdState: 7,
       flowStatus: 132,
     });
-
-    await connection.afterOperation();
   });
 
   test('should throw error when accessing functions for v1', async () => {

@@ -15,7 +15,7 @@ describe('sdk.receiveLegacyCommand', () => {
   beforeEach(async () => {
     connection = await MockDeviceConnection.create();
 
-    const getOnData = async () => {
+    const onData = async () => {
       // SDK Version: 0.1.16, PacketVersion: v1
       await connection.mockDeviceSend(
         new Uint8Array([
@@ -24,7 +24,7 @@ describe('sdk.receiveLegacyCommand', () => {
         ]),
       );
     };
-    connection.configureListeners(getOnData);
+    connection.configureListeners(onData);
 
     sdk = await SDK.create(connection, appletId);
     await sdk.beforeOperation();
