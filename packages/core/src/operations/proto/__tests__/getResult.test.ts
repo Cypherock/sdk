@@ -4,7 +4,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { describe, expect, afterEach, jest } from '@jest/globals';
 import { getResult } from '../getResult';
-import { rawGetResultTestCases } from '../__fixtures__/getResult';
+import { protoGetResultTestCases } from '../__fixtures__/getResult';
 
 describe('Proto Operations: getResult', () => {
   let connection: MockDeviceConnection;
@@ -13,7 +13,7 @@ describe('Proto Operations: getResult', () => {
 
   beforeEach(async () => {
     global.Date.now = jest.fn(() =>
-      rawGetResultTestCases.constantDate.getTime(),
+      protoGetResultTestCases.constantDate.getTime(),
     );
     connection = await MockDeviceConnection.create();
     await connection.beforeOperation();
@@ -38,7 +38,7 @@ describe('Proto Operations: getResult', () => {
         }
       };
 
-    for (const testCase of rawGetResultTestCases.valid) {
+    for (const testCase of protoGetResultTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -91,7 +91,7 @@ describe('Proto Operations: getResult', () => {
         }
       };
 
-    for (const testCase of rawGetResultTestCases.valid) {
+    for (const testCase of protoGetResultTestCases.valid) {
       retries = {};
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
@@ -127,7 +127,7 @@ describe('Proto Operations: getResult', () => {
         }
       };
 
-    for (const testCase of rawGetResultTestCases.valid) {
+    for (const testCase of protoGetResultTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -169,7 +169,7 @@ describe('Proto Operations: getResult', () => {
         }
       };
 
-    for (const testCase of rawGetResultTestCases.valid) {
+    for (const testCase of protoGetResultTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -204,7 +204,7 @@ describe('Proto Operations: getResult', () => {
         }
       };
 
-    for (const testCase of rawGetResultTestCases.error) {
+    for (const testCase of protoGetResultTestCases.error) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
 
@@ -226,7 +226,7 @@ describe('Proto Operations: getResult', () => {
   });
 
   test('should throw error with invalid arguments', async () => {
-    for (const testCase of rawGetResultTestCases.invalidArgs) {
+    for (const testCase of protoGetResultTestCases.invalidArgs) {
       const params = {
         connection: testCase.connection as any,
         appletId: testCase.appletId as any,

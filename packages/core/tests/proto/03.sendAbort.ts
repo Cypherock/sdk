@@ -3,20 +3,20 @@ import {
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import {
-  describe,
-  test,
-  expect,
   afterEach,
-  jest,
   beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
 } from '@jest/globals';
-import SDK from '../../src';
-import fixtures from './__fixtures__/sendCommandAbort';
+import SDK from '../../src/sdk';
+import fixtures from './__fixtures__/sendAbort';
 
-describe('sdk.sendCommandAbort', () => {
+describe('sdk.sendAbort', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
-  let appletId = 0;
+  let appletId = 12;
 
   const RealDate = Date.now;
 
@@ -26,11 +26,11 @@ describe('sdk.sendCommandAbort', () => {
     connection = await MockDeviceConnection.create();
 
     const onData = async () => {
-      // SDK Version: 2.7.1, Packet Version: v3
+      // SDK Version: 3.0.1, Packet Version: v3
       await connection.mockDeviceSend(
         new Uint8Array([
-          170, 1, 7, 0, 1, 0, 1, 0, 69, 133, 170, 88, 12, 0, 1, 0, 1, 0, 2, 0,
-          7, 0, 1, 130, 112,
+          170, 1, 7, 0, 1, 0, 1, 0, 69, 133, 170, 88, 12, 0, 1, 0, 1, 0, 3, 0,
+          0, 0, 1, 173, 177,
         ]),
       );
     };
@@ -58,7 +58,7 @@ describe('sdk.sendCommandAbort', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.sendCommandAbort(testCase.sequenceNumber, 1);
+        const status = await sdk.sendAbort(testCase.sequenceNumber, 1);
 
         expect(status).toEqual(testCase.status);
       });
@@ -86,10 +86,7 @@ describe('sdk.sendCommandAbort', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.sendCommandAbort(
-          testCase.sequenceNumber,
-          maxTries,
-        );
+        const status = await sdk.sendAbort(testCase.sequenceNumber, maxTries);
 
         expect(status).toEqual(testCase.status);
       });
@@ -105,9 +102,9 @@ describe('sdk.sendCommandAbort', () => {
         connection.configureListeners(onData);
         await connection.destroy();
 
-        await expect(
-          sdk.sendCommandAbort(testCase.sequenceNumber, 1),
-        ).rejects.toThrow(DeviceConnectionError);
+        await expect(sdk.sendAbort(testCase.sequenceNumber, 1)).rejects.toThrow(
+          DeviceConnectionError,
+        );
         expect(onData.mock.calls).toHaveLength(0);
       });
     });
@@ -130,9 +127,9 @@ describe('sdk.sendCommandAbort', () => {
         };
 
         connection.configureListeners(onData);
-        await expect(
-          sdk.sendCommandAbort(testCase.sequenceNumber, 1),
-        ).rejects.toThrow(DeviceConnectionError);
+        await expect(sdk.sendAbort(testCase.sequenceNumber, 1)).rejects.toThrow(
+          DeviceConnectionError,
+        );
       });
     });
   });
@@ -149,7 +146,7 @@ describe('sdk.sendCommandAbort', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.sendCommandAbort(testCase.sequenceNumber, 1),
+          sdk.sendAbort(testCase.sequenceNumber, 1),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
     });
@@ -157,11 +154,15 @@ describe('sdk.sendCommandAbort', () => {
 
   describe('should throw error with invalid arguments', () => {
     fixtures.invalidArgs.forEach(testCase => {
-      test(JSON.stringify(testCase), async () => {
-        await expect(
-          sdk.sendCommandAbort(testCase.sequenceNumber as any),
-        ).rejects.toBeInstanceOf(Error);
-      });
-    }, 200);
+      test(
+        JSON.stringify(testCase),
+        async () => {
+          await expect(
+            sdk.sendAbort(testCase.sequenceNumber as any),
+          ).rejects.toBeInstanceOf(Error);
+        },
+        200,
+      );
+    });
   });
 });

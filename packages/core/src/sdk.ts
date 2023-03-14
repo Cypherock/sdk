@@ -29,7 +29,7 @@ export default class SDK {
 
   private readonly isNewer: boolean;
 
-  private readonly appletId: number;
+  private appletId: number;
 
   private constructor(
     connection: IDeviceConnection,
@@ -87,6 +87,10 @@ export default class SDK {
 
   public afterOperation() {
     return this.connection.afterOperation();
+  }
+
+  public configureAppletId(appletId: number) {
+    this.appletId = appletId;
   }
 
   public destroy() {
@@ -185,7 +189,7 @@ export default class SDK {
     return rawOperations.getStatus({
       connection: this.connection,
       version: this.packetVersion,
-      maxTries
+      maxTries,
     });
   }
 
@@ -226,7 +230,7 @@ export default class SDK {
     });
   }
 
-  public async getResult(sequenceNumber: number) {
+  public async getResult(sequenceNumber: number, maxTries?: number) {
     if (!isFeatureEnabled(FeatureName.ProtoCommand, this.version)) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
@@ -238,6 +242,7 @@ export default class SDK {
       appletId: this.appletId,
       sequenceNumber,
       version: this.packetVersion,
+      maxTries
     });
   }
 
@@ -261,7 +266,7 @@ export default class SDK {
     });
   }
 
-  public async getStatus() {
+  public async getStatus(maxTries?: number) {
     if (!isFeatureEnabled(FeatureName.ProtoCommand, this.version)) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
@@ -271,10 +276,11 @@ export default class SDK {
     return operations.getStatus({
       connection: this.connection,
       version: this.packetVersion,
+      maxTries,
     });
   }
 
-  public async sendAbort(sequenceNumber: number) {
+  public async sendAbort(sequenceNumber: number, maxTries?: number) {
     if (!isFeatureEnabled(FeatureName.ProtoCommand, this.version)) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
@@ -285,6 +291,7 @@ export default class SDK {
       connection: this.connection,
       sequenceNumber,
       version: this.packetVersion,
+      maxTries,
     });
   }
 

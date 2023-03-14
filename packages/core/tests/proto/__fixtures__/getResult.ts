@@ -2,77 +2,24 @@ import {
   DeviceAppError,
   DeviceCommunicationError,
 } from '@cypherock/sdk-interfaces';
-import { PacketVersionMap } from '../../../utils';
 
-export const protoGetResultTestCases = {
+const protoGetStatusTestCases = {
   constantDate: new Date('2023-03-07T09:43:48.755Z'),
   invalidArgs: [
     {
-      connection: null,
-      version: PacketVersionMap.v3,
-      appletId: 1,
-      sequenceNumber: 1,
-    },
-    {
-      appletId: null,
-      version: PacketVersionMap.v3,
-      sequenceNumber: 1,
-    },
-    {
-      version: null,
-      appletId: 1,
-      sequenceNumber: 1,
-    },
-    {
-      version: PacketVersionMap.v3,
-      appletId: 1,
       sequenceNumber: null,
     },
     {
-      connection: undefined,
-      appletId: 1,
-      version: PacketVersionMap.v3,
-      sequenceNumber: 1,
-    },
-    {
-      appletId: undefined,
-      version: PacketVersionMap.v3,
-      sequenceNumber: 1,
-    },
-    {
-      version: undefined,
-      appletId: 1,
-      sequenceNumber: 1,
-    },
-    {
-      version: PacketVersionMap.v3,
-      appletId: 1,
       sequenceNumber: undefined,
     },
     {
-      version: PacketVersionMap.v1,
-      appletId: 1,
-      sequenceNumber: 1,
-    },
-    {
-      version: PacketVersionMap.v2,
-      appletId: 1,
-      sequenceNumber: 1,
-    },
-    {
-      version: 'invalid',
-      appletId: 1,
-      sequenceNumber: 1,
-    },
-    {
-      version: PacketVersionMap.v3,
-      appletId: 1,
       sequenceNumber: 123423,
     },
   ],
   valid: [
     // Cmd output
     {
+      name: "Cmd: 16",
       output: {
         isStatus: false,
         result: new Uint8Array([
@@ -97,10 +44,10 @@ export const protoGetResultTestCases = {
           ]),
         ],
       ],
-      version: PacketVersionMap.v3,
     },
     // Status
     {
+      name: "CmdSeq: 215",
       output: {
         isStatus: true,
         result: {
@@ -128,9 +75,9 @@ export const protoGetResultTestCases = {
           ]),
         ],
       ],
-      version: PacketVersionMap.v3,
     },
     {
+      name: "Cmd: 124",
       output: {
         isStatus: false,
         result: new Uint8Array([
@@ -235,12 +182,11 @@ export const protoGetResultTestCases = {
           ]),
         ],
       ],
-      version: PacketVersionMap.v3,
     },
   ],
   error: [
-    // Invalid crc
     {
+      name: 'Invalid CRC',
       appletId: 12,
       sequenceNumber: 16,
       packets: [
@@ -258,11 +204,10 @@ export const protoGetResultTestCases = {
           ]),
         ],
       ],
-      version: PacketVersionMap.v3,
       errorInstance: DeviceCommunicationError,
     },
-    // Invalid sequenceNumber
     {
+      name: 'Invalid sequenceNumber',
       appletId: 215,
       sequenceNumber: 215,
       packets: [
@@ -279,11 +224,10 @@ export const protoGetResultTestCases = {
           ]),
         ],
       ],
-      version: PacketVersionMap.v3,
       errorInstance: DeviceAppError,
     },
-    // Invalid appletId
     {
+      name: 'Invalid appletId',
       appletId: 215,
       sequenceNumber: 215,
       packets: [
@@ -301,8 +245,9 @@ export const protoGetResultTestCases = {
           ]),
         ],
       ],
-      version: PacketVersionMap.v3,
       errorInstance: DeviceAppError,
     },
   ],
 };
+
+export default protoGetStatusTestCases;
