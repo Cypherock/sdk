@@ -11,7 +11,7 @@ import {
   beforeEach,
 } from '@jest/globals';
 import SDK from '../../src';
-import fixtures from './__fixtures__/getStatus';
+import fixtures from './__fixtures__/getCommandStatus';
 
 describe('sdk.getCommandStatus', () => {
   let connection: MockDeviceConnection;
@@ -68,26 +68,19 @@ describe('sdk.getCommandStatus', () => {
   describe('should be able to handle multiple retries', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        const maxTimeoutTriggers = 3;
-        let totalTimeoutTriggers = 0;
-
         const maxTries = 3;
         let retries = 0;
 
         const onData = async () => {
           const currentRetry = retries + 1;
 
-          const doTriggerError =
-            Math.random() > 0.5 &&
-            currentRetry < maxTries &&
-            totalTimeoutTriggers < maxTimeoutTriggers;
+          const doTriggerError = Math.random() > 0.5 && currentRetry < maxTries;
 
           if (!doTriggerError) {
             for (const ackPacket of testCase.ackPackets) {
               await connection.mockDeviceSend(ackPacket);
             }
           } else {
-            totalTimeoutTriggers += 1;
             retries = currentRetry;
           }
         };
@@ -103,15 +96,16 @@ describe('sdk.getCommandStatus', () => {
   describe('should throw error when device is disconnected', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        const onData = async (data: Uint8Array) => {
-          expect(data).toEqual(undefined);
-        };
+        expect.assertions(2);
+        const onData = jest.fn(async () => {});
 
         connection.configureListeners(onData);
         await connection.destroy();
+
         await expect(sdk.getCommandStatus(1)).rejects.toThrow(
           DeviceConnectionError,
         );
+        expect(onData.mock.calls).toHaveLength(0);
       });
     });
   });

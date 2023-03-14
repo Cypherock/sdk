@@ -7,26 +7,30 @@ import {
   test,
   expect,
   afterEach,
-  beforeEach,
   jest,
+  beforeEach,
 } from '@jest/globals';
 import SDK from '../../src';
-import fixtures from './__fixtures__/sendLegacyCommand';
+import fixtures from './__fixtures__/getCommandOutput';
 
-describe('sdk.sendLegacyCommand', () => {
+describe('sdk.getCommandOutput', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
   let appletId = 0;
 
+  const RealDate = Date.now;
+
   beforeEach(async () => {
+    global.Date.now = jest.fn(() => fixtures.constantDate.getTime());
+
     connection = await MockDeviceConnection.create();
 
     const onData = async () => {
-      // SDK Version: 0.1.16, PacketVersion: v1
+      // SDK Version: 2.7.1, Packet Version: v3
       await connection.mockDeviceSend(
         new Uint8Array([
-          170, 1, 7, 0, 1, 0, 1, 0, 69, 133, 170, 88, 12, 0, 1, 0, 1, 0, 0, 0,
-          1, 0, 16, 118, 67,
+          170, 1, 7, 0, 1, 0, 1, 0, 69, 133, 170, 88, 12, 0, 1, 0, 1, 0, 2, 0,
+          7, 0, 1, 130, 112,
         ]),
       );
     };
@@ -39,10 +43,11 @@ describe('sdk.sendLegacyCommand', () => {
   });
 
   afterEach(async () => {
-    await sdk.destroy();
+    global.Date.now = RealDate;
+    await connection.destroy();
   });
 
-  describe('should be able to send data', () => {
+  describe('should be able to get command', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         const onData = async (data: Uint8Array) => {
@@ -51,15 +56,15 @@ describe('sdk.sendLegacyCommand', () => {
           );
           expect(testCase.packets).toContainEqual(data);
           expect(packetIndex).toBeGreaterThanOrEqual(0);
-          await connection.mockDeviceSend(testCase.ackPackets[packetIndex]);
+          for (const ackPacket of testCase.ackPackets[packetIndex]) {
+            await connection.mockDeviceSend(ackPacket);
+          }
         };
 
         connection.configureListeners(onData);
-        await sdk.sendLegacyCommand(
-          testCase.params.command,
-          testCase.params.data,
-          1,
-        );
+        const output = await sdk.getCommandOutput(testCase.sequenceNumber, 1);
+
+        expect(output).toEqual(testCase.output);
       });
     });
   });
@@ -81,14 +86,15 @@ describe('sdk.sendLegacyCommand', () => {
           expect(packetIndex).toBeGreaterThanOrEqual(0);
 
           const currentRetry = (retries[packetIndex] ?? 0) + 1;
-
           const doTriggerError =
-            Math.random() > 0.5 &&
+            Math.random() < 0.5 &&
             currentRetry < maxTries &&
             totalTimeoutTriggers < maxTimeoutTriggers;
 
           if (!doTriggerError) {
-            await connection.mockDeviceSend(testCase.ackPackets[packetIndex]);
+            for (const ackPacket of testCase.ackPackets[packetIndex]) {
+              await connection.mockDeviceSend(ackPacket);
+            }
           } else {
             totalTimeoutTriggers += 1;
             retries[packetIndex] = currentRetry;
@@ -96,11 +102,12 @@ describe('sdk.sendLegacyCommand', () => {
         };
 
         connection.configureListeners(onData);
-        await sdk.sendLegacyCommand(
-          testCase.params.command,
-          testCase.params.data,
+        const output = await sdk.getCommandOutput(
+          testCase.sequenceNumber,
           maxTries,
         );
+
+        expect(output).toEqual(testCase.output);
       });
     });
   });
@@ -112,15 +119,10 @@ describe('sdk.sendLegacyCommand', () => {
         const onData = jest.fn(async () => {});
 
         connection.configureListeners(onData);
-
         await connection.destroy();
 
         await expect(
-          sdk.sendLegacyCommand(
-            testCase.params.command,
-            testCase.params.data,
-            1,
-          ),
+          sdk.getCommandOutput(testCase.sequenceNumber, 1),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
@@ -130,25 +132,27 @@ describe('sdk.sendLegacyCommand', () => {
   describe('should throw error when device is disconnected in between', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        expect.assertions(1);
         const onData = async (data: Uint8Array) => {
           const packetIndex = testCase.packets.findIndex(
             elem => elem.toString() === data.toString(),
           );
-          if (packetIndex >= testCase.ackPackets.length - 1) {
-            await connection.destroy();
+          expect(testCase.packets).toContainEqual(data);
+          expect(packetIndex).toBeGreaterThanOrEqual(0);
+
+          let i = 0;
+          for (const ackPacket of testCase.ackPackets[packetIndex]) {
+            if (i >= testCase.ackPackets[packetIndex].length - 1) {
+              await connection.destroy();
+            } else {
+              await connection.mockDeviceSend(ackPacket);
+            }
+            i += 1;
           }
-          await connection.mockDeviceSend(testCase.ackPackets[packetIndex]);
         };
 
         connection.configureListeners(onData);
-
         await expect(
-          sdk.sendLegacyCommand(
-            testCase.params.command,
-            testCase.params.data,
-            1,
-          ),
+          sdk.getCommandOutput(testCase.sequenceNumber, 1),
         ).rejects.toThrow(DeviceConnectionError);
       });
     });
@@ -156,17 +160,15 @@ describe('sdk.sendLegacyCommand', () => {
 
   describe('should throw error with invalid arguments', () => {
     fixtures.invalidArgs.forEach(testCase => {
-      test(JSON.stringify(testCase), async () => {
-        const params = {
-          command: testCase.command as any,
-          data: testCase.data as any,
-          maxTries: testCase.maxTries as any,
-        };
-
-        await expect(
-          sdk.sendLegacyCommand(params.command, params.data, params.maxTries),
-        ).rejects.toThrow();
-      });
-    }, 200);
+      test(
+        JSON.stringify(testCase),
+        async () => {
+          await expect(
+            sdk.getCommandOutput(testCase.sequenceNumber as any),
+          ).rejects.toBeInstanceOf(Error);
+        },
+        200,
+      );
+    });
   });
 });

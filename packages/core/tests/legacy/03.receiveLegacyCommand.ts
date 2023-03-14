@@ -53,8 +53,6 @@ describe('sdk.receiveLegacyCommand', () => {
 
         expect(response.data).toEqual(testCase.output.data);
         expect(response.commandType).toEqual(testCase.output.commandType);
-
-        await connection.destroy();
       });
     });
   });
@@ -114,6 +112,6 @@ describe('sdk.receiveLegacyCommand', () => {
           sdk.receiveLegacyCommand(params.allAcceptableCommands),
         ).rejects.toBeInstanceOf(Error);
       });
-    });
+    }, 200);
   });
 });
