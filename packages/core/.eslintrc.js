@@ -3,9 +3,9 @@ module.exports = {
   extends: ['custom'],
   parserOptions: {
     tsconfigRootDir: __dirname,
-    project: ['./tsconfig.json']
+    project: ['./tsconfig.json'],
   },
   rules: {
-    'no-bitwise': 0
-  }
+    'no-bitwise': 0,
+  },
 };

@@ -81,13 +81,30 @@ export default class SDK {
     return this.connection.getNewSequenceNumber();
   }
 
+  public beforeOperation() {
+    return this.connection.beforeOperation();
+  }
+
+  public afterOperation() {
+    return this.connection.afterOperation();
+  }
+
+  public destroy() {
+    return this.connection.destroy();
+  }
+
   // ************** v1/v2 Packet Version ****************
-  public async sendLegacyCommand(command: number, data: string) {
+  public async sendLegacyCommand(
+    command: number,
+    data: string,
+    maxTries?: number,
+  ) {
     return legacyOperations.sendData(
       this.connection,
       command,
       data,
       this.packetVersion,
+      maxTries,
     );
   }
 
@@ -333,5 +350,18 @@ export default class SDK {
 
     await connection.afterOperation();
     throw firstError;
+  }
+
+  public async wrapOperation<R>(operation: () => Promise<R>) {
+    try {
+      await this.connection.beforeOperation();
+      const result = await operation();
+      await this.connection.afterOperation();
+
+      return result;
+    } catch (error) {
+      await this.connection.afterOperation();
+      throw error;
+    }
   }
 }

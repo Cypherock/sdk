@@ -5,7 +5,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 import SDK from '../../src/sdk';
-import {PacketVersionMap} from '../../src/utils';
+import { PacketVersionMap } from '../../src/utils';
 
 describe('Legacy Device Operation: v1', () => {
   let connection: MockDeviceConnection;

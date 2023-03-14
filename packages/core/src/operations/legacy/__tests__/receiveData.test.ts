@@ -50,7 +50,7 @@ describe('Legacy Operations: receiveData', () => {
     }
   });
 
-  test('should return valid errors when device is disconnected', async () => {
+  test('should throw errors when device is disconnected', async () => {
     for (const testCase of legacyReceiveDataTestCases.valid) {
       connection = await MockDeviceConnection.create();
       await connection.beforeOperation();
@@ -69,7 +69,7 @@ describe('Legacy Operations: receiveData', () => {
     }
   });
 
-  test('should return valid errors when device is disconnected in between', async () => {
+  test('should throw errors when device is disconnected in between', async () => {
     expect.assertions(legacyReceiveDataTestCases.valid.length * 2);
     const sendDataFromDevice = async (packetsFromDevice: Uint8Array[]) => {
       let i = 0;
