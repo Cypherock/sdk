@@ -104,7 +104,7 @@ describe('sdk.sendLegacyCommand', () => {
     });
   });
 
-  describe('should return valid errors when device is disconnected', () => {
+  describe('should return valid error when device is disconnected', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         expect.assertions(1);
@@ -124,7 +124,7 @@ describe('sdk.sendLegacyCommand', () => {
     });
   });
 
-  describe('should return valid errors when device is disconnected in between', () => {
+  describe('should return valid error when device is disconnected in between', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         expect.assertions(1);

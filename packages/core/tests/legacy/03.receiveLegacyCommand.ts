@@ -59,7 +59,7 @@ describe('sdk.receiveLegacyCommand', () => {
     });
   });
 
-  describe('should throw errors when device is disconnected', () => {
+  describe('should throw error when device is disconnected', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         expect.assertions(1);
@@ -71,7 +71,7 @@ describe('sdk.receiveLegacyCommand', () => {
     });
   });
 
-  describe('should throw errors when device is disconnected in between', () => {
+  describe('should throw error when device is disconnected in between', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         expect.assertions(2);

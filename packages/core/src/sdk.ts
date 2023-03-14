@@ -175,7 +175,7 @@ export default class SDK {
     });
   }
 
-  public async getCommandStatus() {
+  public async getCommandStatus(maxTries?: number) {
     if (!isFeatureEnabled(FeatureName.RawCommand, this.version)) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
@@ -185,6 +185,7 @@ export default class SDK {
     return rawOperations.getStatus({
       connection: this.connection,
       version: this.packetVersion,
+      maxTries
     });
   }
 
