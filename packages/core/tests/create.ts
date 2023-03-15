@@ -164,12 +164,4 @@ describe('SDK.create', () => {
       });
     });
   });
-
-  describe('should throw error with invalid arguments', () => {
-    fixtures.invalidArgs.forEach(testCase => {
-      test(JSON.stringify(testCase), async () => {
-        await expect(SDK.getSDKVersion(testCase as any)).rejects.toThrow();
-      });
-    });
-  });
 });

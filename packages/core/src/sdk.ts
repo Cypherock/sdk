@@ -232,7 +232,7 @@ export default class SDK implements ISDK {
   }
 
   // ************** Bootloader operations ****************
-  public sendBootloaderAbort(
+  public async sendBootloaderAbort(
     maxTries?: number,
     options?: { firstTimeout?: number; timeout?: number },
   ) {
@@ -249,7 +249,7 @@ export default class SDK implements ISDK {
     );
   }
 
-  public sendBootloaderData(
+  public async sendBootloaderData(
     data: string,
     onProgress?: (progress: number) => void,
     maxTries?: number,
@@ -291,7 +291,7 @@ export default class SDK implements ISDK {
     }
   }
 
-  public static async getSDKVersion(
+  private static async getSDKVersion(
     connection: IDeviceConnection,
     maxTries?: number,
     options?: { timeout?: number },

@@ -62,7 +62,6 @@ describe('Bootloader Operation', () => {
       new Uint8Array([4]),
     ];
     connection.configureListeners(async data => {
-      console.log(data);
       const packetIndex = packets.findIndex(
         elem => elem.toString() === data.toString(),
       );

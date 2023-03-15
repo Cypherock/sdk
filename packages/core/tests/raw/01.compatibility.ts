@@ -1,4 +1,6 @@
 import {
+  DeviceBootloaderErrorType,
+  deviceBootloaderErrorTypeDetails,
   DeviceCompatibilityErrorType,
   deviceCompatibilityErrorTypeDetails,
   MockDeviceConnection,
@@ -228,6 +230,20 @@ describe('Device Raw Operation: v3', () => {
     );
     await expect(sdk.sendAbort(1)).rejects.toThrowError(
       invalidSDKOperationMessage,
+    );
+  });
+
+  test('should throw error when accessing bootloader functions', async () => {
+    const notInBootloaderError =
+      deviceBootloaderErrorTypeDetails[
+        DeviceBootloaderErrorType.NOT_IN_BOOTLOADER
+      ].message;
+
+    await expect(sdk.sendBootloaderAbort()).rejects.toThrowError(
+      notInBootloaderError,
+    );
+    await expect(sdk.sendBootloaderData('12')).rejects.toThrowError(
+      notInBootloaderError,
     );
   });
 });

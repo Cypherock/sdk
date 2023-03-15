@@ -1,12 +1,4 @@
 const sdkCreateTestCases = {
-  invalidArgs: [
-    {
-      connection: null,
-    },
-    {
-      connection: undefined,
-    },
-  ],
   valid: [
     {
       output: { sdkVersion: '0.1.16', packetVersion: 'v1' },
