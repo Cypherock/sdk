@@ -9,7 +9,7 @@
     "lint:check": "eslint --ext .ts,tsx,js,jsx,js src/",
     "pretty": "prettier --write 'src/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts'",
-    "prebuild": "./scripts/prebuild.sh",
+    "prebuild": "sh ./scripts/prebuild.sh",
     "build": "rimraf dist && tsc -p tsconfig.json"
   },
   "devDependencies": {
