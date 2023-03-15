@@ -1,8 +1,12 @@
 export default function assert<T>(
   condition: T,
-  message: string,
+  error: string | Error,
 ): asserts condition is Exclude<T, null | undefined> {
   if (condition === null || condition === undefined || condition === false) {
-    throw new Error(message);
+    if (typeof error === 'string') {
+      throw new Error(error);
+    } else {
+      throw error;
+    }
   }
 }

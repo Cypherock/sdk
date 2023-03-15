@@ -71,7 +71,7 @@ const rawSendAbortTestCases = {
   ],
   error: [
     {
-      name: "Invalid CRC",
+      name: 'Invalid CRC',
       abortRequest: new Uint8Array([
         85, 85, 135, 124, 0, 1, 0, 1, 0, 18, 8, 1, 0, 17, 254, 0,
       ]),
@@ -85,7 +85,7 @@ const rawSendAbortTestCases = {
       errorInstance: DeviceCommunicationError,
     },
     {
-      name: "Invalid sequenceNumber",
+      name: 'Invalid sequenceNumber',
       abortRequest: new Uint8Array([
         85, 85, 63, 128, 0, 1, 0, 1, 0, 78, 8, 1, 0, 17, 254, 0,
       ]),

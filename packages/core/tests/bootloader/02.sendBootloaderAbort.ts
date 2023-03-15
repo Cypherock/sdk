@@ -1,21 +1,29 @@
 import {
   DeviceConnectionError,
+  DeviceState,
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { describe, expect, afterEach } from '@jest/globals';
-import { sendBootloaderAbort } from '../sendBootloaderAbort';
-import { sendBootloaderAbortTestCases } from '../__fixtures__/sendBootloaderAbort';
+import { describe, test, expect, afterEach, beforeEach } from '@jest/globals';
+import SDK from '../../src';
 
-describe('Bootloader Operations: sendBootloaderAbort', () => {
+describe('sdk.sendBootloaderAbort', () => {
   let connection: MockDeviceConnection;
+  let sdk: SDK;
+  let appletId = 0;
 
   beforeEach(async () => {
     connection = await MockDeviceConnection.create();
+
+    connection.configureDevice(DeviceState.BOOTLOADER, 'MOCK');
+
+    sdk = await SDK.create(connection, appletId);
     await connection.beforeOperation();
+
+    connection.removeListeners();
   });
 
   afterEach(async () => {
-    await connection.afterOperation();
+    await connection.destroy();
   });
 
   test('should be able to send abort', async () => {
@@ -26,12 +34,8 @@ describe('Bootloader Operations: sendBootloaderAbort', () => {
       await connection.mockDeviceSend(new Uint8Array([24]));
     };
 
-    connection.removeListeners();
-
     connection.configureListeners(onData);
-    await sendBootloaderAbort(connection, 1);
-
-    await connection.destroy();
+    await sdk.sendBootloaderAbort(1);
   });
 
   test('should be able to handle multiple retries', async () => {
@@ -48,12 +52,8 @@ describe('Bootloader Operations: sendBootloaderAbort', () => {
       }
     };
 
-    connection.removeListeners();
-
     connection.configureListeners(onData);
-    await sendBootloaderAbort(connection, maxTries, { firstTimeout: 2000 });
-
-    await connection.destroy();
+    await sdk.sendBootloaderAbort(maxTries, { firstTimeout: 2000 });
   });
 
   test('should return valid errors when device is disconnected', async () => {
@@ -63,11 +63,10 @@ describe('Bootloader Operations: sendBootloaderAbort', () => {
       await connection.mockDeviceSend(new Uint8Array([24]));
     };
 
-    connection.removeListeners();
-
     connection.configureListeners(onData);
     await connection.destroy();
-    await expect(sendBootloaderAbort(connection, 1)).rejects.toThrow(
+
+    await expect(sdk.sendBootloaderAbort(1)).rejects.toThrow(
       DeviceConnectionError,
     );
   });
@@ -79,26 +78,10 @@ describe('Bootloader Operations: sendBootloaderAbort', () => {
       await connection.destroy();
     };
 
-    connection.removeListeners();
-
     connection.configureListeners(onData);
-    await expect(sendBootloaderAbort(connection, 1)).rejects.toThrow(
+
+    await expect(sdk.sendBootloaderAbort(1)).rejects.toThrow(
       DeviceConnectionError,
     );
-    await connection.destroy();
-  });
-
-  test('should throw error with invalid arguments', async () => {
-    for (const testCase of sendBootloaderAbortTestCases.invalidArgs) {
-      const params = {
-        connection: testCase.connection as any,
-      };
-
-      if (!Object.prototype.hasOwnProperty.call(testCase, 'connection')) {
-        params.connection = connection;
-      }
-
-      await expect(sendBootloaderAbort(params.connection)).rejects.toThrow();
-    }
   });
 });

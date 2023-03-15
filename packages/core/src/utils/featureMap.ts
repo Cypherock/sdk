@@ -8,7 +8,7 @@ export enum FeatureName {
 // from is inclusive and to is exclusive
 const FeatureMap: Record<FeatureName, { from: string; to?: string }> = {
   [FeatureName.RawCommand]: { from: '2.0.0', to: '3.0.0' },
-  [FeatureName.ProtoCommand]: { from: '3.0.0' },
+  [FeatureName.ProtoCommand]: { from: '3.0.0', to: '4.0.0' },
 };
 
 export const isFeatureEnabled = (

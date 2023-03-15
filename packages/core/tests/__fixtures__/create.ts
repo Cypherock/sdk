@@ -10,8 +10,10 @@ const sdkCreateTestCases = {
   valid: [
     {
       output: { sdkVersion: '0.1.16', packetVersion: 'v1' },
-      isSupported: false,
-      isNewer: false,
+      isLegacyOperationSupported: true,
+      isRawOperationSupported: false,
+      isProtoOperationSupported: false,
+      isInBootloader: false,
       packet: new Uint8Array([170, 88, 7, 0, 1, 0, 1, 0, 69, 133]),
       ackPackets: [
         new Uint8Array([170, 1, 7, 0, 1, 0, 1, 0, 69, 133]),
@@ -20,8 +22,10 @@ const sdkCreateTestCases = {
     },
     {
       output: { sdkVersion: '0.1.16', packetVersion: 'v1' },
-      isSupported: false,
-      isNewer: false,
+      isLegacyOperationSupported: true,
+      isRawOperationSupported: false,
+      isProtoOperationSupported: false,
+      isInBootloader: false,
       packet: new Uint8Array([170, 88, 7, 0, 1, 0, 1, 0, 69, 133]),
       ackPackets: [
         new Uint8Array([
@@ -32,8 +36,10 @@ const sdkCreateTestCases = {
     },
     {
       output: { sdkVersion: '1.17.6', packetVersion: 'v2' },
-      isSupported: false,
-      isNewer: false,
+      isLegacyOperationSupported: true,
+      isRawOperationSupported: false,
+      isProtoOperationSupported: false,
+      isInBootloader: false,
       packet: new Uint8Array([170, 88, 7, 0, 1, 0, 1, 0, 69, 133]),
       ackPackets: [
         new Uint8Array([170, 1, 7, 0, 1, 0, 1, 0, 69, 133]),
@@ -42,8 +48,10 @@ const sdkCreateTestCases = {
     },
     {
       output: { sdkVersion: '1.17.6', packetVersion: 'v2' },
-      isSupported: false,
-      isNewer: false,
+      isLegacyOperationSupported: true,
+      isRawOperationSupported: false,
+      isProtoOperationSupported: false,
+      isInBootloader: false,
       packet: new Uint8Array([170, 88, 7, 0, 1, 0, 1, 0, 69, 133]),
       ackPackets: [
         new Uint8Array([
@@ -54,8 +62,10 @@ const sdkCreateTestCases = {
     },
     {
       output: { sdkVersion: '2.7.1', packetVersion: 'v3' },
-      isSupported: true,
-      isNewer: false,
+      isLegacyOperationSupported: false,
+      isRawOperationSupported: true,
+      isProtoOperationSupported: false,
+      isInBootloader: false,
       packet: new Uint8Array([170, 88, 7, 0, 1, 0, 1, 0, 69, 133]),
       ackPackets: [
         new Uint8Array([170, 1, 7, 0, 1, 0, 1, 0, 69, 133]),
@@ -64,8 +74,10 @@ const sdkCreateTestCases = {
     },
     {
       output: { sdkVersion: '3.0.1', packetVersion: 'v3' },
-      isSupported: true,
-      isNewer: false,
+      isLegacyOperationSupported: false,
+      isRawOperationSupported: false,
+      isProtoOperationSupported: true,
+      isInBootloader: false,
       packet: new Uint8Array([170, 88, 7, 0, 1, 0, 1, 0, 69, 133]),
       ackPackets: [
         new Uint8Array([170, 1, 7, 0, 1, 0, 1, 0, 69, 133]),
@@ -74,8 +86,10 @@ const sdkCreateTestCases = {
     },
     {
       output: { sdkVersion: '3.2.49', packetVersion: 'v3' },
-      isSupported: false,
-      isNewer: true,
+      isLegacyOperationSupported: false,
+      isRawOperationSupported: false,
+      isProtoOperationSupported: true,
+      isInBootloader: false,
       packet: new Uint8Array([170, 88, 7, 0, 1, 0, 1, 0, 69, 133]),
       ackPackets: [
         new Uint8Array([170, 1, 7, 0, 1, 0, 1, 0, 69, 133]),
@@ -84,8 +98,10 @@ const sdkCreateTestCases = {
     },
     {
       output: { sdkVersion: '3.2.49', packetVersion: 'v3' },
-      isSupported: false,
-      isNewer: true,
+      isLegacyOperationSupported: false,
+      isRawOperationSupported: false,
+      isProtoOperationSupported: true,
+      isInBootloader: false,
       packet: new Uint8Array([170, 88, 7, 0, 1, 0, 1, 0, 69, 133]),
       ackPackets: [
         new Uint8Array([
@@ -95,9 +111,11 @@ const sdkCreateTestCases = {
       ],
     },
     {
-      output: { sdkVersion: '21.49.530', packetVersion: 'v1' },
-      isSupported: false,
-      isNewer: true,
+      output: { sdkVersion: '21.49.530', packetVersion: undefined },
+      isLegacyOperationSupported: false,
+      isRawOperationSupported: false,
+      isProtoOperationSupported: false,
+      isInBootloader: false,
       packet: new Uint8Array([170, 88, 7, 0, 1, 0, 1, 0, 69, 133]),
       ackPackets: [
         new Uint8Array([170, 1, 7, 0, 1, 0, 1, 0, 69, 133]),

@@ -13,7 +13,7 @@ import {
 import SDK from '../../src';
 import fixtures from './__fixtures__/waitForCommandOutput';
 
-describe('sdk.waitForCommandOutput', () => {
+describe('sdk.deprecated.waitForCommandOutput', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
   let appletId = 0;
@@ -50,7 +50,6 @@ describe('sdk.waitForCommandOutput', () => {
   describe('should be able to wait for command output', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-
         expect.assertions(
           1 + 2 * testCase.packets.length + testCase.statusList.length * 3,
         );
@@ -84,7 +83,7 @@ describe('sdk.waitForCommandOutput', () => {
         };
 
         connection.configureListeners(onData);
-        const output = await sdk.waitForCommandOutput({
+        const output = await sdk.deprecated.waitForCommandOutput({
           sequenceNumber: testCase.sequenceNumber,
           expectedCommandTypes: testCase.expectedCommandTypes,
           onStatus,
@@ -148,7 +147,7 @@ describe('sdk.waitForCommandOutput', () => {
 
         connection.configureListeners(onData);
 
-        const output = await sdk.waitForCommandOutput({
+        const output = await sdk.deprecated.waitForCommandOutput({
           sequenceNumber: testCase.sequenceNumber,
           expectedCommandTypes: testCase.expectedCommandTypes,
           onStatus,
@@ -172,7 +171,7 @@ describe('sdk.waitForCommandOutput', () => {
         await connection.destroy();
 
         await expect(
-          sdk.waitForCommandOutput({
+          sdk.deprecated.waitForCommandOutput({
             sequenceNumber: testCase.sequenceNumber,
             expectedCommandTypes: testCase.expectedCommandTypes,
             onStatus,
@@ -221,7 +220,7 @@ describe('sdk.waitForCommandOutput', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.waitForCommandOutput({
+          sdk.deprecated.waitForCommandOutput({
             sequenceNumber: testCase.sequenceNumber,
             expectedCommandTypes: testCase.expectedCommandTypes,
             maxTries: 1,
@@ -264,7 +263,7 @@ describe('sdk.waitForCommandOutput', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.waitForCommandOutput({
+          sdk.deprecated.waitForCommandOutput({
             sequenceNumber: testCase.sequenceNumber as any,
             expectedCommandTypes: testCase.expectedCommandTypes as any,
             onStatus,
@@ -281,7 +280,7 @@ describe('sdk.waitForCommandOutput', () => {
         JSON.stringify(testCase),
         async () => {
           await expect(
-            sdk.waitForCommandOutput({
+            sdk.deprecated.waitForCommandOutput({
               sequenceNumber: testCase.sequenceNumber as any,
               expectedCommandTypes: testCase.expectedCommandTypes as any,
             }),

@@ -2,7 +2,7 @@ const protoGetStatusTestCases = {
   constantDate: new Date('2023-03-07T09:43:48.755Z'),
   valid: [
     {
-      name: "CmdSeq: 50",
+      name: 'CmdSeq: 50',
       statusRequest: new Uint8Array([
         85, 85, 169, 56, 0, 1, 0, 1, 255, 255, 1, 1, 0, 17, 254, 0,
       ]),
@@ -22,7 +22,7 @@ const protoGetStatusTestCases = {
       },
     },
     {
-      name: "CmdSeq: 3842",
+      name: 'CmdSeq: 3842',
       statusRequest: new Uint8Array([
         85, 85, 169, 56, 0, 1, 0, 1, 255, 255, 1, 1, 0, 17, 254, 0,
       ]),

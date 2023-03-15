@@ -19,7 +19,7 @@ const protoGetStatusTestCases = {
   valid: [
     // Cmd output
     {
-      name: "Cmd: 16",
+      name: 'Cmd: 16',
       output: {
         isStatus: false,
         result: new Uint8Array([
@@ -47,7 +47,7 @@ const protoGetStatusTestCases = {
     },
     // Status
     {
-      name: "CmdSeq: 215",
+      name: 'CmdSeq: 215',
       output: {
         isStatus: true,
         result: {
@@ -77,7 +77,7 @@ const protoGetStatusTestCases = {
       ],
     },
     {
-      name: "Cmd: 124",
+      name: 'Cmd: 124',
       output: {
         isStatus: false,
         result: new Uint8Array([

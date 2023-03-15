@@ -32,8 +32,14 @@ describe('SDK.create', () => {
 
         expect(sdk.getVersion()).toEqual(testCase.output.sdkVersion);
         expect(sdk.getPacketVersion()).toEqual(testCase.output.packetVersion);
-        expect(sdk.isSupported()).toEqual(testCase.isSupported);
-        expect(sdk.isSDKNewer()).toEqual(testCase.isNewer);
+        expect(sdk.isInBootloader()).toEqual(testCase.isInBootloader);
+        expect(sdk.deprecated.isLegacyOperationSupported()).toEqual(
+          testCase.isLegacyOperationSupported,
+        );
+        expect(sdk.deprecated.isRawOperationSupported()).toEqual(
+          testCase.isRawOperationSupported,
+        );
+        expect(sdk.isSupported()).toEqual(testCase.isProtoOperationSupported);
       });
     });
   });
@@ -53,8 +59,14 @@ describe('SDK.create', () => {
 
         expect(sdk.getVersion()).toEqual(testCase.output.sdkVersion);
         expect(sdk.getPacketVersion()).toEqual(testCase.output.packetVersion);
-        expect(sdk.isSupported()).toEqual(testCase.isSupported);
-        expect(sdk.isSDKNewer()).toEqual(testCase.isNewer);
+        expect(sdk.isInBootloader()).toEqual(testCase.isInBootloader);
+        expect(sdk.deprecated.isLegacyOperationSupported()).toEqual(
+          testCase.isLegacyOperationSupported,
+        );
+        expect(sdk.deprecated.isRawOperationSupported()).toEqual(
+          testCase.isRawOperationSupported,
+        );
+        expect(sdk.isSupported()).toEqual(testCase.isProtoOperationSupported);
 
         for (let i = 0; i < 100; i += 1) {
           expect(sdk.getSequenceNumber()).toEqual(i);
@@ -98,8 +110,14 @@ describe('SDK.create', () => {
 
         expect(sdk.getVersion()).toEqual(testCase.output.sdkVersion);
         expect(sdk.getPacketVersion()).toEqual(testCase.output.packetVersion);
-        expect(sdk.isSupported()).toEqual(testCase.isSupported);
-        expect(sdk.isSDKNewer()).toEqual(testCase.isNewer);
+        expect(sdk.isInBootloader()).toEqual(testCase.isInBootloader);
+        expect(sdk.deprecated.isLegacyOperationSupported()).toEqual(
+          testCase.isLegacyOperationSupported,
+        );
+        expect(sdk.deprecated.isRawOperationSupported()).toEqual(
+          testCase.isRawOperationSupported,
+        );
+        expect(sdk.isSupported()).toEqual(testCase.isProtoOperationSupported);
       });
     });
   });

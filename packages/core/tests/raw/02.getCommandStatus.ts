@@ -13,7 +13,7 @@ import {
 import SDK from '../../src';
 import fixtures from './__fixtures__/getCommandStatus';
 
-describe('sdk.getCommandStatus', () => {
+describe('sdk.deprecated.getCommandStatus', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
   let appletId = 0;
@@ -58,7 +58,7 @@ describe('sdk.getCommandStatus', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.getCommandStatus(1);
+        const status = await sdk.deprecated.getCommandStatus(1);
 
         expect(status).toEqual(testCase.status);
       });
@@ -86,7 +86,7 @@ describe('sdk.getCommandStatus', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.getCommandStatus(maxTries);
+        const status = await sdk.deprecated.getCommandStatus(maxTries);
 
         expect(status).toEqual(testCase.status);
       });
@@ -102,7 +102,7 @@ describe('sdk.getCommandStatus', () => {
         connection.configureListeners(onData);
         await connection.destroy();
 
-        await expect(sdk.getCommandStatus(1)).rejects.toThrow(
+        await expect(sdk.deprecated.getCommandStatus(1)).rejects.toThrow(
           DeviceConnectionError,
         );
         expect(onData.mock.calls).toHaveLength(0);
@@ -127,7 +127,7 @@ describe('sdk.getCommandStatus', () => {
         };
 
         connection.configureListeners(onData);
-        await expect(sdk.getCommandStatus(1)).rejects.toThrow(
+        await expect(sdk.deprecated.getCommandStatus(1)).rejects.toThrow(
           DeviceConnectionError,
         );
       });

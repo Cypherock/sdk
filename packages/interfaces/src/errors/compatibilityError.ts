@@ -1,5 +1,6 @@
 export enum DeviceCompatibilityErrorType {
   INVALID_SDK_OPERATION = 'COM_0200',
+  DEVICE_NOT_SUPPORTED = 'COM_0201',
 }
 
 type CodeToErrorMap = {
@@ -12,6 +13,10 @@ type CodeToErrorMap = {
 export const deviceCompatibilityErrorTypeDetails: CodeToErrorMap = {
   [DeviceCompatibilityErrorType.INVALID_SDK_OPERATION]: {
     message: 'The device sdk does not support this function',
+    doRetry: false,
+  },
+  [DeviceCompatibilityErrorType.DEVICE_NOT_SUPPORTED]: {
+    message: 'The connected device is not supported by this SDK',
     doRetry: false,
   },
 };

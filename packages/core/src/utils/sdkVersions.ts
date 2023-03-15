@@ -1,23 +1,8 @@
-import { compare, compareVersions, validate } from 'compare-versions';
+import { compareVersions, validate } from 'compare-versions';
 import assert from './assert';
 import { isHex } from './crypto';
 
 import { PacketVersion, PacketVersionMap } from './packetVersions';
-
-// from is inclusive and to is exclusive
-const supportedVersionRange = { from: '2.6.0', to: '3.1.0' };
-
-export const isSDKSupported = (version: string) => {
-  assert(version, 'Invalid version');
-  assert(validate(version), 'Invalid version');
-
-  const isNewer = compare(version, supportedVersionRange.to, '>=');
-  const isOlder = compare(version, supportedVersionRange.from, '<');
-
-  const isSupported = !isNewer && !isOlder;
-
-  return { isSupported, isNewer };
-};
 
 // We need to maintain older sdk versions so that we can update them
 // from is inclusive and to is exclusive
@@ -26,6 +11,7 @@ const SdkToPacketVersionMap: {
   to?: string;
   packetVersion: PacketVersion;
 }[] = [
+  { from: '0.0.1', to: '1.0.0', packetVersion: PacketVersionMap.v1 },
   { from: '1.0.0', to: '2.0.0', packetVersion: PacketVersionMap.v2 },
   { from: '2.0.0', to: '3.0.0', packetVersion: PacketVersionMap.v3 },
   { from: '3.0.0', to: '4.0.0', packetVersion: PacketVersionMap.v3 },

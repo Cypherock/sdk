@@ -7,7 +7,7 @@ import SDK from '../../src';
 import { sleep } from '../../src/utils';
 import fixtures from './__fixtures__/receiveLegacyCommand';
 
-describe('sdk.receiveLegacyCommand', () => {
+describe('sdk.deprecated.receiveLegacyCommand', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
   let appletId = 0;
@@ -47,7 +47,10 @@ describe('sdk.receiveLegacyCommand', () => {
         };
 
         const [response] = await Promise.all([
-          sdk.receiveLegacyCommand(testCase.params.allAcceptableCommands, 2000),
+          sdk.deprecated.receiveLegacyCommand(
+            testCase.params.allAcceptableCommands,
+            2000,
+          ),
           sendDataFromDevice(testCase.packetsFromDevice),
         ]);
 
@@ -63,7 +66,10 @@ describe('sdk.receiveLegacyCommand', () => {
         expect.assertions(1);
         await connection.destroy();
         await expect(
-          sdk.receiveLegacyCommand(testCase.params.allAcceptableCommands, 500),
+          sdk.deprecated.receiveLegacyCommand(
+            testCase.params.allAcceptableCommands,
+            500,
+          ),
         ).rejects.toBeInstanceOf(DeviceConnectionError);
       });
     });
@@ -89,7 +95,10 @@ describe('sdk.receiveLegacyCommand', () => {
         };
 
         const [response] = await Promise.allSettled([
-          sdk.receiveLegacyCommand(testCase.params.allAcceptableCommands, 2000),
+          sdk.deprecated.receiveLegacyCommand(
+            testCase.params.allAcceptableCommands,
+            2000,
+          ),
           sendDataFromDevice(testCase.packetsFromDevice),
         ]);
 
@@ -109,7 +118,7 @@ describe('sdk.receiveLegacyCommand', () => {
         };
 
         await expect(
-          sdk.receiveLegacyCommand(params.allAcceptableCommands),
+          sdk.deprecated.receiveLegacyCommand(params.allAcceptableCommands),
         ).rejects.toBeInstanceOf(Error);
       });
     }, 200);

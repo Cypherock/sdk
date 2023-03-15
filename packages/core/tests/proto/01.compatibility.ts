@@ -52,6 +52,7 @@ describe('Device Proto Operation: v3', () => {
   test('should have the right sdk version and packet version', () => {
     expect(sdk.getVersion()).toEqual('3.0.1');
     expect(sdk.getPacketVersion()).toEqual(PacketVersionMap.v3);
+    expect(sdk.isSupported()).toEqual(true);
   });
 
   test('should be able to get status', async () => {
@@ -191,10 +192,10 @@ describe('Device Proto Operation: v3', () => {
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION
       ].message;
 
-    await expect(sdk.sendLegacyCommand(1, '00')).rejects.toThrowError(
-      invalidSDKOperationMessage,
-    );
-    await expect(sdk.receiveLegacyCommand([1], 500)).rejects.toThrow(
+    await expect(
+      sdk.deprecated.sendLegacyCommand(1, '00'),
+    ).rejects.toThrowError(invalidSDKOperationMessage);
+    await expect(sdk.deprecated.receiveLegacyCommand([1], 500)).rejects.toThrow(
       invalidSDKOperationMessage,
     );
   });
@@ -206,21 +207,25 @@ describe('Device Proto Operation: v3', () => {
       ].message;
 
     await expect(
-      sdk.sendCommand({ commandType: 1, data: '00', sequenceNumber: 1 }),
+      sdk.deprecated.sendCommand({
+        commandType: 1,
+        data: '00',
+        sequenceNumber: 1,
+      }),
     ).rejects.toThrowError(invalidSDKOperationMessage);
-    await expect(sdk.getCommandOutput(1)).rejects.toThrowError(
+    await expect(sdk.deprecated.getCommandOutput(1)).rejects.toThrowError(
       invalidSDKOperationMessage,
     );
     await expect(
-      sdk.waitForCommandOutput({
+      sdk.deprecated.waitForCommandOutput({
         sequenceNumber: 1,
         expectedCommandTypes: [1],
       }),
     ).rejects.toThrowError(invalidSDKOperationMessage);
-    await expect(sdk.getCommandStatus()).rejects.toThrowError(
+    await expect(sdk.deprecated.getCommandStatus()).rejects.toThrowError(
       invalidSDKOperationMessage,
     );
-    await expect(sdk.sendCommandAbort(1)).rejects.toThrowError(
+    await expect(sdk.deprecated.sendCommandAbort(1)).rejects.toThrowError(
       invalidSDKOperationMessage,
     );
   });

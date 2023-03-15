@@ -1,5 +1,7 @@
 import {
+  DeviceBootloaderError,
   DeviceConnectionError,
+  DeviceState,
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import {
@@ -7,47 +9,33 @@ import {
   test,
   expect,
   afterEach,
-  jest,
   beforeEach,
+  jest,
 } from '@jest/globals';
 import SDK from '../../src';
-import fixtures from './__fixtures__/getCommandOutput';
+import fixtures from './__fixtures__/sendBootloaderData';
 
-describe('sdk.deprecated.getCommandOutput', () => {
+describe('sdk.sendBootloaderData', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
   let appletId = 0;
 
-  const RealDate = Date.now;
-
   beforeEach(async () => {
-    global.Date.now = jest.fn(() => fixtures.constantDate.getTime());
-
     connection = await MockDeviceConnection.create();
 
-    const onData = async () => {
-      // SDK Version: 2.7.1, Packet Version: v3
-      await connection.mockDeviceSend(
-        new Uint8Array([
-          170, 1, 7, 0, 1, 0, 1, 0, 69, 133, 170, 88, 12, 0, 1, 0, 1, 0, 2, 0,
-          7, 0, 1, 130, 112,
-        ]),
-      );
-    };
-    connection.configureListeners(onData);
+    connection.configureDevice(DeviceState.BOOTLOADER, 'MOCK');
 
     sdk = await SDK.create(connection, appletId);
-    await sdk.beforeOperation();
+    await connection.beforeOperation();
 
     connection.removeListeners();
   });
 
   afterEach(async () => {
-    global.Date.now = RealDate;
-    await connection.destroy();
+    await sdk.destroy();
   });
 
-  describe('should be able to get command', () => {
+  describe('should be able to send data', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         const onData = async (data: Uint8Array) => {
@@ -56,18 +44,14 @@ describe('sdk.deprecated.getCommandOutput', () => {
           );
           expect(testCase.packets).toContainEqual(data);
           expect(packetIndex).toBeGreaterThanOrEqual(0);
-          for (const ackPacket of testCase.ackPackets[packetIndex]) {
-            await connection.mockDeviceSend(ackPacket);
-          }
+          await connection.mockDeviceSend(new Uint8Array([6]));
         };
 
         connection.configureListeners(onData);
-        const output = await sdk.deprecated.getCommandOutput(
-          testCase.sequenceNumber,
-          1,
-        );
 
-        expect(output).toEqual(testCase.output);
+        // Set in receiving mode
+        await connection.mockDeviceSend(new Uint8Array([67]));
+        await sdk.sendBootloaderData(testCase.data, undefined, 1);
       });
     });
   });
@@ -87,17 +71,15 @@ describe('sdk.deprecated.getCommandOutput', () => {
           );
           expect(testCase.packets).toContainEqual(data);
           expect(packetIndex).toBeGreaterThanOrEqual(0);
-
           const currentRetry = (retries[packetIndex] ?? 0) + 1;
+
           const doTriggerError =
             Math.random() < 0.5 &&
             currentRetry < maxTries &&
             totalTimeoutTriggers < maxTimeoutTriggers;
 
           if (!doTriggerError) {
-            for (const ackPacket of testCase.ackPackets[packetIndex]) {
-              await connection.mockDeviceSend(ackPacket);
-            }
+            await connection.mockDeviceSend(new Uint8Array([6]));
           } else {
             totalTimeoutTriggers += 1;
             retries[packetIndex] = currentRetry;
@@ -105,34 +87,55 @@ describe('sdk.deprecated.getCommandOutput', () => {
         };
 
         connection.configureListeners(onData);
-        const output = await sdk.deprecated.getCommandOutput(
-          testCase.sequenceNumber,
-          maxTries,
-        );
 
-        expect(output).toEqual(testCase.output);
+        await connection.mockDeviceSend(new Uint8Array([67]));
+        await sdk.sendBootloaderData(testCase.data, undefined, maxTries, {
+          firstTimeout: 500,
+        });
       });
     });
   });
 
-  describe('should throw error when device is disconnected', () => {
+  describe('should return valid errors when device is not in receiving mode', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        expect.assertions(2);
         const onData = jest.fn(async () => {});
 
         connection.configureListeners(onData);
+
+        await expect(
+          sdk.sendBootloaderData(testCase.data, undefined, 1, {
+            timeout: 50,
+          }),
+        ).rejects.toThrow(DeviceBootloaderError);
+        expect(onData.mock.calls).toHaveLength(0);
+      });
+    });
+  });
+
+  describe('should return valid errors when device is disconnected', () => {
+    fixtures.valid.forEach(testCase => {
+      test(testCase.name, async () => {
+        const onData = jest.fn(async () => {});
+
+        connection.configureListeners(onData);
+
+        // Set in receiving mode
+        await connection.mockDeviceSend(new Uint8Array([67]));
         await connection.destroy();
 
         await expect(
-          sdk.deprecated.getCommandOutput(testCase.sequenceNumber, 1),
+          sdk.sendBootloaderData(testCase.data, undefined, 1, {
+            timeout: 50,
+            firstTimeout: 50,
+          }),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
     });
   });
 
-  describe('should throw error when device is disconnected in between', () => {
+  describe('should return valid errors when device is disconnected in between', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         const onData = async (data: Uint8Array) => {
@@ -141,21 +144,23 @@ describe('sdk.deprecated.getCommandOutput', () => {
           );
           expect(testCase.packets).toContainEqual(data);
           expect(packetIndex).toBeGreaterThanOrEqual(0);
-
-          let i = 0;
-          for (const ackPacket of testCase.ackPackets[packetIndex]) {
-            if (i >= testCase.ackPackets[packetIndex].length - 1) {
-              await connection.destroy();
-            } else {
-              await connection.mockDeviceSend(ackPacket);
-            }
-            i += 1;
+          if (packetIndex >= testCase.packets.length - 1) {
+            await connection.destroy();
+          } else {
+            await connection.mockDeviceSend(new Uint8Array([6]));
           }
         };
 
         connection.configureListeners(onData);
+
+        // Set in receiving mode
+        await connection.mockDeviceSend(new Uint8Array([67]));
+
         await expect(
-          sdk.deprecated.getCommandOutput(testCase.sequenceNumber, 1),
+          sdk.sendBootloaderData(testCase.data, undefined, 1, {
+            timeout: 500,
+            firstTimeout: 500,
+          }),
         ).rejects.toThrow(DeviceConnectionError);
       });
     });
@@ -167,8 +172,8 @@ describe('sdk.deprecated.getCommandOutput', () => {
         JSON.stringify(testCase),
         async () => {
           await expect(
-            sdk.deprecated.getCommandOutput(testCase.sequenceNumber as any),
-          ).rejects.toBeInstanceOf(Error);
+            sdk.sendBootloaderData(testCase.data as any),
+          ).rejects.toThrow();
         },
         200,
       );

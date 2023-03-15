@@ -1,4 +1,6 @@
 export enum DeviceCommunicationErrorType {
+  IN_BOOTLOADER = 'COM_0000',
+
   UNKNOWN_COMMUNICATION_ERROR = 'COM_0100',
   WRITE_ERROR = 'COM_0101',
   TIMEOUT_ERROR = 'COM_0102',
@@ -15,6 +17,10 @@ type CodeToErrorMap = {
 };
 
 export const deviceCommunicationErrorTypeDetails: CodeToErrorMap = {
+  [DeviceCommunicationErrorType.IN_BOOTLOADER]: {
+    message: 'Device is in bootloader mode',
+    doRetry: false,
+  },
   [DeviceCommunicationErrorType.WRITE_REJECTED]: {
     message: 'The write packet operation was rejected by the device',
     doRetry: false,

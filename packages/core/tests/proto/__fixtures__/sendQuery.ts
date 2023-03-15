@@ -22,7 +22,7 @@ const protoSendQueryTestCases = {
   ],
   valid: [
     {
-      name: "Seq: 16",
+      name: 'Seq: 16',
       data: new Uint8Array([
         98, 110, 1, 88, 234, 189, 103, 120, 176, 24, 231, 183, 92, 134, 213, 11,
       ]),
@@ -59,7 +59,7 @@ const protoSendQueryTestCases = {
       ],
     },
     {
-      name: "Seq: 212",
+      name: 'Seq: 212',
       data: new Uint8Array([
         211, 95, 208, 246, 195, 233, 125, 125, 142, 158, 16, 49, 166, 64, 71,
         223, 4, 39, 173, 223, 87, 209, 132, 137, 44, 179, 100, 203, 81, 235,
@@ -164,7 +164,7 @@ const protoSendQueryTestCases = {
   ],
   error: [
     {
-      name: "Invalid CRC",
+      name: 'Invalid CRC',
       data: new Uint8Array([
         98, 110, 1, 88, 234, 189, 103, 120, 176, 24, 231, 183, 92, 134, 213, 11,
       ]),
@@ -187,7 +187,7 @@ const protoSendQueryTestCases = {
       errorInstance: DeviceCommunicationError,
     },
     {
-      name: "Invalid sequenceNumber",
+      name: 'Invalid sequenceNumber',
       data: new Uint8Array([
         98, 110, 1, 88, 234, 189, 103, 120, 176, 24, 231, 183, 92, 134, 213, 11,
       ]),

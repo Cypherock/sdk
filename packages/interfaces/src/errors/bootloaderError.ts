@@ -1,4 +1,6 @@
 export enum DeviceBootloaderErrorType {
+  NOT_IN_BOOTLOADER = 'BTL_0000',
+
   FIRMWARE_SIZE_LIMIT_EXCEEDED = 'BTL_0100',
   WRONG_HARDWARE_VERSION = 'BTL_0101',
   WRONG_MAGIC_NUMBER = 'BTL_0102',
@@ -19,6 +21,11 @@ type CodeToErrorMap = {
 };
 
 export const deviceBootloaderErrorTypeDetails: CodeToErrorMap = {
+  [DeviceBootloaderErrorType.NOT_IN_BOOTLOADER]: {
+    message: 'The device is not in bootloader mode',
+    doRetry: false,
+  },
+
   [DeviceBootloaderErrorType.FIRMWARE_SIZE_LIMIT_EXCEEDED]: {
     message: 'Firmware Size Limit Exceed',
     doRetry: false,

@@ -13,7 +13,7 @@ import {
 import SDK from '../../src';
 import fixtures from './__fixtures__/sendLegacyCommand';
 
-describe('sdk.sendLegacyCommand', () => {
+describe('sdk.deprecated.sendLegacyCommand', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
   let appletId = 0;
@@ -55,7 +55,7 @@ describe('sdk.sendLegacyCommand', () => {
         };
 
         connection.configureListeners(onData);
-        await sdk.sendLegacyCommand(
+        await sdk.deprecated.sendLegacyCommand(
           testCase.params.command,
           testCase.params.data,
           1,
@@ -96,7 +96,7 @@ describe('sdk.sendLegacyCommand', () => {
         };
 
         connection.configureListeners(onData);
-        await sdk.sendLegacyCommand(
+        await sdk.deprecated.sendLegacyCommand(
           testCase.params.command,
           testCase.params.data,
           maxTries,
@@ -116,7 +116,7 @@ describe('sdk.sendLegacyCommand', () => {
         await connection.destroy();
 
         await expect(
-          sdk.sendLegacyCommand(
+          sdk.deprecated.sendLegacyCommand(
             testCase.params.command,
             testCase.params.data,
             1,
@@ -144,7 +144,7 @@ describe('sdk.sendLegacyCommand', () => {
         connection.configureListeners(onData);
 
         await expect(
-          sdk.sendLegacyCommand(
+          sdk.deprecated.sendLegacyCommand(
             testCase.params.command,
             testCase.params.data,
             1,
@@ -164,7 +164,11 @@ describe('sdk.sendLegacyCommand', () => {
         };
 
         await expect(
-          sdk.sendLegacyCommand(params.command, params.data, params.maxTries),
+          sdk.deprecated.sendLegacyCommand(
+            params.command,
+            params.data,
+            params.maxTries,
+          ),
         ).rejects.toThrow();
       });
     }, 200);

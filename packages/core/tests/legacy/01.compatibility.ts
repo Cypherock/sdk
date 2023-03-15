@@ -39,6 +39,7 @@ describe('Legacy Device Operation: v1', () => {
   test('should have the right sdk version and packet version', () => {
     expect(sdk.getVersion()).toEqual('0.1.16');
     expect(sdk.getPacketVersion()).toEqual(PacketVersionMap.v1);
+    expect(sdk.deprecated.isLegacyOperationSupported()).toEqual(true);
   });
 
   test('should be able to send data', async () => {
@@ -52,7 +53,7 @@ describe('Legacy Device Operation: v1', () => {
       connection.mockDeviceSend(new Uint8Array([170, 1, 6, 0, 0, 0, 0, 0]));
     });
 
-    await sdk.sendLegacyCommand(41, '5b615a3dc38e46b754f15176');
+    await sdk.deprecated.sendLegacyCommand(41, '5b615a3dc38e46b754f15176');
   });
 
   test('should be able to receive data', async () => {
@@ -63,7 +64,7 @@ describe('Legacy Device Operation: v1', () => {
         166, 217, 119, 249, 22, 204, 219,
       ]),
     );
-    const result = await sdk.receiveLegacyCommand([8, 12]);
+    const result = await sdk.deprecated.receiveLegacyCommand([8, 12]);
 
     expect(result.commandType).toEqual(8);
     expect(result.data).toEqual(
@@ -78,21 +79,25 @@ describe('Legacy Device Operation: v1', () => {
       ].message;
 
     await expect(
-      sdk.sendCommand({ commandType: 1, data: '00', sequenceNumber: 1 }),
+      sdk.deprecated.sendCommand({
+        commandType: 1,
+        data: '00',
+        sequenceNumber: 1,
+      }),
     ).rejects.toThrowError(invalidSDKOperationMessage);
-    await expect(sdk.getCommandOutput(1)).rejects.toThrowError(
+    await expect(sdk.deprecated.getCommandOutput(1)).rejects.toThrowError(
       invalidSDKOperationMessage,
     );
     await expect(
-      sdk.waitForCommandOutput({
+      sdk.deprecated.waitForCommandOutput({
         sequenceNumber: 1,
         expectedCommandTypes: [1],
       }),
     ).rejects.toThrowError(invalidSDKOperationMessage);
-    await expect(sdk.getCommandStatus()).rejects.toThrowError(
+    await expect(sdk.deprecated.getCommandStatus()).rejects.toThrowError(
       invalidSDKOperationMessage,
     );
-    await expect(sdk.sendCommandAbort(1)).rejects.toThrowError(
+    await expect(sdk.deprecated.sendCommandAbort(1)).rejects.toThrowError(
       invalidSDKOperationMessage,
     );
 

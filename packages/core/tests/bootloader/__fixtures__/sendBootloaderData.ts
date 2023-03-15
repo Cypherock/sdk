@@ -1,15 +1,7 @@
-export const sendBootloaderDataTestCases = {
+const sendBootloaderDataTestCases = {
   invalidArgs: [
     {
-      connection: null,
-      data: '12',
-    },
-    {
       data: null,
-    },
-    {
-      connection: undefined,
-      data: '12',
     },
     {
       data: undefined,
@@ -26,6 +18,7 @@ export const sendBootloaderDataTestCases = {
   ],
   valid: [
     {
+      name: '1479244f31f2',
       data: '1479244f31f2',
       packets: [
         new Uint8Array([
@@ -44,6 +37,7 @@ export const sendBootloaderDataTestCases = {
       ],
     },
     {
+      name: 'data len: 106',
       data: '07120723f102645888a1219a87c196e3b5095062329bfd44de31d52e25107a000a1061062f965cb256ee44a893221be9aec5d57cff',
       packets: [
         new Uint8Array([
@@ -61,6 +55,7 @@ export const sendBootloaderDataTestCases = {
       ],
     },
     {
+      name: 'data len: 932',
       data: '0632a1bd4ee626517ae248c5233b61102ce627a848788a4894fa5fd71bc03751d9b40c7945727078aa2d7bd49d6a24cc0dc6b7a9f2aebed52e3ef23444060e285ccd0bb6095ad6296602459a957f16f12543e86131c131fb49e07c409faeb40a62683b40eeba9cbf7b2da1260cba2c5aeb04ebfbb23e041ff41ba00b450e0b9566c8730cbbe2139d8cd34358e347aed2849af5cc9ca85e86e395844ef1bae762ad91abb60832d86e461c632662623b9c11b6d82ffe7df90b62295f6500369b631187e103320d10c6d469d0d20eda1f8b31c2a504fdd77dfbddd42d466eb43272f1327013ffd4f46114772960ca59111e64c293f7988831c3d2af9d5164a5bf3a58ba475f8412538ceafa4734893932279746b792ccf7e624541fbdd473a24f8b98c3aeb8362247eb6ca53ccf76ca8f80096d336e542c0ab9167898814c11f5e7c415456ab35359f9f59e6cdaeed1408d0e976de9e20c8a2c5da0c06f4bb6755cf2c31654d82559c3795785997d3e3e7eac89f404d7663a63f26bfff12e190215e52b5c316774a871500a53d3e6fd8ca12063252c594d7aa6bc53525e04f7220c437305b3eef8a95f7d6be8ef021beaebf7f4975664d2af45893b1b763b52fa5d3280d66adafc34eba7f6f1d24690b7c8f851',
       packets: [
         new Uint8Array([
@@ -112,3 +107,5 @@ export const sendBootloaderDataTestCases = {
     },
   ],
 };
+
+export default sendBootloaderDataTestCases;

@@ -13,7 +13,7 @@ import {
 import SDK from '../../src';
 import fixtures from './__fixtures__/sendCommandAbort';
 
-describe('sdk.sendCommandAbort', () => {
+describe('sdk.deprecated.sendCommandAbort', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
   let appletId = 0;
@@ -58,7 +58,10 @@ describe('sdk.sendCommandAbort', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.sendCommandAbort(testCase.sequenceNumber, 1);
+        const status = await sdk.deprecated.sendCommandAbort(
+          testCase.sequenceNumber,
+          1,
+        );
 
         expect(status).toEqual(testCase.status);
       });
@@ -86,7 +89,7 @@ describe('sdk.sendCommandAbort', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.sendCommandAbort(
+        const status = await sdk.deprecated.sendCommandAbort(
           testCase.sequenceNumber,
           maxTries,
         );
@@ -106,7 +109,7 @@ describe('sdk.sendCommandAbort', () => {
         await connection.destroy();
 
         await expect(
-          sdk.sendCommandAbort(testCase.sequenceNumber, 1),
+          sdk.deprecated.sendCommandAbort(testCase.sequenceNumber, 1),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
@@ -131,7 +134,7 @@ describe('sdk.sendCommandAbort', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.sendCommandAbort(testCase.sequenceNumber, 1),
+          sdk.deprecated.sendCommandAbort(testCase.sequenceNumber, 1),
         ).rejects.toThrow(DeviceConnectionError);
       });
     });
@@ -149,7 +152,7 @@ describe('sdk.sendCommandAbort', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.sendCommandAbort(testCase.sequenceNumber, 1),
+          sdk.deprecated.sendCommandAbort(testCase.sequenceNumber, 1),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
     });
@@ -159,7 +162,7 @@ describe('sdk.sendCommandAbort', () => {
     fixtures.invalidArgs.forEach(testCase => {
       test(JSON.stringify(testCase), async () => {
         await expect(
-          sdk.sendCommandAbort(testCase.sequenceNumber as any),
+          sdk.deprecated.sendCommandAbort(testCase.sequenceNumber as any),
         ).rejects.toBeInstanceOf(Error);
       });
     }, 200);

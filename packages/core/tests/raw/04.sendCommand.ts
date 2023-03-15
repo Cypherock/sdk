@@ -13,7 +13,7 @@ import {
 import SDK from '../../src';
 import fixtures from './__fixtures__/sendCommand';
 
-describe('sdk.sendCommand', () => {
+describe('sdk.deprecated.sendCommand', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
   let appletId = 0;
@@ -62,7 +62,7 @@ describe('sdk.sendCommand', () => {
         };
 
         connection.configureListeners(onData);
-        await sdk.sendCommand({
+        await sdk.deprecated.sendCommand({
           data: testCase.data,
           commandType: testCase.commandType,
           sequenceNumber: testCase.sequenceNumber,
@@ -105,7 +105,7 @@ describe('sdk.sendCommand', () => {
         };
 
         connection.configureListeners(onData);
-        await sdk.sendCommand({
+        await sdk.deprecated.sendCommand({
           data: testCase.data,
           commandType: testCase.commandType,
           sequenceNumber: testCase.sequenceNumber,
@@ -125,7 +125,7 @@ describe('sdk.sendCommand', () => {
         await connection.destroy();
 
         await expect(
-          sdk.sendCommand({
+          sdk.deprecated.sendCommand({
             data: testCase.data,
             commandType: testCase.commandType,
             sequenceNumber: testCase.sequenceNumber,
@@ -160,7 +160,7 @@ describe('sdk.sendCommand', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.sendCommand({
+          sdk.deprecated.sendCommand({
             data: testCase.data,
             commandType: testCase.commandType,
             sequenceNumber: testCase.sequenceNumber,
@@ -187,7 +187,7 @@ describe('sdk.sendCommand', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.sendCommand({
+          sdk.deprecated.sendCommand({
             data: testCase.data as any,
             commandType: testCase.commandType as any,
             sequenceNumber: testCase.sequenceNumber as any,
@@ -204,7 +204,7 @@ describe('sdk.sendCommand', () => {
         JSON.stringify(testCase),
         async () => {
           await expect(
-            sdk.sendCommand({
+            sdk.deprecated.sendCommand({
               data: testCase.data as any,
               commandType: testCase.commandType as any,
               sequenceNumber: testCase.sequenceNumber as any,
