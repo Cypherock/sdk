@@ -34,6 +34,9 @@ jobs:
       - name: pnpm install
         run: pnpm install
 
+      - name: Run build
+        run: pnpm build
+
       - name: Run linter checks
         run: pnpm lint:check
 
@@ -42,6 +45,3 @@ jobs:
 
       - name: Run tests
         run: pnpm test
-
-      - name: Run build
-        run: pnpm build
