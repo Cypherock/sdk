@@ -8,7 +8,7 @@ import * as rawOperations from './operations/raw';
 import { PacketVersionMap } from './utils/packetVersions';
 import assert from './utils/assert';
 import { FeatureName, isFeatureEnabled } from './utils/featureMap';
-import { ISDK } from './type';
+import { ISDK } from './types';
 
 export default class DeprecatedCommunication {
   private readonly sdk: ISDK;

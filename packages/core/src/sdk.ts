@@ -15,7 +15,7 @@ import { getPacketVersionFromSDK, formatSDKVersion } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 import assert from './utils/assert';
 import { FeatureName, isFeatureEnabled } from './utils/featureMap';
-import { ISDK } from './type';
+import { ISDK } from './types';
 import DeprecatedCommunication from './deprecated';
 
 export default class SDK implements ISDK {
@@ -29,7 +29,7 @@ export default class SDK implements ISDK {
 
   public deprecated: DeprecatedCommunication;
 
-  private constructor(
+  public constructor(
     connection: IDeviceConnection,
     appletId: number,
     version: string,

@@ -74,6 +74,7 @@ importers:
       '@cypherock/sdk-core': workspace:^0.0.0
       '@cypherock/sdk-interfaces': workspace:^0.0.0
       '@jest/globals': ^29.4.1
+      '@types/jest': ^29.4.0
       '@types/node': 18.11.18
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
@@ -93,6 +94,7 @@ importers:
       uuid: 9.0.0
     devDependencies:
       '@jest/globals': 29.4.1
+      '@types/jest': 29.4.0
       '@types/node': 18.11.18
       eslint: 7.32.0
       eslint-config-custom: link:../util-eslint-config-custom

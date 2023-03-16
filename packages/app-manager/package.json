@@ -10,10 +10,12 @@
     "pretty": "prettier --write 'src/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts'",
     "prebuild": "sh ./scripts/prebuild.sh",
-    "build": "rimraf dist && tsc -p tsconfig.json"
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "test": "jest"
   },
   "devDependencies": {
     "@jest/globals": "^29.4.1",
+    "@types/jest": "^29.4.0",
     "@types/node": "18.11.18",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",

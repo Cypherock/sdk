@@ -5,5 +5,10 @@
   },
   "extends": "tsconfig/base.json",
   "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "src/coverage",
+    "src/**/__fixtures__/*.ts",
+    "src/**/__tests__/*.ts"
+  ]
 }
