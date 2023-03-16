@@ -11,20 +11,26 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "pretty": "turbo run pretty",
+    "lint:check": "turbo run lint:check",
+    "pretty:check": "turbo run pretty:check",
     "test": "turbo run test",
     "start:node": "turbo run build && turbo run start:node",
     "start:browser": "turbo run build && turbo run start:browser",
     "dev:browser": "turbo run build && turbo run dev:browser",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "pre-commit": "turbo run pre-commit --concurrency=1",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
     "eslint-config-custom": "workspace:*",
+    "husky": "^8.0.0",
     "prettier": "latest",
+    "prettier-config-custom": "workspace:*",
     "turbo": "latest"
   },
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {},
   "packageManager": "pnpm@7.18.1"
 }

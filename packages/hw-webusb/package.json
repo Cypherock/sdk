@@ -9,13 +9,15 @@
     "lint:check": "eslint --ext .ts,tsx,js,jsx,js src/",
     "pretty": "prettier --write 'src/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts'",
-    "build": "rimraf dist && tsc -p tsconfig.json"
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "pre-commit": "lint-staged"
   },
   "devDependencies": {
     "@types/uuid": "^9.0.0",
     "@types/w3c-web-usb": "^1.0.6",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
+    "lint-staged": "^13.2.0",
     "prettier-config-custom": "workspace:^0.0.0",
     "rimraf": "^4.1.2",
     "tsconfig": "workspace:*",
@@ -24,5 +26,14 @@
   "dependencies": {
     "@cypherock/sdk-interfaces": "workspace:^0.0.0",
     "uuid": "^9.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --ext js,jsx,ts,tsx --quiet --fix --",
+      "prettier --write"
+    ],
+    "*.{md,mdx,mjs,yml,yaml,css,json}": [
+      "prettier --write"
+    ]
   }
 }

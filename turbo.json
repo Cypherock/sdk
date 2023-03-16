@@ -13,7 +13,15 @@
       "dependsOn": ["^test"],
       "cache": false
     },
+    "lint:check": {
+      "inputs": ["."],
+      "outputs": []
+    },
     "lint": {
+      "inputs": ["."],
+      "outputs": []
+    },
+    "pretty:check": {
       "inputs": ["."],
       "outputs": []
     },
@@ -44,6 +52,9 @@
     },
     "start:browser": {
       "dependsOn": ["^start:browser"],
+      "cache": false
+    },
+    "pre-commit": {
       "cache": false
     }
   }
