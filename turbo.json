@@ -55,8 +55,7 @@
       "cache": false
     },
     "pre-commit": {
-      "inputs": ["."],
-      "cache": true
+      "cache": false
     }
   }
 }
