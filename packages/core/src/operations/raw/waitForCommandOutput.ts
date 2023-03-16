@@ -22,8 +22,7 @@ export interface IWaitForCommandOutputParams {
   expectedCommandTypes: number[];
   onStatus?: (status: StatusData) => void;
   version: PacketVersion;
-  maxTries?: number;
-  options?: { interval?: number };
+  options?: { interval?: number; timeout?: number; maxTries?: number };
 }
 
 export const waitForCommandOutput = async ({
@@ -33,7 +32,6 @@ export const waitForCommandOutput = async ({
   onStatus,
   options,
   version,
-  maxTries = 5,
 }: IWaitForCommandOutputParams): Promise<RawData> => {
   assert(connection, 'Invalid connection');
   assert(expectedCommandTypes, 'Invalid expectedCommandTypes');
@@ -55,8 +53,9 @@ export const waitForCommandOutput = async ({
     const response = await getCommandOutput({
       connection,
       version,
-      maxTries,
+      maxTries: options?.maxTries ?? 5,
       sequenceNumber,
+      timeout: options?.timeout,
     });
 
     if (response.isRawData) {

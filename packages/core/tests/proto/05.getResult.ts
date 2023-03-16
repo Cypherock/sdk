@@ -11,6 +11,7 @@ import {
   beforeEach,
 } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/getResult';
 
 describe('sdk.getResult', () => {
@@ -64,7 +65,11 @@ describe('sdk.getResult', () => {
         connection.configureListeners(onData);
         sdk.configureAppletId(testCase.appletId);
 
-        const output = await sdk.getResult(testCase.sequenceNumber, 1);
+        const output = await sdk.getResult(
+          testCase.sequenceNumber,
+          1,
+          config.defaultTimeout,
+        );
 
         expect(output).toEqual(testCase.output);
       });
@@ -106,7 +111,11 @@ describe('sdk.getResult', () => {
         connection.configureListeners(onData);
         sdk.configureAppletId(testCase.appletId);
 
-        const output = await sdk.getResult(testCase.sequenceNumber, maxTries);
+        const output = await sdk.getResult(
+          testCase.sequenceNumber,
+          maxTries,
+          config.defaultTimeout,
+        );
 
         expect(output).toEqual(testCase.output);
       });
@@ -123,9 +132,9 @@ describe('sdk.getResult', () => {
         await connection.destroy();
         sdk.configureAppletId(testCase.appletId);
 
-        await expect(sdk.getResult(testCase.sequenceNumber, 1)).rejects.toThrow(
-          DeviceConnectionError,
-        );
+        await expect(
+          sdk.getResult(testCase.sequenceNumber, 1, config.defaultTimeout),
+        ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
     });
@@ -155,9 +164,9 @@ describe('sdk.getResult', () => {
         connection.configureListeners(onData);
         sdk.configureAppletId(testCase.appletId);
 
-        await expect(sdk.getResult(testCase.sequenceNumber, 1)).rejects.toThrow(
-          DeviceConnectionError,
-        );
+        await expect(
+          sdk.getResult(testCase.sequenceNumber, 1, config.defaultTimeout),
+        ).rejects.toThrow(DeviceConnectionError);
       });
     });
   });
@@ -180,7 +189,7 @@ describe('sdk.getResult', () => {
         sdk.configureAppletId(testCase.appletId);
 
         await expect(
-          sdk.getResult(testCase.sequenceNumber, 1),
+          sdk.getResult(testCase.sequenceNumber, 1, config.defaultTimeout),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
     });
@@ -192,7 +201,11 @@ describe('sdk.getResult', () => {
         JSON.stringify(testCase),
         async () => {
           await expect(
-            sdk.getResult(testCase.sequenceNumber as any),
+            sdk.getResult(
+              testCase.sequenceNumber as any,
+              1,
+              config.defaultTimeout,
+            ),
           ).rejects.toBeInstanceOf(Error);
         },
         200,

@@ -11,6 +11,7 @@ import {
   beforeEach,
 } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/getCommandOutput';
 
 describe('sdk.deprecated.getCommandOutput', () => {
@@ -65,6 +66,7 @@ describe('sdk.deprecated.getCommandOutput', () => {
         const output = await sdk.deprecated.getCommandOutput(
           testCase.sequenceNumber,
           1,
+          config.defaultTimeout,
         );
 
         expect(output).toEqual(testCase.output);
@@ -108,6 +110,7 @@ describe('sdk.deprecated.getCommandOutput', () => {
         const output = await sdk.deprecated.getCommandOutput(
           testCase.sequenceNumber,
           maxTries,
+          config.defaultTimeout,
         );
 
         expect(output).toEqual(testCase.output);
@@ -125,7 +128,11 @@ describe('sdk.deprecated.getCommandOutput', () => {
         await connection.destroy();
 
         await expect(
-          sdk.deprecated.getCommandOutput(testCase.sequenceNumber, 1),
+          sdk.deprecated.getCommandOutput(
+            testCase.sequenceNumber,
+            1,
+            config.defaultTimeout,
+          ),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
@@ -155,7 +162,11 @@ describe('sdk.deprecated.getCommandOutput', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.deprecated.getCommandOutput(testCase.sequenceNumber, 1),
+          sdk.deprecated.getCommandOutput(
+            testCase.sequenceNumber,
+            1,
+            config.defaultTimeout,
+          ),
         ).rejects.toThrow(DeviceConnectionError);
       });
     });
@@ -167,7 +178,11 @@ describe('sdk.deprecated.getCommandOutput', () => {
         JSON.stringify(testCase),
         async () => {
           await expect(
-            sdk.deprecated.getCommandOutput(testCase.sequenceNumber as any),
+            sdk.deprecated.getCommandOutput(
+              testCase.sequenceNumber as any,
+              1,
+              config.defaultTimeout,
+            ),
           ).rejects.toBeInstanceOf(Error);
         },
         200,

@@ -11,6 +11,7 @@ import {
   beforeEach,
 } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/waitForResult';
 
 describe('sdk.waitForResult', () => {
@@ -88,8 +89,11 @@ describe('sdk.waitForResult', () => {
         const output = await sdk.waitForResult({
           sequenceNumber: testCase.sequenceNumber,
           onStatus,
-          maxTries: 1,
-          options: { interval: 20 },
+          options: {
+            interval: 20,
+            timeout: config.defaultTimeout,
+            maxTries: 1,
+          },
         });
 
         expect(output).toEqual(testCase.output);
@@ -152,8 +156,11 @@ describe('sdk.waitForResult', () => {
         const output = await sdk.waitForResult({
           sequenceNumber: testCase.sequenceNumber,
           onStatus,
-          maxTries,
-          options: { interval: 20 },
+          options: {
+            interval: 20,
+            timeout: config.defaultTimeout,
+            maxTries,
+          },
         });
 
         expect(output).toEqual(testCase.output);
@@ -177,8 +184,11 @@ describe('sdk.waitForResult', () => {
           sdk.waitForResult({
             sequenceNumber: testCase.sequenceNumber,
             onStatus,
-            maxTries: 1,
-            options: { interval: 20 },
+            options: {
+              interval: 20,
+              timeout: config.defaultTimeout,
+              maxTries: 1,
+            },
           }),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
@@ -226,8 +236,11 @@ describe('sdk.waitForResult', () => {
         await expect(
           sdk.waitForResult({
             sequenceNumber: testCase.sequenceNumber,
-            maxTries: 1,
-            options: { interval: 20 },
+            options: {
+              interval: 20,
+              timeout: config.defaultTimeout,
+              maxTries: 1,
+            },
           }),
         ).rejects.toThrow(DeviceConnectionError);
       });
@@ -273,7 +286,11 @@ describe('sdk.waitForResult', () => {
           sdk.waitForResult({
             sequenceNumber: testCase.sequenceNumber as any,
             onStatus,
-            maxTries: 1,
+            options: {
+              interval: 20,
+              maxTries: 1,
+              timeout: config.defaultTimeout,
+            },
           }),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
@@ -288,6 +305,11 @@ describe('sdk.waitForResult', () => {
           await expect(
             sdk.waitForResult({
               sequenceNumber: testCase.sequenceNumber as any,
+              options: {
+                interval: 20,
+                timeout: config.defaultTimeout,
+                maxTries: 1,
+              },
             }),
           ).rejects.toBeInstanceOf(Error);
         },

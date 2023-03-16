@@ -13,6 +13,7 @@ import {
   jest,
 } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/sendBootloaderData';
 
 describe('sdk.sendBootloaderData', () => {
@@ -51,7 +52,11 @@ describe('sdk.sendBootloaderData', () => {
 
         // Set in receiving mode
         await connection.mockDeviceSend(new Uint8Array([67]));
-        await sdk.sendBootloaderData(testCase.data, undefined, 1);
+        await sdk.sendBootloaderData(testCase.data, undefined, {
+          maxTries: 1,
+          firstTimeout: config.defaultTimeout,
+          timeout: config.defaultTimeout,
+        });
       });
     });
   });
@@ -89,8 +94,10 @@ describe('sdk.sendBootloaderData', () => {
         connection.configureListeners(onData);
 
         await connection.mockDeviceSend(new Uint8Array([67]));
-        await sdk.sendBootloaderData(testCase.data, undefined, maxTries, {
-          firstTimeout: 500,
+        await sdk.sendBootloaderData(testCase.data, undefined, {
+          timeout: config.defaultTimeout,
+          firstTimeout: config.defaultTimeout,
+          maxTries,
         });
       });
     });
@@ -104,8 +111,10 @@ describe('sdk.sendBootloaderData', () => {
         connection.configureListeners(onData);
 
         await expect(
-          sdk.sendBootloaderData(testCase.data, undefined, 1, {
-            timeout: 50,
+          sdk.sendBootloaderData(testCase.data, undefined, {
+            timeout: config.defaultTimeout,
+            firstTimeout: config.defaultTimeout,
+            maxTries: 1,
           }),
         ).rejects.toThrow(DeviceBootloaderError);
         expect(onData.mock.calls).toHaveLength(0);
@@ -125,9 +134,10 @@ describe('sdk.sendBootloaderData', () => {
         await connection.destroy();
 
         await expect(
-          sdk.sendBootloaderData(testCase.data, undefined, 1, {
-            timeout: 50,
-            firstTimeout: 50,
+          sdk.sendBootloaderData(testCase.data, undefined, {
+            timeout: config.defaultTimeout,
+            firstTimeout: config.defaultTimeout,
+            maxTries: 1,
           }),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
@@ -157,9 +167,10 @@ describe('sdk.sendBootloaderData', () => {
         await connection.mockDeviceSend(new Uint8Array([67]));
 
         await expect(
-          sdk.sendBootloaderData(testCase.data, undefined, 1, {
-            timeout: 500,
-            firstTimeout: 500,
+          sdk.sendBootloaderData(testCase.data, undefined, {
+            timeout: config.defaultTimeout,
+            firstTimeout: config.defaultTimeout,
+            maxTries: 1,
           }),
         ).rejects.toThrow(DeviceConnectionError);
       });

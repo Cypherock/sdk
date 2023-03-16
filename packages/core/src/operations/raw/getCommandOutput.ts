@@ -17,17 +17,20 @@ export const getCommandOutput = async ({
   version,
   maxTries = 5,
   sequenceNumber,
+  timeout,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
+  timeout?: number;
 }) => {
   const { isStatus, rawData } = await getCommandOutputHelper({
     connection,
     version,
     maxTries,
     sequenceNumber,
+    timeout,
   });
 
   let output: RawData | StatusData;

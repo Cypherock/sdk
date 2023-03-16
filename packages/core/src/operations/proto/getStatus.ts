@@ -9,15 +9,18 @@ export const getStatus = async ({
   connection,
   version,
   maxTries = 5,
+  timeout,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
   maxTries?: number;
+  timeout?: number;
 }) => {
   const { protobufData } = await getStatusHelper({
     connection,
     version,
     maxTries,
+    timeout,
   });
 
   return Status.decode(hexToUint8Array(protobufData));

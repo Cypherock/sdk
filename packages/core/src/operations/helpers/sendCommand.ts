@@ -19,13 +19,15 @@ export const sendCommand = async ({
   maxTries = 5,
   sequenceNumber,
   isProto,
+  timeout,
 }: {
   connection: IDeviceConnection;
   data: string;
   version: PacketVersion;
   sequenceNumber: number;
-  maxTries?: number;
   isProto: boolean;
+  maxTries?: number;
+  timeout?: number;
 }): Promise<void> => {
   assert(connection, 'Invalid connection');
   assert(data, 'Invalid data');
@@ -64,6 +66,7 @@ export const sendCommand = async ({
           version,
           sequenceNumber,
           ackPacketTypes: [usableConfig.commands.PACKET_TYPE.CMD_ACK],
+          timeout,
         });
         isSuccess = true;
       } catch (e: any) {

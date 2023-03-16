@@ -11,6 +11,7 @@ import {
   beforeEach,
 } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/waitForCommandOutput';
 
 describe('sdk.deprecated.waitForCommandOutput', () => {
@@ -87,8 +88,11 @@ describe('sdk.deprecated.waitForCommandOutput', () => {
           sequenceNumber: testCase.sequenceNumber,
           expectedCommandTypes: testCase.expectedCommandTypes,
           onStatus,
-          maxTries: 1,
-          options: { interval: 20 },
+          options: {
+            maxTries: 1,
+            timeout: config.defaultTimeout,
+            interval: 20,
+          },
         });
 
         expect(output).toEqual(testCase.output);
@@ -151,8 +155,11 @@ describe('sdk.deprecated.waitForCommandOutput', () => {
           sequenceNumber: testCase.sequenceNumber,
           expectedCommandTypes: testCase.expectedCommandTypes,
           onStatus,
-          maxTries,
-          options: { interval: 20 },
+          options: {
+            maxTries,
+            timeout: config.defaultTimeout,
+            interval: 20,
+          },
         });
 
         expect(output).toEqual(testCase.output);
@@ -175,8 +182,11 @@ describe('sdk.deprecated.waitForCommandOutput', () => {
             sequenceNumber: testCase.sequenceNumber,
             expectedCommandTypes: testCase.expectedCommandTypes,
             onStatus,
-            maxTries: 1,
-            options: { interval: 20 },
+            options: {
+              maxTries: 1,
+              timeout: config.defaultTimeout,
+              interval: 20,
+            },
           }),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
@@ -223,8 +233,11 @@ describe('sdk.deprecated.waitForCommandOutput', () => {
           sdk.deprecated.waitForCommandOutput({
             sequenceNumber: testCase.sequenceNumber,
             expectedCommandTypes: testCase.expectedCommandTypes,
-            maxTries: 1,
-            options: { interval: 20 },
+            options: {
+              maxTries: 1,
+              timeout: config.defaultTimeout,
+              interval: 20,
+            },
           }),
         ).rejects.toThrow(DeviceConnectionError);
       });
@@ -267,7 +280,10 @@ describe('sdk.deprecated.waitForCommandOutput', () => {
             sequenceNumber: testCase.sequenceNumber as any,
             expectedCommandTypes: testCase.expectedCommandTypes as any,
             onStatus,
-            maxTries: 1,
+            options: {
+              maxTries: 1,
+              timeout: config.defaultTimeout,
+            },
           }),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
@@ -283,6 +299,10 @@ describe('sdk.deprecated.waitForCommandOutput', () => {
             sdk.deprecated.waitForCommandOutput({
               sequenceNumber: testCase.sequenceNumber as any,
               expectedCommandTypes: testCase.expectedCommandTypes as any,
+              options: {
+                maxTries: 1,
+                timeout: config.defaultTimeout,
+              },
             }),
           ).rejects.toBeInstanceOf(Error);
         },

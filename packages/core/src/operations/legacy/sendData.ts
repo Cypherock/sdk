@@ -22,6 +22,7 @@ export const writePacket = (
   packet: Uint8Array,
   version: PacketVersion,
   skipPacketIds: string[],
+  ackTimeout?: number,
 ) => {
   let usableConfig = config.v1;
 
@@ -137,7 +138,7 @@ export const writePacket = (
           DeviceCommunicationErrorType.WRITE_TIMEOUT,
         ),
       );
-    }, usableConfig.constants.ACK_TIME);
+    }, ackTimeout ?? usableConfig.constants.ACK_TIME);
   });
 };
 
@@ -164,7 +165,8 @@ export const sendData = async (
   command: number,
   data: string,
   version: PacketVersion,
-  maxTries = 5,
+  maxTries?: number,
+  timeout?: number,
 ) => {
   assert(connection, 'Invalid connection');
   assert(command, 'Invalid command');
@@ -181,6 +183,8 @@ export const sendData = async (
     );
   }
 
+  const innerMaxTries = maxTries ?? 5;
+
   const skipPacketIds: string[] = [];
   const packetsList = xmodemEncode(data, command, version);
   /**
@@ -190,14 +194,14 @@ export const sendData = async (
   for (const packet of packetsList) {
     let tries = 1;
     let isDone = false;
-    let localMaxTries = maxTries;
+    let localMaxTries = innerMaxTries;
     if (command === 255) localMaxTries = 1;
 
     let firstError: Error | undefined;
     while (!isDone && tries <= localMaxTries) {
       try {
         // eslint-disable-next-line
-        await writePacket(connection, packet, version, skipPacketIds);
+        await writePacket(connection, packet, version, skipPacketIds, timeout);
         isDone = true;
       } catch (e) {
         // Don't retry if connection closed

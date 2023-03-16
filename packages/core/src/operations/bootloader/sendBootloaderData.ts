@@ -244,8 +244,7 @@ export const sendBootloaderData = async (
   connection: IDeviceConnection,
   data: string,
   onProgress?: (percent: number) => void,
-  maxTries?: number,
-  options?: { firstTimeout?: number; timeout?: number },
+  options?: { firstTimeout?: number; timeout?: number; maxTries?: number },
 ) => {
   assert(connection, 'Invalid connection');
 
@@ -263,7 +262,7 @@ export const sendBootloaderData = async (
         reject: (err?: Error) => void,
       ) => {
         let tries = 1;
-        const innerMaxTries = maxTries ?? 5;
+        const innerMaxTries = options?.maxTries ?? 5;
         let firstError: Error | undefined;
         while (tries <= innerMaxTries) {
           try {

@@ -11,6 +11,7 @@ export interface IDeprecatedCommunication {
     command: number,
     data: string,
     maxTries?: number,
+    timeout?: number,
   ): Promise<void>;
   receiveLegacyCommand(
     commands: number[],
@@ -24,10 +25,12 @@ export interface IDeprecatedCommunication {
     data: string;
     sequenceNumber: number;
     maxTries?: number;
+    timeout?: number;
   }): Promise<void>;
   getCommandOutput(
     sequenceNumber: number,
     maxTries?: number,
+    timeout?: number,
   ): Promise<
     import('./encoders/raw').StatusData | import('./encoders/raw').RawData
   >;
@@ -35,13 +38,13 @@ export interface IDeprecatedCommunication {
     sequenceNumber: rawOperations.IWaitForCommandOutputParams['sequenceNumber'];
     expectedCommandTypes: rawOperations.IWaitForCommandOutputParams['expectedCommandTypes'];
     onStatus?: rawOperations.IWaitForCommandOutputParams['onStatus'];
-    maxTries?: rawOperations.IWaitForCommandOutputParams['maxTries'];
     options?: rawOperations.IWaitForCommandOutputParams['options'];
   }): Promise<RawData>;
-  getCommandStatus(maxTries?: number): Promise<StatusData>;
+  getCommandStatus(maxTries?: number, timeout?: number): Promise<StatusData>;
   sendCommandAbort(
     sequenceNumber: number,
     maxTries?: number,
+    timeout?: number,
   ): Promise<StatusData>;
 }
 
@@ -63,10 +66,12 @@ export interface ISDK {
     data: Uint8Array;
     sequenceNumber: number;
     maxTries?: number;
+    timeout?: number;
   }): Promise<void>;
   getResult(
     sequenceNumber: number,
     maxTries?: number,
+    timeout?: number,
   ): Promise<{
     isStatus: boolean;
     result: Uint8Array | import('.').Status;
@@ -74,28 +79,26 @@ export interface ISDK {
   waitForResult(params: {
     sequenceNumber: operations.IWaitForCommandOutputParams['sequenceNumber'];
     onStatus?: operations.IWaitForCommandOutputParams['onStatus'];
-    maxTries?: operations.IWaitForCommandOutputParams['maxTries'];
     options?: operations.IWaitForCommandOutputParams['options'];
   }): Promise<Uint8Array>;
-  getStatus(maxTries?: number): Promise<import('.').Status>;
+  getStatus(maxTries?: number, timeout?: number): Promise<import('.').Status>;
   sendAbort(
     sequenceNumber: number,
     maxTries?: number,
+    timeout?: number,
   ): Promise<import('.').Status>;
-  sendBootloaderAbort(
-    maxTries?: number,
-    options?: {
-      firstTimeout?: number;
-      timeout?: number;
-    },
-  ): Promise<void>;
+  sendBootloaderAbort(options?: {
+    firstTimeout?: number;
+    timeout?: number;
+    maxTries?: number;
+  }): Promise<void>;
   sendBootloaderData(
     data: string,
     onProgress?: (progress: number) => void,
-    maxTries?: number,
     options?: {
       firstTimeout?: number;
       timeout?: number;
+      maxTries?: number;
     },
   ): Promise<void>;
   runOperation<R>(operation: () => Promise<R>): Promise<R>;

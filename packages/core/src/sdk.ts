@@ -43,8 +43,16 @@ export class SDK implements ISDK {
     this.deprecated = new DeprecatedCommunication(this);
   }
 
-  public static async create(connection: IDeviceConnection, appletId: number) {
-    const sdkData = await SDK.getSDKVersion(connection);
+  public static async create(
+    connection: IDeviceConnection,
+    appletId: number,
+    options?: { maxTries?: number; timeout?: number },
+  ) {
+    const sdkData = await SDK.getSDKVersion(
+      connection,
+      options?.maxTries,
+      options?.timeout,
+    );
     return new SDK(
       connection,
       appletId,
@@ -110,6 +118,7 @@ export class SDK implements ISDK {
     data: Uint8Array;
     sequenceNumber: number;
     maxTries?: number;
+    timeout?: number;
   }): Promise<void> {
     this.validateNotInBootloaderMode();
     assert(
@@ -132,10 +141,15 @@ export class SDK implements ISDK {
       sequenceNumber: params.sequenceNumber,
       version: this.packetVersion,
       maxTries: params.maxTries,
+      timeout: params.timeout,
     });
   }
 
-  public async getResult(sequenceNumber: number, maxTries?: number) {
+  public async getResult(
+    sequenceNumber: number,
+    maxTries?: number,
+    timeout?: number,
+  ) {
     this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
@@ -156,13 +170,13 @@ export class SDK implements ISDK {
       sequenceNumber,
       version: this.packetVersion,
       maxTries,
+      timeout,
     });
   }
 
   public async waitForResult(params: {
     sequenceNumber: operations.IWaitForCommandOutputParams['sequenceNumber'];
     onStatus?: operations.IWaitForCommandOutputParams['onStatus'];
-    maxTries?: operations.IWaitForCommandOutputParams['maxTries'];
     options?: operations.IWaitForCommandOutputParams['options'];
   }) {
     this.validateNotInBootloaderMode();
@@ -187,7 +201,7 @@ export class SDK implements ISDK {
     });
   }
 
-  public async getStatus(maxTries?: number) {
+  public async getStatus(maxTries?: number, timeout?: number) {
     this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
@@ -206,10 +220,15 @@ export class SDK implements ISDK {
       connection: this.connection,
       version: this.packetVersion,
       maxTries,
+      timeout,
     });
   }
 
-  public async sendAbort(sequenceNumber: number, maxTries?: number) {
+  public async sendAbort(
+    sequenceNumber: number,
+    maxTries?: number,
+    timeout?: number,
+  ) {
     this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
@@ -229,32 +248,29 @@ export class SDK implements ISDK {
       sequenceNumber,
       version: this.packetVersion,
       maxTries,
+      timeout,
     });
   }
 
   // ************** Bootloader operations ****************
-  public async sendBootloaderAbort(
-    maxTries?: number,
-    options?: { firstTimeout?: number; timeout?: number },
-  ) {
+  public async sendBootloaderAbort(options?: {
+    firstTimeout?: number;
+    timeout?: number;
+    maxTries?: number;
+  }) {
     if (!this.isInBootloader()) {
       throw new DeviceBootloaderError(
         DeviceBootloaderErrorType.NOT_IN_BOOTLOADER,
       );
     }
 
-    return bootloaderOperations.sendBootloaderAbort(
-      this.connection,
-      maxTries,
-      options,
-    );
+    return bootloaderOperations.sendBootloaderAbort(this.connection, options);
   }
 
   public async sendBootloaderData(
     data: string,
     onProgress?: (progress: number) => void,
-    maxTries?: number,
-    options?: { firstTimeout?: number; timeout?: number },
+    options?: { firstTimeout?: number; timeout?: number; maxTries?: number },
   ) {
     if (!this.isInBootloader()) {
       throw new DeviceBootloaderError(
@@ -266,7 +282,6 @@ export class SDK implements ISDK {
       this.connection,
       data,
       onProgress,
-      maxTries,
       options,
     );
   }
@@ -295,7 +310,7 @@ export class SDK implements ISDK {
   private static async getSDKVersion(
     connection: IDeviceConnection,
     maxTries?: number,
-    options?: { timeout?: number },
+    timeout?: number,
   ) {
     assert(connection, 'Invalid connection');
 
@@ -326,7 +341,7 @@ export class SDK implements ISDK {
           connection,
           [88],
           PacketVersionMap.v1,
-          options?.timeout ?? 5000,
+          timeout ?? 5000,
         );
 
         const sdkVersion = formatSDKVersion(sdkVersionData.data);

@@ -11,6 +11,7 @@ import {
   test,
 } from '@jest/globals';
 import { SDK } from '../../src/sdk';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/getStatus';
 
 describe('sdk.getStatus', () => {
@@ -58,7 +59,7 @@ describe('sdk.getStatus', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.getStatus(1);
+        const status = await sdk.getStatus(1, config.defaultTimeout);
 
         expect(status).toEqual(testCase.status);
       });
@@ -86,7 +87,7 @@ describe('sdk.getStatus', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.getStatus(maxTries);
+        const status = await sdk.getStatus(maxTries, config.defaultTimeout);
 
         expect(status).toEqual(testCase.status);
       });
@@ -102,7 +103,9 @@ describe('sdk.getStatus', () => {
         connection.configureListeners(onData);
         await connection.destroy();
 
-        await expect(sdk.getStatus(1)).rejects.toThrow(DeviceConnectionError);
+        await expect(sdk.getStatus(1, config.defaultTimeout)).rejects.toThrow(
+          DeviceConnectionError,
+        );
         expect(onData.mock.calls).toHaveLength(0);
       });
     });
@@ -125,7 +128,9 @@ describe('sdk.getStatus', () => {
         };
 
         connection.configureListeners(onData);
-        await expect(sdk.getStatus(1)).rejects.toThrow(DeviceConnectionError);
+        await expect(sdk.getStatus(1, config.defaultTimeout)).rejects.toThrow(
+          DeviceConnectionError,
+        );
       });
     });
   });

@@ -20,12 +20,14 @@ export const writeCommand = async ({
   version,
   sequenceNumber,
   ackPacketTypes,
+  timeout,
 }: {
   connection: IDeviceConnection;
   packet: Uint8Array;
   version: PacketVersion;
   sequenceNumber: number;
   ackPacketTypes: number[];
+  timeout?: number;
 }): Promise<DecodedPacketData> => {
   assert(connection, 'Invalid connection');
   assert(packet, 'Invalid packet');
@@ -58,6 +60,7 @@ export const writeCommand = async ({
       version,
       packetTypes: ackPacketTypes,
       sequenceNumber,
+      ackTimeout: timeout,
     });
 
     connection.send(packet).catch((error: any) => {

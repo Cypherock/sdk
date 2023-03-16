@@ -20,11 +20,13 @@ export const sendAbort = async ({
   version,
   sequenceNumber,
   maxTries = 2,
+  timeout,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
+  timeout?: number;
 }): Promise<Status> => {
   if (version !== PacketVersionMap.v3) {
     throw new DeviceCompatibilityError(
@@ -67,6 +69,7 @@ export const sendAbort = async ({
         version,
         sequenceNumber,
         ackPacketTypes: [usableConfig.commands.PACKET_TYPE.STATUS],
+        timeout,
       });
 
       const { protobufData } = decodePayloadData(

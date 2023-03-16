@@ -152,7 +152,9 @@ describe('Device Proto Operation: v3', () => {
     });
     const result = await sdk.waitForResult({
       sequenceNumber: 16,
-      maxTries: 1,
+      options: {
+        maxTries: 1,
+      },
     });
 
     expect(result).toEqual(

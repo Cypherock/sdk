@@ -11,6 +11,7 @@ import {
   jest,
 } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/sendLegacyCommand';
 
 describe('sdk.deprecated.sendLegacyCommand', () => {
@@ -59,6 +60,7 @@ describe('sdk.deprecated.sendLegacyCommand', () => {
           testCase.params.command,
           testCase.params.data,
           1,
+          config.defaultTimeout,
         );
       });
     });
@@ -100,6 +102,7 @@ describe('sdk.deprecated.sendLegacyCommand', () => {
           testCase.params.command,
           testCase.params.data,
           maxTries,
+          config.defaultTimeout,
         );
       });
     });
@@ -120,6 +123,7 @@ describe('sdk.deprecated.sendLegacyCommand', () => {
             testCase.params.command,
             testCase.params.data,
             1,
+            config.defaultTimeout,
           ),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
@@ -148,6 +152,7 @@ describe('sdk.deprecated.sendLegacyCommand', () => {
             testCase.params.command,
             testCase.params.data,
             1,
+            config.defaultTimeout,
           ),
         ).rejects.toThrow(DeviceConnectionError);
       });
@@ -168,6 +173,7 @@ describe('sdk.deprecated.sendLegacyCommand', () => {
             params.command,
             params.data,
             params.maxTries,
+            config.defaultTimeout,
           ),
         ).rejects.toThrow();
       });

@@ -15,12 +15,14 @@ export const getResult = async ({
   maxTries = 5,
   sequenceNumber,
   appletId,
+  timeout,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
   sequenceNumber: number;
   appletId: number;
   maxTries?: number;
+  timeout?: number;
 }) => {
   assert(appletId, 'Invalid appletId');
 
@@ -29,6 +31,7 @@ export const getResult = async ({
     version,
     maxTries,
     sequenceNumber,
+    timeout,
   });
 
   let output: Uint8Array | Status;

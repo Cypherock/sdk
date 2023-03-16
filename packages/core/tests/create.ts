@@ -4,6 +4,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 import { SDK } from '../src/index';
+import { config } from './__fixtures__/config';
 import fixtures from './__fixtures__/create';
 
 describe('SDK.create', () => {
@@ -28,7 +29,10 @@ describe('SDK.create', () => {
         };
 
         connection.configureListeners(onData);
-        const sdk = await SDK.create(connection, 0);
+        const sdk = await SDK.create(connection, 0, {
+          maxTries: 1,
+          timeout: config.defaultTimeout,
+        });
 
         expect(sdk.getVersion()).toEqual(testCase.output.sdkVersion);
         expect(sdk.getPacketVersion()).toEqual(testCase.output.packetVersion);
@@ -55,7 +59,10 @@ describe('SDK.create', () => {
         };
 
         connection.configureListeners(onData);
-        const sdk = await SDK.create(connection, 0);
+        const sdk = await SDK.create(connection, 0, {
+          maxTries: 1,
+          timeout: config.defaultTimeout,
+        });
 
         expect(sdk.getVersion()).toEqual(testCase.output.sdkVersion);
         expect(sdk.getPacketVersion()).toEqual(testCase.output.packetVersion);
@@ -106,7 +113,10 @@ describe('SDK.create', () => {
         };
 
         connection.configureListeners(onData);
-        const sdk = await SDK.create(connection, 0);
+        const sdk = await SDK.create(connection, 0, {
+          maxTries,
+          timeout: config.defaultTimeout,
+        });
 
         expect(sdk.getVersion()).toEqual(testCase.output.sdkVersion);
         expect(sdk.getPacketVersion()).toEqual(testCase.output.packetVersion);
@@ -134,9 +144,12 @@ describe('SDK.create', () => {
 
         connection.configureListeners(onData);
         await connection.destroy();
-        await expect(SDK.create(connection, 0)).rejects.toThrow(
-          DeviceConnectionError,
-        );
+        await expect(
+          SDK.create(connection, 0, {
+            maxTries: 1,
+            timeout: config.defaultTimeout,
+          }),
+        ).rejects.toThrow(DeviceConnectionError);
       });
     });
   });
@@ -158,9 +171,12 @@ describe('SDK.create', () => {
         };
 
         connection.configureListeners(onData);
-        await expect(SDK.create(connection, 0)).rejects.toThrow(
-          DeviceConnectionError,
-        );
+        await expect(
+          SDK.create(connection, 0, {
+            maxTries: 1,
+            timeout: config.defaultTimeout,
+          }),
+        ).rejects.toThrow(DeviceConnectionError);
       });
     });
   });

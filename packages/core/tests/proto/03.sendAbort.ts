@@ -11,6 +11,7 @@ import {
   test,
 } from '@jest/globals';
 import { SDK } from '../../src/sdk';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/sendAbort';
 
 describe('sdk.sendAbort', () => {
@@ -58,7 +59,11 @@ describe('sdk.sendAbort', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.sendAbort(testCase.sequenceNumber, 1);
+        const status = await sdk.sendAbort(
+          testCase.sequenceNumber,
+          1,
+          config.defaultTimeout,
+        );
 
         expect(status).toEqual(testCase.status);
       });
@@ -86,7 +91,11 @@ describe('sdk.sendAbort', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.sendAbort(testCase.sequenceNumber, maxTries);
+        const status = await sdk.sendAbort(
+          testCase.sequenceNumber,
+          maxTries,
+          config.defaultTimeout,
+        );
 
         expect(status).toEqual(testCase.status);
       });
@@ -102,9 +111,9 @@ describe('sdk.sendAbort', () => {
         connection.configureListeners(onData);
         await connection.destroy();
 
-        await expect(sdk.sendAbort(testCase.sequenceNumber, 1)).rejects.toThrow(
-          DeviceConnectionError,
-        );
+        await expect(
+          sdk.sendAbort(testCase.sequenceNumber, 1, config.defaultTimeout),
+        ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
     });
@@ -127,9 +136,9 @@ describe('sdk.sendAbort', () => {
         };
 
         connection.configureListeners(onData);
-        await expect(sdk.sendAbort(testCase.sequenceNumber, 1)).rejects.toThrow(
-          DeviceConnectionError,
-        );
+        await expect(
+          sdk.sendAbort(testCase.sequenceNumber, 1, config.defaultTimeout),
+        ).rejects.toThrow(DeviceConnectionError);
       });
     });
   });
@@ -146,7 +155,7 @@ describe('sdk.sendAbort', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.sendAbort(testCase.sequenceNumber, 1),
+          sdk.sendAbort(testCase.sequenceNumber, 1, config.defaultTimeout),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
     });
@@ -158,7 +167,10 @@ describe('sdk.sendAbort', () => {
         JSON.stringify(testCase),
         async () => {
           await expect(
-            sdk.sendAbort(testCase.sequenceNumber as any),
+            sdk.sendAbort(
+              testCase.sequenceNumber as any,
+              config.defaultTimeout,
+            ),
           ).rejects.toBeInstanceOf(Error);
         },
         200,

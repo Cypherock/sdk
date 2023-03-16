@@ -16,10 +16,12 @@ export const getStatus = async ({
   connection,
   version,
   maxTries = 5,
+  timeout,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
   maxTries?: number;
+  timeout?: number;
 }) => {
   assert(connection, 'Invalid connection');
   assert(version, 'Invalid version');
@@ -65,6 +67,7 @@ export const getStatus = async ({
         version,
         sequenceNumber: -1,
         ackPacketTypes: [usableConfig.commands.PACKET_TYPE.STATUS],
+        timeout,
       });
       finalData = receivedPacket.payloadData;
       isSuccess = true;

@@ -43,6 +43,7 @@ export default class DeprecatedCommunication {
     command: number,
     data: string,
     maxTries?: number,
+    timeout?: number,
   ) {
     this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
@@ -60,6 +61,7 @@ export default class DeprecatedCommunication {
       data,
       packetVersion,
       maxTries,
+      timeout,
     );
   }
 
@@ -88,6 +90,7 @@ export default class DeprecatedCommunication {
     data: string;
     sequenceNumber: number;
     maxTries?: number;
+    timeout?: number;
   }): Promise<void> {
     this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
@@ -112,10 +115,15 @@ export default class DeprecatedCommunication {
       sequenceNumber: params.sequenceNumber,
       version: packetVersion,
       maxTries: params.maxTries,
+      timeout: params.timeout,
     });
   }
 
-  public async getCommandOutput(sequenceNumber: number, maxTries?: number) {
+  public async getCommandOutput(
+    sequenceNumber: number,
+    maxTries?: number,
+    timeout?: number,
+  ) {
     this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
@@ -137,6 +145,7 @@ export default class DeprecatedCommunication {
       sequenceNumber,
       version: packetVersion,
       maxTries,
+      timeout,
     });
   }
 
@@ -144,7 +153,6 @@ export default class DeprecatedCommunication {
     sequenceNumber: rawOperations.IWaitForCommandOutputParams['sequenceNumber'];
     expectedCommandTypes: rawOperations.IWaitForCommandOutputParams['expectedCommandTypes'];
     onStatus?: rawOperations.IWaitForCommandOutputParams['onStatus'];
-    maxTries?: rawOperations.IWaitForCommandOutputParams['maxTries'];
     options?: rawOperations.IWaitForCommandOutputParams['options'];
   }) {
     this.sdk.validateNotInBootloaderMode();
@@ -170,7 +178,7 @@ export default class DeprecatedCommunication {
     });
   }
 
-  public async getCommandStatus(maxTries?: number) {
+  public async getCommandStatus(maxTries?: number, timeout?: number) {
     this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
@@ -191,10 +199,15 @@ export default class DeprecatedCommunication {
       connection: this.sdk.getConnection(),
       version: packetVersion,
       maxTries,
+      timeout,
     });
   }
 
-  public async sendCommandAbort(sequenceNumber: number, maxTries?: number) {
+  public async sendCommandAbort(
+    sequenceNumber: number,
+    maxTries?: number,
+    timeout?: number,
+  ) {
     this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
@@ -216,6 +229,7 @@ export default class DeprecatedCommunication {
       version: packetVersion,
       sequenceNumber,
       maxTries,
+      timeout,
     });
   }
 }

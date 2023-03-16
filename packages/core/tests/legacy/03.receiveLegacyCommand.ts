@@ -2,9 +2,9 @@ import {
   DeviceConnectionError,
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { sleep } from '@cypherock/sdk-utils';
 import { describe, test, expect, afterEach, beforeEach } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/receiveLegacyCommand';
 
 describe('sdk.deprecated.receiveLegacyCommand', () => {
@@ -41,7 +41,6 @@ describe('sdk.deprecated.receiveLegacyCommand', () => {
       test(testCase.name, async () => {
         const sendDataFromDevice = async (packetsFromDevice: Uint8Array[]) => {
           for (const data of packetsFromDevice) {
-            await sleep(20);
             await connection.mockDeviceSend(data);
           }
         };
@@ -49,7 +48,7 @@ describe('sdk.deprecated.receiveLegacyCommand', () => {
         const [response] = await Promise.all([
           sdk.deprecated.receiveLegacyCommand(
             testCase.params.allAcceptableCommands,
-            2000,
+            testCase.output.data.length > 200 ? 1200 : config.defaultTimeout,
           ),
           sendDataFromDevice(testCase.packetsFromDevice),
         ]);
@@ -68,7 +67,7 @@ describe('sdk.deprecated.receiveLegacyCommand', () => {
         await expect(
           sdk.deprecated.receiveLegacyCommand(
             testCase.params.allAcceptableCommands,
-            500,
+            config.defaultTimeout,
           ),
         ).rejects.toBeInstanceOf(DeviceConnectionError);
       });
@@ -83,8 +82,6 @@ describe('sdk.deprecated.receiveLegacyCommand', () => {
           let i = 0;
 
           for (const data of packetsFromDevice) {
-            await sleep(20);
-
             if (i >= packetsFromDevice.length - 1) {
               await connection.destroy();
             } else {
@@ -97,7 +94,7 @@ describe('sdk.deprecated.receiveLegacyCommand', () => {
         const [response] = await Promise.allSettled([
           sdk.deprecated.receiveLegacyCommand(
             testCase.params.allAcceptableCommands,
-            2000,
+            config.defaultTimeout,
           ),
           sendDataFromDevice(testCase.packetsFromDevice),
         ]);
@@ -118,7 +115,10 @@ describe('sdk.deprecated.receiveLegacyCommand', () => {
         };
 
         await expect(
-          sdk.deprecated.receiveLegacyCommand(params.allAcceptableCommands),
+          sdk.deprecated.receiveLegacyCommand(
+            params.allAcceptableCommands,
+            config.defaultTimeout,
+          ),
         ).rejects.toBeInstanceOf(Error);
       });
     }, 200);

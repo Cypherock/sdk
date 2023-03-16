@@ -5,6 +5,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { describe, test, expect, afterEach, beforeEach } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 
 describe('sdk.sendBootloaderAbort', () => {
   let connection: MockDeviceConnection;
@@ -35,7 +36,7 @@ describe('sdk.sendBootloaderAbort', () => {
     };
 
     connection.configureListeners(onData);
-    await sdk.sendBootloaderAbort(1);
+    await sdk.sendBootloaderAbort({ maxTries: 1 });
   });
 
   test('should be able to handle multiple retries', async () => {
@@ -53,7 +54,11 @@ describe('sdk.sendBootloaderAbort', () => {
     };
 
     connection.configureListeners(onData);
-    await sdk.sendBootloaderAbort(maxTries, { firstTimeout: 2000 });
+    await sdk.sendBootloaderAbort({
+      firstTimeout: config.defaultTimeout,
+      timeout: config.defaultTimeout,
+      maxTries,
+    });
   });
 
   test('should return valid errors when device is disconnected', async () => {
@@ -66,7 +71,7 @@ describe('sdk.sendBootloaderAbort', () => {
     connection.configureListeners(onData);
     await connection.destroy();
 
-    await expect(sdk.sendBootloaderAbort(1)).rejects.toThrow(
+    await expect(sdk.sendBootloaderAbort({ maxTries: 1 })).rejects.toThrow(
       DeviceConnectionError,
     );
   });
@@ -80,7 +85,7 @@ describe('sdk.sendBootloaderAbort', () => {
 
     connection.configureListeners(onData);
 
-    await expect(sdk.sendBootloaderAbort(1)).rejects.toThrow(
+    await expect(sdk.sendBootloaderAbort({ maxTries: 1 })).rejects.toThrow(
       DeviceConnectionError,
     );
   });

@@ -41,6 +41,7 @@ describe('Operation Helpers: writeCommand', () => {
         sequenceNumber: testCase.sequenceNumber,
         ackPacketTypes: testCase.ackPacketTypes,
         version: PacketVersionMap.v3,
+        timeout: 500,
       });
 
       for (const ackPacket of testCase.ackPackets) {
@@ -74,6 +75,7 @@ describe('Operation Helpers: writeCommand', () => {
         sequenceNumber: testCase.sequenceNumber,
         ackPacketTypes: testCase.ackPacketTypes,
         version: PacketVersionMap.v3,
+        timeout: 500,
       }).catch(error => {
         expect(error).toBeInstanceOf(testCase.errorInstance);
       });
@@ -106,6 +108,7 @@ describe('Operation Helpers: writeCommand', () => {
         sequenceNumber: testCase.sequenceNumber,
         ackPacketTypes: testCase.ackPacketTypes,
         version: PacketVersionMap.v3,
+        timeout: 500,
       }).catch(error => {
         expect(error).toBeInstanceOf(DeviceConnectionError);
       });
@@ -137,6 +140,7 @@ describe('Operation Helpers: writeCommand', () => {
         sequenceNumber: testCase.sequenceNumber,
         ackPacketTypes: testCase.ackPacketTypes,
         version: PacketVersionMap.v3,
+        timeout: 500,
       }).catch(error => {
         expect(error).toBeInstanceOf(DeviceConnectionError);
       });

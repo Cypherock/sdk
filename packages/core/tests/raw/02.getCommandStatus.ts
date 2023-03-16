@@ -11,6 +11,7 @@ import {
   beforeEach,
 } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/getCommandStatus';
 
 describe('sdk.deprecated.getCommandStatus', () => {
@@ -58,7 +59,10 @@ describe('sdk.deprecated.getCommandStatus', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.deprecated.getCommandStatus(1);
+        const status = await sdk.deprecated.getCommandStatus(
+          1,
+          config.defaultTimeout,
+        );
 
         expect(status).toEqual(testCase.status);
       });
@@ -86,7 +90,10 @@ describe('sdk.deprecated.getCommandStatus', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.deprecated.getCommandStatus(maxTries);
+        const status = await sdk.deprecated.getCommandStatus(
+          maxTries,
+          config.defaultTimeout,
+        );
 
         expect(status).toEqual(testCase.status);
       });
@@ -102,9 +109,9 @@ describe('sdk.deprecated.getCommandStatus', () => {
         connection.configureListeners(onData);
         await connection.destroy();
 
-        await expect(sdk.deprecated.getCommandStatus(1)).rejects.toThrow(
-          DeviceConnectionError,
-        );
+        await expect(
+          sdk.deprecated.getCommandStatus(1, config.defaultTimeout),
+        ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
     });
@@ -127,9 +134,9 @@ describe('sdk.deprecated.getCommandStatus', () => {
         };
 
         connection.configureListeners(onData);
-        await expect(sdk.deprecated.getCommandStatus(1)).rejects.toThrow(
-          DeviceConnectionError,
-        );
+        await expect(
+          sdk.deprecated.getCommandStatus(1, config.defaultTimeout),
+        ).rejects.toThrow(DeviceConnectionError);
       });
     });
   });

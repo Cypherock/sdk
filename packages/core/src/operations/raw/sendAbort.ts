@@ -20,11 +20,13 @@ export const sendAbort = async ({
   version,
   sequenceNumber,
   maxTries = 2,
+  timeout,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
+  timeout?: number;
 }): Promise<StatusData> => {
   assert(connection, 'Invalid connection');
   assert(version, 'Invalid version');
@@ -71,6 +73,7 @@ export const sendAbort = async ({
         version,
         sequenceNumber,
         ackPacketTypes: [usableConfig.commands.PACKET_TYPE.STATUS],
+        timeout,
       });
 
       const { rawData } = decodePayloadData(

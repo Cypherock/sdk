@@ -11,6 +11,7 @@ import {
   beforeEach,
 } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/sendCommandAbort';
 
 describe('sdk.deprecated.sendCommandAbort', () => {
@@ -61,6 +62,7 @@ describe('sdk.deprecated.sendCommandAbort', () => {
         const status = await sdk.deprecated.sendCommandAbort(
           testCase.sequenceNumber,
           1,
+          config.defaultTimeout,
         );
 
         expect(status).toEqual(testCase.status);
@@ -92,6 +94,7 @@ describe('sdk.deprecated.sendCommandAbort', () => {
         const status = await sdk.deprecated.sendCommandAbort(
           testCase.sequenceNumber,
           maxTries,
+          config.defaultTimeout,
         );
 
         expect(status).toEqual(testCase.status);
@@ -109,7 +112,11 @@ describe('sdk.deprecated.sendCommandAbort', () => {
         await connection.destroy();
 
         await expect(
-          sdk.deprecated.sendCommandAbort(testCase.sequenceNumber, 1),
+          sdk.deprecated.sendCommandAbort(
+            testCase.sequenceNumber,
+            1,
+            config.defaultTimeout,
+          ),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
@@ -134,7 +141,11 @@ describe('sdk.deprecated.sendCommandAbort', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.deprecated.sendCommandAbort(testCase.sequenceNumber, 1),
+          sdk.deprecated.sendCommandAbort(
+            testCase.sequenceNumber,
+            1,
+            config.defaultTimeout,
+          ),
         ).rejects.toThrow(DeviceConnectionError);
       });
     });
@@ -152,7 +163,11 @@ describe('sdk.deprecated.sendCommandAbort', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.deprecated.sendCommandAbort(testCase.sequenceNumber, 1),
+          sdk.deprecated.sendCommandAbort(
+            testCase.sequenceNumber,
+            1,
+            config.defaultTimeout,
+          ),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
     });
@@ -162,7 +177,11 @@ describe('sdk.deprecated.sendCommandAbort', () => {
     fixtures.invalidArgs.forEach(testCase => {
       test(JSON.stringify(testCase), async () => {
         await expect(
-          sdk.deprecated.sendCommandAbort(testCase.sequenceNumber as any),
+          sdk.deprecated.sendCommandAbort(
+            testCase.sequenceNumber as any,
+            1,
+            config.defaultTimeout,
+          ),
         ).rejects.toBeInstanceOf(Error);
       });
     }, 200);

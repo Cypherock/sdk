@@ -103,8 +103,11 @@ const writePacket = (
 
 export const sendBootloaderAbort = async (
   connection: IDeviceConnection,
-  maxTries?: number,
-  options?: { timeout?: number; firstTimeout?: number },
+  options?: {
+    timeout?: number;
+    firstTimeout?: number;
+    maxTries?: number;
+  },
 ) => {
   assert(connection, 'Invalid connection');
 
@@ -119,7 +122,7 @@ export const sendBootloaderAbort = async (
         reject: (err?: Error) => void,
       ) => {
         let tries = 1;
-        const innerMaxTries = maxTries ?? 5;
+        const innerMaxTries = options?.maxTries ?? 5;
         let firstError: Error | undefined;
         while (tries <= innerMaxTries) {
           try {

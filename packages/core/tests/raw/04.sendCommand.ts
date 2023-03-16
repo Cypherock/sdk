@@ -11,6 +11,7 @@ import {
   beforeEach,
 } from '@jest/globals';
 import { SDK } from '../../src';
+import { config } from '../__fixtures__/config';
 import fixtures from './__fixtures__/sendCommand';
 
 describe('sdk.deprecated.sendCommand', () => {
@@ -67,6 +68,7 @@ describe('sdk.deprecated.sendCommand', () => {
           commandType: testCase.commandType,
           sequenceNumber: testCase.sequenceNumber,
           maxTries: 1,
+          timeout: config.defaultTimeout,
         });
       });
     });
@@ -110,6 +112,7 @@ describe('sdk.deprecated.sendCommand', () => {
           commandType: testCase.commandType,
           sequenceNumber: testCase.sequenceNumber,
           maxTries,
+          timeout: config.defaultTimeout,
         });
       });
     });
@@ -130,6 +133,7 @@ describe('sdk.deprecated.sendCommand', () => {
             commandType: testCase.commandType,
             sequenceNumber: testCase.sequenceNumber,
             maxTries: 1,
+            timeout: config.defaultTimeout,
           }),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
@@ -165,6 +169,7 @@ describe('sdk.deprecated.sendCommand', () => {
             commandType: testCase.commandType,
             sequenceNumber: testCase.sequenceNumber,
             maxTries: 1,
+            timeout: config.defaultTimeout,
           }),
         ).rejects.toThrow(DeviceConnectionError);
       });
@@ -192,6 +197,7 @@ describe('sdk.deprecated.sendCommand', () => {
             commandType: testCase.commandType as any,
             sequenceNumber: testCase.sequenceNumber as any,
             maxTries: 1,
+            timeout: config.defaultTimeout,
           }),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
@@ -209,6 +215,7 @@ describe('sdk.deprecated.sendCommand', () => {
               commandType: testCase.commandType as any,
               sequenceNumber: testCase.sequenceNumber as any,
               maxTries: 1,
+              timeout: config.defaultTimeout,
             }),
           ).rejects.toBeInstanceOf(Error);
         },

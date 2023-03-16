@@ -15,6 +15,7 @@ import {
 } from '@jest/globals';
 import { SDK } from '../../src/sdk';
 import { PacketVersionMap } from '../../src/utils';
+import { config } from '../__fixtures__/config';
 
 describe('Device Raw Operation: v3', () => {
   let connection: MockDeviceConnection;
@@ -155,7 +156,10 @@ describe('Device Raw Operation: v3', () => {
     const result = await sdk.deprecated.waitForCommandOutput({
       sequenceNumber: 16,
       expectedCommandTypes: [12],
-      maxTries: 1,
+      options: {
+        maxTries: 1,
+        timeout: config.defaultTimeout,
+      },
     });
 
     expect(result).toEqual({

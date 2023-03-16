@@ -19,11 +19,13 @@ export const getCommandOutput = async ({
   version,
   maxTries = 5,
   sequenceNumber,
+  timeout,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
+  timeout?: number;
 }) => {
   assert(connection, 'Invalid connection');
   assert(version, 'Invalid version');
@@ -81,6 +83,7 @@ export const getCommandOutput = async ({
             usableConfig.commands.PACKET_TYPE.CMD_OUTPUT,
             usableConfig.commands.PACKET_TYPE.STATUS,
           ],
+          timeout,
         });
         dataList[receivedPacket.currentPacketNumber - 1] =
           receivedPacket.payloadData;

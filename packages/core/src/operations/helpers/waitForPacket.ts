@@ -31,11 +31,13 @@ export const waitForPacket = ({
   version,
   packetTypes,
   sequenceNumber,
+  ackTimeout,
 }: {
   connection: IDeviceConnection;
   sequenceNumber: number;
   packetTypes: number[];
   version: PacketVersion;
+  ackTimeout?: number;
 }): CancellablePromise<DecodedPacketData> => {
   assert(connection, 'Invalid connection');
   assert(version, 'Invalid version');
@@ -214,7 +216,7 @@ export const waitForPacket = ({
           ),
         );
       }
-    }, usableConfig.constants.ACK_TIME);
+    }, ackTimeout ?? usableConfig.constants.ACK_TIME);
 
     recheckTimeout = setTimeout(
       recheckPacket,

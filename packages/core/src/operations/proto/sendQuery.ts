@@ -12,6 +12,7 @@ export const sendQuery = async ({
   version,
   maxTries = 5,
   sequenceNumber,
+  timeout,
 }: {
   connection: IDeviceConnection;
   appletId: number;
@@ -19,6 +20,7 @@ export const sendQuery = async ({
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
+  timeout?: number;
 }): Promise<void> => {
   assert(appletId, 'Invalid appletId');
   assert(data, 'Invalid data');
@@ -37,5 +39,6 @@ export const sendQuery = async ({
     maxTries,
     sequenceNumber,
     isProto: true,
+    timeout,
   });
 };

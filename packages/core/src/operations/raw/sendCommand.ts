@@ -8,8 +8,9 @@ export const sendCommand = async ({
   commandType,
   data,
   version,
-  maxTries = 5,
   sequenceNumber,
+  maxTries = 5,
+  timeout,
 }: {
   connection: IDeviceConnection;
   commandType: number;
@@ -17,6 +18,7 @@ export const sendCommand = async ({
   version: PacketVersion;
   sequenceNumber: number;
   maxTries?: number;
+  timeout?: number;
 }): Promise<void> => {
   const rawEncodedData = encodeRawData({ commandType, data }, version);
 
@@ -27,5 +29,6 @@ export const sendCommand = async ({
     maxTries,
     sequenceNumber,
     isProto: false,
+    timeout,
   });
 };
