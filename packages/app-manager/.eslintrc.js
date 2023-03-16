@@ -1,11 +1,8 @@
 module.exports = {
   root: true,
-  extends: ["custom"],
+  extends: ['custom'],
   parserOptions: {
     tsconfigRootDir: __dirname,
-    project: ['./tsconfig.json']
+    project: ['./tsconfig.eslint.json'],
   },
-  rules: {
-    "no-bitwise": 0
-  }
 };

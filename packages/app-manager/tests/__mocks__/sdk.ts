@@ -14,7 +14,7 @@ export const getNewSequenceNumber = jest.fn(() => {
   return sequenceNumber;
 });
 
-export const wrapOperation = jest.fn((func: () => Promise<void>) => func());
+export const runOperation = jest.fn((func: () => Promise<void>) => func());
 
 export const destroy = jest.fn();
 
@@ -27,11 +27,19 @@ export const create = jest.fn(async () =>
     waitForResult,
     getSequenceNumber,
     getNewSequenceNumber,
-    wrapOperation,
+    runOperation,
     destroy,
   }),
 );
 
-jest.mock('@cypherock/sdk-core', () => ({
-  create,
-}));
+jest.mock('@cypherock/sdk-core', () => {
+  const originalModule: any = jest.requireActual('@cypherock/sdk-core');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    SDK: {
+      create,
+    },
+  };
+});

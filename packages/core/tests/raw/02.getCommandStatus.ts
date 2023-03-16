@@ -10,13 +10,13 @@ import {
   jest,
   beforeEach,
 } from '@jest/globals';
-import SDK from '../../src';
+import { SDK } from '../../src';
 import fixtures from './__fixtures__/getCommandStatus';
 
 describe('sdk.deprecated.getCommandStatus', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
-  let appletId = 0;
+  const appletId = 0;
 
   const RealDate = Date.now;
 
@@ -97,7 +97,7 @@ describe('sdk.deprecated.getCommandStatus', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         expect.assertions(2);
-        const onData = jest.fn(async () => {});
+        const onData = jest.fn();
 
         connection.configureListeners(onData);
         await connection.destroy();

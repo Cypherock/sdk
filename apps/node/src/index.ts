@@ -1,5 +1,5 @@
 import DeviceConnection from '@cypherock/sdk-hw-hid';
-import ManagerApp from '@cypherock/sdk-app-manager';
+import { ManagerApp } from '@cypherock/sdk-app-manager';
 
 const run = async () => {
   const connection = await DeviceConnection.create();

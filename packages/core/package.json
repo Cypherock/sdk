@@ -5,10 +5,8 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint --ext .ts,tsx,js,jsx,js src/ --fix",
+    "lint": "eslint src/ tests/ --fix",
     "test": "jest",
-    "test:unit": "jest --selectProjects unit",
-    "test:e2e": "jest --selectProjects e2e",
     "lint:check": "eslint --ext .ts,tsx,js,jsx,js src/",
     "pretty": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts' 'tests/**/*.ts'",
@@ -31,6 +29,7 @@
   },
   "dependencies": {
     "@cypherock/sdk-interfaces": "workspace:^0.0.0",
+    "@cypherock/sdk-utils": "workspace:^0.0.0",
     "compare-versions": "6.0.0-rc.1",
     "protobufjs": "^7.2.2",
     "uuid": "^9.0.0"

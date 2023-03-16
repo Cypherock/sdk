@@ -3,10 +3,11 @@ import {
   DeviceCompatibilityErrorType,
   DeviceState,
 } from '@cypherock/sdk-interfaces';
+import { assert } from '@cypherock/sdk-utils';
+
 import * as legacyOperations from './operations/legacy';
 import * as rawOperations from './operations/raw';
 import { PacketVersionMap } from './utils/packetVersions';
-import assert from './utils/assert';
 import { FeatureName, isFeatureEnabled } from './utils/featureMap';
 import { ISDK } from './types';
 

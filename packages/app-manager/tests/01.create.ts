@@ -1,8 +1,8 @@
 import { MockDeviceConnection } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
-import * as sdkMocks from '../src/__mocks__/sdk';
-import ManagerApp, { GetDeviceInfoResponse } from '../src/index';
+import * as sdkMocks from './__mocks__/sdk';
+import { ManagerApp } from '../src/index';
 
 describe('ManagerApp.create', () => {
   let connection: MockDeviceConnection;
@@ -21,9 +21,5 @@ describe('ManagerApp.create', () => {
 
     expect(sdkMocks.create).toHaveBeenCalledTimes(1);
     expect(sdkMocks.create.mock.lastCall).toContainEqual(connection);
-  });
-
-  test('should have type exports', async () => {
-    expect(GetDeviceInfoResponse).toBeTruthy();
   });
 });

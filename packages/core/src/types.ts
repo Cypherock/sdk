@@ -98,6 +98,6 @@ export interface ISDK {
       timeout?: number;
     },
   ): Promise<void>;
-  wrapOperation<R>(operation: () => Promise<R>): Promise<R>;
+  runOperation<R>(operation: () => Promise<R>): Promise<R>;
   validateNotInBootloaderMode(): void;
 }

@@ -10,13 +10,13 @@ import {
   jest,
   beforeEach,
 } from '@jest/globals';
-import SDK from '../../src';
+import { SDK } from '../../src';
 import fixtures from './__fixtures__/waitForCommandOutput';
 
 describe('sdk.deprecated.waitForCommandOutput', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
-  let appletId = 0;
+  const appletId = 0;
 
   const RealDate = Date.now;
 
@@ -105,7 +105,7 @@ describe('sdk.deprecated.waitForCommandOutput', () => {
         let totalTimeoutTriggers = 0;
 
         const maxTries = 3;
-        let retries: Record<number, number | undefined> = {};
+        const retries: Record<number, number | undefined> = {};
 
         const onData = async (data: Uint8Array) => {
           const packetIndex = testCase.packets.findIndex(
@@ -164,8 +164,8 @@ describe('sdk.deprecated.waitForCommandOutput', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         expect.assertions(3);
-        const onData = jest.fn(async () => {});
-        const onStatus = jest.fn(async () => {});
+        const onData = jest.fn();
+        const onStatus = jest.fn();
 
         connection.configureListeners(onData);
         await connection.destroy();

@@ -73,6 +73,7 @@ importers:
     specifiers:
       '@cypherock/sdk-core': workspace:^0.0.0
       '@cypherock/sdk-interfaces': workspace:^0.0.0
+      '@cypherock/sdk-utils': workspace:^0.0.0
       '@jest/globals': ^29.4.1
       '@types/jest': ^29.4.0
       '@types/node': 18.11.18
@@ -90,6 +91,7 @@ importers:
     dependencies:
       '@cypherock/sdk-core': link:../core
       '@cypherock/sdk-interfaces': link:../interfaces
+      '@cypherock/sdk-utils': link:../util
       protobufjs: 7.2.2
       uuid: 9.0.0
     devDependencies:
@@ -109,6 +111,7 @@ importers:
   packages/core:
     specifiers:
       '@cypherock/sdk-interfaces': workspace:^0.0.0
+      '@cypherock/sdk-utils': workspace:^0.0.0
       '@jest/globals': ^29.4.1
       '@types/jest': ^29.4.0
       '@types/node': 18.11.18
@@ -126,6 +129,7 @@ importers:
       uuid: ^9.0.0
     dependencies:
       '@cypherock/sdk-interfaces': link:../interfaces
+      '@cypherock/sdk-utils': link:../util
       compare-versions: 6.0.0-rc.1
       protobufjs: 7.2.2
       uuid: 9.0.0
@@ -271,6 +275,43 @@ importers:
       rimraf: 4.1.2
       tsconfig: link:../util-tsconfig
       typescript: 4.9.4
+
+  packages/util:
+    specifiers:
+      '@cypherock/sdk-interfaces': workspace:^0.0.0
+      '@jest/globals': ^29.4.1
+      '@types/jest': ^29.4.0
+      '@types/node': 18.11.18
+      compare-versions: 6.0.0-rc.1
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      jest: ^29.4.1
+      prettier-config-custom: workspace:^0.0.0
+      protobufjs: ^7.2.2
+      rimraf: ^4.1.2
+      ts-jest: ^29.0.5
+      ts-proto: ^1.139.0
+      tsconfig: workspace:*
+      typescript: ^4.5.2
+      uuid: ^9.0.0
+    dependencies:
+      '@cypherock/sdk-interfaces': link:../interfaces
+      compare-versions: 6.0.0-rc.1
+      protobufjs: 7.2.2
+      uuid: 9.0.0
+    devDependencies:
+      '@jest/globals': 29.4.1
+      '@types/jest': 29.4.0
+      '@types/node': 18.11.18
+      eslint: 7.32.0
+      eslint-config-custom: link:../util-eslint-config-custom
+      jest: 29.4.1_@types+node@18.11.18
+      prettier-config-custom: link:../util-prettier-config-custom
+      rimraf: 4.1.2
+      ts-jest: 29.0.5_ecv55cdbauq6znr7ci2lzguwra
+      ts-proto: 1.139.0
+      tsconfig: link:../util-tsconfig
+      typescript: 4.9.5
 
   packages/util-eslint-config-custom:
     specifiers:

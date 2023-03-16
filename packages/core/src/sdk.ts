@@ -8,17 +8,18 @@ import {
   DeviceState,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
+import { assert } from '@cypherock/sdk-utils';
+
 import * as bootloaderOperations from './operations/bootloader';
 import * as legacyOperations from './operations/legacy';
 import * as operations from './operations/proto';
 import { getPacketVersionFromSDK, formatSDKVersion } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
-import assert from './utils/assert';
 import { FeatureName, isFeatureEnabled } from './utils/featureMap';
 import { ISDK } from './types';
 import DeprecatedCommunication from './deprecated';
 
-export default class SDK implements ISDK {
+export class SDK implements ISDK {
   private readonly version: string;
 
   private readonly packetVersion?: PacketVersion;
@@ -270,7 +271,7 @@ export default class SDK implements ISDK {
     );
   }
 
-  public async wrapOperation<R>(operation: () => Promise<R>) {
+  public async runOperation<R>(operation: () => Promise<R>) {
     try {
       await this.connection.beforeOperation();
       const result = await operation();

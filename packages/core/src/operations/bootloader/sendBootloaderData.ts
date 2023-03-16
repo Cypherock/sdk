@@ -7,10 +7,10 @@ import {
   DeviceConnectionErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { hexToUint8Array, logger, uint8ArrayToHex } from '../../utils';
+import { hexToUint8Array, uint8ArrayToHex, assert } from '@cypherock/sdk-utils';
+import { logger } from '../../utils';
 import { stmXmodemEncode } from '../../encoders/packet/bootloader';
 import * as config from '../../config';
-import assert from '../../utils/assert';
 
 const ACK_PACKET = '06';
 const RECEIVING_MODE_PACKET = '43';

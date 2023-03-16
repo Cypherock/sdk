@@ -5,13 +5,10 @@ import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
+import { hexToUint8Array } from '@cypherock/sdk-utils';
+
 import * as config from '../../config';
-import {
-  hexToUint8Array,
-  logger,
-  PacketVersion,
-  PacketVersionMap,
-} from '../../utils';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 import { Status } from '../../encoders/proto/generated/core';
 

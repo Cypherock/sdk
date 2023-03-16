@@ -7,10 +7,11 @@ import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
+import { assert, isHex } from '@cypherock/sdk-utils';
+
 import * as config from '../../config';
-import { isHex, logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { xmodemEncode, xmodemDecode } from '../../encoders/packet/legacy';
-import assert from '../../utils/assert';
 
 /**
  * Writes the packet to the SerialPort on the given connection,

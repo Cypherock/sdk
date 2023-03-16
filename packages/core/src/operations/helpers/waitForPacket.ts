@@ -9,6 +9,8 @@ import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
+import { assert } from '@cypherock/sdk-utils';
+
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import {
@@ -18,7 +20,6 @@ import {
   ErrorPacketRejectReason,
   RejectReasonToMsgMap,
 } from '../../encoders/packet';
-import assert from '../../utils/assert';
 
 export interface CancellablePromise<T> extends Promise<T> {
   cancel: () => void;

@@ -2,20 +2,23 @@ import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
-import * as config from '../../config';
 import {
+  assert,
+  crc16,
   hexToUint8Array,
+  intToUintByte,
+  isHex,
   padStart,
   uint8ArrayToHex,
-  crc16,
+} from '@cypherock/sdk-utils';
+
+import * as config from '../../config';
+import {
   byteStuffing,
   byteUnstuffing,
-  intToUintByte,
   PacketVersion,
   PacketVersionMap,
-  isHex,
 } from '../../utils';
-import assert from '../../utils/assert';
 
 export interface LegacyDecodedPacketData {
   startOfFrame: string;

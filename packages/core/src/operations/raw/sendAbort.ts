@@ -5,6 +5,8 @@ import {
   DeviceCompatibilityErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
+import { assert } from '@cypherock/sdk-utils';
+
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
@@ -12,7 +14,6 @@ import { decodeStatus, StatusData } from '../../encoders/raw';
 
 import { writeCommand } from '../helpers/writeCommand';
 import canRetry from '../helpers/canRetry';
-import assert from '../../utils/assert';
 
 export const sendAbort = async ({
   connection,

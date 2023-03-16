@@ -13,13 +13,13 @@ import {
   jest,
   test,
 } from '@jest/globals';
-import SDK from '../../src/sdk';
+import { SDK } from '../../src/sdk';
 import { PacketVersionMap } from '../../src/utils';
 
 describe('Device Raw Operation: v3', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
-  let appletId = 0;
+  const appletId = 0;
   const constantDate = new Date('2023-03-07T09:43:48.755Z');
 
   const RealDate = Date.now;

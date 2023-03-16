@@ -2,14 +2,10 @@ import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
+import { intToUintByte, isHex, assert } from '@cypherock/sdk-utils';
+
 import * as config from '../../config';
-import {
-  intToUintByte,
-  isHex,
-  PacketVersion,
-  PacketVersionMap,
-} from '../../utils';
-import assert from '../../utils/assert';
+import { PacketVersion, PacketVersionMap } from '../../utils';
 import { RawData, StatusData } from './types';
 
 export * from './types';

@@ -1,6 +1,5 @@
+import { assert, isHex } from '@cypherock/sdk-utils';
 import { compareVersions, validate } from 'compare-versions';
-import assert from './assert';
-import { isHex } from './crypto';
 
 import { PacketVersion, PacketVersionMap } from './packetVersions';
 

@@ -5,10 +5,10 @@ import {
   DeviceConnectionErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { hexToUint8Array, uint8ArrayToHex } from '../../utils';
+import { hexToUint8Array, uint8ArrayToHex, assert } from '@cypherock/sdk-utils';
+
 import * as config from '../../config';
 import canRetry from '../helpers/canRetry';
-import assert from '../../utils/assert';
 
 const ACK_PACKET = '18';
 /*

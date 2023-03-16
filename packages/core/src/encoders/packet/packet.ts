@@ -2,17 +2,16 @@ import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
-import * as config from '../../config';
 import {
+  assert,
   crc16,
   hexToUint8Array,
-  PacketVersion,
-  PacketVersionMap,
-  uint8ArrayToHex,
   intToUintByte,
   isHex,
-} from '../../utils';
-import assert from '../../utils/assert';
+  uint8ArrayToHex,
+} from '@cypherock/sdk-utils';
+import * as config from '../../config';
+import { PacketVersion, PacketVersionMap } from '../../utils';
 
 export interface DecodedPacketData {
   startOfFrame: string;

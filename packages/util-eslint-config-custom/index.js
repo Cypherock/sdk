@@ -29,7 +29,7 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "error",
     "import/no-extraneous-dependencies": [
       "error",
-      { devDependencies: ["**/*.test.ts", "**/*.test.tsx"] },
+      { devDependencies: ["**/*.test.ts", "**/*.test.tsx", "**/tests/**/*.ts"] },
     ],
     "@typescript-eslint/prefer-readonly": "error",
   },

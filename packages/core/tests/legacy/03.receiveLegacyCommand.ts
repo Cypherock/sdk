@@ -2,15 +2,15 @@ import {
   DeviceConnectionError,
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
+import { sleep } from '@cypherock/sdk-utils';
 import { describe, test, expect, afterEach, beforeEach } from '@jest/globals';
-import SDK from '../../src';
-import { sleep } from '../../src/utils';
+import { SDK } from '../../src';
 import fixtures from './__fixtures__/receiveLegacyCommand';
 
 describe('sdk.deprecated.receiveLegacyCommand', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
-  let appletId = 0;
+  const appletId = 0;
 
   beforeEach(async () => {
     connection = await MockDeviceConnection.create();

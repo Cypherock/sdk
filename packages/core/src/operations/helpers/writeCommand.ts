@@ -7,11 +7,12 @@ import {
   DeviceConnectionErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
+import { assert } from '@cypherock/sdk-utils';
+
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { DecodedPacketData } from '../../encoders/packet';
 
 import { waitForPacket } from './waitForPacket';
-import assert from '../../utils/assert';
 
 export const writeCommand = async ({
   connection,

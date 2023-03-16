@@ -1,4 +1,4 @@
-export default function assert<T>(
+export function assert<T>(
   condition: T,
   error: string | Error,
 ): asserts condition is Exclude<T, null | undefined> {

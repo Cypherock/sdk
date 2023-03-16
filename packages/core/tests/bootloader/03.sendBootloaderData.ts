@@ -12,13 +12,13 @@ import {
   beforeEach,
   jest,
 } from '@jest/globals';
-import SDK from '../../src';
+import { SDK } from '../../src';
 import fixtures from './__fixtures__/sendBootloaderData';
 
 describe('sdk.sendBootloaderData', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
-  let appletId = 0;
+  const appletId = 0;
 
   beforeEach(async () => {
     connection = await MockDeviceConnection.create();
@@ -63,7 +63,7 @@ describe('sdk.sendBootloaderData', () => {
         let totalTimeoutTriggers = 0;
 
         const maxTries = 3;
-        let retries: Record<number, number | undefined> = {};
+        const retries: Record<number, number | undefined> = {};
 
         const onData = async (data: Uint8Array) => {
           const packetIndex = testCase.packets.findIndex(
@@ -99,7 +99,7 @@ describe('sdk.sendBootloaderData', () => {
   describe('should return valid errors when device is not in receiving mode', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        const onData = jest.fn(async () => {});
+        const onData = jest.fn();
 
         connection.configureListeners(onData);
 
@@ -116,7 +116,7 @@ describe('sdk.sendBootloaderData', () => {
   describe('should return valid errors when device is disconnected', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        const onData = jest.fn(async () => {});
+        const onData = jest.fn();
 
         connection.configureListeners(onData);
 

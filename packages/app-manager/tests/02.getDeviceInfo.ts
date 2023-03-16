@@ -1,8 +1,8 @@
 import { MockDeviceConnection } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
-import * as sdkMocks from '../src/__mocks__/sdk';
-import ManagerApp from '../src/index';
+import * as sdkMocks from './__mocks__/sdk';
+import { ManagerApp } from '../src/index';
 import fixtures from './__fixtures__/getDeviceInfo';
 
 describe('managerApp.getDeviceInfo', () => {
@@ -16,7 +16,7 @@ describe('managerApp.getDeviceInfo', () => {
     sdkMocks.sendQuery.mockReset();
     sdkMocks.waitForResult.mockReset();
 
-    sdkMocks.wrapOperation.mockClear();
+    sdkMocks.runOperation.mockClear();
 
     managerApp = await ManagerApp.create(connection);
   });
@@ -34,13 +34,13 @@ describe('managerApp.getDeviceInfo', () => {
           return undefined;
         });
 
-        sdkMocks.waitForResult.mockImplementationOnce(async () => {
-          return testCase.result;
-        });
+        sdkMocks.waitForResult.mockImplementationOnce(
+          async () => testCase.result,
+        );
 
         const output = await managerApp.getDeviceInfo();
         expect(output).toEqual(testCase.output);
-        expect(sdkMocks.wrapOperation).toHaveBeenCalledTimes(1);
+        expect(sdkMocks.runOperation).toHaveBeenCalledTimes(1);
       });
     });
   });
@@ -54,9 +54,9 @@ describe('managerApp.getDeviceInfo', () => {
           return undefined;
         });
 
-        sdkMocks.waitForResult.mockImplementationOnce(async () => {
-          return testCase.result;
-        });
+        sdkMocks.waitForResult.mockImplementationOnce(
+          async () => testCase.result,
+        );
 
         await expect(managerApp.getDeviceInfo()).rejects.toThrow(
           testCase.errorInstance,

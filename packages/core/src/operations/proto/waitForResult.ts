@@ -5,7 +5,8 @@ import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
-import { PacketVersion, PacketVersionMap, sleep } from '../../utils';
+import { assert, sleep } from '@cypherock/sdk-utils';
+import { PacketVersion, PacketVersionMap } from '../../utils';
 import {
   CmdState,
   DeviceIdleState,
@@ -13,7 +14,6 @@ import {
 } from '../../encoders/proto/generated/core';
 
 import { getResult } from './getResult';
-import assert from '../../utils/assert';
 
 export interface IWaitForCommandOutputParams {
   connection: IDeviceConnection;

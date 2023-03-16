@@ -1,8 +1,9 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
-import { PacketVersion, uint8ArrayToHex } from '../../utils';
+import { assert, uint8ArrayToHex } from '@cypherock/sdk-utils';
+
+import { PacketVersion } from '../../utils';
 import { Query } from '../../encoders/proto/generated/core';
 import { sendCommand as sendCommandHelper } from '../helpers';
-import assert from '../../utils/assert';
 
 export const sendQuery = async ({
   connection,

@@ -7,13 +7,14 @@ import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
+import { assert } from '@cypherock/sdk-utils';
+
 import { PacketVersion, PacketVersionMap } from '../../utils';
 import {
   xmodemDecode,
   LegacyDecodedPacketData,
 } from '../../encoders/packet/legacy';
 import * as config from '../../config';
-import assert from '../../utils/assert';
 
 const DEFAULT_RECEIVE_TIMEOUT = 15000;
 

@@ -1,14 +1,14 @@
 import {
-  byteUnstuffing,
-  intToUintByte,
+  assert,
   crc16,
-  PacketVersionMap,
-  uint8ArrayToHex,
   hexToUint8Array,
+  intToUintByte,
   isHex,
-} from '../../utils';
+  uint8ArrayToHex,
+} from '@cypherock/sdk-utils';
+
+import { byteUnstuffing, PacketVersionMap } from '../../utils';
 import { v1 as config } from '../../config';
-import assert from '../../utils/assert';
 
 const START_OF_FRAME = '01';
 const END_OF_TRANSMISSION = '04';

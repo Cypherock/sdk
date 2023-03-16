@@ -10,13 +10,13 @@ import {
   jest,
   beforeEach,
 } from '@jest/globals';
-import SDK from '../../src';
+import { SDK } from '../../src';
 import fixtures from './__fixtures__/sendQuery';
 
 describe('sdk.sendQuery', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
-  let appletId = 12;
+  const appletId = 12;
 
   const RealDate = Date.now;
 
@@ -80,7 +80,7 @@ describe('sdk.sendQuery', () => {
         let totalTimeoutTriggers = 0;
 
         const maxTries = 3;
-        let retries: Record<number, number | undefined> = {};
+        const retries: Record<number, number | undefined> = {};
 
         const onData = async (data: Uint8Array) => {
           const packetIndex = testCase.packets.findIndex(
@@ -121,7 +121,7 @@ describe('sdk.sendQuery', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         expect.assertions(2);
-        const onData = jest.fn(async () => {});
+        const onData = jest.fn();
 
         connection.configureListeners(onData);
         sdk.configureAppletId(testCase.appletId);

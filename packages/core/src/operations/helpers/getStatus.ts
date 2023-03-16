@@ -3,13 +3,14 @@ import {
   DeviceCompatibilityErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
+import { assert } from '@cypherock/sdk-utils';
+
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
 import canRetry from './canRetry';
-import assert from '../../utils/assert';
 
 export const getStatus = async ({
   connection,

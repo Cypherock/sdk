@@ -4,8 +4,9 @@ import {
   DeviceState,
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { describe, expect, afterEach } from '@jest/globals';
-import { PacketVersionMap, sleep } from '../../../utils';
+import { describe, expect, afterEach, beforeEach, test } from '@jest/globals';
+import { sleep } from '@cypherock/sdk-utils';
+import { PacketVersionMap } from '../../../utils';
 import { writeCommand } from '../writeCommand';
 import { writeCommandHelperTestCases } from '../__fixtures__/writeCommand';
 

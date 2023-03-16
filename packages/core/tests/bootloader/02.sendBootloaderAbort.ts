@@ -4,12 +4,12 @@ import {
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { describe, test, expect, afterEach, beforeEach } from '@jest/globals';
-import SDK from '../../src';
+import { SDK } from '../../src';
 
 describe('sdk.sendBootloaderAbort', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
-  let appletId = 0;
+  const appletId = 0;
 
   beforeEach(async () => {
     connection = await MockDeviceConnection.create();

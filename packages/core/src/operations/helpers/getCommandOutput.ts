@@ -5,18 +5,14 @@ import {
   DeviceConnectionErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import {
-  intToUintByte,
-  logger,
-  PacketVersion,
-  PacketVersionMap,
-} from '../../utils';
+import { intToUintByte, assert } from '@cypherock/sdk-utils';
+
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import * as config from '../../config';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
 import canRetry from './canRetry';
-import assert from '../../utils/assert';
 
 export const getCommandOutput = async ({
   connection,

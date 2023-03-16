@@ -3,10 +3,11 @@ import {
   DeviceAppErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
-import { hexToUint8Array, PacketVersion } from '../../utils';
+import { assert, hexToUint8Array } from '@cypherock/sdk-utils';
+
+import { PacketVersion } from '../../utils';
 import { Status, Result } from '../../encoders/proto/generated/core';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
-import assert from '../../utils/assert';
 
 export const getResult = async ({
   connection,

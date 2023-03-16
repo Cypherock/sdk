@@ -1,5 +1,7 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
-import { hexToUint8Array, PacketVersion } from '../../utils';
+import { hexToUint8Array } from '@cypherock/sdk-utils';
+
+import { PacketVersion } from '../../utils';
 import { getStatus as getStatusHelper } from '../helpers';
 import { Status } from '../../encoders/proto/generated/core';
 

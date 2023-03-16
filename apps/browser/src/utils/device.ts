@@ -1,14 +1,10 @@
 import DeviceConnection from "@cypherock/sdk-hw-webusb";
-import SDK from "@cypherock/sdk-core";
+import { ManagerApp } from "@cypherock/sdk-app-manager";
 
 export default async function run() {
   const connection = await DeviceConnection.create();
 
-  const sdk = await SDK.create(connection, 1);
+  const managerApp = await ManagerApp.create(connection);
 
-  console.log({ supported: sdk.isSupported(), version: sdk.getVersion() });
-
-  const status = await sdk.getStatus();
-
-  console.log({ status });
+  console.log(managerApp);
 }

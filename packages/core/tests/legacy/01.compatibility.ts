@@ -6,13 +6,13 @@ import {
   MockDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
-import SDK from '../../src/sdk';
+import { SDK } from '../../src/sdk';
 import { PacketVersionMap } from '../../src/utils';
 
 describe('Legacy Device Operation: v1', () => {
   let connection: MockDeviceConnection;
   let sdk: SDK;
-  let appletId = 0;
+  const appletId = 0;
 
   beforeEach(async () => {
     connection = await MockDeviceConnection.create();
