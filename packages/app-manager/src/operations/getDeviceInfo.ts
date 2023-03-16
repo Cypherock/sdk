@@ -1,8 +1,11 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 import { Query, Result } from '../proto/generated/manager/core';
+import { IGetDeviceInfoResponse } from '../proto/generated/types';
 
-export const getDeviceInfo = async (sdk: ISDK) => {
+export const getDeviceInfo = async (
+  sdk: ISDK,
+): Promise<IGetDeviceInfoResponse> => {
   const sequenceNumber = sdk.getNewSequenceNumber();
   const query = Query.encode(
     Query.create({ getDeviceInfo: { dummy: true } }),
