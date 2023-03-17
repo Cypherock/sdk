@@ -4,22 +4,22 @@
  * @param Array<Array> edges : list of edges. each edge forms Array<ID,ID> e.g. [12 , 3]
  *
  * @returns Array : topological sorted list of IDs
- **/
+ * */
 
 function tsort(edges) {
-  var nodes = {}, // hash: stringified id of the node => { id: id, afters: lisf of ids }
-    sorted = [], // sorted list of IDs ( returned value )
-    visited = {}; // hash: id of already visited node => true
+  const nodes = {}; // hash: stringified id of the node => { id: id, afters: lisf of ids }
+  const sorted = []; // sorted list of IDs ( returned value )
+  const visited = {}; // hash: id of already visited node => true
 
-  var Node = function (id) {
+  const Node = function (id) {
     this.id = id;
     this.afters = [];
   };
 
   // 1. build data structures
-  edges.forEach(function (v) {
-    var from = v[0],
-      to = v[1];
+  edges.forEach(v => {
+    const from = v[0];
+    const to = v[1];
     if (!nodes[from]) nodes[from] = new Node(from);
     if (!nodes[to]) nodes[to] = new Node(to);
     nodes[from].afters.push(to);
@@ -27,8 +27,8 @@ function tsort(edges) {
 
   // 2. topological sort
   Object.keys(nodes).forEach(function visit(idstr, ancestors) {
-    var node = nodes[idstr],
-      id = node.id;
+    const node = nodes[idstr];
+    const { id } = node;
 
     // if already exists, do nothing
     if (visited[idstr]) return;
@@ -39,16 +39,14 @@ function tsort(edges) {
 
     visited[idstr] = true;
 
-    node.afters.forEach(function (afterID) {
+    node.afters.forEach(afterID => {
       if (ancestors.indexOf(afterID) >= 0)
         // if already in ancestors, a closed chain exists.
-        throw new Error('closed chain : ' + afterID + ' is in ' + id);
+        throw new Error(`closed chain : ${afterID} is in ${id}`);
 
       visit(
         afterID.toString(),
-        ancestors.map(function (v) {
-          return v;
-        }),
+        ancestors.map(v => v),
       ); // recursive call
     });
 

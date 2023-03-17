@@ -37,11 +37,11 @@
     "uuid": "^9.0.0"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --ext js,jsx,ts,tsx --quiet --fix --",
+    "*.{ts,tsx}": [
+      "eslint --ext ts,tsx --quiet --fix --",
       "prettier --write"
     ],
-    "*.{md,mdx,mjs,yml,yaml,css,json}": [
+    "*.{js,jsx,md,mdx,mjs,yml,yaml,css,json}": [
       "prettier --write"
     ]
   }

@@ -50,12 +50,12 @@ const parseInterfaces = async () => {
   const origionalInterfaceNames = interfaceNames.map(elem => elem.slice(1));
 
   let interfaceBlock = [];
-  let tSortEdges = [];
+  const tSortEdges = [];
 
   for (const interfaceName of interfaceNames) {
     const lines = globalInterfaceList[interfaceName];
     interfaceBlock.push(lines[0]);
-    let dependencies = [];
+    const dependencies = [];
 
     for (let i = 1; i < lines.length - 1; i += 1) {
       const line = lines[i];
@@ -93,6 +93,12 @@ const parseInterfaces = async () => {
     parsedInterfaces[interfaceName] = {};
     parsedInterfaces[interfaceName].data = interfaceBlock;
     parsedInterfaces[interfaceName].dependencies = dependencies;
+
+    if (interfaceBlock.length <= 3) {
+      interfaceBlock.unshift(
+        '// eslint-disable-next-line @typescript-eslint/no-empty-interface',
+      );
+    }
 
     interfaceBlock = [];
   }
