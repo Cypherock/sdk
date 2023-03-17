@@ -114,12 +114,14 @@ export class SDK implements ISDK {
   }
 
   // ************** v3 Packet Version with protobuf ****************
-  public async sendQuery(params: {
-    data: Uint8Array;
-    sequenceNumber: number;
-    maxTries?: number;
-    timeout?: number;
-  }): Promise<void> {
+  public async sendQuery(
+    data: Uint8Array,
+    options?: {
+      sequenceNumber?: number;
+      maxTries?: number;
+      timeout?: number;
+    },
+  ): Promise<void> {
     this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
@@ -136,20 +138,20 @@ export class SDK implements ISDK {
 
     return operations.sendQuery({
       connection: this.connection,
-      data: params.data,
+      data,
       appletId: this.appletId,
-      sequenceNumber: params.sequenceNumber,
+      sequenceNumber: options?.sequenceNumber ?? this.getNewSequenceNumber(),
       version: this.packetVersion,
-      maxTries: params.maxTries,
-      timeout: params.timeout,
+      maxTries: options?.maxTries,
+      timeout: options?.timeout,
     });
   }
 
-  public async getResult(
-    sequenceNumber: number,
-    maxTries?: number,
-    timeout?: number,
-  ) {
+  public async getResult(options?: {
+    sequenceNumber?: number;
+    maxTries?: number;
+    timeout?: number;
+  }) {
     this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
@@ -167,15 +169,15 @@ export class SDK implements ISDK {
     return operations.getResult({
       connection: this.connection,
       appletId: this.appletId,
-      sequenceNumber,
+      sequenceNumber: options?.sequenceNumber ?? this.getSequenceNumber(),
       version: this.packetVersion,
-      maxTries,
-      timeout,
+      maxTries: options?.maxTries,
+      timeout: options?.timeout,
     });
   }
 
-  public async waitForResult(params: {
-    sequenceNumber: operations.IWaitForCommandOutputParams['sequenceNumber'];
+  public async waitForResult(params?: {
+    sequenceNumber?: operations.IWaitForCommandOutputParams['sequenceNumber'];
     onStatus?: operations.IWaitForCommandOutputParams['onStatus'];
     options?: operations.IWaitForCommandOutputParams['options'];
   }) {
@@ -197,7 +199,9 @@ export class SDK implements ISDK {
       connection: this.connection,
       version: this.packetVersion,
       appletId: this.appletId,
-      ...params,
+      sequenceNumber: params?.sequenceNumber ?? this.getSequenceNumber(),
+      onStatus: params?.onStatus,
+      options: params?.options,
     });
   }
 
@@ -224,11 +228,11 @@ export class SDK implements ISDK {
     });
   }
 
-  public async sendAbort(
-    sequenceNumber: number,
-    maxTries?: number,
-    timeout?: number,
-  ) {
+  public async sendAbort(options?: {
+    sequenceNumber?: number;
+    maxTries?: number;
+    timeout?: number;
+  }) {
     this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
@@ -245,10 +249,10 @@ export class SDK implements ISDK {
 
     return operations.sendAbort({
       connection: this.connection,
-      sequenceNumber,
+      sequenceNumber: options?.sequenceNumber ?? this.getNewSequenceNumber(),
       version: this.packetVersion,
-      maxTries,
-      timeout,
+      maxTries: options?.maxTries,
+      timeout: options?.timeout,
     });
   }
 

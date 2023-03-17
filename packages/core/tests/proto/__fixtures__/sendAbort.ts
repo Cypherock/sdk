@@ -7,12 +7,6 @@ const protoSendAbortTestCases = {
   constantDate: new Date('2023-03-07T09:43:48.755Z'),
   invalidArgs: [
     {
-      sequenceNumber: null,
-    },
-    {
-      sequenceNumber: undefined,
-    },
-    {
       sequenceNumber: 123423,
     },
   ],

@@ -28,9 +28,8 @@ describe('managerApp.getDeviceInfo', () => {
   describe('should be able to get info', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        sdkMocks.sendQuery.mockImplementationOnce(async (params: any) => {
-          expect(params).toBeDefined();
-          expect(params.data).toEqual(testCase.query);
+        sdkMocks.sendQuery.mockImplementationOnce(async (data: any) => {
+          expect(data).toEqual(testCase.query);
           return undefined;
         });
 
@@ -48,9 +47,8 @@ describe('managerApp.getDeviceInfo', () => {
   describe('should throw error when device returns invalid data', () => {
     fixtures.error.forEach(testCase => {
       test(JSON.stringify(Array.from(testCase.result)), async () => {
-        sdkMocks.sendQuery.mockImplementationOnce(async (params: any) => {
-          expect(params).toBeDefined();
-          expect(params.data).toEqual(testCase.query);
+        sdkMocks.sendQuery.mockImplementationOnce(async (data: any) => {
+          expect(data).toEqual(testCase.query);
           return undefined;
         });
 

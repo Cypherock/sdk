@@ -62,31 +62,33 @@ export interface ISDK {
   destroy(): Promise<void>;
   isInBootloader(): boolean;
   getDeviceState(): DeviceState;
-  sendQuery(params: {
-    data: Uint8Array;
+  sendQuery(
+    data: Uint8Array,
+    options?: {
+      sequenceNumber: number;
+      maxTries?: number;
+      timeout?: number;
+    },
+  ): Promise<void>;
+  getResult(options?: {
     sequenceNumber: number;
     maxTries?: number;
     timeout?: number;
-  }): Promise<void>;
-  getResult(
-    sequenceNumber: number,
-    maxTries?: number,
-    timeout?: number,
-  ): Promise<{
+  }): Promise<{
     isStatus: boolean;
     result: Uint8Array | import('.').Status;
   }>;
-  waitForResult(params: {
-    sequenceNumber: operations.IWaitForCommandOutputParams['sequenceNumber'];
+  waitForResult(params?: {
+    sequenceNumber?: operations.IWaitForCommandOutputParams['sequenceNumber'];
     onStatus?: operations.IWaitForCommandOutputParams['onStatus'];
     options?: operations.IWaitForCommandOutputParams['options'];
   }): Promise<Uint8Array>;
   getStatus(maxTries?: number, timeout?: number): Promise<import('.').Status>;
-  sendAbort(
-    sequenceNumber: number,
-    maxTries?: number,
-    timeout?: number,
-  ): Promise<import('.').Status>;
+  sendAbort(options?: {
+    sequenceNumber?: number;
+    maxTries?: number;
+    timeout?: number;
+  }): Promise<import('.').Status>;
   sendBootloaderAbort(options?: {
     firstTimeout?: number;
     timeout?: number;

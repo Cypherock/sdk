@@ -7,18 +7,9 @@ import {
 } from '../utils';
 
 export const getWallets = async (sdk: ISDK): Promise<IGetWalletsResponse> => {
-  const sequenceNumber = sdk.getNewSequenceNumber();
+  await sdk.sendQuery(encodeQuery({ getWallets: {} }));
 
-  await sdk.sendQuery({
-    data: encodeQuery({ getWallets: {} }),
-    sequenceNumber,
-  });
-
-  const result = decodeResult(
-    await sdk.waitForResult({
-      sequenceNumber,
-    }),
-  );
+  const result = decodeResult(await sdk.waitForResult());
   assertOrThrowInvalidResult(result.getWallets);
 
   return result.getWallets;

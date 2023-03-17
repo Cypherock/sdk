@@ -59,11 +59,11 @@ describe('sdk.sendAbort', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.sendAbort(
-          testCase.sequenceNumber,
-          1,
-          config.defaultTimeout,
-        );
+        const status = await sdk.sendAbort({
+          sequenceNumber: testCase.sequenceNumber,
+          maxTries: 1,
+          timeout: config.defaultTimeout,
+        });
 
         expect(status).toEqual(testCase.status);
       });
@@ -91,11 +91,11 @@ describe('sdk.sendAbort', () => {
         };
 
         connection.configureListeners(onData);
-        const status = await sdk.sendAbort(
-          testCase.sequenceNumber,
+        const status = await sdk.sendAbort({
+          sequenceNumber: testCase.sequenceNumber,
           maxTries,
-          config.defaultTimeout,
-        );
+          timeout: config.defaultTimeout,
+        });
 
         expect(status).toEqual(testCase.status);
       });
@@ -112,7 +112,11 @@ describe('sdk.sendAbort', () => {
         await connection.destroy();
 
         await expect(
-          sdk.sendAbort(testCase.sequenceNumber, 1, config.defaultTimeout),
+          sdk.sendAbort({
+            sequenceNumber: testCase.sequenceNumber,
+            maxTries: 1,
+            timeout: config.defaultTimeout,
+          }),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
@@ -137,7 +141,11 @@ describe('sdk.sendAbort', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.sendAbort(testCase.sequenceNumber, 1, config.defaultTimeout),
+          sdk.sendAbort({
+            sequenceNumber: testCase.sequenceNumber,
+            maxTries: 1,
+            timeout: config.defaultTimeout,
+          }),
         ).rejects.toThrow(DeviceConnectionError);
       });
     });
@@ -155,7 +163,11 @@ describe('sdk.sendAbort', () => {
 
         connection.configureListeners(onData);
         await expect(
-          sdk.sendAbort(testCase.sequenceNumber, 1, config.defaultTimeout),
+          sdk.sendAbort({
+            sequenceNumber: testCase.sequenceNumber,
+            maxTries: 1,
+            timeout: config.defaultTimeout,
+          }),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
     });
@@ -167,10 +179,11 @@ describe('sdk.sendAbort', () => {
         JSON.stringify(testCase),
         async () => {
           await expect(
-            sdk.sendAbort(
-              testCase.sequenceNumber as any,
-              config.defaultTimeout,
-            ),
+            sdk.sendAbort({
+              sequenceNumber: testCase.sequenceNumber as any,
+              maxTries: 1,
+              timeout: config.defaultTimeout,
+            }),
           ).rejects.toBeInstanceOf(Error);
         },
         200,

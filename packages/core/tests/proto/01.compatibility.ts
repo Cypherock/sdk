@@ -99,13 +99,15 @@ describe('Device Proto Operation: v3', () => {
       );
     });
 
-    await sdk.sendQuery({
-      data: new Uint8Array([
+    await sdk.sendQuery(
+      new Uint8Array([
         98, 110, 1, 88, 234, 189, 103, 120, 176, 24, 231, 183, 92, 134, 213, 11,
       ]),
-      sequenceNumber: 16,
-      maxTries: 1,
-    });
+      {
+        sequenceNumber: 16,
+        maxTries: 1,
+      },
+    );
   });
 
   test('should be able to get result', async () => {
@@ -124,7 +126,7 @@ describe('Device Proto Operation: v3', () => {
         ]),
       );
     });
-    const result = await sdk.getResult(16);
+    const result = await sdk.getResult({ sequenceNumber: 16 });
 
     expect(result).toEqual({
       isStatus: false,
@@ -178,7 +180,7 @@ describe('Device Proto Operation: v3', () => {
         ]),
       );
     });
-    const result = await sdk.sendAbort(18);
+    const result = await sdk.sendAbort({ sequenceNumber: 18 });
 
     expect(result).toEqual({
       deviceIdleState: 3,

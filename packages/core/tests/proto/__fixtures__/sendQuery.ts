@@ -8,10 +8,6 @@ const protoSendQueryTestCases = {
       sequenceNumber: 1,
     },
     {
-      data: new Uint8Array([2]),
-      sequenceNumber: null,
-    },
-    {
       data: undefined,
       sequenceNumber: 1,
     },

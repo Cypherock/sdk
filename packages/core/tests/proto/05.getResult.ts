@@ -65,11 +65,11 @@ describe('sdk.getResult', () => {
         connection.configureListeners(onData);
         sdk.configureAppletId(testCase.appletId);
 
-        const output = await sdk.getResult(
-          testCase.sequenceNumber,
-          1,
-          config.defaultTimeout,
-        );
+        const output = await sdk.getResult({
+          sequenceNumber: testCase.sequenceNumber,
+          maxTries: 1,
+          timeout: config.defaultTimeout,
+        });
 
         expect(output).toEqual(testCase.output);
       });
@@ -111,11 +111,11 @@ describe('sdk.getResult', () => {
         connection.configureListeners(onData);
         sdk.configureAppletId(testCase.appletId);
 
-        const output = await sdk.getResult(
-          testCase.sequenceNumber,
+        const output = await sdk.getResult({
+          sequenceNumber: testCase.sequenceNumber,
           maxTries,
-          config.defaultTimeout,
-        );
+          timeout: config.defaultTimeout,
+        });
 
         expect(output).toEqual(testCase.output);
       });
@@ -133,7 +133,11 @@ describe('sdk.getResult', () => {
         sdk.configureAppletId(testCase.appletId);
 
         await expect(
-          sdk.getResult(testCase.sequenceNumber, 1, config.defaultTimeout),
+          sdk.getResult({
+            sequenceNumber: testCase.sequenceNumber,
+            maxTries: 1,
+            timeout: config.defaultTimeout,
+          }),
         ).rejects.toThrow(DeviceConnectionError);
         expect(onData.mock.calls).toHaveLength(0);
       });
@@ -165,7 +169,11 @@ describe('sdk.getResult', () => {
         sdk.configureAppletId(testCase.appletId);
 
         await expect(
-          sdk.getResult(testCase.sequenceNumber, 1, config.defaultTimeout),
+          sdk.getResult({
+            sequenceNumber: testCase.sequenceNumber,
+            maxTries: 1,
+            timeout: config.defaultTimeout,
+          }),
         ).rejects.toThrow(DeviceConnectionError);
       });
     });
@@ -189,7 +197,11 @@ describe('sdk.getResult', () => {
         sdk.configureAppletId(testCase.appletId);
 
         await expect(
-          sdk.getResult(testCase.sequenceNumber, 1, config.defaultTimeout),
+          sdk.getResult({
+            sequenceNumber: testCase.sequenceNumber,
+            maxTries: 1,
+            timeout: config.defaultTimeout,
+          }),
         ).rejects.toBeInstanceOf(testCase.errorInstance);
       });
     });
@@ -201,11 +213,11 @@ describe('sdk.getResult', () => {
         JSON.stringify(testCase),
         async () => {
           await expect(
-            sdk.getResult(
-              testCase.sequenceNumber as any,
-              1,
-              config.defaultTimeout,
-            ),
+            sdk.getResult({
+              sequenceNumber: testCase.sequenceNumber as any,
+              maxTries: 1,
+              timeout: config.defaultTimeout,
+            }),
           ).rejects.toBeInstanceOf(Error);
         },
         200,

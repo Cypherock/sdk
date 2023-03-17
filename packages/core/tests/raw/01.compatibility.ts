@@ -218,21 +218,19 @@ describe('Device Raw Operation: v3', () => {
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION
       ].message;
 
-    await expect(
-      sdk.sendQuery({ data: new Uint8Array([10]), sequenceNumber: 1 }),
-    ).rejects.toThrowError(invalidSDKOperationMessage);
-    await expect(sdk.getResult(1)).rejects.toThrowError(
+    await expect(sdk.sendQuery(new Uint8Array([10]))).rejects.toThrowError(
       invalidSDKOperationMessage,
     );
-    await expect(
-      sdk.waitForResult({
-        sequenceNumber: 1,
-      }),
-    ).rejects.toThrowError(invalidSDKOperationMessage);
+    await expect(sdk.getResult()).rejects.toThrowError(
+      invalidSDKOperationMessage,
+    );
+    await expect(sdk.waitForResult()).rejects.toThrowError(
+      invalidSDKOperationMessage,
+    );
     await expect(sdk.getStatus()).rejects.toThrowError(
       invalidSDKOperationMessage,
     );
-    await expect(sdk.sendAbort(1)).rejects.toThrowError(
+    await expect(sdk.sendAbort()).rejects.toThrowError(
       invalidSDKOperationMessage,
     );
   });

@@ -9,18 +9,9 @@ import {
 export const getDeviceInfo = async (
   sdk: ISDK,
 ): Promise<IGetDeviceInfoResponse> => {
-  const sequenceNumber = sdk.getNewSequenceNumber();
+  await sdk.sendQuery(encodeQuery({ getDeviceInfo: {} }));
 
-  await sdk.sendQuery({
-    data: encodeQuery({ getDeviceInfo: {} }),
-    sequenceNumber,
-  });
-
-  const result = decodeResult(
-    await sdk.waitForResult({
-      sequenceNumber,
-    }),
-  );
+  const result = decodeResult(await sdk.waitForResult());
   assertOrThrowInvalidResult(result.getDeviceInfo);
 
   return result.getDeviceInfo;

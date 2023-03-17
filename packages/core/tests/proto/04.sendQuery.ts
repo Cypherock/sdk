@@ -65,8 +65,7 @@ describe('sdk.sendQuery', () => {
         connection.configureListeners(onData);
         sdk.configureAppletId(testCase.appletId);
 
-        await sdk.sendQuery({
-          data: testCase.data,
+        await sdk.sendQuery(testCase.data, {
           sequenceNumber: testCase.sequenceNumber,
           maxTries: 1,
           timeout: config.defaultTimeout,
@@ -110,8 +109,7 @@ describe('sdk.sendQuery', () => {
         connection.configureListeners(onData);
         sdk.configureAppletId(testCase.appletId);
 
-        await sdk.sendQuery({
-          data: testCase.data,
+        await sdk.sendQuery(testCase.data, {
           sequenceNumber: testCase.sequenceNumber,
           maxTries,
           timeout: config.defaultTimeout,
@@ -132,8 +130,7 @@ describe('sdk.sendQuery', () => {
         await connection.destroy();
 
         await expect(
-          sdk.sendQuery({
-            data: testCase.data,
+          sdk.sendQuery(testCase.data, {
             sequenceNumber: testCase.sequenceNumber,
             maxTries: 1,
             timeout: config.defaultTimeout,
@@ -169,8 +166,7 @@ describe('sdk.sendQuery', () => {
         sdk.configureAppletId(testCase.appletId);
 
         await expect(
-          sdk.sendQuery({
-            data: testCase.data,
+          sdk.sendQuery(testCase.data, {
             sequenceNumber: testCase.sequenceNumber,
             maxTries: 1,
             timeout: config.defaultTimeout,
@@ -198,8 +194,7 @@ describe('sdk.sendQuery', () => {
         sdk.configureAppletId(testCase.appletId);
 
         await expect(
-          sdk.sendQuery({
-            data: testCase.data,
+          sdk.sendQuery(testCase.data, {
             sequenceNumber: testCase.sequenceNumber,
             maxTries: 1,
             timeout: config.defaultTimeout,
@@ -215,8 +210,7 @@ describe('sdk.sendQuery', () => {
         JSON.stringify(testCase),
         async () => {
           await expect(
-            sdk.sendQuery({
-              data: testCase.data as any,
+            sdk.sendQuery(testCase.data as any, {
               sequenceNumber: testCase.sequenceNumber as any,
               maxTries: 1,
               timeout: config.defaultTimeout,

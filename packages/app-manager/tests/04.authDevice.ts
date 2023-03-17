@@ -29,9 +29,8 @@ describe('managerApp.authDevice', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         testCase.queries.forEach(query => {
-          sdkMocks.sendQuery.mockImplementationOnce(async (params: any) => {
-            expect(params).toBeDefined();
-            expect(params.data).toEqual(query.data);
+          sdkMocks.sendQuery.mockImplementationOnce(async (data: any) => {
+            expect(data).toEqual(query.data);
             return undefined;
           });
         });
@@ -54,9 +53,8 @@ describe('managerApp.authDevice', () => {
     fixtures.error.forEach(testCase => {
       test(testCase.name, async () => {
         testCase.queries.forEach(query => {
-          sdkMocks.sendQuery.mockImplementationOnce(async (params: any) => {
-            expect(params).toBeDefined();
-            expect(params.data).toEqual(query.data);
+          sdkMocks.sendQuery.mockImplementationOnce(async (data: any) => {
+            expect(data).toEqual(query.data);
             return undefined;
           });
         });
