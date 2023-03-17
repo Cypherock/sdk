@@ -3,11 +3,9 @@ import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 import { Query, Result } from '../proto/generated/manager/core';
 import { IGetWalletsResponse } from '../proto/generated/types';
 
-export const getWalelts = async (sdk: ISDK): Promise<IGetWalletsResponse> => {
+export const getWallets = async (sdk: ISDK): Promise<IGetWalletsResponse> => {
   const sequenceNumber = sdk.getNewSequenceNumber();
-  const query = Query.encode(
-    Query.create({ getWallets: { dummy: true } }),
-  ).finish();
+  const query = Query.encode(Query.create({ getWallets: {} })).finish();
 
   await sdk.sendQuery({
     data: Uint8Array.from(query),

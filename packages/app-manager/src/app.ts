@@ -21,7 +21,7 @@ export class ManagerApp {
   }
 
   public async getWallets() {
-    return this.sdk.runOperation(() => operations.getWalelts(this.sdk));
+    return this.sdk.runOperation(() => operations.getWallets(this.sdk));
   }
 
   public async destroy() {

@@ -7,9 +7,7 @@ export const getDeviceInfo = async (
   sdk: ISDK,
 ): Promise<IGetDeviceInfoResponse> => {
   const sequenceNumber = sdk.getNewSequenceNumber();
-  const query = Query.encode(
-    Query.create({ getDeviceInfo: { dummy: true } }),
-  ).finish();
+  const query = Query.encode(Query.create({ getDeviceInfo: {} })).finish();
 
   await sdk.sendQuery({
     data: Uint8Array.from(query),

@@ -4,7 +4,7 @@ const fixtures = {
   valid: [
     {
       name: 'Info with 1 applet',
-      query: new Uint8Array([10, 2, 8, 1]),
+      query: new Uint8Array([10, 0]),
       result: new Uint8Array([
         10, 30, 10, 12, 123, 43, 26, 231, 42, 86, 91, 130, 41, 55, 186, 203, 18,
         2, 8, 1, 24, 1, 34, 8, 8, 12, 18, 4, 8, 1, 24, 26,
@@ -33,7 +33,7 @@ const fixtures = {
     },
     {
       name: 'Info with 2 applets',
-      query: new Uint8Array([10, 2, 8, 1]),
+      query: new Uint8Array([10, 0]),
       result: new Uint8Array([
         10, 34, 10, 3, 90, 221, 135, 18, 2, 8, 1, 24, 1, 34, 11, 8, 2, 18, 7, 8,
         93, 16, 214, 1, 24, 26, 34, 8, 8, 12, 18, 4, 8, 1, 24, 26,
@@ -68,7 +68,7 @@ const fixtures = {
     },
     {
       name: 'Only device serial',
-      query: new Uint8Array([10, 2, 8, 1]),
+      query: new Uint8Array([10, 0]),
       result: new Uint8Array([10, 4, 10, 2, 12, 124]),
       output: {
         deviceSerial: new Uint8Array([12, 124]),
@@ -79,7 +79,7 @@ const fixtures = {
     },
     {
       name: 'Partial data',
-      query: new Uint8Array([10, 2, 8, 1]),
+      query: new Uint8Array([10, 0]),
       result: new Uint8Array([10, 9, 10, 5, 234, 21, 53, 31, 64, 24, 1]),
       output: {
         deviceSerial: new Uint8Array([234, 21, 53, 31, 64]),
@@ -91,26 +91,26 @@ const fixtures = {
   ],
   error: [
     {
-      query: new Uint8Array([10, 2, 8, 1]),
+      query: new Uint8Array([10, 0]),
       result: new Uint8Array([
         2, 8, 1, 24, 1, 34, 8, 8, 12, 18, 4, 8, 1, 24, 26,
       ]),
       errorInstance: DeviceAppError,
     },
     {
-      query: new Uint8Array([10, 2, 8, 1]),
+      query: new Uint8Array([10, 0]),
       result: new Uint8Array([
         10, 34, 10, 3, 90, 221, 135, 18, 2, 8, 1, 24, 1, 34, 11, 8, 2, 18, 7, 8,
       ]),
       errorInstance: DeviceAppError,
     },
     {
-      query: new Uint8Array([10, 2, 8, 1]),
+      query: new Uint8Array([10, 0]),
       result: new Uint8Array([10]),
       errorInstance: DeviceAppError,
     },
     {
-      query: new Uint8Array([10, 2, 8, 1]),
+      query: new Uint8Array([10, 0]),
       result: new Uint8Array([]),
       errorInstance: DeviceAppError,
     },
