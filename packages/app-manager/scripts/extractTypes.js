@@ -64,8 +64,9 @@ const parseInterfaces = async () => {
 
       for (const innerInterfaceName of origionalInterfaceNames) {
         const nestedInterfaceMatch = line.match(
-          new RegExp(`(.*)(${innerInterfaceName})(.*)`),
+          new RegExp(`(.*) (${innerInterfaceName})(.*)`),
         );
+
         if (nestedInterfaceMatch) {
           isModified = true;
 
@@ -77,7 +78,7 @@ const parseInterfaces = async () => {
           tSortEdges.push([interfaceName, interfaceNames[interfaceIndex]]);
 
           interfaceBlock.push(
-            `${nestedInterfaceMatch[1]}${interfaceNames[interfaceIndex]}${nestedInterfaceMatch[3]}`,
+            `${nestedInterfaceMatch[1]} ${interfaceNames[interfaceIndex]}${nestedInterfaceMatch[3]}`,
           );
         }
       }

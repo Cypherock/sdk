@@ -11,7 +11,11 @@ module.exports = {
   testEnvironment: 'node',
   rootDir: '.',
   testPathIgnorePatterns: ['/node_modules/', '/__fixtures__/', '/dist/'],
-  testMatch: ['**/tests/**/*.[jt]s?(x)', '!**/__mocks__/**/*.[jt]s?(x)'],
+  testMatch: [
+    '**/tests/**/*.[jt]s?(x)',
+    '**/__tests__/**/*.[jt]s?(x)',
+    '!**/__mocks__/**/*.[jt]s?(x)',
+  ],
   coverageThreshold: {
     global: {
       statements: 100,

@@ -25,7 +25,7 @@ describe('managerApp.getWallets', () => {
     await managerApp.destroy();
   });
 
-  describe('should be able to get info', () => {
+  describe('should be able to get wallets', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         sdkMocks.sendQuery.mockImplementationOnce(async (params: any) => {

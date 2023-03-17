@@ -24,6 +24,10 @@ export class ManagerApp {
     return this.sdk.runOperation(() => operations.getWallets(this.sdk));
   }
 
+  public async authDevice() {
+    return this.sdk.runOperation(() => operations.authDevice(this.sdk));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }

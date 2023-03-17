@@ -1,33 +1,27 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
-import { Query, Result } from '../proto/generated/manager/core';
 import { IGetDeviceInfoResponse } from '../proto/generated/types';
+import {
+  assertOrThrowInvalidResult,
+  decodeResult,
+  encodeQuery,
+} from '../utils';
 
 export const getDeviceInfo = async (
   sdk: ISDK,
 ): Promise<IGetDeviceInfoResponse> => {
   const sequenceNumber = sdk.getNewSequenceNumber();
-  const query = Query.encode(Query.create({ getDeviceInfo: {} })).finish();
 
   await sdk.sendQuery({
-    data: Uint8Array.from(query),
+    data: encodeQuery({ getDeviceInfo: {} }),
     sequenceNumber,
   });
 
-  const data = await sdk.waitForResult({
-    sequenceNumber,
-  });
-
-  let result: Result;
-  try {
-    result = Result.decode(data);
-  } catch (error) {
-    throw new DeviceAppError(DeviceAppErrorType.INVALID_RESULT);
-  }
-
-  if (!result.getDeviceInfo) {
-    throw new DeviceAppError(DeviceAppErrorType.INVALID_RESULT);
-  }
+  const result = decodeResult(
+    await sdk.waitForResult({
+      sequenceNumber,
+    }),
+  );
+  assertOrThrowInvalidResult(result.getDeviceInfo);
 
   return result.getDeviceInfo;
 };
