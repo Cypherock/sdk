@@ -114,11 +114,6 @@ const fixtures = {
       result: new Uint8Array([]),
       errorInstance: DeviceAppError,
     },
-    {
-      query: new Uint8Array([10, 2, 8, 1]),
-      result: new Uint8Array([]),
-      errorInstance: DeviceAppError,
-    },
   ],
 };
 

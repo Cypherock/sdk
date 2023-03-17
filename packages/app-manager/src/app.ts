@@ -20,6 +20,10 @@ export class ManagerApp {
     return this.sdk.runOperation(() => operations.getDeviceInfo(this.sdk));
   }
 
+  public async getWallets() {
+    return this.sdk.runOperation(() => operations.getWalelts(this.sdk));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }
