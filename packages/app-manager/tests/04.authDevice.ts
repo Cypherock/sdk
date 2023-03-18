@@ -1,5 +1,12 @@
 import { MockDeviceConnection } from '@cypherock/sdk-interfaces';
-import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from '@jest/globals';
 
 import * as sdkMocks from './__mocks__/sdk';
 import { ManagerApp } from '../src/index';
@@ -29,22 +36,52 @@ describe('managerApp.authDevice', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         testCase.queries.forEach(query => {
-          sdkMocks.sendQuery.mockImplementationOnce(async (data: any) => {
+          sdkMocks.sendQuery.mockImplementationOnce(async data => {
             expect(data).toEqual(query.data);
             return undefined;
           });
         });
 
+        const onEvent = jest.fn();
+        onEvent.mockClear();
+
         testCase.results.forEach(result => {
-          sdkMocks.waitForResult.mockImplementationOnce(
-            async () => result.data,
-          );
+          sdkMocks.waitForResult.mockImplementationOnce(async params => {
+            if (params?.onStatus && result.statuses) {
+              let onEventCalls = 0;
+
+              for (const status of result.statuses) {
+                params.onStatus({ flowStatus: status.flowStatus } as any);
+
+                if (status.expectEventCalls !== undefined) {
+                  for (let i = 0; i < status.expectEventCalls.length; i += 1) {
+                    const mockIndex =
+                      onEvent.mock.calls.length -
+                      status.expectEventCalls.length +
+                      i;
+
+                    expect(onEvent.mock.calls[mockIndex]).toEqual([
+                      status.expectEventCalls[i],
+                    ]);
+                  }
+
+                  onEventCalls += status.expectEventCalls.length;
+                  expect(onEvent).toHaveBeenCalledTimes(onEventCalls);
+                } else {
+                  expect(onEvent).toHaveBeenCalledTimes(onEventCalls);
+                }
+              }
+            }
+
+            return result.data;
+          });
         });
 
-        const output = await managerApp.authDevice();
+        const output = await managerApp.authDevice(onEvent);
 
         expect(output).toEqual(testCase.output);
         expect(sdkMocks.runOperation).toHaveBeenCalledTimes(1);
+        expect(onEvent.mock.calls).toEqual(testCase.eventCalls);
       });
     });
   });
@@ -53,7 +90,7 @@ describe('managerApp.authDevice', () => {
     fixtures.error.forEach(testCase => {
       test(testCase.name, async () => {
         testCase.queries.forEach(query => {
-          sdkMocks.sendQuery.mockImplementationOnce(async (data: any) => {
+          sdkMocks.sendQuery.mockImplementationOnce(async data => {
             expect(data).toEqual(query.data);
             return undefined;
           });

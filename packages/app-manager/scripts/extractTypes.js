@@ -26,21 +26,34 @@ const countChars = (str, c) => {
 };
 
 let globalInterfaceList = {};
+let globalEnumList = {};
 
 const rememberInterface = interfaceList => {
   globalInterfaceList = { ...globalInterfaceList, ...interfaceList };
+};
+
+const rememberEnum = enumList => {
+  globalEnumList = { ...globalEnumList, ...enumList };
 };
 
 const saveInterfaces = async (parsedInterfaces, tSortEdges) => {
   const sortedKeys = tsort(tSortEdges).reverse();
 
   const interfaceFileData = [];
+  const enumFileData = [];
 
   for (const key of sortedKeys) {
     interfaceFileData.push(parsedInterfaces[key].data.join('\n'));
   }
 
-  await fs.writeFile(interfaceFilePath, interfaceFileData.join(''));
+  for (const key of Object.keys(globalEnumList)) {
+    enumFileData.push(globalEnumList[key].join('\n'));
+  }
+
+  const fileData =
+    enumFileData.join('\n\n') + '\n\n' + interfaceFileData.join('');
+
+  await fs.writeFile(interfaceFilePath, fileData);
 };
 
 const parseInterfaces = async () => {
@@ -107,9 +120,7 @@ const parseInterfaces = async () => {
   await saveInterfaces(parsedInterfaces, tSortEdges);
 };
 
-const extractTypesFromFile = async filePath => {
-  const fileData = (await fs.readFile(filePath)).toString().split('\n');
-
+const extractInterfacesFromFile = async fileData => {
   const interfaceList = {};
 
   let isInterfaceOpen = false;
@@ -145,6 +156,51 @@ const extractTypesFromFile = async filePath => {
   }
 
   rememberInterface(interfaceList);
+};
+
+const extractEnumsFromFile = async fileData => {
+  const enumList = {};
+
+  let isEnumOpen = false;
+  let enumName = '';
+  let enumBlock = [];
+  let bracesOpened = 0;
+
+  const enumStartRegex = /(export enum) (.*) {/;
+
+  for (const line of fileData) {
+    if (isEnumOpen) {
+      const noOfOpeningBraces = countChars(line, '{');
+      const noOfClosingBraces = countChars(line, '}');
+
+      bracesOpened = bracesOpened + noOfOpeningBraces - noOfClosingBraces;
+      enumBlock.push(line);
+
+      if (bracesOpened === 0) {
+        enumList[enumName] = enumBlock;
+        enumName = '';
+        enumBlock = [];
+        isEnumOpen = false;
+      }
+    } else {
+      const match = line.match(enumStartRegex);
+      if (match) {
+        isEnumOpen = true;
+        enumName = `${match[2]}`;
+        enumBlock.push(`${match[1]} ${enumName} {`);
+        bracesOpened = 1;
+      }
+    }
+  }
+
+  rememberEnum(enumList);
+};
+
+const extractTypesFromFile = async filePath => {
+  const fileData = (await fs.readFile(filePath)).toString().split('\n');
+
+  await extractInterfacesFromFile(fileData);
+  await extractEnumsFromFile(fileData);
 };
 
 const extractTypes = async rootPath => {

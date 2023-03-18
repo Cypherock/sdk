@@ -1,22 +1,27 @@
+import { ISDK } from '@cypherock/sdk-core';
 import { jest } from '@jest/globals';
 
 let sequenceNumber = 0;
 
-export const getStatus = jest.fn();
-export const sendAbort = jest.fn();
-export const getResult = jest.fn();
-export const sendQuery = jest.fn();
+export const getStatus = jest.fn<ISDK['getStatus']>();
+export const sendAbort = jest.fn<ISDK['sendAbort']>();
+export const getResult = jest.fn<ISDK['getResult']>();
+export const sendQuery = jest.fn<ISDK['sendQuery']>();
 
-export const waitForResult = jest.fn();
-export const getSequenceNumber = jest.fn(() => sequenceNumber);
-export const getNewSequenceNumber = jest.fn(() => {
-  sequenceNumber += 1;
-  return sequenceNumber;
-});
+export const waitForResult = jest.fn<ISDK['waitForResult']>();
+export const getSequenceNumber = jest.fn<ISDK['getSequenceNumber']>(
+  () => sequenceNumber,
+);
+export const getNewSequenceNumber = jest.fn<ISDK['getNewSequenceNumber']>(
+  () => {
+    sequenceNumber += 1;
+    return sequenceNumber;
+  },
+);
 
-export const runOperation = jest.fn((func: () => Promise<void>) => func());
+export const runOperation = jest.fn<ISDK['runOperation']>(func => func());
 
-export const destroy = jest.fn();
+export const destroy = jest.fn<ISDK['destroy']>();
 
 export const create = jest.fn(async () =>
   Promise.resolve({

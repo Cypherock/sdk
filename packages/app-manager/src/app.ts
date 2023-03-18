@@ -1,5 +1,6 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { SDK } from '@cypherock/sdk-core';
+
 import * as operations from './operations';
 
 export class ManagerApp {
@@ -24,8 +25,10 @@ export class ManagerApp {
     return this.sdk.runOperation(() => operations.getWallets(this.sdk));
   }
 
-  public async authDevice() {
-    return this.sdk.runOperation(() => operations.authDevice(this.sdk));
+  public async authDevice(onEvent?: operations.AuthDeviceEventHandler) {
+    return this.sdk.runOperation(() =>
+      operations.authDevice(this.sdk, onEvent),
+    );
   }
 
   public async destroy() {
