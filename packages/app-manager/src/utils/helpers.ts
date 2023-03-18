@@ -30,6 +30,9 @@ export function encodeQuery<I extends Exact<DeepPartial<Query>, I>>(query: I) {
   return Uint8Array.from(Query.encode(Query.create(query)).finish());
 }
 
+export type ForceStatusUpdate = (flowStatus: number) => void;
+export type OnStatus = (status: { flowStatus: number }) => void;
+
 export function createStatusListener(
   enums: object,
   onEvent?: (event: number) => void,
@@ -43,7 +46,7 @@ export function createStatusListener(
     .filter(e => e >= 0)
     .sort();
 
-  const onStatus = (status: { flowStatus: number }) => {
+  const onStatus: OnStatus = (status: { flowStatus: number }) => {
     for (const eventIndex of statusList) {
       if (status.flowStatus >= eventIndex && !alreadySent[eventIndex]) {
         alreadySent[eventIndex] = true;
@@ -54,7 +57,7 @@ export function createStatusListener(
     }
   };
 
-  const forceStatusUpdate = (flowStatus: number) => {
+  const forceStatusUpdate: ForceStatusUpdate = (flowStatus: number) => {
     onStatus({ flowStatus });
   };
 

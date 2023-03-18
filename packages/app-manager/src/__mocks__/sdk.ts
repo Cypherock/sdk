@@ -1,4 +1,5 @@
 import { ISDK } from '@cypherock/sdk-core';
+import { DeviceState } from '@cypherock/sdk-interfaces';
 import { jest } from '@jest/globals';
 
 let sequenceNumber = 0;
@@ -22,6 +23,9 @@ export const getNewSequenceNumber = jest.fn<ISDK['getNewSequenceNumber']>(
 export const runOperation = jest.fn<ISDK['runOperation']>(func => func());
 
 export const destroy = jest.fn<ISDK['destroy']>();
+export const getDeviceState = jest.fn<ISDK['getDeviceState']>(
+  () => DeviceState.MAIN,
+);
 
 export const create = jest.fn(async () =>
   Promise.resolve({
@@ -34,6 +38,7 @@ export const create = jest.fn(async () =>
     getNewSequenceNumber,
     runOperation,
     destroy,
+    getDeviceState,
   }),
 );
 

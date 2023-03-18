@@ -1,9 +1,9 @@
 import { MockDeviceConnection } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
-import * as sdkMocks from './__mocks__/sdk';
+import * as sdkMocks from '../src/__mocks__/sdk';
 import { ManagerApp } from '../src/index';
-import fixtures from './__fixtures__/getDeviceInfo';
+import fixtures from './__fixtures__/02.getDeviceInfo';
 
 describe('managerApp.getDeviceInfo', () => {
   let connection: MockDeviceConnection;
