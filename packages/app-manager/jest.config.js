@@ -6,7 +6,7 @@ module.exports = {
     '!src/**/__fixtures__/*',
     '!src/proto/generated/**/*',
   ],
-  testTimeout: 10000,
+  testTimeout: 2000,
   preset: 'ts-jest',
   testEnvironment: 'node',
   rootDir: '.',
@@ -15,6 +15,7 @@ module.exports = {
     '**/tests/**/*.[jt]s?(x)',
     '**/__tests__/**/*.[jt]s?(x)',
     '!**/__mocks__/**/*.[jt]s?(x)',
+    '!**/__helpers__/**/*.[jt]s?(x)',
   ],
   coverageThreshold: {
     global: {

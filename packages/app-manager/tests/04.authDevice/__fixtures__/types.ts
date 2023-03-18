@@ -1,3 +1,5 @@
+import { IGetDeviceInfoResponse } from '../../../src';
+
 export interface IAuthDeviceTestCase {
   queries: {
     name: string;
@@ -12,14 +14,9 @@ export interface IAuthDeviceTestCase {
     challenge?: Uint8Array;
     challengeVerified?: boolean;
     eventCalls?: number[][];
-    deviceInfo: {
-      firmwareVersion: {
-        major: number;
-        minor: number;
-        patch: number;
-      };
-    };
+    deviceInfo: Partial<IGetDeviceInfoResponse>;
   };
+  errorInstance?: any;
   [key: string]: any;
 }
 

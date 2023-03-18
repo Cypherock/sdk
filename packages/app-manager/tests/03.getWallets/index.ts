@@ -1,23 +1,19 @@
 import { MockDeviceConnection } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
-import * as sdkMocks from '../src/__mocks__/sdk';
-import { ManagerApp } from '../src/index';
-import fixtures from './__fixtures__/03.getWallets';
+import fixtures from './__fixtures__';
+import { clearMocks, expectMockCalls, setupMocks } from './__helpers__';
+
+import { ManagerApp } from '../../src/index';
 
 describe('managerApp.getWallets', () => {
   let connection: MockDeviceConnection;
   let managerApp: ManagerApp;
 
   beforeEach(async () => {
+    clearMocks();
+
     connection = await MockDeviceConnection.create();
-    sdkMocks.create.mockClear();
-
-    sdkMocks.sendQuery.mockReset();
-    sdkMocks.waitForResult.mockReset();
-
-    sdkMocks.runOperation.mockClear();
-
     managerApp = await ManagerApp.create(connection);
   });
 
@@ -28,18 +24,12 @@ describe('managerApp.getWallets', () => {
   describe('should be able to get wallets', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        sdkMocks.sendQuery.mockImplementationOnce(async (data: any) => {
-          expect(data).toEqual(testCase.query);
-          return undefined;
-        });
-
-        sdkMocks.waitForResult.mockImplementationOnce(
-          async () => testCase.result,
-        );
+        setupMocks(testCase);
 
         const output = await managerApp.getWallets();
+
         expect(output).toEqual(testCase.output);
-        expect(sdkMocks.runOperation).toHaveBeenCalledTimes(1);
+        expectMockCalls(testCase);
       });
     });
   });
@@ -47,18 +37,12 @@ describe('managerApp.getWallets', () => {
   describe('should throw error when device returns invalid data', () => {
     fixtures.error.forEach(testCase => {
       test(JSON.stringify(Array.from(testCase.result)), async () => {
-        sdkMocks.sendQuery.mockImplementationOnce(async (data: any) => {
-          expect(data).toEqual(testCase.query);
-          return undefined;
-        });
-
-        sdkMocks.waitForResult.mockImplementationOnce(
-          async () => testCase.result,
-        );
+        setupMocks(testCase);
 
         await expect(managerApp.getWallets()).rejects.toThrow(
           testCase.errorInstance,
         );
+        expectMockCalls(testCase);
       });
     });
   });
