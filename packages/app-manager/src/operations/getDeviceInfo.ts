@@ -1,17 +1,13 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { IGetDeviceInfoResponse } from '../proto/generated/types';
-import {
-  assertOrThrowInvalidResult,
-  decodeResult,
-  encodeQuery,
-} from '../utils';
+import { assertOrThrowInvalidResult, sendQuery, waitForResult } from '../utils';
 
 export const getDeviceInfo = async (
   sdk: ISDK,
 ): Promise<IGetDeviceInfoResponse> => {
-  await sdk.sendQuery(encodeQuery({ getDeviceInfo: {} }));
+  await sendQuery(sdk, { getDeviceInfo: {} });
 
-  const result = decodeResult(await sdk.waitForResult());
+  const result = await waitForResult(sdk);
   assertOrThrowInvalidResult(result.getDeviceInfo);
 
   return result.getDeviceInfo;

@@ -6,10 +6,10 @@ import { deviceAuthService } from '../services';
 import {
   assertOrThrowInvalidResult,
   createStatusListener,
-  decodeResult,
-  encodeQuery,
   ForceStatusUpdate,
   OnStatus,
+  sendQuery,
+  waitForResult,
 } from '../utils';
 import { getDeviceInfo } from './getDeviceInfo';
 
@@ -23,8 +23,10 @@ const verifySerialSignature = async (params: {
   forceStatusUpdate: ForceStatusUpdate;
 }) => {
   const { sdk, onStatus, forceStatusUpdate } = params;
-  await sdk.sendQuery(encodeQuery({ authDevice: { initiate: {} } }));
-  const result = decodeResult(await sdk.waitForResult({ onStatus }));
+
+  await sendQuery(sdk, { authDevice: { initiate: {} } });
+
+  const result = await waitForResult(sdk, onStatus);
   assertOrThrowInvalidResult(result.authDevice?.serialSignature);
 
   forceStatusUpdate(AuthDeviceStatus.AUTH_DEVICE_STATUS_USER_CONFIRMED);
@@ -51,11 +53,11 @@ const verifyChallengeSignature = async (params: {
 }) => {
   const { sdk, onStatus, challenge, serial, firmwareVersion } = params;
 
-  await sdk.sendQuery(
-    encodeQuery({ authDevice: { challenge: { challenge } } }),
-  );
-  const result = decodeResult(await sdk.waitForResult({ onStatus }));
+  await sendQuery(sdk, { authDevice: { challenge: { challenge } } });
+
+  const result = await waitForResult(sdk, onStatus);
   assertOrThrowInvalidResult(result.authDevice?.challengeSignature);
+
   const isVerified = await deviceAuthService.verifyChallengeSignature({
     ...result.authDevice.challengeSignature,
     challenge,
@@ -67,10 +69,6 @@ const verifyChallengeSignature = async (params: {
   if (!isVerified) {
     throw deviceNotVerifiedError;
   }
-
-  await sdk.sendQuery(
-    encodeQuery({ authDevice: { result: { verified: true } } }),
-  );
 };
 
 export const authDevice = async (
@@ -103,12 +101,12 @@ export const authDevice = async (
       firmwareVersion,
     });
 
+    await sendQuery(sdk, { authDevice: { result: { verified: true } } });
+
     return true;
   } catch (error) {
     if (error === deviceNotVerifiedError) {
-      await sdk.sendQuery(
-        encodeQuery({ authDevice: { result: { verified: false } } }),
-      );
+      await sendQuery(sdk, { authDevice: { result: { verified: false } } });
       return false;
     }
 

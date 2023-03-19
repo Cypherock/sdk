@@ -1,3 +1,4 @@
+import { ISDK, Status } from '@cypherock/sdk-core';
 import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 import { assert } from '@cypherock/sdk-utils';
 
@@ -28,6 +29,20 @@ export function assertOrThrowInvalidResult<T>(
 
 export function encodeQuery<I extends Exact<DeepPartial<Query>, I>>(query: I) {
   return Uint8Array.from(Query.encode(Query.create(query)).finish());
+}
+
+export async function sendQuery<I extends Exact<DeepPartial<Query>, I>>(
+  sdk: ISDK,
+  query: I,
+) {
+  return sdk.sendQuery(encodeQuery(query));
+}
+
+export async function waitForResult(
+  sdk: ISDK,
+  onStatus?: (status: Status) => void,
+) {
+  return decodeResult(await sdk.waitForResult({ onStatus }));
 }
 
 export type ForceStatusUpdate = (flowStatus: number) => void;
