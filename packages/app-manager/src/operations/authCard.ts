@@ -1,7 +1,6 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { DeviceState } from '@cypherock/sdk-interfaces';
-import { AuthDeviceStatus } from '../proto/generated/types';
-import { deviceAuthService } from '../services';
+import { AuthCardStatus } from '../proto/generated/types';
+import { cardAuthService } from '../services';
 
 import {
   assertOrThrowInvalidResult,
@@ -10,14 +9,13 @@ import {
   OnStatus,
   OperationHelper,
 } from '../utils';
-import { getDeviceInfo } from './getDeviceInfo';
 
-export type AuthDeviceEventHandler = (event: AuthDeviceStatus) => void;
+export type AuthCardEventHandler = (event: AuthCardStatus) => void;
 
-const deviceNotVerifiedError = new Error('Device not verified');
+const cardNotVerifiedError = new Error('Card not verified');
 
 const verifySerialSignature = async (params: {
-  helper: OperationHelper<'authDevice', 'authDevice'>;
+  helper: OperationHelper<'authCard', 'authCard'>;
   onStatus: OnStatus;
   forceStatusUpdate: ForceStatusUpdate;
 }) => {
@@ -28,62 +26,54 @@ const verifySerialSignature = async (params: {
   const result = await helper.waitForResult(onStatus);
   assertOrThrowInvalidResult(result.serialSignature);
 
-  forceStatusUpdate(AuthDeviceStatus.AUTH_DEVICE_STATUS_USER_CONFIRMED);
+  forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_USER_CONFIRMED);
 
-  const challenge = await deviceAuthService.verifyDeviceSerialSignature({
+  const challenge = await cardAuthService.verifyCardSerialSignature({
     ...result.serialSignature,
   });
   const { serial } = result.serialSignature;
 
   if (!challenge) {
-    throw deviceNotVerifiedError;
+    throw cardNotVerifiedError;
   }
 
   return { serial, challenge };
 };
 
 const verifyChallengeSignature = async (params: {
-  helper: OperationHelper<'authDevice', 'authDevice'>;
+  helper: OperationHelper<'authCard', 'authCard'>;
   onStatus: OnStatus;
   forceStatusUpdate: ForceStatusUpdate;
   challenge: Uint8Array;
   serial: Uint8Array;
-  firmwareVersion: string;
 }) => {
-  const { helper, onStatus, challenge, serial, firmwareVersion } = params;
+  const { helper, onStatus, challenge, serial } = params;
 
   await helper.sendQuery({ challenge: { challenge } });
 
   const result = await helper.waitForResult(onStatus);
   assertOrThrowInvalidResult(result.challengeSignature);
 
-  const isVerified = await deviceAuthService.verifyDeviceChallengeSignature({
+  const isVerified = await cardAuthService.verifyCardChallengeSignature({
     ...result.challengeSignature,
     challenge,
     serial,
-    isTestApp: helper.sdk.getDeviceState() === DeviceState.INITIAL,
-    firmwareVersion,
   });
 
   if (!isVerified) {
-    throw deviceNotVerifiedError;
+    throw cardNotVerifiedError;
   }
 };
 
-export const authDevice = async (
+export const authCard = async (
   sdk: ISDK,
-  onEvent?: AuthDeviceEventHandler,
+  onEvent?: AuthCardEventHandler,
 ): Promise<boolean> => {
-  const helper = new OperationHelper(sdk, 'authDevice', 'authDevice');
+  const helper = new OperationHelper(sdk, 'authCard', 'authCard');
 
   try {
-    const info = await getDeviceInfo(sdk);
-    assertOrThrowInvalidResult(info.firmwareVersion);
-
-    const firmwareVersion = `${info.firmwareVersion.major}.${info.firmwareVersion.minor}.${info.firmwareVersion.patch}`;
-
     const { onStatus, forceStatusUpdate } = createStatusListener(
-      AuthDeviceStatus,
+      AuthCardStatus,
       onEvent,
     );
 
@@ -99,14 +89,13 @@ export const authDevice = async (
       forceStatusUpdate,
       serial,
       challenge,
-      firmwareVersion,
     });
 
     await helper.sendQuery({ result: { verified: true } });
 
     return true;
   } catch (error) {
-    if (error === deviceNotVerifiedError) {
+    if (error === cardNotVerifiedError) {
       await helper.sendQuery({ result: { verified: false } });
       return false;
     }

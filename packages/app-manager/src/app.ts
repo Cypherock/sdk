@@ -31,6 +31,10 @@ export class ManagerApp {
     );
   }
 
+  public async authCard(onEvent?: operations.AuthCardEventHandler) {
+    return this.sdk.runOperation(() => operations.authCard(this.sdk, onEvent));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }

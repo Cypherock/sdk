@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, test } from '@jest/globals';
-import fixtures from '../__fixtures__/deviceAuth';
+import fixtures from '../__fixtures__/authVerification';
 import * as httpMocks from '../../__mocks__/http';
 
-import { deviceAuthService } from '..';
+import {
+  verifySerialSignature,
+  verifyChallengeSignature,
+} from '../authVerification';
 
 describe('deviceAuth Service', () => {
   beforeEach(async () => {
@@ -17,9 +20,7 @@ describe('deviceAuth Service', () => {
             httpMocks.post.mockReturnValueOnce(Promise.resolve(result)),
           );
 
-          const challenge = await deviceAuthService.verifySerialSignature(
-            testCase.params,
-          );
+          const challenge = await verifySerialSignature(testCase.params);
           expect(challenge).toEqual(testCase.result);
           expect(httpMocks.post.mock.calls).toEqual(
             testCase.httpPostMocks.calls,
@@ -37,9 +38,7 @@ describe('deviceAuth Service', () => {
             httpMocks.post.mockReturnValueOnce(Promise.resolve(result)),
           );
 
-          const challenge = await deviceAuthService.verifyChallengeSignature(
-            testCase.params,
-          );
+          const challenge = await verifyChallengeSignature(testCase.params);
           expect(challenge).toEqual(testCase.result);
           expect(httpMocks.post.mock.calls).toEqual(
             testCase.httpPostMocks.calls,

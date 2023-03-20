@@ -2,13 +2,12 @@ import { expect, jest } from '@jest/globals';
 
 import * as sdkMocks from '../../../src/__mocks__/sdk';
 import * as verificationServiceMocks from '../../../src/__mocks__/authVerificationService';
-import { getDeviceInfo as getDeviceInfoMock } from '../../../src/__mocks__/getDeviceInfo';
 
-import { IAuthDeviceTestCase } from '../__fixtures__';
+import { IAuthCardTestCase } from '../__fixtures__';
 
 const onEvent = jest.fn();
 
-export function setupMocks(testCase: IAuthDeviceTestCase) {
+export function setupMocks(testCase: IAuthCardTestCase) {
   testCase.queries.forEach(() => {
     sdkMocks.sendQuery.mockReturnValueOnce(Promise.resolve(undefined));
   });
@@ -47,13 +46,14 @@ export function setupMocks(testCase: IAuthDeviceTestCase) {
     });
   });
 
-  verificationServiceMocks.verifySerialSignature.mockReturnValueOnce(
-    testCase.mocks.challenge,
-  );
-  verificationServiceMocks.verifyChallengeSignature.mockReturnValueOnce(
-    testCase.mocks.challengeVerified,
-  );
-  getDeviceInfoMock.mockReturnValueOnce(testCase.mocks.deviceInfo);
+  if (testCase.mocks) {
+    verificationServiceMocks.verifySerialSignature.mockReturnValueOnce(
+      testCase.mocks.challenge,
+    );
+    verificationServiceMocks.verifyChallengeSignature.mockReturnValueOnce(
+      testCase.mocks.challengeVerified,
+    );
+  }
 
   return onEvent;
 }
@@ -70,16 +70,19 @@ export function clearMocks() {
 
   verificationServiceMocks.verifySerialSignature.mockReset();
   verificationServiceMocks.verifyChallengeSignature.mockReset();
-
-  getDeviceInfoMock.mockReset();
 }
 
-export function expectMockCalls(testCase: IAuthDeviceTestCase) {
+export function expectMockCalls(testCase: IAuthCardTestCase) {
   expect(sdkMocks.runOperation).toHaveBeenCalledTimes(1);
   expect(sdkMocks.sendQuery.mock.calls.map(elem => elem[0])).toEqual(
     testCase.queries.map(elem => elem.data),
   );
-  expect(onEvent.mock.calls).toEqual(testCase.mocks.eventCalls);
+
+  if (!testCase.mocks) return;
+
+  if (testCase.mocks.eventCalls) {
+    expect(onEvent.mock.calls).toEqual(testCase.mocks.eventCalls);
+  }
 
   if (testCase.mocks.verifyChallengeSignatureCalls) {
     expect(

@@ -89,6 +89,7 @@ importers:
       '@types/jest': ^29.4.0
       '@types/node': 18.11.18
       axios: ^1.3.4
+      crypto-js: ^4.1.1
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
       jest: ^29.4.1
@@ -106,6 +107,7 @@ importers:
       '@cypherock/sdk-interfaces': link:../interfaces
       '@cypherock/sdk-utils': link:../util
       axios: 1.3.4
+      crypto-js: 4.1.1
       protobufjs: 7.2.2
       uuid: 9.0.0
     devDependencies:
@@ -2723,6 +2725,10 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  /crypto-js/4.1.1:
+    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+    dev: false
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}

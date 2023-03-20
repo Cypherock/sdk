@@ -1,6 +1,4 @@
-import { IGetDeviceInfoResponse } from '../../../src';
-
-export interface IAuthDeviceTestCase {
+export interface IAuthCardTestCase {
   queries: {
     name: string;
     data: Uint8Array;
@@ -10,13 +8,12 @@ export interface IAuthDeviceTestCase {
     data: Uint8Array;
     statuses?: { flowStatus: number; expectEventCalls?: number[] }[];
   }[];
-  mocks: {
+  mocks?: {
     challenge?: Uint8Array;
     challengeVerified?: boolean;
-    eventCalls?: number[][];
     verifySerialSignatureCalls?: any[][];
     verifyChallengeSignatureCalls?: any[][];
-    deviceInfo: Partial<IGetDeviceInfoResponse>;
+    eventCalls?: number[][];
   };
   errorInstance?: any;
   errorMessage?: any;
@@ -24,7 +21,7 @@ export interface IAuthDeviceTestCase {
 }
 
 export interface IFixtures {
-  valid: IAuthDeviceTestCase[];
-  invalidData: IAuthDeviceTestCase[];
-  error: IAuthDeviceTestCase[];
+  valid: IAuthCardTestCase[];
+  invalidData: IAuthCardTestCase[];
+  error: IAuthCardTestCase[];
 }
