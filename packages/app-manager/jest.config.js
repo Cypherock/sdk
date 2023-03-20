@@ -6,7 +6,7 @@ module.exports = {
     '!src/**/__fixtures__/*',
     '!src/proto/generated/**/*',
   ],
-  testTimeout: 2000,
+  testTimeout: 500,
   preset: 'ts-jest',
   testEnvironment: 'node',
   rootDir: '.',
@@ -16,6 +16,7 @@ module.exports = {
     '**/__tests__/**/*.[jt]s?(x)',
     '!**/__mocks__/**/*.[jt]s?(x)',
     '!**/__helpers__/**/*.[jt]s?(x)',
+    '!**/.stryker-tmp/**/*.[jt]s?(x)',
   ],
   coverageThreshold: {
     global: {
@@ -25,4 +26,5 @@ module.exports = {
       functions: 100,
     },
   },
+  modulePathIgnorePatterns: ['<rootDir>/.stryker-tmp'],
 };

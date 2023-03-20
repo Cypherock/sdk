@@ -1,2 +1,6 @@
 .turbo
 dist
+
+# stryker temp files
+.stryker-tmp
+reports
