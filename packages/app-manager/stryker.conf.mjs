@@ -17,7 +17,7 @@ const config = {
   tsconfigFile: 'tsconfig.json',
   jest: {
     projectType: 'custom',
-    configFile: './jest.config.js',
+    configFile: './jest.stryker.config.js',
   },
 };
 

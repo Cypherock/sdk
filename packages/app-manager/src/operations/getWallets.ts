@@ -1,12 +1,10 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { IGetWalletsResponse } from '../proto/generated/types';
-import { assertOrThrowInvalidResult, sendQuery, waitForResult } from '../utils';
+import { OperationHelper } from '../utils';
 
 export const getWallets = async (sdk: ISDK): Promise<IGetWalletsResponse> => {
-  await sendQuery(sdk, { getWallets: {} });
+  const helper = new OperationHelper(sdk, 'getWallets', 'getWallets');
 
-  const result = await waitForResult(sdk);
-  assertOrThrowInvalidResult(result.getWallets);
-
-  return result.getWallets;
+  await helper.sendQuery({});
+  return helper.waitForResult();
 };

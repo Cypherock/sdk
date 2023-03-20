@@ -17,10 +17,12 @@ export interface IAuthDeviceTestCase {
     deviceInfo: Partial<IGetDeviceInfoResponse>;
   };
   errorInstance?: any;
+  errorMessage?: any;
   [key: string]: any;
 }
 
 export interface IFixtures {
   valid: IAuthDeviceTestCase[];
+  invalidData: IAuthDeviceTestCase[];
   error: IAuthDeviceTestCase[];
 }

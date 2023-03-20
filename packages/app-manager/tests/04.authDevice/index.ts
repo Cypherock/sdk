@@ -36,13 +36,30 @@ describe('managerApp.authDevice', () => {
   });
 
   describe('should throw error when device returns invalid data', () => {
-    fixtures.error.forEach(testCase => {
+    fixtures.invalidData.forEach(testCase => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
         await expect(managerApp.authDevice()).rejects.toThrow(
           testCase.errorInstance,
         );
+      });
+    });
+  });
+
+  describe('should throw error when device returns error', () => {
+    fixtures.error.forEach(testCase => {
+      test(testCase.name, async () => {
+        setupMocks(testCase);
+
+        const authDevicePromise = managerApp.authDevice();
+
+        await expect(authDevicePromise).rejects.toThrow(testCase.errorInstance);
+        if (testCase.errorMessage) {
+          await expect(authDevicePromise).rejects.toThrowError(
+            testCase.errorMessage,
+          );
+        }
       });
     });
   });

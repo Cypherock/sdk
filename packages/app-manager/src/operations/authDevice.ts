@@ -8,8 +8,7 @@ import {
   createStatusListener,
   ForceStatusUpdate,
   OnStatus,
-  sendQuery,
-  waitForResult,
+  OperationHelper,
 } from '../utils';
 import { getDeviceInfo } from './getDeviceInfo';
 
@@ -18,23 +17,23 @@ export type AuthDeviceEventHandler = (event: AuthDeviceStatus) => void;
 const deviceNotVerifiedError = new Error('Device not verified');
 
 const verifySerialSignature = async (params: {
-  sdk: ISDK;
+  helper: OperationHelper<'authDevice', 'authDevice'>;
   onStatus: OnStatus;
   forceStatusUpdate: ForceStatusUpdate;
 }) => {
-  const { sdk, onStatus, forceStatusUpdate } = params;
+  const { helper, onStatus, forceStatusUpdate } = params;
 
-  await sendQuery(sdk, { authDevice: { initiate: {} } });
+  await helper.sendQuery({ initiate: {} });
 
-  const result = await waitForResult(sdk, onStatus);
-  assertOrThrowInvalidResult(result.authDevice?.serialSignature);
+  const result = await helper.waitForResult(onStatus);
+  assertOrThrowInvalidResult(result.serialSignature);
 
   forceStatusUpdate(AuthDeviceStatus.AUTH_DEVICE_STATUS_USER_CONFIRMED);
 
   const challenge = await deviceAuthService.verifySerialSignature({
-    ...result.authDevice.serialSignature,
+    ...result.serialSignature,
   });
-  const { serial } = result.authDevice.serialSignature;
+  const { serial } = result.serialSignature;
 
   if (!challenge) {
     throw deviceNotVerifiedError;
@@ -44,25 +43,25 @@ const verifySerialSignature = async (params: {
 };
 
 const verifyChallengeSignature = async (params: {
-  sdk: ISDK;
+  helper: OperationHelper<'authDevice', 'authDevice'>;
   onStatus: OnStatus;
   forceStatusUpdate: ForceStatusUpdate;
   challenge: Uint8Array;
   serial: Uint8Array;
   firmwareVersion: string;
 }) => {
-  const { sdk, onStatus, challenge, serial, firmwareVersion } = params;
+  const { helper, onStatus, challenge, serial, firmwareVersion } = params;
 
-  await sendQuery(sdk, { authDevice: { challenge: { challenge } } });
+  await helper.sendQuery({ challenge: { challenge } });
 
-  const result = await waitForResult(sdk, onStatus);
-  assertOrThrowInvalidResult(result.authDevice?.challengeSignature);
+  const result = await helper.waitForResult(onStatus);
+  assertOrThrowInvalidResult(result.challengeSignature);
 
   const isVerified = await deviceAuthService.verifyChallengeSignature({
-    ...result.authDevice.challengeSignature,
+    ...result.challengeSignature,
     challenge,
     serial,
-    isTestApp: sdk.getDeviceState() === DeviceState.INITIAL,
+    isTestApp: helper.sdk.getDeviceState() === DeviceState.INITIAL,
     firmwareVersion,
   });
 
@@ -75,6 +74,8 @@ export const authDevice = async (
   sdk: ISDK,
   onEvent?: AuthDeviceEventHandler,
 ): Promise<boolean> => {
+  const helper = new OperationHelper(sdk, 'authDevice', 'authDevice');
+
   try {
     const info = await getDeviceInfo(sdk);
     assertOrThrowInvalidResult(info.firmwareVersion);
@@ -87,13 +88,13 @@ export const authDevice = async (
     );
 
     const { serial, challenge } = await verifySerialSignature({
-      sdk,
+      helper,
       onStatus,
       forceStatusUpdate,
     });
 
     await verifyChallengeSignature({
-      sdk,
+      helper,
       onStatus,
       forceStatusUpdate,
       serial,
@@ -101,12 +102,12 @@ export const authDevice = async (
       firmwareVersion,
     });
 
-    await sendQuery(sdk, { authDevice: { result: { verified: true } } });
+    await helper.sendQuery({ result: { verified: true } });
 
     return true;
   } catch (error) {
     if (error === deviceNotVerifiedError) {
-      await sendQuery(sdk, { authDevice: { result: { verified: false } } });
+      await helper.sendQuery({ result: { verified: false } });
       return false;
     }
 

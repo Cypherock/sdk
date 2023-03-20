@@ -1,4 +1,6 @@
 export enum DeviceAppErrorType {
+  UNKNOWN_ERROR = 'APP_0000',
+
   NO_WORKING_PACKET_VERSION = 'APP_0100',
   EXECUTING_OTHER_COMMAND = 'APP_0101',
   PROCESS_ABORTED = 'APP_0102',
@@ -12,7 +14,6 @@ export enum DeviceAppErrorType {
   NO_WALLET_EXISTS = 'APP_0302',
 
   CARD_OPERATION_FAILED = 'APP_0400',
-  CARD_NOT_PAIRED = 'APP_0401',
 
   USER_REJECTION = 'APP_0501',
 }
@@ -24,7 +25,11 @@ type CodeToErrorMap = {
   };
 };
 
-const deviceAppErrorTypeDetails: CodeToErrorMap = {
+export const deviceAppErrorTypeDetails: CodeToErrorMap = {
+  [DeviceAppErrorType.UNKNOWN_ERROR]: {
+    message: 'Unknown application error',
+    doRetry: false,
+  },
   [DeviceAppErrorType.NO_WORKING_PACKET_VERSION]: {
     message: 'No working packet version found',
     doRetry: false,
@@ -65,10 +70,6 @@ const deviceAppErrorTypeDetails: CodeToErrorMap = {
   },
   [DeviceAppErrorType.CARD_OPERATION_FAILED]: {
     message: 'Card operation failed',
-    doRetry: false,
-  },
-  [DeviceAppErrorType.CARD_NOT_PAIRED]: {
-    message: 'Card is not paired',
     doRetry: false,
   },
   [DeviceAppErrorType.USER_REJECTION]: {

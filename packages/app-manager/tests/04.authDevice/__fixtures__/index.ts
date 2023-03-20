@@ -1,10 +1,12 @@
 import { IFixtures } from './types';
 import validData from './valid';
-import errorData from './error';
+import invalidData from './invalidData';
+import error from './error';
 
 const fixtures: IFixtures = {
   valid: validData,
-  error: errorData,
+  invalidData,
+  error,
 };
 
 export * from './types';
