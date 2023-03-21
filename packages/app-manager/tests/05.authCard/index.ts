@@ -26,9 +26,32 @@ describe('managerApp.authCard', () => {
       test(testCase.name, async () => {
         const onEvent = setupMocks(testCase);
 
-        const output = await managerApp.authCard(onEvent);
+        const output = await managerApp.authCard({
+          cardIndex: testCase.params?.cardIndex,
+          onEvent,
+        });
 
         expect(output).toEqual(testCase.output);
+
+        expectMockCalls(testCase);
+      });
+    });
+  });
+
+  describe('should throw error with invalid arguments', () => {
+    fixtures.invalidArgs.forEach(testCase => {
+      test(testCase.name, async () => {
+        setupMocks(testCase);
+
+        const rejectedPromise = managerApp.authCard(testCase.params);
+
+        await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
+
+        if (testCase.errorMessage) {
+          await expect(rejectedPromise).rejects.toThrowError(
+            testCase.errorMessage,
+          );
+        }
 
         expectMockCalls(testCase);
       });
@@ -40,9 +63,15 @@ describe('managerApp.authCard', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        await expect(managerApp.authCard()).rejects.toThrow(
-          testCase.errorInstance,
-        );
+        const rejectedPromise = managerApp.authCard(testCase.params);
+
+        await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
+
+        if (testCase.errorMessage) {
+          await expect(rejectedPromise).rejects.toThrowError(
+            testCase.errorMessage,
+          );
+        }
         expectMockCalls(testCase);
       });
     });
@@ -53,14 +82,16 @@ describe('managerApp.authCard', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const authCardPromise = managerApp.authCard();
+        const rejectedPromise = managerApp.authCard(testCase.params);
 
-        await expect(authCardPromise).rejects.toThrow(testCase.errorInstance);
+        await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
+
         if (testCase.errorMessage) {
-          await expect(authCardPromise).rejects.toThrowError(
+          await expect(rejectedPromise).rejects.toThrowError(
             testCase.errorMessage,
           );
         }
+        expectMockCalls(testCase);
       });
     });
   });

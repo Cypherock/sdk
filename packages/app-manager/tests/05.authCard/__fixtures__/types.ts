@@ -1,4 +1,7 @@
 export interface IAuthCardTestCase {
+  params?: {
+    cardIndex?: number;
+  };
   queries: {
     name: string;
     data: Uint8Array;
@@ -24,4 +27,5 @@ export interface IFixtures {
   valid: IAuthCardTestCase[];
   invalidData: IAuthCardTestCase[];
   error: IAuthCardTestCase[];
+  invalidArgs: IAuthCardTestCase[];
 }

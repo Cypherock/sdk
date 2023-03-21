@@ -27,6 +27,8 @@ const withOneApplet: IGetDeviceInfoTestCase = {
         },
       },
     ],
+    initialStates: undefined,
+    isInitial: false,
   },
 };
 
@@ -63,6 +65,8 @@ const withTwoApplet: IGetDeviceInfoTestCase = {
         },
       },
     ],
+    initialStates: undefined,
+    isInitial: false,
   },
 };
 
@@ -75,6 +79,8 @@ const withOnlyDeviceSerial: IGetDeviceInfoTestCase = {
     firmwareVersion: undefined,
     isAuthenticated: false,
     appletList: [],
+    initialStates: undefined,
+    isInitial: false,
   },
 };
 
@@ -87,6 +93,54 @@ const withPartialData: IGetDeviceInfoTestCase = {
     firmwareVersion: undefined,
     isAuthenticated: true,
     appletList: [],
+    initialStates: undefined,
+    isInitial: false,
+  },
+};
+
+const withInitialStates: IGetDeviceInfoTestCase = {
+  name: 'With initial states',
+  query: new Uint8Array([10, 0]),
+  result: new Uint8Array([
+    10, 46, 10, 12, 123, 43, 26, 231, 42, 86, 91, 130, 41, 55, 186, 203, 18, 2,
+    8, 1, 24, 1, 34, 8, 8, 12, 18, 4, 8, 1, 24, 26, 40, 1, 50, 12, 10, 2, 8, 1,
+    18, 2, 8, 1, 26, 2, 16, 2,
+  ]),
+  output: {
+    deviceSerial: new Uint8Array([
+      123, 43, 26, 231, 42, 86, 91, 130, 41, 55, 186, 203,
+    ]),
+    firmwareVersion: {
+      major: 1,
+      minor: 0,
+      patch: 0,
+    },
+    isAuthenticated: true,
+    appletList: [
+      {
+        id: 12,
+        version: {
+          major: 1,
+          minor: 0,
+          patch: 26,
+        },
+      },
+    ],
+    initialStates: {
+      authDevice: {
+        isCompleted: true,
+        state: undefined,
+      },
+      userTraining: {
+        isCompleted: true,
+        state: undefined,
+      },
+      authCards: {
+        isCompleted: false,
+        state: 2,
+      },
+    },
+    isInitial: true,
   },
 };
 
@@ -95,6 +149,7 @@ const valid: IGetDeviceInfoTestCase[] = [
   withTwoApplet,
   withOnlyDeviceSerial,
   withPartialData,
+  withInitialStates,
 ];
 
 export default valid;

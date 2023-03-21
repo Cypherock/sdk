@@ -6,7 +6,7 @@ import fixtures from './__fixtures__';
 
 import { ManagerApp } from '../../src/index';
 
-describe('managerApp.getLogs', () => {
+describe('managerApp.trainUser', () => {
   let connection: MockDeviceConnection;
   let managerApp: ManagerApp;
 
@@ -21,12 +21,12 @@ describe('managerApp.getLogs', () => {
     await managerApp.destroy();
   });
 
-  describe('should be able to get logs', () => {
+  describe('should be able complete user training', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         const onEvent = setupMocks(testCase);
 
-        const output = await managerApp.getLogs(onEvent);
+        const output = await managerApp.trainUser(onEvent);
 
         expect(output).toEqual(testCase.output);
 
@@ -40,27 +40,10 @@ describe('managerApp.getLogs', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        await expect(managerApp.getLogs()).rejects.toThrow(
+        await expect(managerApp.trainUser()).rejects.toThrow(
           testCase.errorInstance,
         );
         expectMockCalls(testCase);
-      });
-    });
-  });
-
-  describe('should throw error when device returns error', () => {
-    fixtures.error.forEach(testCase => {
-      test(testCase.name, async () => {
-        setupMocks(testCase);
-
-        const getLogsPromise = managerApp.getLogs();
-
-        await expect(getLogsPromise).rejects.toThrow(testCase.errorInstance);
-        if (testCase.errorMessage) {
-          await expect(getLogsPromise).rejects.toThrowError(
-            testCase.errorMessage,
-          );
-        }
       });
     });
   });

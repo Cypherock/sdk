@@ -31,12 +31,16 @@ export class ManagerApp {
     );
   }
 
-  public async authCard(onEvent?: operations.AuthCardEventHandler) {
-    return this.sdk.runOperation(() => operations.authCard(this.sdk, onEvent));
+  public async authCard(params?: operations.IAuthCardParams) {
+    return this.sdk.runOperation(() => operations.authCard(this.sdk, params));
   }
 
   public async getLogs(onEvent?: operations.GetLogsEventHandler) {
     return this.sdk.runOperation(() => operations.getLogs(this.sdk, onEvent));
+  }
+
+  public async trainUser(onEvent?: operations.TrainUserEventHandler) {
+    return this.sdk.runOperation(() => operations.trainUser(this.sdk, onEvent));
   }
 
   public async destroy() {

@@ -1,4 +1,5 @@
 import { ISDK } from '@cypherock/sdk-core';
+import { assert } from '@cypherock/sdk-utils';
 import { AuthCardStatus } from '../../proto/generated/types';
 import { cardAuthService } from '../../services';
 
@@ -19,10 +20,11 @@ const verifySerialSignature = async (params: {
   helper: OperationHelper<'authCard', 'authCard'>;
   onStatus: OnStatus;
   forceStatusUpdate: ForceStatusUpdate;
+  cardIndex?: number;
 }) => {
-  const { helper, onStatus, forceStatusUpdate } = params;
+  const { helper, onStatus, forceStatusUpdate, cardIndex } = params;
 
-  await helper.sendQuery({ initiate: {} });
+  await helper.sendQuery({ initiate: { cardIndex } });
 
   const result = await helper.waitForResult(onStatus);
   assertOrThrowInvalidResult(result.serialSignature);
@@ -66,22 +68,39 @@ const verifyChallengeSignature = async (params: {
   }
 };
 
+export interface IAuthCardParams {
+  cardIndex?: number;
+  onEvent?: AuthCardEventHandler;
+}
+
 export const authCard = async (
   sdk: ISDK,
-  onEvent?: AuthCardEventHandler,
+  params?: {
+    cardIndex?: number;
+    onEvent?: AuthCardEventHandler;
+  },
 ): Promise<boolean> => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (params?.cardIndex !== undefined && params.cardIndex !== null) {
+    assert(
+      params.cardIndex >= 1 && params.cardIndex <= 4,
+      'Card index should be 1,2,3,4',
+    );
+  }
+
   const helper = new OperationHelper(sdk, 'authCard', 'authCard');
 
   try {
     const { onStatus, forceStatusUpdate } = createStatusListener(
       AuthCardStatus,
-      onEvent,
+      params?.onEvent,
     );
 
     const { serial, challenge } = await verifySerialSignature({
       helper,
       onStatus,
       forceStatusUpdate,
+      cardIndex: params?.cardIndex,
     });
 
     await verifyChallengeSignature({
