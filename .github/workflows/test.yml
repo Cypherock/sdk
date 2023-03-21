@@ -35,9 +35,13 @@ jobs:
 
       - name: Install Protoc
         run: |
-          sudo apt-get update
-          sudo apt-get install -y protobuf-compiler
-          protoc --version
+          PB_REL="https://github.com/protocolbuffers/protobuf/releases"
+          curl -LO $PB_REL/download/v22.2/protoc-22.2-linux-x86_64.zip
+          unzip protoc-22.2-linux-x86_64.zip -d $HOME/.local
+          export PATH="$PATH:$HOME/.local/bin"
+
+      - name: Check protoc installation
+        run: protoc --version
 
       - name: pnpm install
         run: pnpm install
