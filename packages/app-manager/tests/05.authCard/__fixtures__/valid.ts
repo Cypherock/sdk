@@ -421,8 +421,109 @@ const withChallengeSignatureFailure: IAuthCardTestCase = {
   output: false,
 };
 
+const withCardIndex1: IAuthCardTestCase = {
+  name: 'With card index 1',
+  params: {
+    cardIndex: 1,
+  },
+  queries: [
+    {
+      name: 'initiate',
+      data: new Uint8Array([34, 4, 10, 2, 8, 1]),
+    },
+    {
+      name: 'challenge',
+      data: new Uint8Array([
+        34, 32, 18, 30, 10, 28, 91, 43, 48, 103, 233, 161, 221, 174, 200, 188,
+        58, 150, 248, 9, 194, 145, 154, 20, 240, 2, 0, 243, 245, 127, 1, 90,
+        115, 37,
+      ]),
+    },
+    {
+      name: 'result',
+      data: new Uint8Array([34, 4, 26, 2, 8, 1]),
+    },
+  ],
+  results: [
+    {
+      name: 'serialSig',
+      data: new Uint8Array([
+        34, 62, 10, 60, 10, 24, 142, 25, 5, 198, 236, 185, 206, 147, 215, 202,
+        105, 46, 115, 113, 200, 105, 202, 105, 203, 201, 104, 200, 148, 61, 18,
+        32, 12, 33, 164, 252, 205, 209, 52, 110, 243, 37, 33, 251, 198, 114,
+        232, 67, 60, 6, 252, 240, 72, 5, 115, 235, 100, 193, 252, 26, 55, 2,
+        196, 165,
+      ]),
+      statuses: [
+        {
+          flowStatus: 0,
+          expectEventCalls: [0],
+        },
+        {
+          flowStatus: 1,
+          expectEventCalls: [1],
+        },
+        {
+          flowStatus: 2,
+        },
+      ],
+    },
+    {
+      name: 'challengeSig',
+      data: new Uint8Array([
+        34, 36, 18, 34, 10, 32, 110, 18, 146, 170, 47, 162, 166, 84, 178, 57,
+        180, 174, 155, 207, 154, 42, 142, 121, 176, 134, 225, 0, 48, 44, 101,
+        204, 158, 229, 107, 113, 214, 188,
+      ]),
+    },
+  ],
+  mocks: {
+    challenge: new Uint8Array([
+      91, 43, 48, 103, 233, 161, 221, 174, 200, 188, 58, 150, 248, 9, 194, 145,
+      154, 20, 240, 2, 0, 243, 245, 127, 1, 90, 115, 37,
+    ]),
+    challengeVerified: true,
+    eventCalls: [[0], [1]],
+    verifySerialSignatureCalls: [
+      [
+        {
+          serial: new Uint8Array([
+            142, 25, 5, 198, 236, 185, 206, 147, 215, 202, 105, 46, 115, 113,
+            200, 105, 202, 105, 203, 201, 104, 200, 148, 61,
+          ]),
+          signature: new Uint8Array([
+            12, 33, 164, 252, 205, 209, 52, 110, 243, 37, 33, 251, 198, 114,
+            232, 67, 60, 6, 252, 240, 72, 5, 115, 235, 100, 193, 252, 26, 55, 2,
+            196, 165,
+          ]),
+        },
+      ],
+    ],
+    verifyChallengeSignatureCalls: [
+      [
+        {
+          serial: new Uint8Array([
+            142, 25, 5, 198, 236, 185, 206, 147, 215, 202, 105, 46, 115, 113,
+            200, 105, 202, 105, 203, 201, 104, 200, 148, 61,
+          ]),
+          challenge: new Uint8Array([
+            91, 43, 48, 103, 233, 161, 221, 174, 200, 188, 58, 150, 248, 9, 194,
+            145, 154, 20, 240, 2, 0, 243, 245, 127, 1, 90, 115, 37,
+          ]),
+          signature: new Uint8Array([
+            110, 18, 146, 170, 47, 162, 166, 84, 178, 57, 180, 174, 155, 207,
+            154, 42, 142, 121, 176, 134, 225, 0, 48, 44, 101, 204, 158, 229,
+            107, 113, 214, 188,
+          ]),
+        },
+      ],
+    ],
+  },
+  output: true,
+};
+
 const withCardIndex2: IAuthCardTestCase = {
-  name: 'With card index',
+  name: 'With card index 2',
   params: {
     cardIndex: 2,
   },
@@ -523,7 +624,7 @@ const withCardIndex2: IAuthCardTestCase = {
 };
 
 const withCardIndex4: IAuthCardTestCase = {
-  name: 'With card index',
+  name: 'With card index 4',
   params: {
     cardIndex: 4,
   },
@@ -629,6 +730,7 @@ const valid: IAuthCardTestCase[] = [
   withSkippedStatuses,
   withSerialSignatureFailure,
   withChallengeSignatureFailure,
+  withCardIndex1,
   withCardIndex2,
   withCardIndex4,
 ];

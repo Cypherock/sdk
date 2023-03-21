@@ -20,7 +20,7 @@ export const trainUser = async (
     onEvent,
   );
 
-  await helper.sendQuery({ initiate: {} });
+  await helper.sendQuery({});
   const result = helper.waitForResult(onStatus);
 
   forceStatusUpdate(TrainUserStatus.USER_TRAINING_CARD_TAP);
