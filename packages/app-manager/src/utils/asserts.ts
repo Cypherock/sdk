@@ -24,7 +24,7 @@ export function parseCoreError(error?: ICoreError) {
   };
 
   for (const key of keys) {
-    if (key in error && error[key]) {
+    if (error[key]) {
       throw new DeviceAppError(errorTypesMap[key]);
     }
   }

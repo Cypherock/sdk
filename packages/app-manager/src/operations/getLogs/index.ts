@@ -25,7 +25,7 @@ const parseGetLogsError = (error?: IGetLogsErrorResponse) => {
   };
 
   for (const key of keys) {
-    if (key in error && error[key]) {
+    if (error[key]) {
       throw new GetLogsError(errorTypesMap[key]);
     }
   }
