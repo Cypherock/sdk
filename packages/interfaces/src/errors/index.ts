@@ -1,3 +1,4 @@
+export * from './deviceError';
 export * from './appError';
 export * from './bootloaderError';
 export * from './communicationError';

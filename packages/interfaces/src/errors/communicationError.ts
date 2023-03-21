@@ -1,3 +1,5 @@
+import { DeviceError } from './deviceError';
+
 export enum DeviceCommunicationErrorType {
   IN_BOOTLOADER = 'COM_0000',
 
@@ -12,61 +14,40 @@ export enum DeviceCommunicationErrorType {
 type CodeToErrorMap = {
   [property in DeviceCommunicationErrorType]: {
     message: string;
-    doRetry: boolean;
   };
 };
 
 export const deviceCommunicationErrorTypeDetails: CodeToErrorMap = {
   [DeviceCommunicationErrorType.IN_BOOTLOADER]: {
     message: 'Device is in bootloader mode',
-    doRetry: false,
   },
   [DeviceCommunicationErrorType.WRITE_REJECTED]: {
     message: 'The write packet operation was rejected by the device',
-    doRetry: false,
   },
   [DeviceCommunicationErrorType.WRITE_ERROR]: {
     message: 'Unable to write packet to the device',
-    doRetry: true,
   },
 
   [DeviceCommunicationErrorType.TIMEOUT_ERROR]: {
     message: 'Timeout Error due to write/read',
-    doRetry: true,
   },
   [DeviceCommunicationErrorType.WRITE_TIMEOUT]: {
     message: 'Did not receive ACK of sent packet on time',
-    doRetry: true,
   },
   [DeviceCommunicationErrorType.READ_TIMEOUT]: {
     message: 'Did not receive the expected data from device on time',
-    doRetry: true,
   },
   [DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR]: {
     message: 'Unknown Error at communication module',
-    doRetry: true,
   },
 };
 
-export class DeviceCommunicationError extends Error {
-  public code: DeviceCommunicationErrorType;
-
-  public message: string;
-
-  public doRetry: boolean;
-
+export class DeviceCommunicationError extends DeviceError {
   constructor(errorCode: DeviceCommunicationErrorType) {
-    super();
-    this.code =
-      errorCode || DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR;
-    this.message = deviceCommunicationErrorTypeDetails[this.code].message;
-    this.doRetry = deviceCommunicationErrorTypeDetails[this.code].doRetry;
-
-    if ((<any>Object).setPrototypeOf) {
-      (<any>Object).setPrototypeOf(this, DeviceCommunicationError.prototype);
-    } else {
-      // eslint-disable-next-line
-      (<any>this).__proto__ = DeviceCommunicationError.prototype;
-    }
+    super(
+      errorCode,
+      deviceCommunicationErrorTypeDetails[errorCode].message,
+      DeviceCommunicationError,
+    );
   }
 }

@@ -1,3 +1,5 @@
+import { DeviceError } from './deviceError';
+
 export enum DeviceBootloaderErrorType {
   NOT_IN_BOOTLOADER = 'BTL_0000',
 
@@ -16,76 +18,52 @@ export enum DeviceBootloaderErrorType {
 type CodeToErrorMap = {
   [property in DeviceBootloaderErrorType]: {
     message: string;
-    doRetry: boolean;
   };
 };
 
 export const deviceBootloaderErrorTypeDetails: CodeToErrorMap = {
   [DeviceBootloaderErrorType.NOT_IN_BOOTLOADER]: {
     message: 'The device is not in bootloader mode',
-    doRetry: false,
   },
 
   [DeviceBootloaderErrorType.FIRMWARE_SIZE_LIMIT_EXCEEDED]: {
     message: 'Firmware Size Limit Exceed',
-    doRetry: false,
   },
   [DeviceBootloaderErrorType.WRONG_HARDWARE_VERSION]: {
     message: 'Wrong Hardware version',
-    doRetry: false,
   },
   [DeviceBootloaderErrorType.WRONG_MAGIC_NUMBER]: {
     message: 'Wrong Magic Number',
-    doRetry: false,
   },
   [DeviceBootloaderErrorType.SIGNATURE_NOT_VERIFIED]: {
     message: 'Signature not verified',
-    doRetry: false,
   },
   [DeviceBootloaderErrorType.LOWER_FIRMWARE_VERSION]: {
     message: 'Lower Firmware version',
-    doRetry: false,
   },
   [DeviceBootloaderErrorType.FLASH_WRITE_ERROR]: {
     message: 'Flash Write Error',
-    doRetry: true,
   },
   [DeviceBootloaderErrorType.FLASH_CRC_MISMATCH]: {
     message: 'Flash CRC Mismatch',
-    doRetry: true,
   },
   [DeviceBootloaderErrorType.FLASH_TIMEOUT_ERROR]: {
     message: 'Flash Timeout Error',
-    doRetry: false,
   },
   [DeviceBootloaderErrorType.FLASH_NACK]: {
     message: 'Flash Negative Acknowledgement',
-    doRetry: true,
   },
   [DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE]: {
     message: 'The device is in fault state',
-    doRetry: false,
   },
 };
 
-export class DeviceBootloaderError extends Error {
-  public code: DeviceBootloaderErrorType;
-
-  public message: string;
-
-  public doRetry: boolean;
-
+export class DeviceBootloaderError extends DeviceError {
   constructor(errorCode: DeviceBootloaderErrorType) {
-    super();
-    this.code = errorCode;
-    this.message = deviceBootloaderErrorTypeDetails[this.code].message;
-    this.doRetry = deviceBootloaderErrorTypeDetails[this.code].doRetry;
-
-    if ((<any>Object).setPrototypeOf) {
-      (<any>Object).setPrototypeOf(this, DeviceBootloaderError.prototype);
-    } else {
-      // eslint-disable-next-line
-      (<any>this).__proto__ = DeviceBootloaderError.prototype;
-    }
+    super(
+      errorCode,
+      deviceBootloaderErrorTypeDetails[errorCode].message,
+      DeviceBootloaderError,
+    );
   }
 }

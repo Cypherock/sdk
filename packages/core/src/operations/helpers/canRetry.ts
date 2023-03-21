@@ -21,7 +21,7 @@ const canRetry = (error: Error) => {
     [
       DeviceAppErrorType.PROCESS_ABORTED,
       DeviceAppErrorType.DEVICE_ABORT,
-    ].includes((error as DeviceAppError).code);
+    ].includes(error.code as any);
 
   return !dontRetry;
 };

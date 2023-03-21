@@ -1,3 +1,5 @@
+import { DeviceError } from './deviceError';
+
 export enum DeviceAppErrorType {
   UNKNOWN_ERROR = 'APP_0000',
 
@@ -21,81 +23,56 @@ export enum DeviceAppErrorType {
 type CodeToErrorMap = {
   [property in DeviceAppErrorType]: {
     message: string;
-    doRetry: boolean;
   };
 };
 
 export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.UNKNOWN_ERROR]: {
     message: 'Unknown application error',
-    doRetry: false,
   },
   [DeviceAppErrorType.NO_WORKING_PACKET_VERSION]: {
     message: 'No working packet version found',
-    doRetry: false,
   },
   [DeviceAppErrorType.EXECUTING_OTHER_COMMAND]: {
     message: 'The device is executing some other command',
-    doRetry: false,
   },
   [DeviceAppErrorType.PROCESS_ABORTED]: {
     message: 'The process was aborted',
-    doRetry: false,
   },
   [DeviceAppErrorType.DEVICE_ABORT]: {
     message: 'The request was timed out on the device',
-    doRetry: true,
   },
 
   [DeviceAppErrorType.INVALID_RESULT]: {
     message: 'Invalid result received from device',
-    doRetry: false,
   },
   [DeviceAppErrorType.INVALID_APP_ID]: {
     message: 'Invalid appId received from device',
-    doRetry: false,
   },
 
   [DeviceAppErrorType.WALLET_NOT_FOUND]: {
     message: 'Selected wallet is not present on the device',
-    doRetry: false,
   },
   [DeviceAppErrorType.WALLET_PARTIAL_STATE]: {
     message: 'Selected wallet is in partial state',
-    doRetry: false,
   },
   [DeviceAppErrorType.NO_WALLET_EXISTS]: {
     message: 'No wallet exists on the device',
-    doRetry: false,
   },
   [DeviceAppErrorType.CARD_OPERATION_FAILED]: {
     message: 'Card operation failed',
-    doRetry: false,
   },
   [DeviceAppErrorType.USER_REJECTION]: {
     message: 'User rejected the operation',
-    doRetry: false,
   },
 };
 
-export class DeviceAppError extends Error {
-  public code: DeviceAppErrorType;
-
-  public message: string;
-
-  public doRetry: boolean;
-
+export class DeviceAppError extends DeviceError {
   constructor(errorCode: DeviceAppErrorType) {
-    super();
-    this.code = errorCode;
-    this.message = deviceAppErrorTypeDetails[this.code].message;
-    this.doRetry = deviceAppErrorTypeDetails[this.code].doRetry;
-
-    if ((<any>Object).setPrototypeOf) {
-      (<any>Object).setPrototypeOf(this, DeviceAppError.prototype);
-    } else {
-      // eslint-disable-next-line
-      (<any>this).__proto__ = DeviceAppError.prototype;
-    }
+    super(
+      errorCode,
+      deviceAppErrorTypeDetails[errorCode].message,
+      DeviceAppError,
+    );
   }
 }

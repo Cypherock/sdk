@@ -35,6 +35,10 @@ export class ManagerApp {
     return this.sdk.runOperation(() => operations.authCard(this.sdk, onEvent));
   }
 
+  public async getLogs(onEvent?: operations.GetLogsEventHandler) {
+    return this.sdk.runOperation(() => operations.getLogs(this.sdk, onEvent));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }

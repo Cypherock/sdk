@@ -1,6 +1,6 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { AuthCardStatus } from '../proto/generated/types';
-import { cardAuthService } from '../services';
+import { AuthCardStatus } from '../../proto/generated/types';
+import { cardAuthService } from '../../services';
 
 import {
   assertOrThrowInvalidResult,
@@ -8,9 +8,10 @@ import {
   ForceStatusUpdate,
   OnStatus,
   OperationHelper,
-} from '../utils';
+} from '../../utils';
+import { AuthCardEventHandler } from './types';
 
-export type AuthCardEventHandler = (event: AuthCardStatus) => void;
+export * from './types';
 
 const cardNotVerifiedError = new Error('Card not verified');
 

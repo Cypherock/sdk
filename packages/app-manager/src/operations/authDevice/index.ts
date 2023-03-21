@@ -1,7 +1,7 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { DeviceState } from '@cypherock/sdk-interfaces';
-import { AuthDeviceStatus } from '../proto/generated/types';
-import { deviceAuthService } from '../services';
+import { AuthDeviceStatus } from '../../proto/generated/types';
+import { deviceAuthService } from '../../services';
 
 import {
   assertOrThrowInvalidResult,
@@ -9,10 +9,11 @@ import {
   ForceStatusUpdate,
   OnStatus,
   OperationHelper,
-} from '../utils';
-import { getDeviceInfo } from './getDeviceInfo';
+} from '../../utils';
+import { getDeviceInfo } from '../getDeviceInfo';
+import { AuthDeviceEventHandler } from './types';
 
-export type AuthDeviceEventHandler = (event: AuthDeviceStatus) => void;
+export * from './types';
 
 const deviceNotVerifiedError = new Error('Device not verified');
 
