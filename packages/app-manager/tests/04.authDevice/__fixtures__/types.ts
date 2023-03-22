@@ -1,4 +1,4 @@
-import { IGetDeviceInfoResponse } from '../../../src';
+import { IGetDeviceInfoResultResponse } from '../../../src';
 
 export interface IAuthDeviceTestCase {
   queries: {
@@ -16,7 +16,7 @@ export interface IAuthDeviceTestCase {
     eventCalls?: number[][];
     verifySerialSignatureCalls?: any[][];
     verifyChallengeSignatureCalls?: any[][];
-    deviceInfo: Partial<IGetDeviceInfoResponse>;
+    deviceInfo: Partial<IGetDeviceInfoResultResponse>;
   };
   errorInstance?: any;
   errorMessage?: any;
