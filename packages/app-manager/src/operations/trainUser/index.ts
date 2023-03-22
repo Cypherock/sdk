@@ -1,14 +1,11 @@
 import { ISDK } from '@cypherock/sdk-core';
+import { createStatusListener } from '@cypherock/sdk-utils';
 import {
   ITrainUserResultResponse,
   TrainUserStatus,
 } from '../../proto/generated/types';
 
-import {
-  assertOrThrowInvalidResult,
-  createStatusListener,
-  OperationHelper,
-} from '../../utils';
+import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
 import { ITrainUserParams } from './types';
 
 export * from './types';

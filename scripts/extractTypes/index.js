@@ -4,15 +4,19 @@ const tsort = require('./tsort');
 
 const ignoreFiles = ['types.ts'];
 
-const rootPath = path.join(__dirname, '..', 'src', 'proto', 'generated');
-const interfaceFilePath = path.join(
-  __dirname,
-  '..',
-  'src',
-  'proto',
-  'generated',
-  'types.ts',
-);
+const throwInvalidUsage = () => {
+  console.log(
+    'Invalid arguments. Usage: node extractTypes.js <ROOT_FOLDER_PATH> <TYPES_FILE_PATH>',
+  );
+  process.exit(1);
+};
+
+if (process.argv.length !== 4) {
+  throwInvalidUsage();
+}
+
+const rootPath = process.argv[2];
+const interfaceFilePath = process.argv[3];
 
 const countChars = (str, c) => {
   let count = 0;
@@ -77,7 +81,7 @@ const parseInterfaces = async () => {
 
       for (const innerInterfaceName of origionalInterfaceNames) {
         const nestedInterfaceMatch = line.match(
-          new RegExp(`(.*) (${innerInterfaceName})(.*)`),
+          new RegExp(`(.*) (${innerInterfaceName})([\\s\\[;]+)(.*)`),
         );
 
         if (nestedInterfaceMatch) {
@@ -90,9 +94,8 @@ const parseInterfaces = async () => {
           dependencies.push(interfaceNames[interfaceIndex]);
           tSortEdges.push([interfaceName, interfaceNames[interfaceIndex]]);
 
-          interfaceBlock.push(
-            `${nestedInterfaceMatch[1]} ${interfaceNames[interfaceIndex]}${nestedInterfaceMatch[3]}`,
-          );
+          const newLine = `${nestedInterfaceMatch[1]} ${interfaceNames[interfaceIndex]}${nestedInterfaceMatch[3]}${nestedInterfaceMatch[4]}`;
+          interfaceBlock.push(newLine);
         }
       }
 

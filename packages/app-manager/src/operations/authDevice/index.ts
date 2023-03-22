@@ -1,15 +1,14 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { DeviceState } from '@cypherock/sdk-interfaces';
-import { AuthDeviceStatus } from '../../proto/generated/types';
-import { deviceAuthService } from '../../services';
-
 import {
-  assertOrThrowInvalidResult,
   createStatusListener,
   ForceStatusUpdate,
   OnStatus,
-  OperationHelper,
-} from '../../utils';
+} from '@cypherock/sdk-utils';
+import { AuthDeviceStatus } from '../../proto/generated/types';
+import { deviceAuthService } from '../../services';
+
+import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
 import { getDeviceInfo } from '../getDeviceInfo';
 import { AuthDeviceEventHandler } from './types';
 

@@ -4,7 +4,7 @@ export function assert<T>(
 ): asserts condition is Exclude<T, null | undefined> {
   if (condition === null || condition === undefined || condition === false) {
     if (typeof error === 'string') {
-      throw new Error(error);
+      throw new Error(`AssertionError: ${error}`);
     } else {
       throw error;
     }

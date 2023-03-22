@@ -1,15 +1,14 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { assert } from '@cypherock/sdk-utils';
-import { AuthCardStatus } from '../../proto/generated/types';
-import { cardAuthService } from '../../services';
-
 import {
-  assertOrThrowInvalidResult,
+  assert,
   createStatusListener,
   ForceStatusUpdate,
   OnStatus,
-  OperationHelper,
-} from '../../utils';
+} from '@cypherock/sdk-utils';
+import { AuthCardStatus } from '../../proto/generated/types';
+import { cardAuthService } from '../../services';
+
+import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
 import { IAuthCardParams } from './types';
 
 export * from './types';

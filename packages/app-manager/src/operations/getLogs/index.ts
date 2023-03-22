@@ -1,15 +1,11 @@
 import { ISDK } from '@cypherock/sdk-core';
+import { createStatusListener, OnStatus } from '@cypherock/sdk-utils';
 import {
   GetLogsStatus,
   IGetLogsErrorResponse,
 } from '../../proto/generated/types';
 
-import {
-  assertOrThrowInvalidResult,
-  createStatusListener,
-  OnStatus,
-  OperationHelper,
-} from '../../utils';
+import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
 import { GetLogsError, GetLogsErrorType, GetLogsEventHandler } from './types';
 
 export * from './types';

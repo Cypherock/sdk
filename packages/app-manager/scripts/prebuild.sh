@@ -11,4 +11,4 @@ else
   protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./src/proto/generated ../../submodules/common/proto/manager/*.proto -I../../submodules/common/proto
 fi
 
-node ./scripts/extractTypes.js
+node ../../scripts/extractTypes/index.js ./src/proto/generated ./src/proto/generated/types.ts
