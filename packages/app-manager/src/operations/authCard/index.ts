@@ -10,7 +10,7 @@ import {
   OnStatus,
   OperationHelper,
 } from '../../utils';
-import { AuthCardEventHandler } from './types';
+import { IAuthCardParams } from './types';
 
 export * from './types';
 
@@ -68,17 +68,9 @@ const verifyChallengeSignature = async (params: {
   }
 };
 
-export interface IAuthCardParams {
-  cardIndex?: number;
-  onEvent?: AuthCardEventHandler;
-}
-
 export const authCard = async (
   sdk: ISDK,
-  params?: {
-    cardIndex?: number;
-    onEvent?: AuthCardEventHandler;
-  },
+  params?: IAuthCardParams,
 ): Promise<boolean> => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (params?.cardIndex !== undefined && params.cardIndex !== null) {

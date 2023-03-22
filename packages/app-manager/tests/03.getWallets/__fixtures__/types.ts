@@ -1,10 +1,10 @@
-import { IGetWalletsResponse } from '../../../src';
+import { IGetWalletsResultResponse } from '../../../src';
 
 export interface IGetWalletsTestCase {
   name: string;
   query: Uint8Array;
   result: Uint8Array;
-  output?: Partial<IGetWalletsResponse>;
+  output?: Partial<IGetWalletsResultResponse>;
   errorInstance?: any;
   [key: string]: any;
 }
@@ -12,4 +12,5 @@ export interface IGetWalletsTestCase {
 export interface IFixtures {
   valid: IGetWalletsTestCase[];
   error: IGetWalletsTestCase[];
+  invalidData: IGetWalletsTestCase[];
 }

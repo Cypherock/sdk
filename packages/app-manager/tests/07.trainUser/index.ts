@@ -26,7 +26,10 @@ describe('managerApp.trainUser', () => {
       test(testCase.name, async () => {
         const onEvent = setupMocks(testCase);
 
-        const output = await managerApp.trainUser(onEvent);
+        const output = await managerApp.trainUser({
+          onEvent,
+          ...(testCase.params ?? {}),
+        });
 
         expect(output).toEqual(testCase.output);
 
@@ -40,9 +43,28 @@ describe('managerApp.trainUser', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        await expect(managerApp.trainUser()).rejects.toThrow(
+        await expect(managerApp.trainUser(testCase.params)).rejects.toThrow(
           testCase.errorInstance,
         );
+        expectMockCalls(testCase);
+      });
+    });
+  });
+
+  describe('should throw error when device returns error', () => {
+    fixtures.error.forEach(testCase => {
+      test(testCase.name, async () => {
+        setupMocks(testCase);
+
+        const rejectedPromise = managerApp.trainUser(testCase.params);
+
+        await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
+        if (testCase.errorMessage) {
+          await expect(rejectedPromise).rejects.toThrowError(
+            testCase.errorMessage,
+          );
+        }
+
         expectMockCalls(testCase);
       });
     });

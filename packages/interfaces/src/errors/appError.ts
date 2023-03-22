@@ -11,6 +11,11 @@ export enum DeviceAppErrorType {
   INVALID_RESULT = 'APP_0200',
   INVALID_APP_ID = 'APP_0201',
 
+  INVALID_RESULT_ON_DEVICE = 'APP_0202',
+  INVALID_APP_ID_ON_DEVICE = 'APP_0203',
+
+  DEVICE_SETUP_REQUIRED = 'APP_0204',
+
   WALLET_NOT_FOUND = 'APP_0300',
   WALLET_PARTIAL_STATE = 'APP_0301',
   NO_WALLET_EXISTS = 'APP_0302',
@@ -48,6 +53,15 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   },
   [DeviceAppErrorType.INVALID_APP_ID]: {
     message: 'Invalid appId received from device',
+  },
+  [DeviceAppErrorType.INVALID_RESULT_ON_DEVICE]: {
+    message: 'Invalid result sent from app',
+  },
+  [DeviceAppErrorType.INVALID_APP_ID_ON_DEVICE]: {
+    message: 'Invalid appId sent from app',
+  },
+  [DeviceAppErrorType.DEVICE_SETUP_REQUIRED]: {
+    message: 'Device setup is required',
   },
 
   [DeviceAppErrorType.WALLET_NOT_FOUND]: {

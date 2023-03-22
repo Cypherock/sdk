@@ -1,7 +1,8 @@
-import { ITrainUserResponse } from '../../../src';
+import { ITrainUserResultResponse } from '../../../src';
 
 export interface ITrainUserTestCase {
   name: string;
+  params?: { jumpToState?: number };
   queries: {
     name: string;
     data: Uint8Array;
@@ -14,7 +15,7 @@ export interface ITrainUserTestCase {
   mocks?: {
     eventCalls?: number[][];
   };
-  output?: Partial<ITrainUserResponse>;
+  output?: Partial<ITrainUserResultResponse>;
   errorInstance?: any;
   [key: string]: any;
 }
@@ -22,4 +23,5 @@ export interface ITrainUserTestCase {
 export interface IFixtures {
   valid: ITrainUserTestCase[];
   invalidData: ITrainUserTestCase[];
+  error: ITrainUserTestCase[];
 }

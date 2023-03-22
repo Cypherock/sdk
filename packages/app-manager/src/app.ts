@@ -39,8 +39,8 @@ export class ManagerApp {
     return this.sdk.runOperation(() => operations.getLogs(this.sdk, onEvent));
   }
 
-  public async trainUser(onEvent?: operations.TrainUserEventHandler) {
-    return this.sdk.runOperation(() => operations.trainUser(this.sdk, onEvent));
+  public async trainUser(params?: operations.ITrainUserParams) {
+    return this.sdk.runOperation(() => operations.trainUser(this.sdk, params));
   }
 
   public async destroy() {

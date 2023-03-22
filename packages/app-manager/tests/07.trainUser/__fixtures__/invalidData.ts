@@ -6,7 +6,7 @@ const withInvalidData = {
   queries: [
     {
       name: 'initiate',
-      data: new Uint8Array([50, 0]),
+      data: new Uint8Array([50, 2, 10, 0]),
     },
   ],
   results: [
@@ -23,7 +23,7 @@ const withInvalidData2 = {
   queries: [
     {
       name: 'initiate',
-      data: new Uint8Array([50, 0]),
+      data: new Uint8Array([50, 2, 10, 0]),
     },
   ],
   results: [

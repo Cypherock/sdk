@@ -16,6 +16,9 @@ export function parseCoreError(error?: ICoreError) {
 
   const errorTypesMap: Record<CoreErrorKey, DeviceAppErrorType> = {
     unknownError: DeviceAppErrorType.UNKNOWN_ERROR,
+    invalidAppId: DeviceAppErrorType.INVALID_APP_ID_ON_DEVICE,
+    invalidResult: DeviceAppErrorType.INVALID_RESULT_ON_DEVICE,
+    deviceSetupRequired: DeviceAppErrorType.DEVICE_SETUP_REQUIRED,
     walletNotFound: DeviceAppErrorType.WALLET_NOT_FOUND,
     walletPartialState: DeviceAppErrorType.WALLET_PARTIAL_STATE,
     noWalletExists: DeviceAppErrorType.NO_WALLET_EXISTS,
@@ -24,7 +27,7 @@ export function parseCoreError(error?: ICoreError) {
   };
 
   for (const key of keys) {
-    if (error[key]) {
+    if (error[key] !== undefined) {
       throw new DeviceAppError(errorTypesMap[key]);
     }
   }

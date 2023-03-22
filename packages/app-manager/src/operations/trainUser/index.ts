@@ -1,18 +1,24 @@
 import { ISDK } from '@cypherock/sdk-core';
 import {
-  ITrainUserResponse,
+  ITrainUserResultResponse,
   TrainUserStatus,
 } from '../../proto/generated/types';
 
-import { createStatusListener, OperationHelper } from '../../utils';
-import { TrainUserEventHandler } from './types';
+import {
+  assertOrThrowInvalidResult,
+  createStatusListener,
+  OperationHelper,
+} from '../../utils';
+import { ITrainUserParams } from './types';
 
 export * from './types';
 
 export const trainUser = async (
   sdk: ISDK,
-  onEvent?: TrainUserEventHandler,
-): Promise<ITrainUserResponse> => {
+  params?: ITrainUserParams,
+): Promise<ITrainUserResultResponse> => {
+  const { onEvent, jumpToState } = params ?? {};
+
   const helper = new OperationHelper(sdk, 'trainUser', 'trainUser');
 
   const { onStatus, forceStatusUpdate } = createStatusListener(
@@ -20,10 +26,11 @@ export const trainUser = async (
     onEvent,
   );
 
-  await helper.sendQuery({});
-  const result = helper.waitForResult(onStatus);
+  await helper.sendQuery({ initiate: { jumpToState } });
+  const result = await helper.waitForResult(onStatus);
+  assertOrThrowInvalidResult(result.result);
 
   forceStatusUpdate(TrainUserStatus.USER_TRAINING_CARD_TAP);
 
-  return result;
+  return result.result;
 };

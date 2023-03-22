@@ -35,13 +35,38 @@ describe('managerApp.getWallets', () => {
   });
 
   describe('should throw error when device returns invalid data', () => {
-    fixtures.error.forEach(testCase => {
-      test(JSON.stringify(Array.from(testCase.result)), async () => {
+    fixtures.invalidData.forEach(testCase => {
+      test(testCase.name, async () => {
         setupMocks(testCase);
 
-        await expect(managerApp.getWallets()).rejects.toThrow(
-          testCase.errorInstance,
-        );
+        const rejectedPromise = managerApp.getWallets();
+
+        await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
+        if (testCase.errorMessage) {
+          await expect(rejectedPromise).rejects.toThrowError(
+            testCase.errorMessage,
+          );
+        }
+
+        expectMockCalls(testCase);
+      });
+    });
+  });
+
+  describe('should throw error when device returns error', () => {
+    fixtures.error.forEach(testCase => {
+      test(testCase.name, async () => {
+        setupMocks(testCase);
+
+        const rejectedPromise = managerApp.getWallets();
+
+        await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
+        if (testCase.errorMessage) {
+          await expect(rejectedPromise).rejects.toThrowError(
+            testCase.errorMessage,
+          );
+        }
+
         expectMockCalls(testCase);
       });
     });

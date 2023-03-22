@@ -35,13 +35,37 @@ describe('managerApp.getDeviceInfo', () => {
   });
 
   describe('should throw error when device returns invalid data', () => {
+    fixtures.invalidData.forEach(testCase => {
+      test(testCase.name, async () => {
+        setupMocks(testCase);
+
+        const rejectedPromise = managerApp.getDeviceInfo();
+
+        await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
+        if (testCase.errorMessage) {
+          await expect(rejectedPromise).rejects.toThrowError(
+            testCase.errorMessage,
+          );
+        }
+
+        expectMockCalls(testCase);
+      });
+    });
+  });
+
+  describe('should throw error when device returns error', () => {
     fixtures.error.forEach(testCase => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        await expect(managerApp.getDeviceInfo()).rejects.toThrow(
-          testCase.errorInstance,
-        );
+        const rejectedPromise = managerApp.getDeviceInfo();
+
+        await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
+        if (testCase.errorMessage) {
+          await expect(rejectedPromise).rejects.toThrowError(
+            testCase.errorMessage,
+          );
+        }
 
         expectMockCalls(testCase);
       });
