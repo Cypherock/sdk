@@ -38,4 +38,45 @@ describe('assert', () => {
       });
     });
   });
+
+  describe('should not throw error assertion is satisfied', () => {
+    const testCases = [
+      {
+        name: 'string',
+        condition: 'aksjdh',
+      },
+      {
+        name: 'empty string',
+        condition: '',
+      },
+      {
+        name: 'object',
+        condition: {},
+      },
+      {
+        name: 'array',
+        condition: [],
+      },
+      {
+        name: 'number',
+        condition: 1,
+      },
+      {
+        name: 'number zero',
+        condition: 0,
+      },
+      {
+        name: 'negative number',
+        condition: -12,
+      },
+    ];
+
+    testCases.forEach(testCase => {
+      test(testCase.name, () => {
+        expect(() =>
+          assert(testCase.condition, 'Should not have failed'),
+        ).not.toThrow();
+      });
+    });
+  });
 });
