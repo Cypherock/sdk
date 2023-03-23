@@ -3,25 +3,33 @@ import {
   DeviceAppErrorType,
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
-import { IGetPublicKeyTestCase } from './types';
+import { IGetXpubsTestCase } from './types';
 
 const commonParams = {
   params: {
-    walletId: new Uint8Array([10]),
-    derivationPath: [
-      { index: 44, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: false },
-      { index: 0, isHardened: false },
+    walletId: new Uint8Array([
+      199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103, 233, 62,
+      110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
+      64,
+    ]),
+    derivationPaths: [
+      {
+        path: [
+          { index: 44, isHardened: true },
+          { index: 0, isHardened: true },
+          { index: 0, isHardened: true },
+        ],
+      },
     ],
   },
   queries: [
     {
       name: 'Initate query',
       data: new Uint8Array([
-        10, 27, 10, 25, 10, 1, 10, 18, 4, 8, 44, 16, 1, 18, 2, 16, 1, 18, 2, 16,
-        1, 18, 2, 16, 0, 18, 2, 16, 0,
+        18, 54, 10, 52, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
+        38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
+        53, 86, 128, 26, 3, 187, 121, 64, 18, 14, 10, 4, 8, 44, 16, 1, 10, 2,
+        16, 1, 10, 2, 16, 1,
       ]),
     },
   ],
@@ -29,7 +37,7 @@ const commonParams = {
   errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_RESULT],
 };
 
-const invalidData: IGetPublicKeyTestCase[] = [
+const invalidData: IGetXpubsTestCase[] = [
   {
     name: 'Invalid data',
     ...commonParams,
@@ -55,7 +63,7 @@ const invalidData: IGetPublicKeyTestCase[] = [
       {
         name: 'error',
         data: new Uint8Array([
-          10, 34, 10, 3, 90, 221, 135, 18, 2, 8, 1, 24, 1, 34, 11, 8, 2, 18, 7,
+          18, 34, 10, 3, 90, 221, 135, 18, 2, 8, 1, 24, 1, 34, 11, 8, 2, 18, 7,
           8,
         ]),
       },
@@ -68,7 +76,7 @@ const invalidData: IGetPublicKeyTestCase[] = [
     results: [
       {
         name: 'error',
-        data: new Uint8Array([10]),
+        data: new Uint8Array([18]),
       },
     ],
   },

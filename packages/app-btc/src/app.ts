@@ -23,6 +23,10 @@ export class BtcApp {
     );
   }
 
+  public async getXpubs(params: operations.IGetXpubsParams) {
+    return this.sdk.runOperation(() => operations.getXpubs(this.sdk, params));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }

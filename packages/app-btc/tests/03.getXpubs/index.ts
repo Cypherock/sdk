@@ -6,7 +6,7 @@ import fixtures from './__fixtures__';
 
 import { BtcApp } from '../../src/index';
 
-describe('btcApp.getPublicKey', () => {
+describe('btcApp.getXpubs', () => {
   let connection: MockDeviceConnection;
   let btcApp: BtcApp;
 
@@ -21,12 +21,12 @@ describe('btcApp.getPublicKey', () => {
     await btcApp.destroy();
   });
 
-  describe('should be able to get public key', () => {
+  describe('should be able to get xpub', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         const onEvent = setupMocks(testCase);
 
-        const output = await btcApp.getPublicKey({
+        const output = await btcApp.getXpubs({
           ...testCase.params,
           onEvent,
         });
@@ -42,7 +42,7 @@ describe('btcApp.getPublicKey', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const rejectedPromise = btcApp.getPublicKey(testCase.params);
+        const rejectedPromise = btcApp.getXpubs(testCase.params);
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
@@ -59,7 +59,7 @@ describe('btcApp.getPublicKey', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const rejectedPromise = btcApp.getPublicKey(testCase.params);
+        const rejectedPromise = btcApp.getXpubs(testCase.params);
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
@@ -78,7 +78,7 @@ describe('btcApp.getPublicKey', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const rejectedPromise = btcApp.getPublicKey(testCase.params);
+        const rejectedPromise = btcApp.getXpubs(testCase.params);
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
