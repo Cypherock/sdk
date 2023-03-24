@@ -1,5 +1,6 @@
-import { ISDK, OnStatus } from '@cypherock/sdk-core';
+import { ISDK } from '@cypherock/sdk-core';
 import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
+import { OnStatus } from '@cypherock/sdk-utils';
 import { DeepPartial, Exact, Query, Result } from '../proto/generated/btc/core';
 import { assertOrThrowInvalidResult, parseCoreError } from './asserts';
 
