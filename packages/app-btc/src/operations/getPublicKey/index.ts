@@ -16,14 +16,22 @@ export const getPublicKey = async (
   assert(params, 'Params should be defined');
   assert(params.derivationPath, 'DerivationPath should be defined');
   assert(params.walletId, 'WalletId should be defined');
-  assert(params.derivationPath.length === 5, 'DerivationPath be of depth 5');
-
-  const helper = new OperationHelper(sdk, 'getPublicKey', 'getPublicKey');
+  assert(
+    params.derivationPath.length === 5,
+    'DerivationPath should be of depth 5',
+  );
 
   const { onStatus, forceStatusUpdate } = createStatusListener(
     GetPublicKeyStatus,
     params.onEvent,
   );
+
+  const helper = new OperationHelper({
+    sdk,
+    queryKey: 'getPublicKey',
+    resultKey: 'getPublicKey',
+    onStatus,
+  });
 
   await helper.sendQuery({
     initiate: {
@@ -32,7 +40,7 @@ export const getPublicKey = async (
     },
   });
 
-  const result = await helper.waitForResult(onStatus);
+  const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.result);
 
   forceStatusUpdate(GetPublicKeyStatus.GET_PUBLIC_KEY_STATUS_VERIFY);

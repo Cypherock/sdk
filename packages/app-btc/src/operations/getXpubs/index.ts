@@ -25,15 +25,19 @@ export const getXpubs = async (
       (acc, path) => acc && path.path.length === 3,
       true,
     ),
-    'DerivationPaths should of depth 3',
+    'DerivationPaths should be of depth 3',
   );
-
-  const helper = new OperationHelper(sdk, 'getXpubs', 'getXpubs');
 
   const { onStatus, forceStatusUpdate } = createStatusListener(
     GetXpubsStatus,
     params.onEvent,
   );
+  const helper = new OperationHelper({
+    sdk,
+    queryKey: 'getXpubs',
+    resultKey: 'getXpubs',
+    onStatus,
+  });
 
   await helper.sendQuery({
     initiate: {
@@ -42,7 +46,7 @@ export const getXpubs = async (
     },
   });
 
-  const result = await helper.waitForResult(onStatus);
+  const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.result);
 
   forceStatusUpdate(GetXpubsStatus.GET_XPUBS_STATUS_CARD);
