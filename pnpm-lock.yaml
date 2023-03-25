@@ -16,7 +16,7 @@ importers:
       '@commitlint/config-conventional': 17.4.4
       eslint-config-custom: link:packages/util-eslint-config-custom
       husky: 8.0.3
-      prettier: 2.8.6
+      prettier: 2.8.7
       prettier-config-custom: link:packages/util-prettier-config-custom
       turbo: 1.8.5
 
@@ -78,6 +78,53 @@ importers:
       typescript: 4.9.4
 
   packages/app-btc:
+    specifiers:
+      '@cypherock/sdk-core': workspace:^0.0.0
+      '@cypherock/sdk-interfaces': workspace:^0.0.0
+      '@cypherock/sdk-utils': workspace:^0.0.0
+      '@jest/globals': ^29.4.1
+      '@stryker-mutator/core': ^6.4.1
+      '@stryker-mutator/jest-runner': ^6.4.1
+      '@stryker-mutator/typescript-checker': ^6.4.1
+      '@types/jest': ^29.4.0
+      '@types/node': 18.11.18
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      jest: ^29.4.1
+      lint-staged: ^13.2.0
+      long: ^5.2.1
+      prettier-config-custom: workspace:^0.0.0
+      protobufjs: ^7.2.2
+      rimraf: ^4.1.2
+      ts-jest: ^29.0.5
+      ts-proto: ^1.139.0
+      tsconfig: workspace:*
+      typescript: ^4.5.2
+    dependencies:
+      '@cypherock/sdk-core': link:../core
+      '@cypherock/sdk-interfaces': link:../interfaces
+      '@cypherock/sdk-utils': link:../util
+      long: 5.2.1
+      protobufjs: 7.2.2
+    devDependencies:
+      '@jest/globals': 29.4.1
+      '@stryker-mutator/core': 6.4.1
+      '@stryker-mutator/jest-runner': 6.4.1_voebic7tsm3k7rk6ezzaimtxri
+      '@stryker-mutator/typescript-checker': 6.4.1_7uqal5pkepf6puxg5uigi7ulbq
+      '@types/jest': 29.4.0
+      '@types/node': 18.11.18
+      eslint: 7.32.0
+      eslint-config-custom: link:../util-eslint-config-custom
+      jest: 29.4.1_@types+node@18.11.18
+      lint-staged: 13.2.0
+      prettier-config-custom: link:../util-prettier-config-custom
+      rimraf: 4.1.2
+      ts-jest: 29.0.5_ecv55cdbauq6znr7ci2lzguwra
+      ts-proto: 1.139.0
+      tsconfig: link:../util-tsconfig
+      typescript: 4.9.5
+
+  packages/app-evm:
     specifiers:
       '@cypherock/sdk-core': workspace:^0.0.0
       '@cypherock/sdk-interfaces': workspace:^0.0.0
@@ -532,14 +579,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dev: true
 
-  /@babel/helper-function-name/7.19.0:
-    resolution: {integrity: sha512-WAwHBINyrpqywkUH0nTnNgI5ina5TFn85HKS0pbPDfxFfhyR/aNQEn4hGi1P1JyT//I0t4OgXUlofzWILRvS5w==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      '@babel/template': 7.20.7
-      '@babel/types': 7.21.3
-    dev: true
-
   /@babel/helper-function-name/7.21.0:
     resolution: {integrity: sha512-HfK1aMRanKHpxemaY2gqBmL04iAPOPRj7DxtNbiDOrJK+gdwkiNRVpCpUJYbUT+aZyemKN8brqTOxzCaG6ExRg==}
     engines: {node: '>=6.9.0'}
@@ -670,7 +709,7 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': 7.20.7
+      '@babel/types': 7.21.3
     dev: true
 
   /@babel/plugin-proposal-class-properties/7.18.6_@babel+core@7.20.12:
@@ -906,7 +945,7 @@ packages:
       '@babel/code-frame': 7.18.6
       '@babel/generator': 7.20.14
       '@babel/helper-environment-visitor': 7.18.9
-      '@babel/helper-function-name': 7.19.0
+      '@babel/helper-function-name': 7.21.0
       '@babel/helper-hoist-variables': 7.18.6
       '@babel/helper-split-export-declaration': 7.18.6
       '@babel/parser': 7.20.15
@@ -915,15 +954,6 @@ packages:
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /@babel/types/7.20.7:
-    resolution: {integrity: sha512-69OnhBxSSgK0OzTJai4kyPDiKTIe3j+ctaHdIGVbRahTLAT7L3R9oeXHC2aVSuGYt3cVnoAMDmOCgJ2yaiLMvg==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      '@babel/helper-string-parser': 7.19.4
-      '@babel/helper-validator-identifier': 7.19.1
-      to-fast-properties: 2.0.0
     dev: true
 
   /@babel/types/7.21.3:
@@ -5535,8 +5565,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  /prettier/2.8.6:
-    resolution: {integrity: sha512-mtuzdiBbHwPEgl7NxWlqOkithPyp4VN93V7VeHVWBF+ad3I5avc0RVDT4oImXQy9H/AqxA2NSQH8pSxHW6FYbQ==}
+  /prettier/2.8.7:
+    resolution: {integrity: sha512-yPngTo3aXUUmyuTjeTUT75txrf+aMh9FiD7q9ZE/i6r0bPb22g4FsE6Y338PQX1bmfy08i9QQCB7/rcUAVntfw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
