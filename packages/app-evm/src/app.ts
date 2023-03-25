@@ -17,10 +17,14 @@ export class EvmApp {
     return new EvmApp(sdk);
   }
 
-  public async getPublicKey(params: operations.IGetPublicKeysParams) {
+  public async getPublicKeys(params: operations.IGetPublicKeysParams) {
     return this.sdk.runOperation(() =>
       operations.getPublicKeys(this.sdk, params),
     );
+  }
+
+  public async signTxn(params: operations.ISignTxnParams) {
+    return this.sdk.runOperation(() => operations.signTxn(this.sdk, params));
   }
 
   public async destroy() {

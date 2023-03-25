@@ -29,19 +29,35 @@ export const crc16 = (dataBuff: Uint8Array) => {
 
 export const isHex = (maybeHex: string) => {
   assert(maybeHex, 'Data cannot be empty');
-  return maybeHex.length % 2 === 0 && !/[^a-fA-F0-9]/u.test(maybeHex);
-};
-
-export const hexToUint8Array = (data: string) => {
-  assert(data, 'Invalid data');
-
-  let hex = data;
+  let hex = maybeHex;
 
   if (hex.startsWith('0x')) {
     hex = hex.slice(2);
   }
 
-  assert(isHex(hex), `Invalid hex string: ${data}`);
+  return !/[^a-fA-F0-9]/u.test(hex);
+};
+
+export const formatHex = (maybeHex: string) => {
+  assert(maybeHex, 'Invalid hex');
+
+  let hex = maybeHex;
+
+  if (hex.startsWith('0x')) {
+    hex = hex.slice(2);
+  }
+
+  assert(isHex(hex), `Invalid hex string: ${maybeHex}`);
+
+  if (hex.length % 2 !== 0) {
+    hex = `0${hex}`;
+  }
+
+  return hex;
+};
+
+export const hexToUint8Array = (data: string) => {
+  const hex = formatHex(data);
 
   if (hex.length <= 0) return new Uint8Array([]);
 
@@ -130,15 +146,7 @@ export const intToUintByte = (num: string | number, radix: number) => {
 export const hexToAscii = (str1: string) => {
   assert(str1, 'Invalid string');
 
-  let hex = str1.toString();
-
-  if (hex.startsWith('0x')) {
-    hex = hex.slice(2);
-  }
-
-  if (!isHex(hex)) {
-    throw new Error(`Invalid hex string: ${hex}`);
-  }
+  const hex = formatHex(str1);
 
   let str = '';
   for (let n = 0; n < hex.length; n += 2) {

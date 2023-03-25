@@ -37,6 +37,7 @@
     "@cypherock/sdk-core": "workspace:^0.0.0",
     "@cypherock/sdk-interfaces": "workspace:^0.0.0",
     "@cypherock/sdk-utils": "workspace:^0.0.0",
+    "ethers": "^6.2.2",
     "long": "^5.2.1",
     "protobufjs": "^7.2.2"
   },

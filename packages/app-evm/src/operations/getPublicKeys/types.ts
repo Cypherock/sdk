@@ -1,5 +1,5 @@
 import {
-  GetPublicKeyFormat,
+  AddressFormat,
   GetPublicKeysStatus,
   IGetPublicKeysDerivationPath,
 } from '../../proto/generated/types';
@@ -12,6 +12,6 @@ export interface IGetPublicKeysParams {
   walletId: Uint8Array;
   derivationPaths: IGetPublicKeysDerivationPath[];
   chainId: number;
-  format?: GetPublicKeyFormat;
+  format?: AddressFormat;
   doVerifyOnDevice?: boolean;
 }

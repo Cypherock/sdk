@@ -103,6 +103,7 @@ describe('SDK Version', () => {
         { raw: '000100020032', formatted: '1.2.50' },
         { raw: '000000f200a2', formatted: '0.242.162' },
         { raw: '020010000010', formatted: '512.4096.16' },
+        { raw: '0x020010000010', formatted: '512.4096.16' },
       ];
 
       for (const testCase of testCases) {
@@ -116,8 +117,8 @@ describe('SDK Version', () => {
         null,
         undefined,
         '',
-        '0x1287612121',
-        '3212',
+        '0x1287612121s',
+        '3212s',
         'asdgawvaseaw',
       ];
 

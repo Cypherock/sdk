@@ -6,7 +6,7 @@ import fixtures from './__fixtures__';
 
 import { EvmApp } from '../../src/index';
 
-describe('evmApp.getPublicKeys', () => {
+describe('evmApp.signTxn', () => {
   let connection: MockDeviceConnection;
   let evmApp: EvmApp;
 
@@ -21,12 +21,12 @@ describe('evmApp.getPublicKeys', () => {
     await evmApp.destroy();
   });
 
-  describe('should be able to get public keys', () => {
+  describe('should be able to get signature', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         const onEvent = setupMocks(testCase);
 
-        const output = await evmApp.getPublicKeys({
+        const output = await evmApp.signTxn({
           ...testCase.params,
           onEvent,
         });
@@ -42,7 +42,7 @@ describe('evmApp.getPublicKeys', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const rejectedPromise = evmApp.getPublicKeys(testCase.params);
+        const rejectedPromise = evmApp.signTxn(testCase.params);
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
@@ -59,7 +59,7 @@ describe('evmApp.getPublicKeys', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const rejectedPromise = evmApp.getPublicKeys(testCase.params);
+        const rejectedPromise = evmApp.signTxn(testCase.params);
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
@@ -78,7 +78,7 @@ describe('evmApp.getPublicKeys', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const rejectedPromise = evmApp.getPublicKeys(testCase.params);
+        const rejectedPromise = evmApp.signTxn(testCase.params);
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {

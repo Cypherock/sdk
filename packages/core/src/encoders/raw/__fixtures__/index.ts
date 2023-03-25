@@ -154,11 +154,11 @@ export const decodeRawDataTestCases = {
       version: undefined,
     },
     {
-      payload: '5818f605bc3531741',
+      payload: '5818f605bc3531741s',
       version: PacketVersionMap.v3,
     },
     {
-      payload: '0x12',
+      payload: '0x12s',
       version: PacketVersionMap.v3,
     },
   ],
@@ -249,11 +249,11 @@ export const decodeStatusTestCases = {
       version: undefined,
     },
     {
-      payload: '5818f605bc3531741',
+      payload: '5818f605bc3531741s',
       version: PacketVersionMap.v3,
     },
     {
-      payload: '0x12',
+      payload: '0x12s',
       version: PacketVersionMap.v3,
     },
   ],

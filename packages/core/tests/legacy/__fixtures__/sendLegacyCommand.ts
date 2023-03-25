@@ -27,7 +27,7 @@ const legacySendCommandTestCases = {
     },
     {
       command: 2,
-      data: '231',
+      data: '231ss',
       maxTries: 2,
     },
     {

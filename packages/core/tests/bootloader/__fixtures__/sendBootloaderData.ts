@@ -10,7 +10,7 @@ const sendBootloaderDataTestCases = {
       data: '',
     },
     {
-      data: '214',
+      data: '127s',
     },
     {
       data: 'akjq',

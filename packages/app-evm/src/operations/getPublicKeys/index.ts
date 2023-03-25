@@ -1,7 +1,11 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { createStatusListener, assert } from '@cypherock/sdk-utils';
 import {
-  GetPublicKeyFormat,
+  createStatusListener,
+  assert,
+  hexToUint8Array,
+} from '@cypherock/sdk-utils';
+import {
+  AddressFormat,
   GetPublicKeysStatus,
   IGetPublicKeysResultResponse,
 } from '../../proto/generated/types';
@@ -11,7 +15,7 @@ import { IGetPublicKeysParams } from './types';
 export * from './types';
 
 const defaultParams = {
-  format: GetPublicKeyFormat.DEFAULT,
+  format: AddressFormat.DEFAULT,
   doVerifyOnDevice: true,
 };
 
@@ -51,7 +55,7 @@ export const getPublicKeys = async (
     initiate: {
       walletId: params.walletId,
       derivationPaths: params.derivationPaths,
-      chainId: params.chainId,
+      chainId: hexToUint8Array(params.chainId.toString(16)),
       format: params.format ?? defaultParams.format,
       doVerify: params.doVerifyOnDevice ?? defaultParams.doVerifyOnDevice,
     },

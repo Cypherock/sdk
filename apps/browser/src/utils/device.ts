@@ -1,5 +1,5 @@
-import DeviceConnection from "@cypherock/sdk-hw-webusb";
-import { ManagerApp } from "@cypherock/sdk-app-manager";
+import DeviceConnection from '@cypherock/sdk-hw-webusb';
+import { ManagerApp } from '@cypherock/sdk-app-manager';
 
 export default async function run() {
   const connection = await DeviceConnection.create();

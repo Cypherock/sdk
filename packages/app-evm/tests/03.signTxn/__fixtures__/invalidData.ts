@@ -3,7 +3,7 @@ import {
   DeviceAppErrorType,
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
-import { IGetPublicKeysTestCase } from './types';
+import { ISignTxnTestCase } from './types';
 
 const commonParams = {
   params: {
@@ -12,27 +12,23 @@ const commonParams = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPaths: [
-      {
-        path: [
-          { index: 44, isHardened: true },
-          { index: 60, isHardened: true },
-          { index: 0, isHardened: true },
-          { index: 0, isHardened: false },
-          { index: 0, isHardened: false },
-        ],
-      },
+    derivationPath: [
+      { index: 44, isHardened: true },
+      { index: 60, isHardened: true },
+      { index: 0, isHardened: true },
+      { index: 0, isHardened: false },
+      { index: 0, isHardened: false },
     ],
-    chainId: 1,
+    txn: '0xed8205a385059aaf0d8082520894292f04a44506c2fd49bac032e1ca148c35a478c887c962225a2ab40080018080',
   },
   queries: [
     {
       name: 'Initate query',
       data: new Uint8Array([
-        10, 69, 10, 67, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
+        18, 65, 10, 63, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
         38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 24, 10, 4, 8, 44, 16, 1, 10, 4, 8,
-        60, 16, 1, 10, 2, 16, 1, 10, 2, 16, 0, 10, 2, 16, 0, 24, 1, 34, 1, 1,
+        53, 86, 128, 26, 3, 187, 121, 64, 18, 4, 8, 44, 16, 1, 18, 4, 8, 60, 16,
+        1, 18, 2, 16, 1, 18, 2, 16, 0, 18, 2, 16, 0, 26, 1, 1,
       ]),
     },
   ],
@@ -40,7 +36,7 @@ const commonParams = {
   errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_RESULT],
 };
 
-const invalidData: IGetPublicKeysTestCase[] = [
+const invalidData: ISignTxnTestCase[] = [
   {
     name: 'Invalid data',
     ...commonParams,

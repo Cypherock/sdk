@@ -1,4 +1,4 @@
-import { assert, isHex } from '@cypherock/sdk-utils';
+import { formatHex, assert, isHex } from '@cypherock/sdk-utils';
 import { compareVersions, validate } from 'compare-versions';
 
 import { PacketVersion, PacketVersionMap } from './packetVersions';
@@ -37,9 +37,11 @@ export const formatSDKVersion = (version: string) => {
   assert(isHex(version), 'Invalid hex in version');
   assert(version.length >= 12, 'SDK version should be atleast 6 bytes.');
 
-  const major = parseInt(version.slice(0, 4), 16);
-  const minor = parseInt(version.slice(4, 8), 16);
-  const patch = parseInt(version.slice(8, 12), 16);
+  const hexVersion = formatHex(version);
+
+  const major = parseInt(hexVersion.slice(0, 4), 16);
+  const minor = parseInt(hexVersion.slice(4, 8), 16);
+  const patch = parseInt(hexVersion.slice(8, 12), 16);
 
   return `${major}.${minor}.${patch}`;
 };

@@ -1,4 +1,4 @@
-import { GetPublicKeyFormat } from '../../../src';
+import { AddressFormat } from '../../../src';
 import { IGetPublicKeysTestCase } from './types';
 
 const requestOneAddress: IGetPublicKeysTestCase = {
@@ -26,10 +26,10 @@ const requestOneAddress: IGetPublicKeysTestCase = {
     {
       name: 'Initate query',
       data: new Uint8Array([
-        10, 68, 10, 66, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
+        10, 69, 10, 67, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
         38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
         53, 86, 128, 26, 3, 187, 121, 64, 18, 24, 10, 4, 8, 44, 16, 1, 10, 4, 8,
-        60, 16, 1, 10, 2, 16, 1, 10, 2, 16, 0, 10, 2, 16, 0, 24, 1, 32, 1,
+        60, 16, 1, 10, 2, 16, 1, 10, 2, 16, 0, 10, 2, 16, 0, 24, 1, 34, 1, 1,
       ]),
     },
   ],
@@ -101,7 +101,7 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
       },
     ],
     chainId: 1666600000,
-    format: GetPublicKeyFormat.HARMONY,
+    format: AddressFormat.HARMONY,
     doVerifyOnDevice: false,
   },
   queries: [
@@ -114,7 +114,7 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
         8, 60, 16, 1, 10, 2, 16, 1, 10, 2, 16, 0, 10, 2, 16, 0, 18, 26, 10, 4,
         8, 44, 16, 1, 10, 4, 8, 60, 16, 1, 10, 4, 8, 1, 16, 1, 10, 2, 16, 0, 10,
         2, 16, 0, 18, 26, 10, 4, 8, 44, 16, 1, 10, 4, 8, 60, 16, 1, 10, 4, 8, 2,
-        16, 1, 10, 2, 16, 0, 10, 2, 16, 0, 32, 192, 152, 217, 154, 6, 40, 1,
+        16, 1, 10, 2, 16, 0, 10, 2, 16, 0, 34, 4, 99, 86, 76, 64, 40, 1,
       ]),
     },
   ],

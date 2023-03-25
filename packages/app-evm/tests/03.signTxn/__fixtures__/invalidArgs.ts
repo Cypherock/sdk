@@ -1,4 +1,4 @@
-import { IGetPublicKeysTestCase } from './types';
+import { ISignTxnTestCase } from './types';
 
 const commonParams = {
   queries: [{ name: 'empty', data: new Uint8Array([]) }],
@@ -13,21 +13,17 @@ const validParams = {
     110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
     64,
   ]),
-  derivationPaths: [
-    {
-      path: [
-        { index: 44, isHardened: true },
-        { index: 60, isHardened: true },
-        { index: 0, isHardened: true },
-        { index: 0, isHardened: false },
-        { index: 0, isHardened: false },
-      ],
-    },
+  derivationPath: [
+    { index: 44, isHardened: true },
+    { index: 60, isHardened: true },
+    { index: 0, isHardened: true },
+    { index: 0, isHardened: false },
+    { index: 0, isHardened: false },
   ],
-  chainId: '1',
+  txn: '0xed8205a385059aaf0d8082520894292f04a44506c2fd49bac032e1ca148c35a478c887c962225a2ab40080018080',
 };
 
-const invalidArgs: IGetPublicKeysTestCase[] = [
+const invalidArgs: ISignTxnTestCase[] = [
   {
     name: 'Null',
     ...commonParams,
@@ -44,9 +40,9 @@ const invalidArgs: IGetPublicKeysTestCase[] = [
     params: {} as any,
   },
   {
-    name: 'No derivation paths',
+    name: 'No derivation path',
     ...commonParams,
-    params: { ...validParams, derivationPaths: undefined } as any,
+    params: { ...validParams, derivationPath: undefined } as any,
   },
   {
     name: 'No wallet id',
@@ -54,16 +50,16 @@ const invalidArgs: IGetPublicKeysTestCase[] = [
     params: { ...validParams, walletId: undefined } as any,
   },
   {
-    name: 'No chain id',
+    name: 'No txn',
     ...commonParams,
-    params: { ...validParams, chainId: undefined } as any,
+    params: { ...validParams, txn: undefined } as any,
   },
   {
     name: 'Empty derivation path',
     ...commonParams,
     params: {
       ...validParams,
-      derivationPaths: [],
+      derivationPath: [],
     } as any,
   },
   {
@@ -71,15 +67,21 @@ const invalidArgs: IGetPublicKeysTestCase[] = [
     ...commonParams,
     params: {
       ...validParams,
-      derivationPaths: [
-        {
-          path: [
-            { index: 44, isHardened: true },
-            { index: 0, isHardened: true },
-          ],
-        },
+      derivationPath: [
+        { index: 44, isHardened: true },
+        { index: 0, isHardened: true },
       ],
     },
+  },
+  {
+    name: 'invalid txn',
+    ...commonParams,
+    params: {
+      ...validParams,
+      txn: '0x1237162387',
+    },
+    errorInstance: Error,
+    errorMessage: /Invalid txn/,
   },
 ];
 
