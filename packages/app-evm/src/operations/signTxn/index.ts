@@ -12,22 +12,8 @@ import { ISignTxnParams, ISignTxnResult } from './types';
 
 export * from './types';
 
-const CHUNK_SIZE = 5120;
-
 const defaultParams = {
   addressFormat: AddressFormat.DEFAULT,
-};
-
-const splitTxnIntoChunks = (txn: Uint8Array): Uint8Array[] => {
-  const chunks: Uint8Array[] = [];
-  const totalChunks = Math.ceil(txn.length / CHUNK_SIZE);
-
-  for (let i = 0; i < totalChunks; i += 1) {
-    const chunk = txn.slice(i * CHUNK_SIZE, i * CHUNK_SIZE + CHUNK_SIZE);
-    chunks.push(chunk);
-  }
-
-  return chunks;
 };
 
 export const signTxn = async (
@@ -73,33 +59,13 @@ export const signTxn = async (
   });
 
   const txnBytes = hexToUint8Array(params.txn);
-  const txnChunks = splitTxnIntoChunks(txnBytes);
-  let remainingSize = txnBytes.length;
-
-  for (let i = 0; i < txnChunks.length; i += 1) {
-    const chunk = txnChunks[i];
-
-    const result = await helper.waitForResult();
-    assertOrThrowInvalidResult(result.txnData);
-    assertOrThrowInvalidResult(result.txnData.chunkIndex === i);
-
-    forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CONFIRM);
-
-    remainingSize -= chunk.length;
-    await helper.sendQuery({
-      txnData: {
-        txnChunk: chunk,
-        chunkIndex: i,
-        totalChunks: txnChunks.length,
-        remainingSize,
-      },
-    });
-  }
+  await helper.sendInChunks(txnBytes, 'txnData', 'txnData');
+  forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CONFIRM);
 
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.signature);
 
-  forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_VERIFY);
+  forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CARD);
 
   const signature = {
     r: `0x${uint8ArrayToHex(result.signature.r)}`,

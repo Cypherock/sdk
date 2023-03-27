@@ -92,7 +92,13 @@ const parseInterfaces = async () => {
           );
 
           dependencies.push(interfaceNames[interfaceIndex]);
-          tSortEdges.push([interfaceName, interfaceNames[interfaceIndex]]);
+          if (interfaceName === interfaceNames[interfaceIndex]) {
+            console.warn(
+              `Cyclic dependency found: ${interfaceName} <=> ${interfaceNames[interfaceIndex]}`,
+            );
+          } else {
+            tSortEdges.push([interfaceName, interfaceNames[interfaceIndex]]);
+          }
 
           const newLine = `${nestedInterfaceMatch[1]} ${interfaceNames[interfaceIndex]}${nestedInterfaceMatch[3]}${nestedInterfaceMatch[4]}`;
           interfaceBlock.push(newLine);

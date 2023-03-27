@@ -1,6 +1,7 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 import { OnStatus } from '@cypherock/sdk-utils';
+import { ChunkRequest, ChunkResponse } from '../proto/generated/common';
 import { DeepPartial, Exact, Query, Result } from '../proto/generated/evm/core';
 import { assertOrThrowInvalidResult, parseCoreError } from './asserts';
 
@@ -33,6 +34,8 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
   private readonly onStatus?: OnStatus;
 
+  private static readonly CHUNK_SIZE = 5120;
+
   constructor(params: {
     sdk: ISDK;
     queryKey: Q;
@@ -62,5 +65,57 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
     parseCoreError((result[this.resultKey] as any).coreError);
 
     return retrunObj;
+  }
+
+  private static splitIntoChunks(txn: Uint8Array): Uint8Array[] {
+    const chunks: Uint8Array[] = [];
+    const totalChunks = Math.ceil(txn.length / OperationHelper.CHUNK_SIZE);
+
+    for (let i = 0; i < totalChunks; i += 1) {
+      const chunk = txn.slice(
+        i * OperationHelper.CHUNK_SIZE,
+        i * OperationHelper.CHUNK_SIZE + OperationHelper.CHUNK_SIZE,
+      );
+      chunks.push(chunk);
+    }
+
+    return chunks;
+  }
+
+  public async sendInChunks<
+    RK extends keyof Exclude<Result[R], null | undefined>,
+    QK extends keyof Exclude<Query[Q], null | undefined>,
+  >(data: Uint8Array, queryKey: QK, resultKey: RK) {
+    const chunks = OperationHelper.splitIntoChunks(data);
+    let remainingSize = data.length;
+
+    for (let i = 0; i < chunks.length; i += 1) {
+      const chunk = chunks[i];
+
+      const result = await this.waitForResult();
+      assertOrThrowInvalidResult(result[resultKey]);
+
+      const { chunkRequest } = result[resultKey] as {
+        chunkRequest: ChunkRequest;
+      };
+
+      assertOrThrowInvalidResult(chunkRequest);
+      assertOrThrowInvalidResult(chunkRequest.chunkIndex === i);
+
+      remainingSize -= chunk.length;
+
+      const chunkResponse: ChunkResponse = {
+        chunk,
+        chunkIndex: i,
+        totalChunks: chunks.length,
+        remainingSize,
+      };
+
+      await this.sendQuery({
+        [queryKey]: {
+          chunkResponse,
+        },
+      });
+    }
   }
 }
