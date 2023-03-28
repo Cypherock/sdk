@@ -9,5 +9,6 @@ export interface ISignPersonalMsgParams {
 
   walletId: Uint8Array;
   derivationPath: IDerivationPath[];
-  message: Uint8Array;
+  // hex string
+  message: string;
 }

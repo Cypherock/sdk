@@ -20,11 +20,8 @@ const validParams = {
     { index: 0, isHardened: false },
     { index: 0, isHardened: false },
   ],
-  message: new Uint8Array([
-    116, 101, 115, 116, 105, 110, 103, 32, 116, 101, 120, 116, 32, 102, 111,
-    114, 32, 115, 105, 103, 110, 105, 110, 103, 32, 112, 101, 114, 115, 111,
-    110, 97, 108, 32, 109, 101, 115, 115, 97, 103, 101,
-  ]),
+  message:
+    '0x74657374696e67207465787420666f72207369676e696e6720706572736f6e616c206d657373616765',
 };
 
 const invalidArgs: ISignPersonalMsgTestCase[] = [
@@ -75,6 +72,14 @@ const invalidArgs: ISignPersonalMsgTestCase[] = [
         { index: 44, isHardened: true },
         { index: 0, isHardened: true },
       ],
+    },
+  },
+  {
+    name: 'invalid message hex',
+    ...commonParams,
+    params: {
+      ...validParams,
+      message: '0x214s',
     },
   },
 ];
