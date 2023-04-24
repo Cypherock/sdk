@@ -80,3 +80,50 @@ The `create` static method creates a new instance of the `Transport` class with 
 ```typescript
 static async create(timeout?: number): Promise<Transport>
 ```
+
+## Sample code 
+
+```typescript
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ledger WebUSB Example</title>
+  <script type="module">
+    // Import the Transport class and custom error classes
+    import { Transport, TransportWebUSBGestureRequired, TransportOpenUserCancelled } from './transport.js';
+
+    async function main() {
+      // Button click event listener
+      document.getElementById('connect').addEventListener('click', async () => {
+        try {
+          // Use the create method to get a new instance of the Transport class
+          const transport = await Transport.create(5000);
+          console.log('Transport instance:', transport);
+
+          // Access the Ledger device and perform further actions with the transport instance
+          // ...
+        } catch (error) {
+          if (error instanceof TransportWebUSBGestureRequired) {
+            console.error('User gesture required:', error.message);
+          } else if (error instanceof TransportOpenUserCancelled) {
+            console.error('User cancelled the device connection:', error.message);
+          } else {
+            console.error('Error:', error.message);
+          }
+        }
+      });
+    }
+
+    main();
+  </script>
+</head>
+<body>
+  <h1>Ledger WebUSB Example</h1>
+  <button id="connect">Connect Ledger Device</button>
+</body>
+</html>
+
+
+```
