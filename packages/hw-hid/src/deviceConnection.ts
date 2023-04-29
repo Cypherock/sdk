@@ -125,14 +125,19 @@ export default class DeviceConnection implements IDeviceConnection {
    */
   public async send(data: Uint8Array) {
     this.connection.write(Buffer.from([0x00, ...data]));
+    console.log({ data });
   }
 
   public async receive() {
-    return this.dataListener.receive();
+    const recv = await this.dataListener.receive();
+    console.log({ recv: JSON.stringify(recv, undefined, 2) });
+    return recv;
   }
 
   public async peek() {
-    return this.dataListener.peek();
+    const peek = await this.dataListener.peek();
+    console.log({ peek: JSON.stringify(peek, undefined, 2) });
+    return peek;
   }
 
   private onClose() {

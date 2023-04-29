@@ -65,6 +65,7 @@ export const waitForCommandOutput = async ({
         expectedCommandTypes.length > 0 &&
         !expectedCommandTypes.includes(resp.commandType)
       ) {
+        console.log({ resp });
         throw new DeviceAppError(DeviceAppErrorType.INVALID_RESULT);
       }
       return resp;

@@ -98,16 +98,22 @@ export default class DeviceConnection implements IDeviceConnection {
   /**
    * Writes a given data string (in hex) to the device.
    */
-  public send(data: Uint8Array) {
-    return this.dataListener.send(data);
+  public async send(data: Uint8Array) {
+    const sentData = await this.dataListener.send(data);
+    console.log({ sentData });
+    return sentData;
   }
 
   public async receive() {
-    return this.dataListener.receive();
+    const recv = this.dataListener.receive();
+    console.log({ recv: JSON.stringify(recv, undefined, 2) });
+    return recv;
   }
 
   public async peek() {
-    return this.dataListener.peek();
+    const peek = this.dataListener.peek();
+    console.log({ peek: JSON.stringify(peek, undefined, 2) });
+    return peek;
   }
 
   /**
