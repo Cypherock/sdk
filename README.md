@@ -1,73 +1,93 @@
-# Turborepo starter
+# Cypherock SDK
 
-This is an official pnpm starter turborepo.
+## Table of contents
 
-## What's inside?
+1. [Prerequisites](#prerequisites)
+2. [Understanding the directory structure](#understanding-the-directory-structure)
+3. [Development Setup](#development-setup)
+4. [Local setup](#local-setup)
+5. [Other commands](#other-commands)
+6. [Contributing](#contributing)
 
-This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes the following packages/apps:
+## Prerequisites
 
-### Apps and Packages
+Before you get started, please make sure you have the following setup -
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+- Node.js v16 (use [nvm][1] if already using a different Node version).
+- [`pnpm`][2]
+  ```
+  npm i -g pnpm
+  ```
+- Install [`protoc`][9]
+- Python >=3.6
+  - [Download][7] and install the latest Python version.
+  - Run `npm config set python /path/to/executable/python` to configure.
+- Install and set up [node-gyp][6] -
+  - `npm i -g node-gyp` to install.
+  - For Windows, follow an additional step -
+    - Install Visual C++ 2017 Build Environment: [Visual Studio Build Tools][3] (using "Visual C++ build tools" workload) or [Visual Studio Community][4] (using the "Desktop development with C++" workload).
+  - For more details, please refer to the [node-gyp documentation][5].
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm run build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
+## Understanding the directory structure
 
 ```
-cd my-turborepo
-pnpm run dev
+├── apps                # Contains all the applications 
+│   └── browser             # Browser application to test sdk
+│   └── node                # Nodejs application to test sdk
+│   └── docs                # Documentation for sdk
+│
+├── packages            # Holds packages required for sdk
+│   └── app-manager         # Manager application containing all
+│   └── core                # Handles low level communication protocol necessary for device communication
+│   └── hw-hid              # Handles device connection with HID protocol
+│   └── hw-serialport       # Handles device connection with SerialPort protocol
+│   └── hw-webusb           # Handles device connection with WebUSB protocol
+│   └── interfaces          # Contains common interfaces between other packages
+│   └── util-*              # Common utilities shared between packages
+│
+├── submodules          # Contains all submodules required for sdk 
+│   └── common              # Common configs and protobufs shared between device and sdk
+│
+├── package.json
+
 ```
 
-### Remote Caching
+## Development Setup
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+> The repository contains submodules, which need to be downloaded as well.
+> Clone the repository along with its submodules using -
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-pnpm dlx turbo login
+```sh
+git clone git@github.com:Cypherock/sdk.git --recurse-submodules
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Local setup
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
+Once you have cloned the repository, follow these steps -
 
+```sh
+pnpm i        # Install packages
+pnpm build        # build all modules
 ```
-pnpm dlx turbo link
-```
 
-## Useful Links
+### Other commands
 
-Learn more about the power of Turborepo:
+- `pnpm start:node`: Start demo app on nodejs
+- `pnpm start:browser`: Start demo app on browser
+- `pnpm test`: Run all tests
+- `pnpm lint`: Lint all files
+- `pnpm pretty`: Prettify all files
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+## Contributing
+
+Please consider making a contribution to the project. Contributions can include bug fixes, feature proposal, or optimizations to the current code.
+
+[1]: https://nodejs.org/en/download/package-manager/#nvm "How to use NVM"
+[2]: https://pnpm.io/ "Pnpm documentation"
+[3]: https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools "MS VS Build Tools"
+[4]: https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community "MS VS Community"
+[5]: https://github.com/nodejs/node-gyp "node-gyp documentation"
+[6]: https://github.com/nodejs/node-gyp#on-windows "Configure node-gyp on Windows"
+[7]: https://www.python.org/downloads "Download Python"
+[8]: https://nodejs.org/api/fs.html#fsrmsyncpath-options "fs.rmSync was introduced in v14.14.0"
+[9]: https://grpc.io/docs/protoc-installation/ "Protoc Installation"

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "lib": ["ES2018", "DOM"],
+    "allowJs": true
+  },
+  "extends": "tsconfig/base.json",
+  "include": ["./src/**/*.ts", "./src/generated"],
+  "exclude": ["node_modules"]
+}

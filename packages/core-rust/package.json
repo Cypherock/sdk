@@ -1,0 +1,29 @@
+{
+  "name": "@cypherock/sdk-core-rust",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint:disabled": "eslint --ext .ts,tsx,js,jsx,js src/ --fix",
+    "lint:check:disabled": "eslint --ext .ts,tsx,js,jsx,js src/",
+    "pretty:disabled": "prettier --write 'src/**/*.ts'",
+    "pretty:check:disabled": "prettier --check 'src/**/*.ts'",
+    "build:ts": "rimraf dist && tsc -p tsconfig.json",
+    "build:disabled": "make"
+  },
+  "devDependencies": {
+    "@types/node": "18.11.18",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "prettier-config-custom": "workspace:^0.0.0",
+    "rimraf": "^4.1.2",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@cypherock/sdk-interfaces": "workspace:^0.0.0",
+    "compare-versions": "6.0.0-rc.1",
+    "uuid": "^9.0.0"
+  }
+}

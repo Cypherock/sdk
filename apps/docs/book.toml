@@ -1,0 +1,7 @@
+[book]
+authors = ["Cypherock"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Cypherock SDK"
+description = "Documentation for Cypherock SDK"

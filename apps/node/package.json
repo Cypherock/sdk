@@ -1,0 +1,29 @@
+{
+  "name": "nodejs-test",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint --ext .ts,tsx,js,jsx,js src/ --fix",
+    "lint:check": "eslint --ext .ts,tsx,js,jsx,js src/",
+    "pretty": "prettier --write 'src/**/*.ts'",
+    "pretty:check": "prettier --check 'src/**/*.ts'",
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "start:node": "node dist/index.js"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "prettier-config-custom": "workspace:^0.0.0",
+    "rimraf": "^4.1.2",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@cypherock/sdk-app-manager": "workspace:^0.0.0",
+    "@cypherock/sdk-core": "workspace:^0.0.0",
+    "@cypherock/sdk-hw-hid": "workspace:^0.0.0",
+    "@cypherock/sdk-hw-serialport": "workspace:^0.0.0"
+  }
+}
