@@ -18,7 +18,8 @@
     "start:browser": "turbo run build && turbo run start:browser",
     "dev:browser": "turbo run build && turbo run dev:browser",
     "pre-commit": "turbo run pre-commit --concurrency=1",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "clean": "node scripts/clean.js && bash ./scripts/clean.sh"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
