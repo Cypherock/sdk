@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['custom'],
+  extends: ["@cypherock/eslint-config"],
   parserOptions: {
     tsconfigRootDir: __dirname,
     project: ['./tsconfig.eslint.json'],

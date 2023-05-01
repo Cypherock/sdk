@@ -19,14 +19,14 @@
     "@types/jest": "^29.4.0",
     "@types/node": "18.11.18",
     "eslint": "^7.32.0",
-    "eslint-config-custom": "workspace:*",
+    "@cypherock/eslint-config": "workspace:*",
     "jest": "^29.4.1",
     "lint-staged": "^13.2.0",
-    "prettier-config-custom": "workspace:^0.0.0",
+    "@cypherock/prettier-config": "workspace:^0.0.0",
     "rimraf": "^4.1.2",
     "ts-jest": "^29.0.5",
     "ts-proto": "^1.139.0",
-    "tsconfig": "workspace:*",
+    "@cypherock/tsconfig": "workspace:*",
     "typescript": "^4.5.2"
   },
   "dependencies": {

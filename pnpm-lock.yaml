@@ -13,18 +13,18 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^17.4.4
         version: 17.4.4
-      eslint-config-custom:
+      '@cypherock/eslint-config':
         specifier: workspace:*
-        version: link:packages/util-eslint-config-custom
+        version: link:packages/util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:*
+        version: link:packages/util-prettier-config
       husky:
         specifier: ^8.0.0
         version: 8.0.3
       prettier:
         specifier: latest
         version: 2.8.8
-      prettier-config-custom:
-        specifier: workspace:*
-        version: link:packages/util-prettier-config-custom
       turbo:
         specifier: latest
         version: 1.9.3
@@ -89,21 +89,21 @@ importers:
         specifier: workspace:^0.0.0
         version: link:../../packages/hw-serialport
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../../packages/util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/util-tsconfig
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../../packages/util-eslint-config-custom
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../../packages/util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.4
@@ -126,6 +126,15 @@ importers:
         specifier: ^7.2.2
         version: 7.2.2
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@jest/globals':
         specifier: ^29.4.1
         version: 29.4.1
@@ -147,18 +156,12 @@ importers:
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
       jest:
         specifier: ^29.4.1
         version: 29.4.1(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
         specifier: ^13.2.0
         version: 13.2.0
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
@@ -168,9 +171,6 @@ importers:
       ts-proto:
         specifier: ^1.139.0
         version: 1.139.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.5
@@ -196,6 +196,15 @@ importers:
         specifier: ^7.2.2
         version: 7.2.2
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@jest/globals':
         specifier: ^29.4.1
         version: 29.4.1
@@ -217,18 +226,12 @@ importers:
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
       jest:
         specifier: ^29.4.1
         version: 29.4.1(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
         specifier: ^13.2.0
         version: 13.2.0
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
@@ -238,9 +241,6 @@ importers:
       ts-proto:
         specifier: ^1.139.0
         version: 1.139.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.5
@@ -269,6 +269,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@jest/globals':
         specifier: ^29.4.1
         version: 29.4.1
@@ -290,18 +299,12 @@ importers:
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
       jest:
         specifier: ^29.4.1
         version: 29.4.1(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
         specifier: ^13.2.0
         version: 13.2.0
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
@@ -311,9 +314,6 @@ importers:
       ts-proto:
         specifier: ^1.139.0
         version: 1.139.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.5
@@ -336,6 +336,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@jest/globals':
         specifier: ^29.4.1
         version: 29.4.1
@@ -348,18 +357,12 @@ importers:
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
       jest:
         specifier: ^29.4.1
         version: 29.4.1(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
         specifier: ^13.2.0
         version: 13.2.0
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
@@ -369,9 +372,6 @@ importers:
       ts-proto:
         specifier: ^1.139.0
         version: 1.139.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.4
@@ -388,24 +388,24 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@types/node':
         specifier: 18.11.18
         version: 18.11.18
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.5
@@ -422,6 +422,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@types/node-hid':
         specifier: ^1.3.1
         version: 1.3.1
@@ -431,21 +440,12 @@ importers:
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
       lint-staged:
         specifier: ^13.2.0
         version: 13.2.0
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.5
@@ -462,6 +462,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@types/serialport':
         specifier: 8.0.1
         version: 8.0.1
@@ -471,21 +480,12 @@ importers:
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
       lint-staged:
         specifier: ^13.2.0
         version: 13.2.0
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.5
@@ -499,6 +499,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@types/uuid':
         specifier: ^9.0.0
         version: 9.0.0
@@ -508,21 +517,12 @@ importers:
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
       lint-staged:
         specifier: ^13.2.0
         version: 13.2.0
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.5
@@ -539,27 +539,27 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@types/uuid':
         specifier: ^9.0.0
         version: 9.0.0
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
       lint-staged:
         specifier: ^13.2.0
         version: 13.2.0
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.4
@@ -579,6 +579,15 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.0
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
       '@jest/globals':
         specifier: ^29.4.1
         version: 29.4.1
@@ -591,18 +600,12 @@ importers:
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../util-eslint-config-custom
       jest:
         specifier: ^29.4.1
         version: 29.4.1(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
         specifier: ^13.2.0
         version: 13.2.0
-      prettier-config-custom:
-        specifier: workspace:^0.0.0
-        version: link:../util-prettier-config-custom
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
@@ -612,14 +615,11 @@ importers:
       ts-proto:
         specifier: ^1.139.0
         version: 1.139.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../util-tsconfig
       typescript:
         specifier: ^4.5.2
         version: 4.9.5
 
-  packages/util-eslint-config-custom:
+  packages/util-eslint-config:
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.49.0
@@ -635,16 +635,16 @@ importers:
         version: 8.6.0(eslint@7.32.0)
       prettier:
         specifier: ^2.8.3
-        version: 2.8.4
+        version: 2.8.8
       typescript:
         specifier: ^4.7.4
         version: 4.9.5
 
-  packages/util-prettier-config-custom:
+  packages/util-prettier-config:
     dependencies:
       prettier:
         specifier: ^2.8.3
-        version: 2.8.4
+        version: 2.8.8
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.49.0
@@ -6104,16 +6104,10 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  /prettier@2.8.4:
-    resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-
   /prettier@2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
     hasBin: true
-    dev: true
 
   /pretty-format@29.4.1:
     resolution: {integrity: sha512-dt/Z761JUVsrIKaY215o1xQJBGlSmTx/h4cSqXqjHLnU1+Kt+mavVE7UgqJJO5ukx5HjSswHfmXz4LjS2oIJfg==}

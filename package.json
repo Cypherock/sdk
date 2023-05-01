@@ -24,10 +24,10 @@
     "@changesets/cli": "^2.26.1",
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
-    "eslint-config-custom": "workspace:*",
+    "@cypherock/eslint-config": "workspace:*",
     "husky": "^8.0.0",
     "prettier": "latest",
-    "prettier-config-custom": "workspace:*",
+    "@cypherock/prettier-config": "workspace:*",
     "turbo": "latest"
   },
   "engines": {
