@@ -1,0 +1,11 @@
+import { Mutant } from '@stryker-mutator/api/src/core';
+export declare class TSFileNode {
+    fileName: string;
+    parents: TSFileNode[];
+    children: TSFileNode[];
+    constructor(fileName: string, parents: TSFileNode[], children: TSFileNode[]);
+    getAllParentReferencesIncludingSelf(allParentReferences?: Set<TSFileNode>): Set<TSFileNode>;
+    getAllChildReferencesIncludingSelf(allChildReferences?: Set<TSFileNode>): Set<TSFileNode>;
+    getMutantsWithReferenceToChildrenOrSelf(mutants: Mutant[], nodesChecked?: string[]): Mutant[];
+}
+//# sourceMappingURL=ts-file-node.d.ts.map

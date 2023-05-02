@@ -1,0 +1,9 @@
+export declare const restClientNpmSearch = "restClientNpmSearch";
+export declare const restClientNpm = "restClientNpm";
+export declare const npmClient = "npmClient";
+export declare const strykerPresets = "strykerPresets";
+export declare const configWriter = "configWriter";
+export declare const gitignoreWriter = "gitignoreWriter";
+export declare const inquirer = "inquirer";
+export declare const out = "out";
+//# sourceMappingURL=initializer-tokens.d.ts.map

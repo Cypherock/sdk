@@ -1,0 +1,17 @@
+import { LitElement, PropertyValues } from 'lit';
+import { FileUnderTestModel, Metrics, MetricsResult } from 'mutation-testing-metrics';
+import { Thresholds } from 'mutation-testing-report-schema/api';
+import { DrawerMode } from '../drawer/drawer.component';
+export declare class MutationTestReportMutantViewComponent extends LitElement {
+    drawerMode: DrawerMode;
+    private selectedMutant?;
+    static styles: import("lit").CSSResult[];
+    result: MetricsResult<FileUnderTestModel, Metrics>;
+    thresholds: Thresholds;
+    path: string[];
+    private handleClick;
+    private handleMutantSelected;
+    updated(changes: PropertyValues): void;
+    render(): import("lit-html").TemplateResult<1>;
+}
+//# sourceMappingURL=mutant-view.d.ts.map

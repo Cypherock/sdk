@@ -1,0 +1,1 @@
+{"version":3,"file":"preset-configuration.d.ts","sourceRoot":"","sources":["../../../../src/initializer/presets/preset-configuration.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,qBAAqB,EAAE,MAAM,2BAA2B,CAAC;AAElE,MAAM,WAAW,mBAAmB;IAClC,MAAM,EAAE,qBAAqB,CAAC;IAC9B,QAAQ,EAAE,MAAM,CAAC;IACjB,YAAY,EAAE,MAAM,EAAE,CAAC;IACvB,qBAAqB,CAAC,EAAE,MAAM,CAAC,MAAM,EAAE,MAAM,CAAC,CAAC;CAChD"}

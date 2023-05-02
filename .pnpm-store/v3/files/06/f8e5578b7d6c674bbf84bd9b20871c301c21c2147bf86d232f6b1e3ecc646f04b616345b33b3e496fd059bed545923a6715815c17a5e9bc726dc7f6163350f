@@ -1,0 +1,1 @@
+{"version":3,"file":"dry-run-completed-event.d.ts","sourceRoot":"","sources":["../../../src/report/dry-run-completed-event.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,oBAAoB,EAAE,MAAM,yBAAyB,CAAC;AAE/D,MAAM,WAAW,oBAAoB;IACnC,MAAM,EAAE,oBAAoB,CAAC;IAC7B,MAAM,EAAE,SAAS,CAAC;CACnB;AAED,MAAM,WAAW,SAAS;IACxB;;OAEG;IACH,GAAG,EAAE,MAAM,CAAC;IACZ;;;OAGG;IACH,QAAQ,EAAE,MAAM,CAAC;CAClB"}

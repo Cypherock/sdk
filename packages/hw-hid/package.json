@@ -1,6 +1,6 @@
 {
   "name": "@cypherock/sdk-hw-hid",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -18,13 +18,13 @@
     "eslint": "^7.32.0",
     "@cypherock/eslint-config": "workspace:*",
     "lint-staged": "^13.2.0",
-    "@cypherock/prettier-config": "workspace:^0.0.0",
+    "@cypherock/prettier-config": "workspace:^0.0.1",
     "rimraf": "^4.1.2",
     "@cypherock/tsconfig": "workspace:*",
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@cypherock/sdk-interfaces": "workspace:^0.0.0",
+    "@cypherock/sdk-interfaces": "workspace:^0.0.1",
     "node-hid": "^2.1.2",
     "uuid": "^9.0.0"
   },

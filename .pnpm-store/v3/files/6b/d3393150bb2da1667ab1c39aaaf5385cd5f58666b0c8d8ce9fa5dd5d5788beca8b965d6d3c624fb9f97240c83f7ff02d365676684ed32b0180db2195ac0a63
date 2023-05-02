@@ -1,0 +1,41 @@
+{
+    "name": "@types/serialport",
+    "version": "8.0.1",
+    "description": "TypeScript definitions for serialport",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Jeremy Foster",
+            "url": "https://github.com/codefoster",
+            "githubUsername": "codefoster"
+        },
+        {
+            "name": "Andrew Pearson",
+            "url": "https://github.com/apearson",
+            "githubUsername": "apearson"
+        },
+        {
+            "name": "Cameron Tacklind",
+            "url": "https://github.com/cinderblock",
+            "githubUsername": "cinderblock"
+        },
+        {
+            "name": "Doug Brunner",
+            "url": "https://github.com/doug-a-brunner",
+            "githubUsername": "doug-a-brunner"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/serialport"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/node": "*"
+    },
+    "typesPublisherContentHash": "09f462da576dfedb8014955cf1704661c73acd9036eb90e869d2d538b0d27fe3",
+    "typeScriptVersion": "3.0"
+}

@@ -1,0 +1,15 @@
+import { FileResult, MutationTestResult } from 'mutation-testing-report-schema/api';
+import { FileUnderTestModel, Metrics, MetricsResult, MutationTestMetricsResult } from './model';
+/**
+ * Calculates the files-under-test metrics inside of a mutation testing report
+ * @param files The files inside the mutation testing report
+ * @returns A MetricsResult containing the metrics for the entire report. See `childResults`
+ */
+export declare function calculateMetrics(files: Record<string, FileResult>): MetricsResult<FileUnderTestModel, Metrics>;
+/**
+ * Calculates the full mutation test metrics from both the files-under-test as well as (optionally) the test files.
+ * @param result The full mutation test result
+ * @returns A MutationTestMetricsResult that contains both the `systemUnderTestMetrics` as well as the `testMetrics`
+ */
+export declare function calculateMutationTestMetrics(result: MutationTestResult): MutationTestMetricsResult;
+//# sourceMappingURL=calculateMetrics.d.ts.map

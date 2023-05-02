@@ -1,0 +1,54 @@
+import ts from 'typescript';
+import { tokens, commonTokens } from '@stryker-mutator/api/plugin';
+import { toPosixFileName } from '../tsconfig-helpers.js';
+import { ScriptFile } from './script-file.js';
+/**
+ * A very simple hybrid file system.
+ * * Readonly from disk
+ * * Writes in-memory
+ * * Hard caching
+ * * Ability to mutate one file
+ */
+export class HybridFileSystem {
+    constructor(log) {
+        this.log = log;
+        this.files = new Map();
+    }
+    writeFile(fileName, data) {
+        fileName = toPosixFileName(fileName);
+        const existingFile = this.files.get(fileName);
+        if (existingFile) {
+            existingFile.write(data);
+        }
+        else {
+            this.log.trace('Writing to file "%s"', fileName);
+            this.files.set(fileName, new ScriptFile(data, fileName));
+        }
+    }
+    watchFile(fileName, watcher) {
+        const file = this.getFile(fileName);
+        if (file) {
+            this.log.trace('Registering watcher for file "%s"', fileName);
+            file.watcher = watcher;
+        }
+    }
+    getFile(fileName) {
+        fileName = toPosixFileName(fileName);
+        if (!this.files.has(fileName)) {
+            const content = ts.sys.readFile(fileName);
+            if (typeof content === 'string') {
+                const modifiedTime = ts.sys.getModifiedTime(fileName);
+                this.files.set(fileName, new ScriptFile(content, fileName, modifiedTime));
+            }
+            else {
+                this.files.set(fileName, undefined);
+            }
+        }
+        return this.files.get(fileName);
+    }
+    existsInMemory(fileName) {
+        return !!this.files.get(toPosixFileName(fileName));
+    }
+}
+HybridFileSystem.inject = tokens(commonTokens.logger);
+//# sourceMappingURL=hybrid-file-system.js.map

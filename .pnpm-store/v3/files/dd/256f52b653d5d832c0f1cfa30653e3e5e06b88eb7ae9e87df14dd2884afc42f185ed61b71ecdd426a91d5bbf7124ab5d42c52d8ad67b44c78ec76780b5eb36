@@ -1,0 +1,1 @@
+{"version":3,"file":"InjectionToken.d.ts","sourceRoot":"","sources":["../../../src/api/InjectionToken.ts"],"names":[],"mappings":"AAAA,oBAAY,aAAa,GAAG,WAAW,CAAC;AACxC,oBAAY,WAAW,GAAG,SAAS,CAAC;AACpC,eAAO,MAAM,cAAc,EAAE,aAA2B,CAAC;AACzD,eAAO,MAAM,YAAY,EAAE,WAAuB,CAAC;AACnD,oBAAY,cAAc,CAAC,QAAQ,IAAI,aAAa,GAAG,WAAW,GAAG,MAAM,QAAQ,CAAC"}

@@ -1,0 +1,72 @@
+{
+  "name": "typed-inject",
+  "version": "3.0.1",
+  "description": "Type safe dependency injection framework for TypeScript",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "all": "npm run clean && npm run lint && npm run build && npm run test && npm run stryker",
+    "start": "tsc -b -w",
+    "clean": "rimraf dist",
+    "lint": "eslint . --ext .js,.ts --ignore-path .gitignore --ignore-pattern testResources/**/*.ts --ignore-pattern stryker.conf.js --ignore-pattern .eslintrc.js",
+    "build": "tsc -b",
+    "test": "nyc --exclude-after-remap=false \"--exclude=dist/test/**/*.js\" --check-coverage --reporter=html --report-dir=reports/coverage --lines 100 --functions 100 --branches 100 npm run mocha",
+    "mocha": "mocha \"dist/test/helpers/**/*.js\" \"dist/test/unit/**/*.js\" && mocha --timeout 20000 \"dist/test/helpers/**/*.js\" \"dist/test/integration/**/*.js\"",
+    "stryker": "stryker run",
+    "preversion": "npm run all",
+    "version": "npm run generate-changelog",
+    "postversion": "npm publish && git push && git push --tags",
+    "generate-changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+    "release:patch": "npm version patch -m \"chore(release): %s\"",
+    "release:minor": "npm version minor -m \"chore(release): %s\"",
+    "release:major": "npm version major -m \"chore(release): %s\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicojs/typed-inject.git"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "keywords": [
+    "typescript",
+    "dependency-injection",
+    "IoC",
+    "di",
+    "inject",
+    "type-safe"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Nico Jansen <jansennico@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nicojs/typed-inject/issues"
+  },
+  "homepage": "https://github.com/nicojs/typed-inject/#readme",
+  "devDependencies": {
+    "@stryker-mutator/core": "^5.4.1",
+    "@stryker-mutator/mocha-runner": "^5.4.1",
+    "@stryker-mutator/typescript-checker": "^5.4.1",
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.10.3",
+    "@types/sinon": "^10.0.4",
+    "@types/sinon-chai": "^3.2.5",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "chai": "^4.3.4",
+    "conventional-changelog-cli": "^2.1.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "mocha": "^9.1.2",
+    "nyc": "^15.1.0",
+    "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "sinon": "^11.1.2",
+    "sinon-chai": "^3.7.0",
+    "source-map-support": "^0.5.20",
+    "typescript": "4.4.3"
+  }
+}
