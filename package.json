@@ -2,10 +2,7 @@
   "name": "sdk",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -18,15 +15,19 @@
     "start:browser": "turbo run build && turbo run start:browser",
     "dev:browser": "turbo run build && turbo run dev:browser",
     "pre-commit": "turbo run pre-commit --concurrency=1",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "clean": "node scripts/clean.js && bash ./scripts/clean.sh",
+    "ci:publish": "pnpm publish -r",
+    "ci:version": "pnpm changeset version && pnpm i"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.1",
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
-    "eslint-config-custom": "workspace:*",
+    "@cypherock/eslint-config": "workspace:*",
     "husky": "^8.0.0",
     "prettier": "latest",
-    "prettier-config-custom": "workspace:*",
+    "@cypherock/prettier-config": "workspace:*",
     "turbo": "latest"
   },
   "engines": {

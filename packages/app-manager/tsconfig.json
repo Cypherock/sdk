@@ -3,7 +3,7 @@
     "outDir": "dist",
     "lib": ["ES2015"]
   },
-  "extends": "tsconfig/base.json",
+  "extends": "@cypherock/tsconfig/base.json",
   "include": ["./src/**/*.ts"],
   "exclude": [
     "node_modules",
