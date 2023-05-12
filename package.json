@@ -5,6 +5,7 @@
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "build": "turbo run build",
+    "prebuild": "turbo run prebuild",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "pretty": "turbo run pretty",

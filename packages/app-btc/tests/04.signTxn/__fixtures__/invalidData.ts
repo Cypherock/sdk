@@ -55,7 +55,8 @@ const commonParams = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_RESULT],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
 };
 
 const invalidData: ISignTxnTestCase[] = [

@@ -35,11 +35,10 @@ export const getStatus = async ({
   const usableConfig = config.v3;
 
   const packetsList = encodePacket({
-    data: '',
+    rawData: '',
     version,
     sequenceNumber: -1,
     packetType: usableConfig.commands.PACKET_TYPE.STATUS_REQ,
-    isProto: false,
   });
 
   if (packetsList.length === 0) {

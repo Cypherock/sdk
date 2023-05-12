@@ -2,7 +2,7 @@ import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { assert, uint8ArrayToHex } from '@cypherock/sdk-utils';
 
 import { PacketVersion } from '../../utils';
-import { Query } from '../../encoders/proto/generated/core';
+import { Msg } from '../../encoders/proto/generated/core';
 import { sendCommand as sendCommandHelper } from '../helpers';
 
 export const sendQuery = async ({
@@ -28,17 +28,17 @@ export const sendQuery = async ({
   assert(appletId >= 0, 'appletId cannot be negative');
   assert(data.length > 0, 'data cannot be empty');
 
-  const rawEncodedData = uint8ArrayToHex(
-    Query.encode(Query.create({ cmd: { appletId, data } })).finish(),
+  const msgData = uint8ArrayToHex(
+    Msg.encode(Msg.create({ cmd: { appletId } })).finish(),
   );
 
   return sendCommandHelper({
     connection,
-    data: rawEncodedData,
+    protoData: msgData,
+    rawData: uint8ArrayToHex(data),
     version,
     maxTries,
     sequenceNumber,
-    isProto: true,
     timeout,
   });
 };

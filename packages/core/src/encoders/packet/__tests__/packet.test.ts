@@ -83,10 +83,10 @@ describe('Packet Encoder', () => {
     test('should return valid packets', () => {
       for (const testCase of packetDataTestCases.validEncodings) {
         const result = encodePacket({
-          data: testCase.data,
+          rawData: testCase.rawData,
+          protoData: testCase.protoData,
           sequenceNumber: testCase.sequenceNumber,
           packetType: testCase.packetType,
-          isProto: testCase.isProto,
           version: testCase.version,
         });
         expect(result).toEqual(testCase.encoded);
@@ -97,10 +97,10 @@ describe('Packet Encoder', () => {
       for (const testCase of encodePacketTestCases.invalid) {
         expect(() =>
           encodePacket({
-            data: testCase.data as any,
+            rawData: testCase.rawData as any,
+            protoData: testCase.protoData as any,
             sequenceNumber: testCase.sequenceNumber as any,
             packetType: testCase.packetType as any,
-            isProto: testCase.isProto as any,
             version: testCase.version as any,
           }),
         ).toThrow();

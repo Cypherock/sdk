@@ -6,7 +6,7 @@ import {
   Query,
   Result,
 } from '../proto/generated/manager/core';
-import { assertOrThrowInvalidResult, parseCoreError } from './asserts';
+import { assertOrThrowInvalidResult, parseCommonError } from './asserts';
 
 export function decodeResult(data: Uint8Array) {
   let result: Result;
@@ -14,7 +14,7 @@ export function decodeResult(data: Uint8Array) {
   try {
     result = Result.decode(data);
   } catch (error) {
-    throw new DeviceAppError(DeviceAppErrorType.INVALID_RESULT);
+    throw new DeviceAppError(DeviceAppErrorType.INVALID_MSG_FROM_DEVICE);
   }
 
   return result;
@@ -52,7 +52,7 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
     const retrunObj = result[this.resultKey] as Result[R];
     assertOrThrowInvalidResult(retrunObj);
-    parseCoreError((result[this.resultKey] as any).coreError);
+    parseCommonError((result[this.resultKey] as any).commonError);
 
     return retrunObj;
   }

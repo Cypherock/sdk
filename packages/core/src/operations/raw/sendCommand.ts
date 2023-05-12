@@ -24,11 +24,10 @@ export const sendCommand = async ({
 
   return sendCommandHelper({
     connection,
-    data: rawEncodedData,
+    rawData: rawEncodedData,
     version,
     maxTries,
     sequenceNumber,
-    isProto: false,
     timeout,
   });
 };
