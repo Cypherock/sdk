@@ -10,6 +10,14 @@ export enum DeviceState {
   MAIN,
 }
 
+export interface IDevice {
+  path: string;
+  deviceState: DeviceState;
+  vendorId: number;
+  productId: number;
+  serial: string;
+}
+
 export interface PoolData {
   id: string;
   data: Uint8Array;

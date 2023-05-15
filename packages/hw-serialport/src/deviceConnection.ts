@@ -2,25 +2,24 @@ import {
   IDeviceConnection,
   DeviceState,
   ConnectionTypeMap,
+  IDevice,
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
 } from '@cypherock/sdk-interfaces';
 import SerialPort from 'serialport';
 import * as uuid from 'uuid';
 
 import {
-  createPort,
-  getAvailableConnectionInfo,
+  getAvailableDevices,
   closeConnection,
   openConnection,
   DataListener,
 } from './helpers';
-import { IConnectionInfo } from './types';
 
 export default class DeviceConnection implements IDeviceConnection {
   protected port: string;
 
   protected deviceState: DeviceState;
-
-  protected hardwareVersion: string;
 
   protected serial?: string;
 
@@ -34,11 +33,10 @@ export default class DeviceConnection implements IDeviceConnection {
 
   protected dataListener: DataListener;
 
-  constructor(connectionInfo: IConnectionInfo) {
-    this.port = connectionInfo.port.path;
-    this.deviceState = connectionInfo.deviceState;
-    this.hardwareVersion = connectionInfo.hardwareVersion;
-    this.serial = connectionInfo.serial;
+  constructor(device: IDevice) {
+    this.port = device.path;
+    this.deviceState = device.deviceState;
+    this.serial = device.serial;
 
     this.connectionId = uuid.v4();
     this.sequenceNumber = 0;
@@ -56,14 +54,21 @@ export default class DeviceConnection implements IDeviceConnection {
     return ConnectionTypeMap.SERIAL_PORT;
   }
 
-  public static async create() {
-    const connectionInfo = await createPort();
-    return new DeviceConnection(connectionInfo);
+  public static async connect(device: IDevice) {
+    return new DeviceConnection(device);
   }
 
-  public static async getAvailableConnection() {
-    const connectionInfo = await getAvailableConnectionInfo();
-    return connectionInfo;
+  public static async list() {
+    return getAvailableDevices();
+  }
+
+  public static async create() {
+    const devices = await getAvailableDevices();
+
+    if (devices.length <= 0)
+      throw new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED);
+
+    return new DeviceConnection(devices[0]);
   }
 
   public getDeviceState() {
