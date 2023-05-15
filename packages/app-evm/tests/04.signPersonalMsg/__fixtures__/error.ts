@@ -59,7 +59,7 @@ const withInvalidResult: ISignPersonalMsgTestCase = {
   ],
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_RESULT_ON_DEVICE],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
 };
 
 const error: ISignPersonalMsgTestCase[] = [withUnknownError, withInvalidResult];

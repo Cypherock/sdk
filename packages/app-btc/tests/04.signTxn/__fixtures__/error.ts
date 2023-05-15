@@ -65,16 +65,16 @@ const withUnknownError: ISignTxnTestCase = {
 };
 
 const withInvalidAppId: ISignTxnTestCase = {
-  name: 'With invalid app id',
+  name: 'With invalid msg from device',
   ...commonParams,
   results: [{ name: 'error', data: new Uint8Array([26, 4, 50, 2, 16, 1]) }],
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_APP_ID_ON_DEVICE],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
 };
 
 const withUserRejection: ISignTxnTestCase = {
-  name: 'With invalid app id',
+  name: 'With user rejection',
   ...commonParams,
   results: [{ name: 'error', data: new Uint8Array([26, 5, 50, 3, 176, 1, 1]) }],
   errorInstance: DeviceAppError,

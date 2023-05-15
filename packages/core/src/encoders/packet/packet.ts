@@ -98,24 +98,29 @@ export const encodePayloadData = (
 };
 
 export const encodePacket = ({
-  data,
+  rawData,
+  protoData,
   version,
   sequenceNumber,
   packetType,
-  isProto,
 }: {
-  data: string;
+  rawData?: string;
+  protoData?: string;
   version: PacketVersion;
   sequenceNumber: number;
   packetType: number;
-  isProto: boolean;
 }) => {
-  assert(data, 'Invalid data');
+  assert(rawData ?? protoData, 'Invalid data');
   assert(version, 'Invalid version');
   assert(sequenceNumber, 'Invalid sequenceNumber');
   assert(packetType, 'Invalid packetType');
 
-  assert(isHex(data), 'Invalid hex in data');
+  if (rawData) {
+    assert(isHex(rawData), 'Invalid hex in raw data');
+  }
+  if (protoData) {
+    assert(isHex(protoData), 'Invalid hex in proto data');
+  }
   assert(packetType > 0, 'Packet type cannot be negative');
 
   if (version !== PacketVersionMap.v3) {
@@ -137,12 +142,11 @@ export const encodePacket = ({
 
   const { CHUNK_SIZE, START_OF_FRAME } = usableConfig.constants;
 
-  let serializedData: string;
-  if (isProto) {
-    serializedData = encodePayloadData('', data, version);
-  } else {
-    serializedData = encodePayloadData(data, '', version);
-  }
+  const serializedData = encodePayloadData(
+    rawData ?? '',
+    protoData ?? '',
+    version,
+  );
 
   let rounds = Math.ceil(serializedData.length / CHUNK_SIZE);
 

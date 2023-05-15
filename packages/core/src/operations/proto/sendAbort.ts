@@ -37,11 +37,10 @@ export const sendAbort = async ({
   const usableConfig = config.v3;
 
   const packetsList = encodePacket({
-    data: '',
+    rawData: '',
     version,
     sequenceNumber,
     packetType: usableConfig.commands.PACKET_TYPE.ABORT,
-    isProto: false,
   });
 
   if (packetsList.length === 0) {

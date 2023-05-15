@@ -14,23 +14,23 @@ import canRetry from './canRetry';
 
 export const sendCommand = async ({
   connection,
-  data,
+  rawData,
+  protoData,
   version,
   maxTries = 5,
   sequenceNumber,
-  isProto,
   timeout,
 }: {
   connection: IDeviceConnection;
-  data: string;
+  rawData?: string;
+  protoData?: string;
   version: PacketVersion;
   sequenceNumber: number;
-  isProto: boolean;
   maxTries?: number;
   timeout?: number;
 }): Promise<void> => {
   assert(connection, 'Invalid connection');
-  assert(data, 'Invalid data');
+  assert(rawData ?? protoData, 'Raw data or proto data is required');
   assert(version, 'Invalid version');
   assert(sequenceNumber, 'Invalid sequenceNumber');
 
@@ -43,11 +43,11 @@ export const sendCommand = async ({
   const usableConfig = config.v3;
 
   const packetsList = encodePacket({
-    data,
+    rawData,
+    protoData,
     version,
     sequenceNumber,
     packetType: usableConfig.commands.PACKET_TYPE.CMD,
-    isProto,
   });
 
   let firstError: Error | undefined;
