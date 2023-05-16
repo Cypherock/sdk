@@ -52,7 +52,7 @@ const withUnknownError: IGetPublicKeysTestCase = {
 };
 
 const withInvalidAppId: IGetPublicKeysTestCase = {
-  name: 'With invalid app id',
+  name: 'With invalid msg from device',
   ...commonParams,
   results: [
     {
@@ -62,7 +62,7 @@ const withInvalidAppId: IGetPublicKeysTestCase = {
   ],
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_APP_ID_ON_DEVICE],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
 };
 
 const error: IGetPublicKeysTestCase[] = [withUnknownError, withInvalidAppId];

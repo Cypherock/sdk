@@ -6,7 +6,7 @@ import {
 import { assert, hexToUint8Array } from '@cypherock/sdk-utils';
 
 import { PacketVersion } from '../../utils';
-import { Status, Result } from '../../encoders/proto/generated/core';
+import { Status, Msg, ErrorType } from '../../encoders/proto/generated/core';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
 
 export const getResult = async ({
@@ -26,7 +26,7 @@ export const getResult = async ({
 }) => {
   assert(appletId, 'Invalid appletId');
 
-  const { isStatus, protobufData } = await getCommandOutputHelper({
+  const { isStatus, protobufData, rawData } = await getCommandOutputHelper({
     connection,
     version,
     maxTries,
@@ -41,12 +41,28 @@ export const getResult = async ({
       throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
     }
   } else {
-    const result = Result.decode(hexToUint8Array(protobufData));
-    if (result.cmd?.appletId !== appletId) {
-      throw new DeviceAppError(DeviceAppErrorType.INVALID_APP_ID);
+    const result = Msg.decode(hexToUint8Array(protobufData));
+    if (result.error) {
+      const errorMap: Record<ErrorType, DeviceAppErrorType> = {
+        [ErrorType.NO_ERROR]: DeviceAppErrorType.UNKNOWN_ERROR,
+        [ErrorType.UNRECOGNIZED]: DeviceAppErrorType.UNKNOWN_ERROR,
+        [ErrorType.UNKNOWN_APP]: DeviceAppErrorType.UNKNOWN_APP,
+        [ErrorType.INVALID_MSG]: DeviceAppErrorType.INVALID_MSG,
+        [ErrorType.APP_NOT_ACTIVE]: DeviceAppErrorType.APP_NOT_ACTIVE,
+      };
+
+      throw new DeviceAppError(errorMap[result.error.type]);
     }
 
-    output = result.cmd.data;
+    if (!result.cmd) {
+      throw new DeviceAppError(DeviceAppErrorType.INVALID_MSG_FROM_DEVICE);
+    }
+
+    if (result.cmd.appletId !== appletId) {
+      throw new DeviceAppError(DeviceAppErrorType.INVALID_APP_ID_FROM_DEVICE);
+    }
+
+    output = hexToUint8Array(rawData);
   }
 
   return { isStatus, result: output };

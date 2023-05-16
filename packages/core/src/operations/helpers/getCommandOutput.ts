@@ -51,11 +51,10 @@ export const getCommandOutput = async ({
     let isSuccess = false;
 
     const packetsList = encodePacket({
-      data: intToUintByte(currentPacket, 16),
+      rawData: intToUintByte(currentPacket, 16),
       version,
       sequenceNumber,
       packetType: usableConfig.commands.PACKET_TYPE.CMD_OUTPUT_REQ,
-      isProto: false,
     });
 
     if (packetsList.length > 1) {

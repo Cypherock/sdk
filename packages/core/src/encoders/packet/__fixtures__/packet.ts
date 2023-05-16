@@ -163,11 +163,10 @@ export const packetDataTestCases = {
   constantDate: new Date('2023-03-03T19:42:42.359Z'),
   validEncodings: [
     {
-      data: '',
+      rawData: '',
       encodedPayloadData: '',
       sequenceNumber: 1,
       packetType: 1,
-      isProto: false,
       version: PacketVersionMap.v3,
       encoded: [
         new Uint8Array([85, 85, 96, 77, 0, 1, 0, 1, 0, 1, 1, 1, 0, 5, 229, 0]),
@@ -187,11 +186,10 @@ export const packetDataTestCases = {
       ],
     },
     {
-      data: '0d843c9c84486d8297f268c3e92f',
+      rawData: '0d843c9c84486d8297f268c3e92f',
       encodedPayloadData: '0000000e0d843c9c84486d8297f268c3e92f',
       sequenceNumber: 16,
       packetType: 7,
-      isProto: false,
       version: PacketVersionMap.v3,
       encoded: [
         new Uint8Array([
@@ -214,11 +212,10 @@ export const packetDataTestCases = {
       ],
     },
     {
-      data: '0d843c9c84486d8297f268c3e92f',
+      protoData: '0d843c9c84486d8297f268c3e92f',
       encodedPayloadData: '000e00000d843c9c84486d8297f268c3e92f',
       sequenceNumber: 16,
       packetType: 7,
-      isProto: true,
       version: PacketVersionMap.v3,
       encoded: [
         new Uint8Array([
@@ -241,12 +238,12 @@ export const packetDataTestCases = {
       ],
     },
     {
-      data: 'f5387171fcd9c4f4279f3d8f1f90eec716903c246e741920ced373ded7b28ecee4dc3dae6bc53b71d259c11f4c93bc3d8d23951d9e5ddf34a76425f25b29bdb87b10854d14677cba4d7e770937814f9733d82f9ee8ec9562dae1fc189f17aaa0b1a7c25b7e020c058af0c841536570d2b137292e292fc158bc0bedd3d720b3988fcde3351c96c801b6fa74421dcb01f96929062fe23b03fc7411ac7ad7e0c5bc00be86d1d9361090ffefd0d7f14e2e52ada41ba0a08401ad8b2c00ce4a8d29093a61a486236c93e744a37c97635402a0fd8e2f83bef7a6610ce27269a370b5345ae5eef8c9575675562dfe833e05bc823b27d41b8af21368d7f237d6db6ca00193caef3140d72925dc27b125e92a9bb010f1bfe27dd9f24585d72c9607502e38142653cc19f833c4b48473672ab7be118796dc7520fd286ba9f4fa2fc8ca80b04551fb17961062cae7f1acc6e829deaae39ad8e8d5da016aa6a73ca132c2ab5fce306947add9e83b3d24be5c28f8dd393092e9f6386faa6094d46407bcc04014c3cf945934cc34912f189e307bd946e2781cfd17bf52399bb84b1f3fae1ddca5cd7792eff4da8bd33c8a61cadd5bbbb0652088fc',
+      protoData:
+        'f5387171fcd9c4f4279f3d8f1f90eec716903c246e741920ced373ded7b28ecee4dc3dae6bc53b71d259c11f4c93bc3d8d23951d9e5ddf34a76425f25b29bdb87b10854d14677cba4d7e770937814f9733d82f9ee8ec9562dae1fc189f17aaa0b1a7c25b7e020c058af0c841536570d2b137292e292fc158bc0bedd3d720b3988fcde3351c96c801b6fa74421dcb01f96929062fe23b03fc7411ac7ad7e0c5bc00be86d1d9361090ffefd0d7f14e2e52ada41ba0a08401ad8b2c00ce4a8d29093a61a486236c93e744a37c97635402a0fd8e2f83bef7a6610ce27269a370b5345ae5eef8c9575675562dfe833e05bc823b27d41b8af21368d7f237d6db6ca00193caef3140d72925dc27b125e92a9bb010f1bfe27dd9f24585d72c9607502e38142653cc19f833c4b48473672ab7be118796dc7520fd286ba9f4fa2fc8ca80b04551fb17961062cae7f1acc6e829deaae39ad8e8d5da016aa6a73ca132c2ab5fce306947add9e83b3d24be5c28f8dd393092e9f6386faa6094d46407bcc04014c3cf945934cc34912f189e307bd946e2781cfd17bf52399bb84b1f3fae1ddca5cd7792eff4da8bd33c8a61cadd5bbbb0652088fc',
       encodedPayloadData:
         '01b40000f5387171fcd9c4f4279f3d8f1f90eec716903c246e741920ced373ded7b28ecee4dc3dae6bc53b71d259c11f4c93bc3d8d23951d9e5ddf34a76425f25b29bdb87b10854d14677cba4d7e770937814f9733d82f9ee8ec9562dae1fc189f17aaa0b1a7c25b7e020c058af0c841536570d2b137292e292fc158bc0bedd3d720b3988fcde3351c96c801b6fa74421dcb01f96929062fe23b03fc7411ac7ad7e0c5bc00be86d1d9361090ffefd0d7f14e2e52ada41ba0a08401ad8b2c00ce4a8d29093a61a486236c93e744a37c97635402a0fd8e2f83bef7a6610ce27269a370b5345ae5eef8c9575675562dfe833e05bc823b27d41b8af21368d7f237d6db6ca00193caef3140d72925dc27b125e92a9bb010f1bfe27dd9f24585d72c9607502e38142653cc19f833c4b48473672ab7be118796dc7520fd286ba9f4fa2fc8ca80b04551fb17961062cae7f1acc6e829deaae39ad8e8d5da016aa6a73ca132c2ab5fce306947add9e83b3d24be5c28f8dd393092e9f6386faa6094d46407bcc04014c3cf945934cc34912f189e307bd946e2781cfd17bf52399bb84b1f3fae1ddca5cd7792eff4da8bd33c8a61cadd5bbbb0652088fc',
       sequenceNumber: 16,
       packetType: 7,
-      isProto: true,
       version: PacketVersionMap.v3,
       encoded: [
         new Uint8Array([
@@ -434,12 +431,12 @@ export const packetDataTestCases = {
       ],
     },
     {
-      data: 'f5387171fcd9c4f4279f3d8f1f90eec716903c246e741920ced373ded7b28ecee4dc3dae6bc53b71d259c11f4c93bc3d8d23951d9e5ddf34a76425f25b29bdb87b10854d14677cba4d7e770937814f9733d82f9ee8ec9562dae1fc189f17aaa0b1a7c25b7e020c058af0c841536570d2b137292e292fc158bc0bedd3d720b3988fcde3351c96c801b6fa74421dcb01f96929062fe23b03fc7411ac7ad7e0c5bc00be86d1d9361090ffefd0d7f14e2e52ada41ba0a08401ad8b2c00ce4a8d29093a61a486236c93e744a37c97635402a0fd8e2f83bef7a6610ce27269a370b5345ae5eef8c9575675562dfe833e05bc823b27d41b8af21368d7f237d6db6ca00193caef3140d72925dc27b125e92a9bb010f1bfe27dd9f24585d72c9607502e38142653cc19f833c4b48473672ab7be118796dc7520fd286ba9f4fa2fc8ca80b04551fb17961062cae7f1acc6e829deaae39ad8e8d5da016aa6a73ca132c2ab5fce306947add9e83b3d24be5c28f8dd393092e9f6386faa6094d46407bcc04014c3cf945934cc34912f189e307bd946e2781cfd17bf52399bb84b1f3fae1ddca5cd7792eff4da8bd33c8a61cadd5bbbb0652088fc',
+      rawData:
+        'f5387171fcd9c4f4279f3d8f1f90eec716903c246e741920ced373ded7b28ecee4dc3dae6bc53b71d259c11f4c93bc3d8d23951d9e5ddf34a76425f25b29bdb87b10854d14677cba4d7e770937814f9733d82f9ee8ec9562dae1fc189f17aaa0b1a7c25b7e020c058af0c841536570d2b137292e292fc158bc0bedd3d720b3988fcde3351c96c801b6fa74421dcb01f96929062fe23b03fc7411ac7ad7e0c5bc00be86d1d9361090ffefd0d7f14e2e52ada41ba0a08401ad8b2c00ce4a8d29093a61a486236c93e744a37c97635402a0fd8e2f83bef7a6610ce27269a370b5345ae5eef8c9575675562dfe833e05bc823b27d41b8af21368d7f237d6db6ca00193caef3140d72925dc27b125e92a9bb010f1bfe27dd9f24585d72c9607502e38142653cc19f833c4b48473672ab7be118796dc7520fd286ba9f4fa2fc8ca80b04551fb17961062cae7f1acc6e829deaae39ad8e8d5da016aa6a73ca132c2ab5fce306947add9e83b3d24be5c28f8dd393092e9f6386faa6094d46407bcc04014c3cf945934cc34912f189e307bd946e2781cfd17bf52399bb84b1f3fae1ddca5cd7792eff4da8bd33c8a61cadd5bbbb0652088fc',
       encodedPayloadData:
         '000001b4f5387171fcd9c4f4279f3d8f1f90eec716903c246e741920ced373ded7b28ecee4dc3dae6bc53b71d259c11f4c93bc3d8d23951d9e5ddf34a76425f25b29bdb87b10854d14677cba4d7e770937814f9733d82f9ee8ec9562dae1fc189f17aaa0b1a7c25b7e020c058af0c841536570d2b137292e292fc158bc0bedd3d720b3988fcde3351c96c801b6fa74421dcb01f96929062fe23b03fc7411ac7ad7e0c5bc00be86d1d9361090ffefd0d7f14e2e52ada41ba0a08401ad8b2c00ce4a8d29093a61a486236c93e744a37c97635402a0fd8e2f83bef7a6610ce27269a370b5345ae5eef8c9575675562dfe833e05bc823b27d41b8af21368d7f237d6db6ca00193caef3140d72925dc27b125e92a9bb010f1bfe27dd9f24585d72c9607502e38142653cc19f833c4b48473672ab7be118796dc7520fd286ba9f4fa2fc8ca80b04551fb17961062cae7f1acc6e829deaae39ad8e8d5da016aa6a73ca132c2ab5fce306947add9e83b3d24be5c28f8dd393092e9f6386faa6094d46407bcc04014c3cf945934cc34912f189e307bd946e2781cfd17bf52399bb84b1f3fae1ddca5cd7792eff4da8bd33c8a61cadd5bbbb0652088fc',
       sequenceNumber: 16,
       packetType: 7,
-      isProto: false,
       version: PacketVersionMap.v3,
       encoded: [
         new Uint8Array([
@@ -632,112 +629,113 @@ export const packetDataTestCases = {
 export const encodePacketTestCases = {
   invalid: [
     {
-      data: '',
+      rawData: '',
+      protoData: undefined,
       sequenceNumber: 1,
       packetType: 1,
       isProto: false,
       version: PacketVersionMap.v1,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: 1,
       packetType: 1,
       isProto: false,
       version: PacketVersionMap.v2,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: 1,
       packetType: 1,
       isProto: false,
       version: 'invalid',
     },
     {
-      data: null,
+      rawData: null,
       sequenceNumber: 1,
       packetType: 1,
       isProto: false,
       version: PacketVersionMap.v3,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: null,
       packetType: 1,
       isProto: false,
       version: PacketVersionMap.v3,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: 1,
       packetType: null,
       isProto: false,
       version: PacketVersionMap.v3,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: 1,
       packetType: 1,
       isProto: false,
       version: null,
     },
     {
-      data: undefined,
+      rawData: undefined,
       sequenceNumber: 1,
       packetType: 1,
       isProto: false,
       version: PacketVersionMap.v3,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: undefined,
       packetType: 1,
       isProto: false,
       version: PacketVersionMap.v3,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: 1,
       packetType: undefined,
       isProto: false,
       version: PacketVersionMap.v3,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: 1,
       packetType: 1,
       isProto: false,
       version: undefined,
     },
     {
-      data: '5818f605bc3531741',
+      rawData: '5818f605bc3531741',
       sequenceNumber: 1,
       packetType: 1,
       isProto: false,
       version: PacketVersionMap.v3,
     },
     {
-      data: '0x12',
+      rawData: '0x12',
       sequenceNumber: 1,
       packetType: 1,
       isProto: false,
       version: PacketVersionMap.v3,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: 99999,
       packetType: 1,
       isProto: true,
       version: PacketVersionMap.v3,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: 10,
       packetType: 99999,
       isProto: true,
       version: PacketVersionMap.v3,
     },
     {
-      data: '',
+      rawData: '',
       sequenceNumber: 10,
       packetType: -1,
       isProto: true,

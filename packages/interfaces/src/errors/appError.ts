@@ -8,13 +8,14 @@ export enum DeviceAppErrorType {
   PROCESS_ABORTED = 'APP_0102',
   DEVICE_ABORT = 'APP_0103',
 
-  INVALID_RESULT = 'APP_0200',
-  INVALID_APP_ID = 'APP_0201',
+  INVALID_MSG_FROM_DEVICE = 'APP_0200',
+  INVALID_APP_ID_FROM_DEVICE = 'APP_0201',
 
-  INVALID_RESULT_ON_DEVICE = 'APP_0202',
-  INVALID_APP_ID_ON_DEVICE = 'APP_0203',
+  INVALID_MSG = 'APP_0202',
+  UNKNOWN_APP = 'APP_0203',
+  APP_NOT_ACTIVE = 'APP_0204',
 
-  DEVICE_SETUP_REQUIRED = 'APP_0204',
+  DEVICE_SETUP_REQUIRED = 'APP_0205',
 
   WALLET_NOT_FOUND = 'APP_0300',
   WALLET_PARTIAL_STATE = 'APP_0301',
@@ -48,17 +49,20 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
     message: 'The request was timed out on the device',
   },
 
-  [DeviceAppErrorType.INVALID_RESULT]: {
+  [DeviceAppErrorType.INVALID_MSG_FROM_DEVICE]: {
     message: 'Invalid result received from device',
   },
-  [DeviceAppErrorType.INVALID_APP_ID]: {
+  [DeviceAppErrorType.INVALID_APP_ID_FROM_DEVICE]: {
     message: 'Invalid appId received from device',
   },
-  [DeviceAppErrorType.INVALID_RESULT_ON_DEVICE]: {
+  [DeviceAppErrorType.INVALID_MSG]: {
     message: 'Invalid result sent from app',
   },
-  [DeviceAppErrorType.INVALID_APP_ID_ON_DEVICE]: {
-    message: 'Invalid appId sent from app',
+  [DeviceAppErrorType.UNKNOWN_APP]: {
+    message: 'The app does not exist on device',
+  },
+  [DeviceAppErrorType.APP_NOT_ACTIVE]: {
+    message: 'The app is active on the device',
   },
   [DeviceAppErrorType.DEVICE_SETUP_REQUIRED]: {
     message: 'Device setup is required',

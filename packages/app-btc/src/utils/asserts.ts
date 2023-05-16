@@ -1,23 +1,24 @@
 import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 import { assert } from '@cypherock/sdk-utils';
-import { ICoreError } from '../proto/generated/types';
+import { ICommonError } from '../proto/generated/types';
 
 export function assertOrThrowInvalidResult<T>(
   condition: T,
 ): asserts condition is Exclude<T, null | undefined> {
-  assert(condition, new DeviceAppError(DeviceAppErrorType.INVALID_RESULT));
+  assert(
+    condition,
+    new DeviceAppError(DeviceAppErrorType.INVALID_MSG_FROM_DEVICE),
+  );
 }
 
-export function parseCoreError(error?: ICoreError) {
+export function parseCommonError(error?: ICommonError) {
   if (error === undefined) return;
 
-  type CoreErrorKey = keyof ICoreError;
-  const keys = Object.keys(error) as CoreErrorKey[];
+  type CommonErrorKey = keyof ICommonError;
+  const keys = Object.keys(error) as CommonErrorKey[];
 
-  const errorTypesMap: Record<CoreErrorKey, DeviceAppErrorType> = {
+  const errorTypesMap: Record<CommonErrorKey, DeviceAppErrorType> = {
     unknownError: DeviceAppErrorType.UNKNOWN_ERROR,
-    invalidAppId: DeviceAppErrorType.INVALID_APP_ID_ON_DEVICE,
-    invalidResult: DeviceAppErrorType.INVALID_RESULT_ON_DEVICE,
     deviceSetupRequired: DeviceAppErrorType.DEVICE_SETUP_REQUIRED,
     walletNotFound: DeviceAppErrorType.WALLET_NOT_FOUND,
     walletPartialState: DeviceAppErrorType.WALLET_PARTIAL_STATE,
