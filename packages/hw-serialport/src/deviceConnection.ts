@@ -50,7 +50,7 @@ export default class DeviceConnection implements IDeviceConnection {
   }
 
   // eslint-disable-next-line
-  public getConnectionType() {
+  public async getConnectionType() {
     return ConnectionTypeMap.SERIAL_PORT;
   }
 
@@ -71,27 +71,27 @@ export default class DeviceConnection implements IDeviceConnection {
     return new DeviceConnection(devices[0]);
   }
 
-  public getDeviceState() {
+  public async getDeviceState() {
     return this.deviceState;
   }
 
-  public isInitialized() {
+  public async isInitialized() {
     return this.initialized;
   }
 
-  public getNewSequenceNumber() {
+  public async getNewSequenceNumber() {
     this.sequenceNumber += 1;
     return this.sequenceNumber;
   }
 
-  public getSequenceNumber() {
+  public async getSequenceNumber() {
     return this.sequenceNumber;
   }
 
   /**
    * Returns if the device is connected or not
    */
-  public isConnected() {
+  public async isConnected() {
     return !this.connection.destroyed;
   }
 
@@ -157,15 +157,15 @@ export default class DeviceConnection implements IDeviceConnection {
   /**
    * Returns if the device connection is open, i.e., if it's ready to communicate.
    */
-  private isOpen() {
-    return this.isConnected() && this.connection.isOpen;
+  private async isOpen() {
+    return (await this.isConnected()) && this.connection.isOpen;
   }
 
   /**
    * Open the device connection
    */
-  private open() {
-    if (this.isOpen()) {
+  private async open() {
+    if (await this.isOpen()) {
       return;
     }
 

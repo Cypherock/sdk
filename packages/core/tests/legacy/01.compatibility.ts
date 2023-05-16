@@ -41,7 +41,7 @@ describe('Legacy Device Operation: v1', () => {
   test('should have the right sdk version and packet version', () => {
     expect(sdk.getVersion()).toEqual('0.1.16');
     expect(sdk.getPacketVersion()).toEqual(PacketVersionMap.v1);
-    expect(sdk.deprecated.isLegacyOperationSupported()).toEqual(true);
+    expect(sdk.deprecated.isLegacyOperationSupported()).resolves.toEqual(true);
   });
 
   test('should be able to send data', async () => {

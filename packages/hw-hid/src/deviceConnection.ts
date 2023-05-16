@@ -45,7 +45,7 @@ export default class DeviceConnection implements IDeviceConnection {
   }
 
   // eslint-disable-next-line
-  public getConnectionType() {
+  public async getConnectionType() {
     return ConnectionTypeMap.HID;
   }
 
@@ -71,27 +71,27 @@ export default class DeviceConnection implements IDeviceConnection {
     return connectionInfo;
   }
 
-  public getDeviceState() {
+  public async getDeviceState() {
     return this.deviceState;
   }
 
-  public isInitialized() {
+  public async isInitialized() {
     return this.initialized;
   }
 
-  public getNewSequenceNumber() {
+  public async getNewSequenceNumber() {
     this.sequenceNumber += 1;
     return this.sequenceNumber;
   }
 
-  public getSequenceNumber() {
+  public async getSequenceNumber() {
     return this.sequenceNumber;
   }
 
   /**
    * Returns if the device is connected or not
    */
-  public isConnected() {
+  public async isConnected() {
     return this.isPortOpen;
   }
 

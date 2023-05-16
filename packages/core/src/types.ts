@@ -5,8 +5,8 @@ import { PacketVersion } from './utils';
 import { RawData, StatusData } from './encoders/raw';
 
 export interface IDeprecatedCommunication {
-  isLegacyOperationSupported(): boolean;
-  isRawOperationSupported(): boolean;
+  isLegacyOperationSupported(): Promise<boolean>;
+  isRawOperationSupported(): Promise<boolean>;
   sendLegacyCommand(
     command: number,
     data: string,
@@ -53,15 +53,15 @@ export interface ISDK {
   getConnection(): IDeviceConnection;
   getVersion(): string;
   getPacketVersion(): PacketVersion | undefined;
-  isSupported(): boolean;
-  getSequenceNumber(): number;
-  getNewSequenceNumber(): number;
+  isSupported(): Promise<boolean>;
+  getSequenceNumber(): Promise<number>;
+  getNewSequenceNumber(): Promise<number>;
   beforeOperation(): Promise<void>;
   afterOperation(): Promise<void>;
   configureAppletId(appletId: number): void;
   destroy(): Promise<void>;
-  isInBootloader(): boolean;
-  getDeviceState(): DeviceState;
+  isInBootloader(): Promise<boolean>;
+  getDeviceState(): Promise<DeviceState>;
   sendQuery(
     data: Uint8Array,
     options?: {
@@ -104,5 +104,5 @@ export interface ISDK {
     },
   ): Promise<void>;
   runOperation<R>(operation: () => Promise<R>): Promise<R>;
-  validateNotInBootloaderMode(): void;
+  validateNotInBootloaderMode(): Promise<void>;
 }

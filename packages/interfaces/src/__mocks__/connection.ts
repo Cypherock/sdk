@@ -49,11 +49,11 @@ export class MockDeviceConnection implements IDeviceConnection {
     return new MockDeviceConnection();
   }
 
-  public getConnectionType() {
+  public async getConnectionType() {
     return this.connectionType;
   }
 
-  public isConnected() {
+  public async isConnected() {
     return !this.isDestroyed;
   }
 
@@ -66,16 +66,16 @@ export class MockDeviceConnection implements IDeviceConnection {
     this.isConnectionOpen = false;
   }
 
-  public getSequenceNumber() {
+  public async getSequenceNumber() {
     return this.sequenceNumber;
   }
 
-  public getNewSequenceNumber() {
+  public async getNewSequenceNumber() {
     this.sequenceNumber += 1;
     return this.sequenceNumber;
   }
 
-  public getDeviceState() {
+  public async getDeviceState() {
     return this.deviceState;
   }
 

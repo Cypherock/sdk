@@ -61,7 +61,7 @@ const verifyChallengeSignature = async (params: {
     ...result.challengeSignature,
     challenge,
     serial,
-    isTestApp: helper.sdk.getDeviceState() === DeviceState.INITIAL,
+    isTestApp: (await helper.sdk.getDeviceState()) === DeviceState.INITIAL,
     firmwareVersion,
   });
 

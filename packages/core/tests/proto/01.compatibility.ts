@@ -54,7 +54,7 @@ describe('Device Proto Operation: v3', () => {
   test('should have the right sdk version and packet version', () => {
     expect(sdk.getVersion()).toEqual('3.0.1');
     expect(sdk.getPacketVersion()).toEqual(PacketVersionMap.v3);
-    expect(sdk.isSupported()).toEqual(true);
+    expect(sdk.isSupported()).resolves.toEqual(true);
   });
 
   test('should be able to get status', async () => {

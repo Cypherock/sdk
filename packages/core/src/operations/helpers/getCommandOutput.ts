@@ -1,8 +1,6 @@
 import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
-  DeviceConnectionError,
-  DeviceConnectionErrorType,
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { intToUintByte, assert } from '@cypherock/sdk-utils';
@@ -34,12 +32,6 @@ export const getCommandOutput = async ({
   if (version !== PacketVersionMap.v3) {
     throw new DeviceCompatibilityError(
       DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
-    );
-  }
-
-  if (!connection.isConnected()) {
-    throw new DeviceConnectionError(
-      DeviceConnectionErrorType.CONNECTION_CLOSED,
     );
   }
 

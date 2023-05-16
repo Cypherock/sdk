@@ -26,12 +26,6 @@ export const writePacket = (
 ) => {
   let usableConfig = config.v1;
 
-  if (!connection.isConnected()) {
-    throw new DeviceConnectionError(
-      DeviceConnectionErrorType.CONNECTION_CLOSED,
-    );
-  }
-
   if (version === PacketVersionMap.v2) {
     usableConfig = config.v2;
   }
@@ -39,106 +33,119 @@ export const writePacket = (
   /**
    * Be sure to remove all listeners and timeout.
    */
-  return new Promise<void>((resolve, reject) => {
-    let timeout: NodeJS.Timeout | undefined;
-    let recheckTimeout: NodeJS.Timeout | undefined;
-
-    function cleanUp() {
-      if (timeout) {
-        clearTimeout(timeout);
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise<void>(async (resolve, reject) => {
+    try {
+      if (!(await connection.isConnected())) {
+        throw new DeviceConnectionError(
+          DeviceConnectionErrorType.CONNECTION_CLOSED,
+        );
       }
-      if (recheckTimeout) {
-        clearTimeout(recheckTimeout);
-      }
-    }
 
-    async function recheckAck() {
-      try {
-        if (!connection.isConnected()) {
-          reject(
-            new DeviceConnectionError(
-              DeviceConnectionErrorType.CONNECTION_CLOSED,
-            ),
-          );
-          return;
+      let timeout: NodeJS.Timeout | undefined;
+      let recheckTimeout: NodeJS.Timeout | undefined;
+
+      // eslint-disable-next-line no-inner-declarations
+      function cleanUp() {
+        if (timeout) {
+          clearTimeout(timeout);
         }
+        if (recheckTimeout) {
+          clearTimeout(recheckTimeout);
+        }
+      }
 
-        const pool = await connection.peek();
-
-        // eslint-disable-next-line
-        for (const poolItem of pool) {
-          const { data } = poolItem;
-          if (skipPacketIds.includes(poolItem.id)) {
-            // eslint-disable-next-line
-            continue;
+      // eslint-disable-next-line no-inner-declarations
+      async function recheckAck() {
+        try {
+          if (!(await connection.isConnected())) {
+            reject(
+              new DeviceConnectionError(
+                DeviceConnectionErrorType.CONNECTION_CLOSED,
+              ),
+            );
+            return;
           }
 
-          skipPacketIds.push(poolItem.id);
-
-          const packetList = xmodemDecode(data, version);
+          const pool = await connection.peek();
 
           // eslint-disable-next-line
-          for (const packet of packetList) {
-            switch (packet.commandType) {
-              case usableConfig.commands.ACK_PACKET:
-                cleanUp();
-                resolve();
-                return;
-              case usableConfig.commands.NACK_PACKET:
-                cleanUp();
-                reject(
-                  new DeviceCommunicationError(
-                    DeviceCommunicationErrorType.WRITE_ERROR,
-                  ),
-                );
-                // eslint-disable-next-line
-                return;
-              default:
-              // Do nothing
+          for (const poolItem of pool) {
+            const { data } = poolItem;
+            if (skipPacketIds.includes(poolItem.id)) {
+              // eslint-disable-next-line
+              continue;
+            }
+
+            skipPacketIds.push(poolItem.id);
+
+            const packetList = xmodemDecode(data, version);
+
+            // eslint-disable-next-line
+            for (const packet of packetList) {
+              switch (packet.commandType) {
+                case usableConfig.commands.ACK_PACKET:
+                  cleanUp();
+                  resolve();
+                  return;
+                case usableConfig.commands.NACK_PACKET:
+                  cleanUp();
+                  reject(
+                    new DeviceCommunicationError(
+                      DeviceCommunicationErrorType.WRITE_ERROR,
+                    ),
+                  );
+                  // eslint-disable-next-line
+                  return;
+                default:
+                // Do nothing
+              }
             }
           }
+
+          recheckTimeout = setTimeout(
+            recheckAck,
+            usableConfig.constants.RECHECK_TIME,
+          );
+        } catch (error) {
+          cleanUp();
+          reject(
+            new DeviceCommunicationError(
+              DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR,
+            ),
+          );
         }
-
-        recheckTimeout = setTimeout(
-          recheckAck,
-          usableConfig.constants.RECHECK_TIME,
-        );
-      } catch (error) {
-        cleanUp();
-        reject(
-          new DeviceCommunicationError(
-            DeviceCommunicationErrorType.UNKNOWN_COMMUNICATION_ERROR,
-          ),
-        );
       }
-    }
 
-    connection
-      .send(packet)
-      .then(() => {
-        recheckTimeout = setTimeout(
-          recheckAck,
-          usableConfig.constants.RECHECK_TIME,
-        );
-      })
-      .catch(error => {
+      connection
+        .send(packet)
+        .then(() => {
+          recheckTimeout = setTimeout(
+            recheckAck,
+            usableConfig.constants.RECHECK_TIME,
+          );
+        })
+        .catch(error => {
+          cleanUp();
+          logger.error(error);
+          reject(
+            new DeviceCommunicationError(
+              DeviceCommunicationErrorType.WRITE_ERROR,
+            ),
+          );
+        });
+
+      timeout = setTimeout(() => {
         cleanUp();
-        logger.error(error);
         reject(
           new DeviceCommunicationError(
-            DeviceCommunicationErrorType.WRITE_ERROR,
+            DeviceCommunicationErrorType.WRITE_TIMEOUT,
           ),
         );
-      });
-
-    timeout = setTimeout(() => {
-      cleanUp();
-      reject(
-        new DeviceCommunicationError(
-          DeviceCommunicationErrorType.WRITE_TIMEOUT,
-        ),
-      );
-    }, ackTimeout ?? usableConfig.constants.ACK_TIME);
+      }, ackTimeout ?? usableConfig.constants.ACK_TIME);
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 

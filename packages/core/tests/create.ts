@@ -36,14 +36,16 @@ describe('SDK.create', () => {
 
         expect(sdk.getVersion()).toEqual(testCase.output.sdkVersion);
         expect(sdk.getPacketVersion()).toEqual(testCase.output.packetVersion);
-        expect(sdk.isInBootloader()).toEqual(testCase.isInBootloader);
-        expect(sdk.deprecated.isLegacyOperationSupported()).toEqual(
+        expect(sdk.isInBootloader()).resolves.toEqual(testCase.isInBootloader);
+        expect(sdk.deprecated.isLegacyOperationSupported()).resolves.toEqual(
           testCase.isLegacyOperationSupported,
         );
-        expect(sdk.deprecated.isRawOperationSupported()).toEqual(
+        expect(sdk.deprecated.isRawOperationSupported()).resolves.toEqual(
           testCase.isRawOperationSupported,
         );
-        expect(sdk.isSupported()).toEqual(testCase.isProtoOperationSupported);
+        expect(sdk.isSupported()).resolves.toEqual(
+          testCase.isProtoOperationSupported,
+        );
       });
     });
   });
@@ -66,18 +68,20 @@ describe('SDK.create', () => {
 
         expect(sdk.getVersion()).toEqual(testCase.output.sdkVersion);
         expect(sdk.getPacketVersion()).toEqual(testCase.output.packetVersion);
-        expect(sdk.isInBootloader()).toEqual(testCase.isInBootloader);
-        expect(sdk.deprecated.isLegacyOperationSupported()).toEqual(
+        expect(sdk.isInBootloader()).resolves.toEqual(testCase.isInBootloader);
+        expect(sdk.deprecated.isLegacyOperationSupported()).resolves.toEqual(
           testCase.isLegacyOperationSupported,
         );
-        expect(sdk.deprecated.isRawOperationSupported()).toEqual(
+        expect(sdk.deprecated.isRawOperationSupported()).resolves.toEqual(
           testCase.isRawOperationSupported,
         );
-        expect(sdk.isSupported()).toEqual(testCase.isProtoOperationSupported);
+        expect(sdk.isSupported()).resolves.toEqual(
+          testCase.isProtoOperationSupported,
+        );
 
         for (let i = 0; i < 100; i += 1) {
-          expect(sdk.getSequenceNumber()).toEqual(i);
-          expect(sdk.getNewSequenceNumber()).toEqual(i + 1);
+          expect(sdk.getSequenceNumber()).resolves.toEqual(i);
+          expect(sdk.getNewSequenceNumber()).resolves.toEqual(i + 1);
         }
       });
     });
@@ -120,14 +124,16 @@ describe('SDK.create', () => {
 
         expect(sdk.getVersion()).toEqual(testCase.output.sdkVersion);
         expect(sdk.getPacketVersion()).toEqual(testCase.output.packetVersion);
-        expect(sdk.isInBootloader()).toEqual(testCase.isInBootloader);
-        expect(sdk.deprecated.isLegacyOperationSupported()).toEqual(
+        expect(sdk.isInBootloader()).resolves.toEqual(testCase.isInBootloader);
+        expect(sdk.deprecated.isLegacyOperationSupported()).resolves.toEqual(
           testCase.isLegacyOperationSupported,
         );
-        expect(sdk.deprecated.isRawOperationSupported()).toEqual(
+        expect(sdk.deprecated.isRawOperationSupported()).resolves.toEqual(
           testCase.isRawOperationSupported,
         );
-        expect(sdk.isSupported()).toEqual(testCase.isProtoOperationSupported);
+        expect(sdk.isSupported()).resolves.toEqual(
+          testCase.isProtoOperationSupported,
+        );
       });
     });
   });

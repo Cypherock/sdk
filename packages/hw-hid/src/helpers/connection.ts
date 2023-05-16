@@ -1,5 +1,9 @@
 import HID from 'node-hid';
-import { DeviceState, IDevice } from '@cypherock/sdk-interfaces';
+import {
+  DeviceState,
+  IDevice,
+  ConnectionTypeMap,
+} from '@cypherock/sdk-interfaces';
 
 export const formatDeviceInfo = (device: HID.Device): IDevice | undefined => {
   const { vendorId, productId, serialNumber } = device;
@@ -16,6 +20,7 @@ export const formatDeviceInfo = (device: HID.Device): IDevice | undefined => {
       vendorId,
       productId,
       serial: serialNumber,
+      type: ConnectionTypeMap.HID,
     };
   }
 
