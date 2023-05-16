@@ -82,7 +82,6 @@ describe('Bootloader Operation', () => {
         DeviceCommunicationErrorType.IN_BOOTLOADER
       ].message;
 
-    console.log('SendLegacy');
     await expect(
       sdk.deprecated.sendLegacyCommand(1, '00'),
     ).rejects.toThrowError(inBootloaderError);
@@ -90,7 +89,6 @@ describe('Bootloader Operation', () => {
       inBootloaderError,
     );
 
-    console.log('Command');
     await expect(
       sdk.deprecated.sendCommand({
         commandType: 1,
@@ -114,7 +112,6 @@ describe('Bootloader Operation', () => {
       inBootloaderError,
     );
 
-    console.log('Proto');
     await expect(sdk.sendQuery(new Uint8Array([10]))).rejects.toThrowError(
       inBootloaderError,
     );

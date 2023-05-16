@@ -1,7 +1,7 @@
 export const getEnvVariable = (key: string, defaultValue?: string): string => {
   let value: string | undefined;
 
-  if (typeof process !== 'undefined') {
+  if (typeof process !== 'undefined' && process.env) {
     value = process.env[key];
   } else if (typeof window !== 'undefined' && (window as any).cysyncEnv) {
     value = (window as any).cysyncEnv[key];
