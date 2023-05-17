@@ -44,7 +44,7 @@ export default class DeviceConnection implements IDeviceConnection {
     });
   }
 
-  // eslint-disable-next-line
+  // eslint-disable-next-line class-methods-use-this
   public async getConnectionType() {
     return ConnectionTypeMap.HID;
   }

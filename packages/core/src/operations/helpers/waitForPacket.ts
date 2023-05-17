@@ -58,7 +58,7 @@ export const waitForPacket = ({
   const usableConfig = config.v3;
 
   let isCancelled = false;
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   let onCancel = () => {};
 
   /**
@@ -200,12 +200,6 @@ export const waitForPacket = ({
             usableConfig.constants.RECHECK_TIME,
           );
         }
-      }
-
-      if (!(await connection.isConnected())) {
-        throw new DeviceConnectionError(
-          DeviceConnectionErrorType.CONNECTION_CLOSED,
-        );
       }
 
       timeout = setTimeout(async () => {

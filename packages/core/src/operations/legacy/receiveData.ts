@@ -54,25 +54,17 @@ export const receiveData = (
           );
         }
 
-        if (!(await connection.isConnected())) {
-          reject(
-            new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED),
-          );
-          return;
-        }
-
         let timeoutIdentifier: NodeJS.Timeout | null = null;
         let recheckTimeout: NodeJS.Timeout | null = null;
 
-        // eslint-disable-next-line
-        function cleanUp() {
+        const cleanUp = () => {
           if (timeoutIdentifier) {
             clearTimeout(timeoutIdentifier);
           }
           if (recheckTimeout) {
             clearTimeout(recheckTimeout);
           }
-        }
+        };
 
         if (timeout) {
           timeoutIdentifier = setTimeout(() => {
@@ -85,8 +77,7 @@ export const receiveData = (
           }, timeout);
         }
 
-        // eslint-disable-next-line
-        function processPacket(packet: LegacyDecodedPacketData) {
+        const processPacket = (packet: LegacyDecodedPacketData) => {
           const { commandType, currentPacketNumber, totalPacket, dataChunk } =
             packet;
           if (allAcceptableCommands.includes(commandType)) {
@@ -99,10 +90,9 @@ export const receiveData = (
           }
 
           return false;
-        }
+        };
 
-        // eslint-disable-next-line
-        async function recheckPacket() {
+        const recheckPacket = async () => {
           try {
             if (!(await connection.isConnected())) {
               reject(
@@ -144,7 +134,7 @@ export const receiveData = (
               ),
             );
           }
-        }
+        };
 
         recheckTimeout = setTimeout(
           recheckPacket,

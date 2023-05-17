@@ -45,18 +45,16 @@ export const writePacket = (
       let timeout: NodeJS.Timeout | undefined;
       let recheckTimeout: NodeJS.Timeout | undefined;
 
-      // eslint-disable-next-line no-inner-declarations
-      function cleanUp() {
+      const cleanUp = () => {
         if (timeout) {
           clearTimeout(timeout);
         }
         if (recheckTimeout) {
           clearTimeout(recheckTimeout);
         }
-      }
+      };
 
-      // eslint-disable-next-line no-inner-declarations
-      async function recheckAck() {
+      const recheckAck = async () => {
         try {
           if (!(await connection.isConnected())) {
             reject(
@@ -69,7 +67,6 @@ export const writePacket = (
 
           const pool = await connection.peek();
 
-          // eslint-disable-next-line
           for (const poolItem of pool) {
             const { data } = poolItem;
             if (skipPacketIds.includes(poolItem.id)) {
@@ -81,9 +78,8 @@ export const writePacket = (
 
             const packetList = xmodemDecode(data, version);
 
-            // eslint-disable-next-line
-            for (const packet of packetList) {
-              switch (packet.commandType) {
+            for (const pkt of packetList) {
+              switch (pkt.commandType) {
                 case usableConfig.commands.ACK_PACKET:
                   cleanUp();
                   resolve();
@@ -95,7 +91,6 @@ export const writePacket = (
                       DeviceCommunicationErrorType.WRITE_ERROR,
                     ),
                   );
-                  // eslint-disable-next-line
                   return;
                 default:
                 // Do nothing
@@ -115,7 +110,7 @@ export const writePacket = (
             ),
           );
         }
-      }
+      };
 
       connection
         .send(packet)

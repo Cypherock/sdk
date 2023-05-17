@@ -15,4 +15,4 @@
 '@cypherock/tsconfig': patch
 ---
 
-Device list and connect func on hw-serialport, hw-hid
+list(), connect() on serialport, hid. Made all deviceConnection functions async

@@ -61,7 +61,6 @@ export class MockDeviceConnection implements IDeviceConnection {
     this.isConnectionOpen = true;
   }
 
-  // eslint-disable-next-line
   public async afterOperation() {
     this.isConnectionOpen = false;
   }
