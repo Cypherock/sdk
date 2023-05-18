@@ -18,20 +18,20 @@ export default class DeprecatedCommunication {
     this.sdk = sdk;
   }
 
-  public isLegacyOperationSupported() {
+  public async isLegacyOperationSupported() {
     const packetVersion = this.sdk.getPacketVersion();
 
     if (!packetVersion) return false;
 
-    if (this.sdk.getDeviceState() === DeviceState.BOOTLOADER) {
+    if ((await this.sdk.getDeviceState()) === DeviceState.BOOTLOADER) {
       return false;
     }
 
     return [PacketVersionMap.v1, PacketVersionMap.v2].includes(packetVersion);
   }
 
-  public isRawOperationSupported() {
-    if (this.sdk.getDeviceState() === DeviceState.BOOTLOADER) {
+  public async isRawOperationSupported() {
+    if ((await this.sdk.getDeviceState()) === DeviceState.BOOTLOADER) {
       return false;
     }
 
@@ -45,7 +45,7 @@ export default class DeprecatedCommunication {
     maxTries?: number,
     timeout?: number,
   ) {
-    this.sdk.validateNotInBootloaderMode();
+    await this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
     assert(
@@ -66,7 +66,7 @@ export default class DeprecatedCommunication {
   }
 
   public async receiveLegacyCommand(commands: number[], timeout?: number) {
-    this.sdk.validateNotInBootloaderMode();
+    await this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
     assert(
@@ -92,7 +92,7 @@ export default class DeprecatedCommunication {
     maxTries?: number;
     timeout?: number;
   }): Promise<void> {
-    this.sdk.validateNotInBootloaderMode();
+    await this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
     assert(
@@ -102,7 +102,7 @@ export default class DeprecatedCommunication {
       ),
     );
 
-    if (!this.isRawOperationSupported()) {
+    if (!(await this.isRawOperationSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );
@@ -124,7 +124,7 @@ export default class DeprecatedCommunication {
     maxTries?: number,
     timeout?: number,
   ) {
-    this.sdk.validateNotInBootloaderMode();
+    await this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
     assert(
@@ -134,7 +134,7 @@ export default class DeprecatedCommunication {
       ),
     );
 
-    if (!this.isRawOperationSupported()) {
+    if (!(await this.isRawOperationSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );
@@ -155,7 +155,7 @@ export default class DeprecatedCommunication {
     onStatus?: rawOperations.IWaitForCommandOutputParams['onStatus'];
     options?: rawOperations.IWaitForCommandOutputParams['options'];
   }) {
-    this.sdk.validateNotInBootloaderMode();
+    await this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
     assert(
@@ -165,7 +165,7 @@ export default class DeprecatedCommunication {
       ),
     );
 
-    if (!this.isRawOperationSupported()) {
+    if (!(await this.isRawOperationSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );
@@ -179,7 +179,7 @@ export default class DeprecatedCommunication {
   }
 
   public async getCommandStatus(maxTries?: number, timeout?: number) {
-    this.sdk.validateNotInBootloaderMode();
+    await this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
     assert(
@@ -189,7 +189,7 @@ export default class DeprecatedCommunication {
       ),
     );
 
-    if (!this.isRawOperationSupported()) {
+    if (!(await this.isRawOperationSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );
@@ -208,7 +208,7 @@ export default class DeprecatedCommunication {
     maxTries?: number,
     timeout?: number,
   ) {
-    this.sdk.validateNotInBootloaderMode();
+    await this.sdk.validateNotInBootloaderMode();
     const packetVersion = this.sdk.getPacketVersion();
 
     assert(
@@ -218,7 +218,7 @@ export default class DeprecatedCommunication {
       ),
     );
 
-    if (!this.isRawOperationSupported()) {
+    if (!(await this.isRawOperationSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );

@@ -194,7 +194,7 @@ export const encodePacket = ({
       payloadLength +
       payload;
     const crc = intToUintByte(
-      crc16(Buffer.from(commData, 'hex')),
+      crc16(hexToUint8Array(commData)),
       usableConfig.radix.crc,
     );
     const packet = START_OF_FRAME + crc + commData;
@@ -298,7 +298,7 @@ export const decodePacket = (
       intToUintByte(payloadLength, usableConfig.radix.payloadLength) +
       payloadData;
     const actualCRC = intToUintByte(
-      crc16(Buffer.from(commData, 'hex')),
+      crc16(hexToUint8Array(commData)),
       usableConfig.radix.crc,
     );
 

@@ -57,7 +57,7 @@ export const stmXmodemEncode = (data: string) => {
 
     const commData =
       START_OF_FRAME + currentPacketNumber + packetNumberXor + dataChunk;
-    const crc = intToUintByte(crc16(Buffer.from(dataChunk, 'hex')), 16);
+    const crc = intToUintByte(crc16(hexToUint8Array(dataChunk)), 16);
     const packet = commData + crc;
     packetList.push(packet);
   }
@@ -112,7 +112,7 @@ export const stmXmodemDecode = (param: Uint8Array) => {
       0,
       unStuffedData.length - radix.crc / 4,
     );
-    const actualCRC = crc16(Buffer.from(crcInput, 'hex'))
+    const actualCRC = crc16(hexToUint8Array(crcInput))
       .toString(16)
       .padStart(4, '0');
 

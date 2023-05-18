@@ -2,25 +2,24 @@ import {
   IDeviceConnection,
   DeviceState,
   ConnectionTypeMap,
+  IDevice,
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
 } from '@cypherock/sdk-interfaces';
 import SerialPort from 'serialport';
 import * as uuid from 'uuid';
 
 import {
-  createPort,
-  getAvailableConnectionInfo,
+  getAvailableDevices,
   closeConnection,
   openConnection,
   DataListener,
 } from './helpers';
-import { IConnectionInfo } from './types';
 
 export default class DeviceConnection implements IDeviceConnection {
   protected port: string;
 
   protected deviceState: DeviceState;
-
-  protected hardwareVersion: string;
 
   protected serial?: string;
 
@@ -34,11 +33,10 @@ export default class DeviceConnection implements IDeviceConnection {
 
   protected dataListener: DataListener;
 
-  constructor(connectionInfo: IConnectionInfo) {
-    this.port = connectionInfo.port.path;
-    this.deviceState = connectionInfo.deviceState;
-    this.hardwareVersion = connectionInfo.hardwareVersion;
-    this.serial = connectionInfo.serial;
+  constructor(device: IDevice) {
+    this.port = device.path;
+    this.deviceState = device.deviceState;
+    this.serial = device.serial;
 
     this.connectionId = uuid.v4();
     this.sequenceNumber = 0;
@@ -52,41 +50,48 @@ export default class DeviceConnection implements IDeviceConnection {
   }
 
   // eslint-disable-next-line
-  public getConnectionType() {
+  public async getConnectionType() {
     return ConnectionTypeMap.SERIAL_PORT;
   }
 
+  public static async connect(device: IDevice) {
+    return new DeviceConnection(device);
+  }
+
+  public static async list() {
+    return getAvailableDevices();
+  }
+
   public static async create() {
-    const connectionInfo = await createPort();
-    return new DeviceConnection(connectionInfo);
+    const devices = await getAvailableDevices();
+
+    if (devices.length <= 0)
+      throw new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED);
+
+    return new DeviceConnection(devices[0]);
   }
 
-  public static async getAvailableConnection() {
-    const connectionInfo = await getAvailableConnectionInfo();
-    return connectionInfo;
-  }
-
-  public getDeviceState() {
+  public async getDeviceState() {
     return this.deviceState;
   }
 
-  public isInitialized() {
+  public async isInitialized() {
     return this.initialized;
   }
 
-  public getNewSequenceNumber() {
+  public async getNewSequenceNumber() {
     this.sequenceNumber += 1;
     return this.sequenceNumber;
   }
 
-  public getSequenceNumber() {
+  public async getSequenceNumber() {
     return this.sequenceNumber;
   }
 
   /**
    * Returns if the device is connected or not
    */
-  public isConnected() {
+  public async isConnected() {
     return !this.connection.destroyed;
   }
 
@@ -152,15 +157,15 @@ export default class DeviceConnection implements IDeviceConnection {
   /**
    * Returns if the device connection is open, i.e., if it's ready to communicate.
    */
-  private isOpen() {
-    return this.isConnected() && this.connection.isOpen;
+  private async isOpen() {
+    return (await this.isConnected()) && this.connection.isOpen;
   }
 
   /**
    * Open the device connection
    */
-  private open() {
-    if (this.isOpen()) {
+  private async open() {
+    if (await this.isOpen()) {
       return;
     }
 

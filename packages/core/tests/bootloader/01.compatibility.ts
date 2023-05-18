@@ -30,10 +30,10 @@ describe('Bootloader Operation', () => {
   test('should have the right configuration', () => {
     expect(sdk.getVersion()).toEqual('0.0.0');
     expect(sdk.getPacketVersion()).toEqual(undefined);
-    expect(sdk.getDeviceState()).toEqual(DeviceState.BOOTLOADER);
+    expect(sdk.getDeviceState()).resolves.toEqual(DeviceState.BOOTLOADER);
 
-    expect(sdk.isInBootloader()).toEqual(true);
-    expect(sdk.isSupported()).toEqual(false);
+    expect(sdk.isInBootloader()).resolves.toEqual(true);
+    expect(sdk.isSupported()).resolves.toEqual(false);
   });
 
   test('should be able to send abort', async () => {

@@ -17,6 +17,14 @@ export class ManagerApp {
     return new ManagerApp(sdk);
   }
 
+  public getSDKVersion() {
+    return this.sdk.getVersion();
+  }
+
+  public isSupported() {
+    return this.sdk.isSupported();
+  }
+
   public async getDeviceInfo() {
     return this.sdk.runOperation(() => operations.getDeviceInfo(this.sdk));
   }

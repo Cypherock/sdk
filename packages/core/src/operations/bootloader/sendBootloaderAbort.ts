@@ -36,15 +36,9 @@ const writePacket = (
       }
     }
 
-    if (!connection.isConnected()) {
-      throw new DeviceConnectionError(
-        DeviceConnectionErrorType.CONNECTION_CLOSED,
-      );
-    }
-
     async function recheckPacket() {
       try {
-        if (!connection.isConnected()) {
+        if (!(await connection.isConnected())) {
           cleanUp();
           reject(
             new DeviceConnectionError(

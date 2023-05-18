@@ -11,10 +11,10 @@ export const sendQuery = jest.fn<ISDK['sendQuery']>();
 
 export const waitForResult = jest.fn<ISDK['waitForResult']>();
 export const getSequenceNumber = jest.fn<ISDK['getSequenceNumber']>(
-  () => sequenceNumber,
+  async () => sequenceNumber,
 );
 export const getNewSequenceNumber = jest.fn<ISDK['getNewSequenceNumber']>(
-  () => {
+  async () => {
     sequenceNumber += 1;
     return sequenceNumber;
   },
@@ -24,7 +24,7 @@ export const runOperation = jest.fn<ISDK['runOperation']>(func => func());
 
 export const destroy = jest.fn<ISDK['destroy']>();
 export const getDeviceState = jest.fn<ISDK['getDeviceState']>(
-  () => DeviceState.MAIN,
+  async () => DeviceState.MAIN,
 );
 
 export const create = jest.fn(async () =>

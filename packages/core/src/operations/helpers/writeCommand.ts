@@ -47,7 +47,7 @@ export const writeCommand = async ({
     );
   }
 
-  if (!connection.isConnected()) {
+  if (!(await connection.isConnected())) {
     throw new DeviceConnectionError(
       DeviceConnectionErrorType.CONNECTION_CLOSED,
     );
@@ -63,10 +63,10 @@ export const writeCommand = async ({
       ackTimeout: timeout,
     });
 
-    connection.send(packet).catch((error: any) => {
+    connection.send(packet).catch(async (error: any) => {
       logger.error(error);
       ackPromise.cancel();
-      if (!connection.isConnected()) {
+      if (!(await connection.isConnected())) {
         reject(
           new DeviceConnectionError(
             DeviceConnectionErrorType.CONNECTION_CLOSED,

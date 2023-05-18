@@ -1,18 +1,15 @@
 import {
   IDeviceConnection,
   DeviceState,
+  IDevice,
   ConnectionTypeMap,
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
 } from '@cypherock/sdk-interfaces';
 import HID from 'node-hid';
 import * as uuid from 'uuid';
 
-import {
-  createPort,
-  getAvailableConnectionInfo,
-  DataListener,
-  formatDeviceInfo,
-} from './helpers';
-import { IConnectionInfo } from './types';
+import { getAvailableDevices, DataListener } from './helpers';
 
 export default class DeviceConnection implements IDeviceConnection {
   protected path: string;
@@ -31,9 +28,9 @@ export default class DeviceConnection implements IDeviceConnection {
 
   protected isPortOpen: boolean;
 
-  constructor(connectionInfo: IConnectionInfo) {
-    this.path = connectionInfo.path;
-    this.deviceState = connectionInfo.deviceState;
+  constructor(device: IDevice) {
+    this.path = device.path;
+    this.deviceState = device.deviceState;
 
     this.connectionId = uuid.v4();
     this.sequenceNumber = 0;
@@ -47,52 +44,54 @@ export default class DeviceConnection implements IDeviceConnection {
     });
   }
 
-  // eslint-disable-next-line
-  public getConnectionType() {
-    return ConnectionTypeMap.SERIAL_PORT;
+  // eslint-disable-next-line class-methods-use-this
+  public async getConnectionType() {
+    return ConnectionTypeMap.HID;
   }
 
-  public static async connect(device: HID.Device) {
-    const connectionInfo = formatDeviceInfo(device);
+  public static async connect(device: IDevice) {
+    return new DeviceConnection(device);
+  }
 
-    if (!connectionInfo) {
-      throw new Error('Invalid device');
-    }
-
-    return new DeviceConnection(connectionInfo);
+  public static async list() {
+    return getAvailableDevices();
   }
 
   public static async create() {
-    const connectionInfo = await createPort();
-    return new DeviceConnection(connectionInfo);
+    const devices = await getAvailableDevices();
+
+    if (devices.length <= 0)
+      throw new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED);
+
+    return new DeviceConnection(devices[0]);
   }
 
   public static async getAvailableConnection() {
-    const connectionInfo = await getAvailableConnectionInfo();
+    const connectionInfo = await getAvailableDevices();
     return connectionInfo;
   }
 
-  public getDeviceState() {
+  public async getDeviceState() {
     return this.deviceState;
   }
 
-  public isInitialized() {
+  public async isInitialized() {
     return this.initialized;
   }
 
-  public getNewSequenceNumber() {
+  public async getNewSequenceNumber() {
     this.sequenceNumber += 1;
     return this.sequenceNumber;
   }
 
-  public getSequenceNumber() {
+  public async getSequenceNumber() {
     return this.sequenceNumber;
   }
 
   /**
    * Returns if the device is connected or not
    */
-  public isConnected() {
+  public async isConnected() {
     return this.isPortOpen;
   }
 

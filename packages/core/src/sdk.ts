@@ -73,19 +73,19 @@ export class SDK implements ISDK {
     return this.packetVersion;
   }
 
-  public isSupported() {
-    if (this.getDeviceState() === DeviceState.BOOTLOADER) {
+  public async isSupported() {
+    if ((await this.getDeviceState()) === DeviceState.BOOTLOADER) {
       return false;
     }
 
     return isFeatureEnabled(FeatureName.ProtoCommand, this.getVersion());
   }
 
-  public getSequenceNumber() {
+  public async getSequenceNumber() {
     return this.connection.getSequenceNumber();
   }
 
-  public getNewSequenceNumber() {
+  public async getNewSequenceNumber() {
     return this.connection.getNewSequenceNumber();
   }
 
@@ -105,11 +105,11 @@ export class SDK implements ISDK {
     return this.connection.destroy();
   }
 
-  public isInBootloader() {
-    return this.getDeviceState() === DeviceState.BOOTLOADER;
+  public async isInBootloader() {
+    return (await this.getDeviceState()) === DeviceState.BOOTLOADER;
   }
 
-  public getDeviceState() {
+  public async getDeviceState() {
     return this.connection.getDeviceState();
   }
 
@@ -122,7 +122,7 @@ export class SDK implements ISDK {
       timeout?: number;
     },
   ): Promise<void> {
-    this.validateNotInBootloaderMode();
+    await this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
       new DeviceCompatibilityError(
@@ -130,7 +130,7 @@ export class SDK implements ISDK {
       ),
     );
 
-    if (!this.isSupported()) {
+    if (!(await this.isSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );
@@ -140,7 +140,8 @@ export class SDK implements ISDK {
       connection: this.connection,
       data,
       appletId: this.appletId,
-      sequenceNumber: options?.sequenceNumber ?? this.getNewSequenceNumber(),
+      sequenceNumber:
+        options?.sequenceNumber ?? (await this.getNewSequenceNumber()),
       version: this.packetVersion,
       maxTries: options?.maxTries,
       timeout: options?.timeout,
@@ -152,7 +153,7 @@ export class SDK implements ISDK {
     maxTries?: number;
     timeout?: number;
   }) {
-    this.validateNotInBootloaderMode();
+    await this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
       new DeviceCompatibilityError(
@@ -160,7 +161,7 @@ export class SDK implements ISDK {
       ),
     );
 
-    if (!this.isSupported()) {
+    if (!(await this.isSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );
@@ -169,7 +170,8 @@ export class SDK implements ISDK {
     return operations.getResult({
       connection: this.connection,
       appletId: this.appletId,
-      sequenceNumber: options?.sequenceNumber ?? this.getSequenceNumber(),
+      sequenceNumber:
+        options?.sequenceNumber ?? (await this.getSequenceNumber()),
       version: this.packetVersion,
       maxTries: options?.maxTries,
       timeout: options?.timeout,
@@ -181,7 +183,7 @@ export class SDK implements ISDK {
     onStatus?: operations.IWaitForCommandOutputParams['onStatus'];
     options?: operations.IWaitForCommandOutputParams['options'];
   }) {
-    this.validateNotInBootloaderMode();
+    await this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
       new DeviceCompatibilityError(
@@ -189,7 +191,7 @@ export class SDK implements ISDK {
       ),
     );
 
-    if (!this.isSupported()) {
+    if (!(await this.isSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );
@@ -199,14 +201,15 @@ export class SDK implements ISDK {
       connection: this.connection,
       version: this.packetVersion,
       appletId: this.appletId,
-      sequenceNumber: params?.sequenceNumber ?? this.getSequenceNumber(),
+      sequenceNumber:
+        params?.sequenceNumber ?? (await this.getSequenceNumber()),
       onStatus: params?.onStatus,
       options: params?.options,
     });
   }
 
   public async getStatus(maxTries?: number, timeout?: number) {
-    this.validateNotInBootloaderMode();
+    await this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
       new DeviceCompatibilityError(
@@ -214,7 +217,7 @@ export class SDK implements ISDK {
       ),
     );
 
-    if (!this.isSupported()) {
+    if (!(await this.isSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );
@@ -233,7 +236,7 @@ export class SDK implements ISDK {
     maxTries?: number;
     timeout?: number;
   }) {
-    this.validateNotInBootloaderMode();
+    await this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
       new DeviceCompatibilityError(
@@ -241,7 +244,7 @@ export class SDK implements ISDK {
       ),
     );
 
-    if (!this.isSupported()) {
+    if (!(await this.isSupported())) {
       throw new DeviceCompatibilityError(
         DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
       );
@@ -249,7 +252,8 @@ export class SDK implements ISDK {
 
     return operations.sendAbort({
       connection: this.connection,
-      sequenceNumber: options?.sequenceNumber ?? this.getNewSequenceNumber(),
+      sequenceNumber:
+        options?.sequenceNumber ?? (await this.getNewSequenceNumber()),
       version: this.packetVersion,
       maxTries: options?.maxTries,
       timeout: options?.timeout,
@@ -262,7 +266,7 @@ export class SDK implements ISDK {
     timeout?: number;
     maxTries?: number;
   }) {
-    if (!this.isInBootloader()) {
+    if (!(await this.isInBootloader())) {
       throw new DeviceBootloaderError(
         DeviceBootloaderErrorType.NOT_IN_BOOTLOADER,
       );
@@ -276,7 +280,7 @@ export class SDK implements ISDK {
     onProgress?: (progress: number) => void,
     options?: { firstTimeout?: number; timeout?: number; maxTries?: number },
   ) {
-    if (!this.isInBootloader()) {
+    if (!(await this.isInBootloader())) {
       throw new DeviceBootloaderError(
         DeviceBootloaderErrorType.NOT_IN_BOOTLOADER,
       );
@@ -303,8 +307,8 @@ export class SDK implements ISDK {
     }
   }
 
-  public validateNotInBootloaderMode() {
-    if (this.isInBootloader()) {
+  public async validateNotInBootloaderMode() {
+    if (await this.isInBootloader()) {
       throw new DeviceCommunicationError(
         DeviceCommunicationErrorType.IN_BOOTLOADER,
       );
@@ -318,7 +322,7 @@ export class SDK implements ISDK {
   ) {
     assert(connection, 'Invalid connection');
 
-    if (connection.getDeviceState() === DeviceState.BOOTLOADER) {
+    if ((await connection.getDeviceState()) === DeviceState.BOOTLOADER) {
       return {
         sdkVersion: '0.0.0',
       };

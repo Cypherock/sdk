@@ -34,7 +34,7 @@ export default class DeviceConnection implements IDeviceConnection {
   }
 
   // eslint-disable-next-line
-  public getConnectionType() {
+  public async getConnectionType() {
     return ConnectionTypeMap.WEBUSB;
   }
 
@@ -48,7 +48,7 @@ export default class DeviceConnection implements IDeviceConnection {
     return DeviceConnection.connect(connection);
   }
 
-  public getDeviceState() {
+  public async getDeviceState() {
     return this.deviceState;
   }
 
@@ -56,19 +56,19 @@ export default class DeviceConnection implements IDeviceConnection {
     return this.initialized;
   }
 
-  public getNewSequenceNumber() {
+  public async getNewSequenceNumber() {
     this.sequenceNumber += 1;
     return this.sequenceNumber;
   }
 
-  public getSequenceNumber() {
+  public async getSequenceNumber() {
     return this.sequenceNumber;
   }
 
   /**
    * Returns if the device is connected or not
    */
-  public isConnected() {
+  public async isConnected() {
     return this.connection.opened;
   }
 

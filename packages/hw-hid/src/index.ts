@@ -1,5 +1,5 @@
 import DeviceConnection from './deviceConnection';
 
-export * from './types';
+export { default as DeviceConnection } from './deviceConnection';
 
 export default DeviceConnection;
