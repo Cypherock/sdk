@@ -1,5 +1,11 @@
 # @cypherock/eslint-config
 
+## 0.0.3
+
+### Patch Changes
+
+- f676bec: list(), connect() on serialport, hid. Made all deviceConnection functions async
+
 ## 0.0.2
 
 ### Patch Changes
