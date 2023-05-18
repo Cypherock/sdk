@@ -1,5 +1,15 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.4
+
+### Patch Changes
+
+- 35d134d: smaller recheck time for bootloader commands
+- Updated dependencies [35d134d]
+  - @cypherock/sdk-core@0.0.4
+  - @cypherock/sdk-interfaces@0.0.4
+  - @cypherock/sdk-utils@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes
