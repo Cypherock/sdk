@@ -10,8 +10,8 @@ import {
 import { hexToUint8Array, uint8ArrayToHex, assert } from '@cypherock/sdk-utils';
 import { logger } from '../../utils';
 import { stmXmodemEncode } from '../../encoders/packet/bootloader';
-import * as config from '../../config';
 
+const RECHECK_TIME = 1;
 const ACK_PACKET = '06';
 const RECEIVING_MODE_PACKET = '43';
 
@@ -93,10 +93,7 @@ const writePacket = (
 
         const rawPacket = await connection.receive();
         if (!rawPacket) {
-          recheckTimeout = setTimeout(
-            recheckPacket,
-            config.v1.constants.RECHECK_TIME,
-          );
+          recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
           return;
         }
 
@@ -117,17 +114,11 @@ const writePacket = (
           return;
         }
 
-        recheckTimeout = setTimeout(
-          recheckPacket,
-          config.v1.constants.RECHECK_TIME,
-        );
+        recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
       } catch (error) {
         logger.error('Error while processing data from device');
         logger.error(error);
-        recheckTimeout = setTimeout(
-          recheckPacket,
-          config.v1.constants.RECHECK_TIME,
-        );
+        recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
       }
     }
 
@@ -145,10 +136,7 @@ const writePacket = (
       );
     }, options?.timeout ?? 2000);
 
-    recheckTimeout = setTimeout(
-      recheckPacket,
-      config.v1.constants.RECHECK_TIME,
-    );
+    recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
   });
 
 const checkIfInReceivingMode = async (
@@ -184,10 +172,7 @@ const checkIfInReceivingMode = async (
         }
         const rawPacket = await connection.receive();
         if (!rawPacket) {
-          recheckTimeout = setTimeout(
-            recheckPacket,
-            config.v1.constants.RECHECK_TIME,
-          );
+          recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
           return;
         }
 
@@ -199,17 +184,11 @@ const checkIfInReceivingMode = async (
           return;
         }
 
-        recheckTimeout = setTimeout(
-          recheckPacket,
-          config.v1.constants.RECHECK_TIME,
-        );
+        recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
       } catch (error) {
         logger.error('Error while processing data from device');
         logger.error(error);
-        recheckTimeout = setTimeout(
-          recheckPacket,
-          config.v1.constants.RECHECK_TIME,
-        );
+        recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
       }
     }
 
@@ -222,10 +201,7 @@ const checkIfInReceivingMode = async (
       );
     }, options?.timeout ?? 2000);
 
-    recheckTimeout = setTimeout(
-      recheckPacket,
-      config.v1.constants.RECHECK_TIME,
-    );
+    recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
   });
 
 export const sendBootloaderData = async (
