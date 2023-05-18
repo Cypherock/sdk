@@ -1,5 +1,15 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.3
+
+### Patch Changes
+
+- f676bec: list(), connect() on serialport, hid. Made all deviceConnection functions async
+- Updated dependencies [f676bec]
+  - @cypherock/sdk-interfaces@0.0.3
+  - @cypherock/sdk-core@0.0.3
+  - @cypherock/sdk-utils@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes

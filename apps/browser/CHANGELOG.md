@@ -1,5 +1,15 @@
 # browser-test
 
+## 0.0.3
+
+### Patch Changes
+
+- f676bec: list(), connect() on serialport, hid. Made all deviceConnection functions async
+- Updated dependencies [f676bec]
+  - @cypherock/sdk-app-manager@0.0.3
+  - @cypherock/sdk-core@0.0.3
+  - @cypherock/sdk-hw-webusb@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes
