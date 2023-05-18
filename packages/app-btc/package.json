@@ -1,6 +1,6 @@
 {
   "name": "@cypherock/sdk-app-btc",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -26,7 +26,7 @@
     "@cypherock/eslint-config": "workspace:*",
     "jest": "^29.4.1",
     "lint-staged": "^13.2.0",
-    "@cypherock/prettier-config": "workspace:^0.0.3",
+    "@cypherock/prettier-config": "workspace:^0.0.4",
     "rimraf": "^4.1.2",
     "ts-jest": "^29.0.5",
     "ts-proto": "^1.139.0",
@@ -34,9 +34,9 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@cypherock/sdk-core": "workspace:^0.0.3",
-    "@cypherock/sdk-interfaces": "workspace:^0.0.3",
-    "@cypherock/sdk-utils": "workspace:^0.0.3",
+    "@cypherock/sdk-core": "workspace:^0.0.4",
+    "@cypherock/sdk-interfaces": "workspace:^0.0.4",
+    "@cypherock/sdk-utils": "workspace:^0.0.4",
     "long": "^5.2.1",
     "protobufjs": "^7.2.2"
   },

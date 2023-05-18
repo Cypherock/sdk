@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.4
+
+### Patch Changes
+
+- 35d134d: smaller recheck time for bootloader commands
+
 ## 0.0.3
 
 ### Patch Changes
