@@ -52,6 +52,10 @@ const withValidData: IAuthDeviceTestCase = {
         190, 86,
       ]),
     },
+    {
+      name: 'flowComplete',
+      data: new Uint8Array([26, 2, 34, 0]),
+    },
   ],
   mocks: {
     challenge: new Uint8Array([
@@ -156,6 +160,10 @@ const withPartiallySkippedStatus: IAuthDeviceTestCase = {
         190, 86,
       ]),
     },
+    {
+      name: 'flowComplete',
+      data: new Uint8Array([26, 2, 34, 0]),
+    },
   ],
   mocks: {
     deviceInfo: {
@@ -255,6 +263,10 @@ const withSkippedStatuses: IAuthDeviceTestCase = {
         190, 86,
       ]),
     },
+    {
+      name: 'flowComplete',
+      data: new Uint8Array([26, 2, 34, 0]),
+    },
   ],
   mocks: {
     eventCalls: [[0], [1]],
@@ -343,6 +355,10 @@ const withSerialSignatureFailure: IAuthDeviceTestCase = {
         },
       ],
     },
+    {
+      name: 'flowComplete',
+      data: new Uint8Array([26, 2, 34, 0]),
+    },
   ],
   mocks: {
     eventCalls: [[0], [1]],
@@ -419,6 +435,10 @@ const withChallengeSignatureFailure: IAuthDeviceTestCase = {
         129, 35, 143, 222, 136, 154, 19, 160, 41, 37, 144, 197, 190, 151, 236,
         190, 86,
       ]),
+    },
+    {
+      name: 'flowComplete',
+      data: new Uint8Array([26, 2, 34, 0]),
     },
   ],
   mocks: {
