@@ -47,8 +47,14 @@ export class ManagerApp {
     return this.sdk.runOperation(() => operations.getLogs(this.sdk, onEvent));
   }
 
-  public async trainUser(params?: operations.ITrainUserParams) {
-    return this.sdk.runOperation(() => operations.trainUser(this.sdk, params));
+  public async trainJoystick(onEvent?: operations.TrainJoystickEventHandler) {
+    return this.sdk.runOperation(() =>
+      operations.trainJoystick(this.sdk, onEvent),
+    );
+  }
+
+  public async trainCard() {
+    return this.sdk.runOperation(() => operations.trainCard(this.sdk));
   }
 
   public async destroy() {

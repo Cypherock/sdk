@@ -1,6 +1,4 @@
-import { ITrainUserResultResponse } from '../../../src';
-
-export interface ITrainUserTestCase {
+export interface ITrainJoystickTestCase {
   name: string;
   params?: { jumpToState?: number };
   queries: {
@@ -15,13 +13,12 @@ export interface ITrainUserTestCase {
   mocks?: {
     eventCalls?: number[][];
   };
-  output?: Partial<ITrainUserResultResponse>;
   errorInstance?: any;
   [key: string]: any;
 }
 
 export interface IFixtures {
-  valid: ITrainUserTestCase[];
-  invalidData: ITrainUserTestCase[];
-  error: ITrainUserTestCase[];
+  valid: ITrainJoystickTestCase[];
+  invalidData: ITrainJoystickTestCase[];
+  error: ITrainJoystickTestCase[];
 }

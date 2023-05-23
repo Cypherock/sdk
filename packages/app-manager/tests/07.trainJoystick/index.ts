@@ -6,7 +6,7 @@ import fixtures from './__fixtures__';
 
 import { ManagerApp } from '../../src/index';
 
-describe('managerApp.trainUser', () => {
+describe('managerApp.trainJoystick', () => {
   let connection: MockDeviceConnection;
   let managerApp: ManagerApp;
 
@@ -21,17 +21,12 @@ describe('managerApp.trainUser', () => {
     await managerApp.destroy();
   });
 
-  describe('should be able complete user training', () => {
+  describe('should be able complete user joystick training', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         const onEvent = setupMocks(testCase);
 
-        const output = await managerApp.trainUser({
-          onEvent,
-          ...(testCase.params ?? {}),
-        });
-
-        expect(output).toEqual(testCase.output);
+        await managerApp.trainJoystick(onEvent);
 
         expectMockCalls(testCase);
       });
@@ -43,7 +38,7 @@ describe('managerApp.trainUser', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        await expect(managerApp.trainUser(testCase.params)).rejects.toThrow(
+        await expect(managerApp.trainJoystick()).rejects.toThrow(
           testCase.errorInstance,
         );
         expectMockCalls(testCase);
@@ -56,7 +51,7 @@ describe('managerApp.trainUser', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const rejectedPromise = managerApp.trainUser(testCase.params);
+        const rejectedPromise = managerApp.trainJoystick();
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
