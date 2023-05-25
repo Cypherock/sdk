@@ -1,5 +1,12 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.5
+
+### Patch Changes
+
+- 3944830: added flow complete step in device auth
+- 606f2a7: split joystick and card training flows
+
 ## 0.0.4
 
 ### Patch Changes
