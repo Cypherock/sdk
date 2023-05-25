@@ -1,5 +1,5 @@
 import { DeviceAppError } from '@cypherock/sdk-interfaces';
-import { ITrainUserTestCase } from './types';
+import { ITrainJoystickTestCase } from './types';
 
 const withInvalidData = {
   name: 'With invalid data',
@@ -42,6 +42,9 @@ const withInvalidData2 = {
   errorInstance: DeviceAppError,
 };
 
-const invalidData: ITrainUserTestCase[] = [withInvalidData, withInvalidData2];
+const invalidData: ITrainJoystickTestCase[] = [
+  withInvalidData,
+  withInvalidData2,
+];
 
 export default invalidData;

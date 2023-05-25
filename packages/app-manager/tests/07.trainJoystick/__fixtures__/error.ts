@@ -3,9 +3,9 @@ import {
   DeviceAppErrorType,
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
-import { ITrainUserTestCase } from './types';
+import { ITrainJoystickTestCase } from './types';
 
-const withInvalidResult: ITrainUserTestCase = {
+const withInvalidResult: ITrainJoystickTestCase = {
   name: 'With invalid result',
   queries: [
     {
@@ -16,7 +16,7 @@ const withInvalidResult: ITrainUserTestCase = {
   results: [
     {
       name: 'result',
-      data: new Uint8Array([50, 4, 18, 2, 24, 0]),
+      data: new Uint8Array([50, 5]),
     },
   ],
   errorInstance: DeviceAppError,
@@ -24,7 +24,7 @@ const withInvalidResult: ITrainUserTestCase = {
     deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
 };
 
-const withUnknownError: ITrainUserTestCase = {
+const withUnknownError: ITrainJoystickTestCase = {
   name: 'With invalid result',
   queries: [
     {
@@ -42,6 +42,6 @@ const withUnknownError: ITrainUserTestCase = {
   errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR],
 };
 
-const error: ITrainUserTestCase[] = [withInvalidResult, withUnknownError];
+const error: ITrainJoystickTestCase[] = [withInvalidResult, withUnknownError];
 
 export default error;

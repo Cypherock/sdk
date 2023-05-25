@@ -1,8 +1,8 @@
 import * as superMocks from '../../__helpers__';
 
-import { ITrainUserTestCase } from '../__fixtures__';
+import { ITrainJoystickTestCase } from '../__fixtures__';
 
-export function setupMocks(testCase: ITrainUserTestCase) {
+export function setupMocks(testCase: ITrainJoystickTestCase) {
   return superMocks.setupMocks(testCase);
 }
 
@@ -10,6 +10,6 @@ export function clearMocks() {
   superMocks.clearMocks();
 }
 
-export function expectMockCalls(testCase: ITrainUserTestCase) {
+export function expectMockCalls(testCase: ITrainJoystickTestCase) {
   superMocks.expectMockCalls(testCase);
 }

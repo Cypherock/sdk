@@ -103,11 +103,16 @@ export const authDevice = async (
     });
 
     await helper.sendQuery({ result: { verified: true } });
+    const result = await helper.waitForResult();
+    assertOrThrowInvalidResult(result.flowComplete);
 
     return true;
   } catch (error) {
     if (error === deviceNotVerifiedError) {
       await helper.sendQuery({ result: { verified: false } });
+      const result = await helper.waitForResult();
+      assertOrThrowInvalidResult(result.flowComplete);
+
       return false;
     }
 
