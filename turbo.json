@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["turbo.json"],
   "pipeline": {
     "prebuild": {
       "cache": true,
@@ -7,27 +8,27 @@
     },
     "build": {
       "dependsOn": ["prebuild", "^build"],
-      "outputs": ["dist/**", ".next/**", "wasm/**"]
+      "outputs": ["dist/**", ".next/**"],
+      "inputs": ["src/**", "package.json", "tsconfig.json"]
     },
     "test": {
-      "dependsOn": ["^test"],
-      "cache": false
+      "dependsOn": ["build", "^test"],
+      "inputs": ["src/**", "tests/**"],
+      "cache": true
     },
     "lint:check": {
-      "inputs": ["."],
-      "outputs": []
+      "inputs": ["src/**", "tests/**"]
     },
     "lint": {
-      "inputs": ["."],
-      "outputs": []
+      "inputs": ["src/**", "tests/**"],
+      "cache": false
     },
     "pretty:check": {
-      "inputs": ["."],
-      "outputs": []
+      "inputs": ["src/**", "tests/**"]
     },
     "pretty": {
-      "inputs": ["."],
-      "outputs": []
+      "inputs": ["src/**", "tests/**"],
+      "cache": false
     },
     "dev": {
       "cache": false
@@ -42,16 +43,26 @@
       "outputs": ["src/proto/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
+    "@cypherock/sdk-app-btc#prebuild": {
+      "cache": true,
+      "outputs": ["src/proto/**"],
+      "inputs": ["../../submodules/common/proto/**"]
+    },
+    "@cypherock/sdk-app-evm#prebuild": {
+      "cache": true,
+      "outputs": ["src/proto/**"],
+      "inputs": ["../../submodules/common/proto/**"]
+    },
     "start:node": {
-      "dependsOn": ["^start:node"],
+      "dependsOn": ["build", "^start:node"],
       "cache": false
     },
     "dev:browser": {
-      "dependsOn": ["^dev:browser"],
+      "dependsOn": ["build", "^dev:browser"],
       "cache": false
     },
     "start:browser": {
-      "dependsOn": ["^start:browser"],
+      "dependsOn": ["build", "^start:browser"],
       "cache": false
     },
     "pre-commit": {

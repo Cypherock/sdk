@@ -7,10 +7,10 @@ const commonTSFolders = ['node_modules', 'coverage', 'dist', '.turbo'];
 const packages = {
   'apps/browser': [...commonTSFolders, '.next'],
   'apps/node': [...commonTSFolders],
-  'packages/app-btc': [...commonTSFolders],
-  'packages/app-evm': [...commonTSFolders],
-  'packages/app-manager': [...commonTSFolders],
-  'packages/core': [...commonTSFolders],
+  'packages/app-btc': [...commonTSFolders, 'src/proto/generated'],
+  'packages/app-evm': [...commonTSFolders, 'src/proto/generated'],
+  'packages/app-manager': [...commonTSFolders, 'src/proto/generated'],
+  'packages/core': [...commonTSFolders, 'src/encoders/proto/generated'],
   'packages/hw-hid': [...commonTSFolders],
   'packages/hw-serialport': [...commonTSFolders],
   'packages/hw-webusb': [...commonTSFolders],
@@ -62,6 +62,9 @@ const run = async () => {
   const parentDir = path.join(__dirname, '..');
   const allFoldersToDelete = [];
 
+  const isForce =
+    process.argv.includes('--force') || process.argv.includes('-f');
+
   for (const pkgName in packages) {
     for (const folder of packages[pkgName]) {
       allFoldersToDelete.push(path.join(pkgName, folder));
@@ -69,21 +72,26 @@ const run = async () => {
   }
 
   console.log(allFoldersToDelete);
-  await confirmFromUser(
-    'Do you want to delete all the above folders? (y/n)',
-    ['y', 'yes'],
-    ['n', 'no'],
-  );
+  if (!isForce) {
+    await confirmFromUser(
+      'Do you want to delete all the above folders? (y/n)',
+      ['y', 'yes'],
+      ['n', 'no'],
+    );
+  }
 
   console.log();
   console.log(`Working dir: ${parentDir}`);
-  await confirmFromUser(
-    `Please type the parent directory to confirm: (${path.basename(
-      parentDir,
-    )}/n)`,
-    [path.basename(parentDir)],
-    ['n', 'no'],
-  );
+
+  if (!isForce) {
+    await confirmFromUser(
+      `Please type the parent directory to confirm: (${path.basename(
+        parentDir,
+      )}/n)`,
+      [path.basename(parentDir)],
+      ['n', 'no'],
+    );
+  }
 
   await removeFolders(parentDir, allFoldersToDelete);
 
