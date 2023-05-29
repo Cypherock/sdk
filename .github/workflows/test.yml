@@ -8,13 +8,16 @@ on:
 permissions:
   contents: read # to fetch code (actions/checkout)
 
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
 
     steps:
       - name: Checkout Commit
@@ -25,7 +28,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: next-7
+          version: next-8
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -45,6 +48,12 @@ jobs:
 
       - name: pnpm install
         run: pnpm install
+
+      - name: Setup turbo cache
+        env:
+          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+          TURBO_API: ${{ secrets.TURBO_API }}
+        run: node scripts/setupTurboCache.js
 
       - name: Run build
         run: pnpm build

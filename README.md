@@ -31,7 +31,7 @@ Before you get started, please make sure you have the following setup -
 ## Understanding the directory structure
 
 ```
-├── apps                # Contains all the applications 
+├── apps                # Contains all the applications
 │   └── browser             # Browser application to test sdk
 │   └── node                # Nodejs application to test sdk
 │   └── docs                # Documentation for sdk
@@ -45,7 +45,7 @@ Before you get started, please make sure you have the following setup -
 │   └── interfaces          # Contains common interfaces between other packages
 │   └── util-*              # Common utilities shared between packages
 │
-├── submodules          # Contains all submodules required for sdk 
+├── submodules          # Contains all submodules required for sdk
 │   └── common              # Common configs and protobufs shared between device and sdk
 │
 ├── package.json
@@ -78,16 +78,27 @@ pnpm build        # build all modules
 - `pnpm lint`: Lint all files
 - `pnpm pretty`: Prettify all files
 
+### Turorepo Remote Caching
+
+- Create a new file `.turbo/config.json` and add the following content -
+  ```json
+  {
+    "teamid": "team_<TEAMID>",
+    "apiurl": "<CACHE API URL>"
+  }
+  ```
+- Set the `TURBO_TOKEN=yourToken` environment variable
+
 ## Contributing
 
 Please consider making a contribution to the project. Contributions can include bug fixes, feature proposal, or optimizations to the current code.
 
-[1]: https://nodejs.org/en/download/package-manager/#nvm "How to use NVM"
-[2]: https://pnpm.io/ "Pnpm documentation"
-[3]: https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools "MS VS Build Tools"
-[4]: https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community "MS VS Community"
-[5]: https://github.com/nodejs/node-gyp "node-gyp documentation"
-[6]: https://github.com/nodejs/node-gyp#on-windows "Configure node-gyp on Windows"
-[7]: https://www.python.org/downloads "Download Python"
-[8]: https://nodejs.org/api/fs.html#fsrmsyncpath-options "fs.rmSync was introduced in v14.14.0"
-[9]: https://grpc.io/docs/protoc-installation/ "Protoc Installation"
+[1]: https://nodejs.org/en/download/package-manager/#nvm 'How to use NVM'
+[2]: https://pnpm.io/ 'Pnpm documentation'
+[3]: https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools 'MS VS Build Tools'
+[4]: https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community 'MS VS Community'
+[5]: https://github.com/nodejs/node-gyp 'node-gyp documentation'
+[6]: https://github.com/nodejs/node-gyp#on-windows 'Configure node-gyp on Windows'
+[7]: https://www.python.org/downloads 'Download Python'
+[8]: https://nodejs.org/api/fs.html#fsrmsyncpath-options 'fs.rmSync was introduced in v14.14.0'
+[9]: https://grpc.io/docs/protoc-installation/ 'Protoc Installation'
