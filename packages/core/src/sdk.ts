@@ -1,4 +1,6 @@
 import {
+  DeviceAppError,
+  DeviceAppErrorType,
   DeviceBootloaderError,
   DeviceBootloaderErrorType,
   DeviceCommunicationError,
@@ -18,6 +20,8 @@ import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 import { FeatureName, isFeatureEnabled } from './utils/featureMap';
 import { ISDK } from './types';
 import DeprecatedCommunication from './deprecated';
+import { DeviceIdleState } from './encoders/proto/types';
+import { DeviceIdleState as RawDeviceIdleState } from './encoders/raw';
 
 export class SDK implements ISDK {
   private readonly version: string;
@@ -294,9 +298,33 @@ export class SDK implements ISDK {
     );
   }
 
+  public async makeDeviceReady() {
+    if (await this.isSupported()) {
+      const status = await this.getStatus();
+      if (status.deviceIdleState !== DeviceIdleState.DEVICE_IDLE_STATE_IDLE) {
+        if (status.abortDisabled) {
+          throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
+        }
+
+        await this.sendAbort();
+      }
+    } else if (await this.deprecated.isRawOperationSupported()) {
+      const status = await this.deprecated.getCommandStatus();
+      if (status.deviceIdleState !== RawDeviceIdleState.IDLE) {
+        if (status.abortDisabled) {
+          throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
+        }
+
+        await this.deprecated.sendCommandAbort(await this.getSequenceNumber());
+      }
+    }
+  }
+
   public async runOperation<R>(operation: () => Promise<R>) {
     try {
       await this.connection.beforeOperation();
+      await this.makeDeviceReady();
+
       const result = await operation();
       await this.connection.afterOperation();
 
