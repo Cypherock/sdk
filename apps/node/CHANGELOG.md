@@ -1,5 +1,13 @@
 # nodejs-test
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`58dfd16`](https://github.com/Cypherock/sdk/commit/58dfd1600a115d60fb5a96ee8f671ba1b5be0dcf)]:
+  - @cypherock/sdk-core@0.0.5
+  - @cypherock/sdk-app-manager@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes
