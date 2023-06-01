@@ -1,5 +1,11 @@
 # @cypherock/sdk-core
 
+## 0.0.5
+
+### Patch Changes
+
+- [#17](https://github.com/Cypherock/sdk/pull/17) [`58dfd16`](https://github.com/Cypherock/sdk/commit/58dfd1600a115d60fb5a96ee8f671ba1b5be0dcf) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - abort existing operation if another one is triggred
+
 ## 0.0.4
 
 ### Patch Changes
