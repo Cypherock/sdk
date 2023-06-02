@@ -20,10 +20,12 @@ const verifySerialSignature = async (params: {
   onStatus: OnStatus;
   forceStatusUpdate: ForceStatusUpdate;
   cardIndex?: number;
+  isPairRequired?: boolean;
 }) => {
-  const { helper, onStatus, forceStatusUpdate, cardIndex } = params;
+  const { helper, onStatus, forceStatusUpdate, cardIndex, isPairRequired } =
+    params;
 
-  await helper.sendQuery({ initiate: { cardIndex } });
+  await helper.sendQuery({ initiate: { cardIndex, isPairRequired } });
 
   const result = await helper.waitForResult(onStatus);
   assertOrThrowInvalidResult(result.serialSignature);
@@ -93,6 +95,7 @@ export const authCard = async (
       onStatus,
       forceStatusUpdate,
       cardIndex: params?.cardIndex,
+      isPairRequired: params?.isPairRequired,
     });
 
     await verifyChallengeSignature({
