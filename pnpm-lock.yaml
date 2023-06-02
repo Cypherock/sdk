@@ -88,9 +88,6 @@ importers:
       '@cypherock/sdk-hw-serialport':
         specifier: workspace:^0.0.4
         version: link:../../packages/hw-serialport
-      '@cypherock/sdk-utils':
-        specifier: workspace:^
-        version: link:../../packages/util
     devDependencies:
       '@cypherock/eslint-config':
         specifier: workspace:*
