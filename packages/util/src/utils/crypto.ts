@@ -1,3 +1,4 @@
+import { Sha256 } from '@aws-crypto/sha256-browser';
 import { assert } from './assert';
 
 const updateCRC16 = (crcParam: number, byte: number) => {
@@ -153,4 +154,12 @@ export const hexToAscii = (str1: string) => {
     str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
   }
   return str;
+};
+
+export const sha256 = async (data: Uint8Array) => {
+  const hash = new Sha256();
+  hash.update(data);
+  const result = await hash.digest();
+
+  return result;
 };

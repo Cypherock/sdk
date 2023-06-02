@@ -8,12 +8,14 @@ export const verifySerialSignature = async (params: {
   signature: Uint8Array;
   postfix1?: Uint8Array;
   postfix2?: Uint8Array;
+  message?: Uint8Array;
 }): Promise<Uint8Array | undefined> => {
   const verifyParams = {
     serial: uint8ArrayToHex(params.serial),
     signature: uint8ArrayToHex(params.signature),
     postfix1: params.postfix1 ? uint8ArrayToHex(params.postfix1) : undefined,
     postfix2: params.postfix2 ? uint8ArrayToHex(params.postfix2) : undefined,
+    message: params.message ? uint8ArrayToHex(params.message) : undefined,
   };
 
   const res = await http.post(`${baseURL}/verify`, verifyParams);
@@ -32,7 +34,7 @@ export const verifyChallengeSignature = async (params: {
   postfix2?: Uint8Array;
 
   challenge: Uint8Array;
-  firmwareVersion?: string;
+  firmwareVersion: string;
   isTestApp?: boolean;
   email?: string;
   cysyncVersion?: string;

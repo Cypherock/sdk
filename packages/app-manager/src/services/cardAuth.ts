@@ -1,3 +1,4 @@
+import { sha256 } from '@cypherock/sdk-utils';
 import {
   verifySerialSignature,
   verifyChallengeSignature,
@@ -6,7 +7,11 @@ import {
 export const verifyCardSerialSignature = async (params: {
   serial: Uint8Array;
   signature: Uint8Array;
-}): Promise<Uint8Array | undefined> => verifySerialSignature(params);
+}): Promise<Uint8Array | undefined> =>
+  verifySerialSignature({
+    ...params,
+    message: await sha256(params.serial),
+  });
 
 export const verifyCardChallengeSignature = async (params: {
   serial: Uint8Array;
@@ -15,4 +20,5 @@ export const verifyCardChallengeSignature = async (params: {
   challenge: Uint8Array;
   email?: string;
   cysyncVersion?: string;
-}): Promise<string | undefined> => verifyChallengeSignature(params);
+}): Promise<string | undefined> =>
+  verifyChallengeSignature({ ...params, firmwareVersion: '0.0.0' });

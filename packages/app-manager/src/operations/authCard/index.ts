@@ -28,7 +28,7 @@ const verifySerialSignature = async (params: {
   const result = await helper.waitForResult(onStatus);
   assertOrThrowInvalidResult(result.serialSignature);
 
-  forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_USER_CONFIRMED);
+  forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_SERIAL_SIGNED);
 
   const challenge = await cardAuthService.verifyCardSerialSignature({
     ...result.serialSignature,
@@ -49,12 +49,13 @@ const verifyChallengeSignature = async (params: {
   challenge: Uint8Array;
   serial: Uint8Array;
 }) => {
-  const { helper, onStatus, challenge, serial } = params;
+  const { helper, onStatus, challenge, serial, forceStatusUpdate } = params;
 
   await helper.sendQuery({ challenge: { challenge } });
 
   const result = await helper.waitForResult(onStatus);
   assertOrThrowInvalidResult(result.challengeSignature);
+  forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_CHALLENGE_SIGNED);
 
   const isVerified = await cardAuthService.verifyCardChallengeSignature({
     ...result.challengeSignature,
@@ -103,13 +104,23 @@ export const authCard = async (
     });
 
     await helper.sendQuery({ result: { verified: true } });
+    const result = await helper.waitForResult();
+    assertOrThrowInvalidResult(result.flowComplete);
+    forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_PAIRING_DONE);
 
     return true;
   } catch (error) {
     if (error === cardNotVerifiedError) {
       await helper.sendQuery({ result: { verified: false } });
+      const result = await helper.waitForResult();
+      assertOrThrowInvalidResult(result.flowComplete);
       return false;
     }
+
+    try {
+      await sdk.sendAbort();
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
 
     throw error;
   }
