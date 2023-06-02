@@ -65,6 +65,24 @@ export class SDK implements ISDK {
     );
   }
 
+  public static async sendAbort(
+    connection: IDeviceConnection,
+    options?: {
+      sequenceNumber?: number;
+      maxTries?: number;
+      timeout?: number;
+    },
+  ) {
+    return operations.sendAbort({
+      connection,
+      sequenceNumber:
+        options?.sequenceNumber ?? (await connection.getSequenceNumber()),
+      version: PacketVersionMap.v3,
+      maxTries: options?.maxTries,
+      timeout: options?.timeout,
+    });
+  }
+
   public getConnection() {
     return this.connection;
   }
@@ -257,7 +275,7 @@ export class SDK implements ISDK {
     return operations.sendAbort({
       connection: this.connection,
       sequenceNumber:
-        options?.sequenceNumber ?? (await this.getNewSequenceNumber()),
+        options?.sequenceNumber ?? (await this.getSequenceNumber()),
       version: this.packetVersion,
       maxTries: options?.maxTries,
       timeout: options?.timeout,

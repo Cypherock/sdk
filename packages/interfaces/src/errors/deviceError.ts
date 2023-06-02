@@ -3,6 +3,8 @@ export abstract class DeviceError extends Error {
 
   public message: string;
 
+  public isDeviceError = true;
+
   constructor(errorCode: string, message: string, cls: any) {
     super();
     this.code = errorCode;
