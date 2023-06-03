@@ -27,7 +27,7 @@ describe('managerApp.authCard', () => {
         const onEvent = setupMocks(testCase);
 
         const output = await managerApp.authCard({
-          cardIndex: testCase.params?.cardIndex,
+          cardNumber: testCase.params?.cardNumber,
           onEvent,
         });
 

@@ -3,7 +3,7 @@ import { IAuthCardTestCase } from './types';
 const withValidData: IAuthCardTestCase = {
   name: 'With valid data',
   params: {
-    cardIndex: null as any,
+    cardNumber: null as any,
   },
   queries: [
     {
@@ -468,7 +468,7 @@ const withChallengeSignatureFailure: IAuthCardTestCase = {
 const withCardIndex1: IAuthCardTestCase = {
   name: 'With card index 1',
   params: {
-    cardIndex: 1,
+    cardNumber: 1,
   },
   queries: [
     {
@@ -576,7 +576,7 @@ const withCardIndex1: IAuthCardTestCase = {
 const withCardIndex2: IAuthCardTestCase = {
   name: 'With card index 2',
   params: {
-    cardIndex: 2,
+    cardNumber: 2,
   },
   queries: [
     {
@@ -684,7 +684,7 @@ const withCardIndex2: IAuthCardTestCase = {
 const withCardIndex4: IAuthCardTestCase = {
   name: 'With card index 4',
   params: {
-    cardIndex: 4,
+    cardNumber: 4,
   },
   queries: [
     {

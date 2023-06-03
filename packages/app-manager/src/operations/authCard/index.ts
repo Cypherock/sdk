@@ -19,13 +19,15 @@ const verifySerialSignature = async (params: {
   helper: OperationHelper<'authCard', 'authCard'>;
   onStatus: OnStatus;
   forceStatusUpdate: ForceStatusUpdate;
-  cardIndex?: number;
+  cardNumber?: number;
   isPairRequired?: boolean;
 }) => {
-  const { helper, onStatus, forceStatusUpdate, cardIndex, isPairRequired } =
+  const { helper, onStatus, forceStatusUpdate, cardNumber, isPairRequired } =
     params;
 
-  await helper.sendQuery({ initiate: { cardIndex, isPairRequired } });
+  await helper.sendQuery({
+    initiate: { cardIndex: cardNumber, isPairRequired },
+  });
 
   const result = await helper.waitForResult(onStatus);
   assertOrThrowInvalidResult(result.serialSignature);
@@ -75,10 +77,10 @@ export const authCard = async (
   params?: IAuthCardParams,
 ): Promise<boolean> => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (params?.cardIndex !== undefined && params.cardIndex !== null) {
+  if (params?.cardNumber !== undefined && params.cardNumber !== null) {
     assert(
-      params.cardIndex >= 1 && params.cardIndex <= 4,
-      'Card index should be 1,2,3,4',
+      params.cardNumber >= 1 && params.cardNumber <= 4,
+      'Card number should be one of 1,2,3,4',
     );
   }
 
@@ -94,7 +96,7 @@ export const authCard = async (
       helper,
       onStatus,
       forceStatusUpdate,
-      cardIndex: params?.cardIndex,
+      cardNumber: params?.cardNumber,
       isPairRequired: params?.isPairRequired,
     });
 
