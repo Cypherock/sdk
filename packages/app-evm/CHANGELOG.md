@@ -1,5 +1,13 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`9c3280d`](https://github.com/Cypherock/sdk/commit/9c3280ded2b7681c2ae8c478b7fe43590ab2bdaf)]:
+  - @cypherock/sdk-utils@0.0.5
+  - @cypherock/sdk-core@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes

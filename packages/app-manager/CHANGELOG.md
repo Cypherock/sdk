@@ -1,5 +1,17 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.7
+
+### Patch Changes
+
+- [#19](https://github.com/Cypherock/sdk/pull/19) [`9c3280d`](https://github.com/Cypherock/sdk/commit/9c3280ded2b7681c2ae8c478b7fe43590ab2bdaf) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added flow complete step in card auth
+
+- [#19](https://github.com/Cypherock/sdk/pull/19) [`9c3280d`](https://github.com/Cypherock/sdk/commit/9c3280ded2b7681c2ae8c478b7fe43590ab2bdaf) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - updated train card & get device info operations
+
+- Updated dependencies [[`9c3280d`](https://github.com/Cypherock/sdk/commit/9c3280ded2b7681c2ae8c478b7fe43590ab2bdaf)]:
+  - @cypherock/sdk-utils@0.0.5
+  - @cypherock/sdk-core@0.0.6
+
 ## 0.0.6
 
 ### Patch Changes
