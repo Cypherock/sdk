@@ -1,5 +1,11 @@
 # @cypherock/sdk-utils
 
+## 0.0.5
+
+### Patch Changes
+
+- [#19](https://github.com/Cypherock/sdk/pull/19) [`9c3280d`](https://github.com/Cypherock/sdk/commit/9c3280ded2b7681c2ae8c478b7fe43590ab2bdaf) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added flow complete step in card auth
+
 ## 0.0.4
 
 ### Patch Changes
