@@ -1,6 +1,6 @@
 export interface IAuthCardTestCase {
   params?: {
-    cardIndex?: number;
+    cardNumber?: number;
   };
   queries: {
     name: string;

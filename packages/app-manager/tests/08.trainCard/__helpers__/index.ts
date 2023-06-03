@@ -1,24 +1,14 @@
-import { expect } from '@jest/globals';
-
-import * as sdkMocks from '../../../src/__mocks__/sdk';
+import * as superMocks from '../../__helpers__';
 import { ITrainCardTestCase } from '../__fixtures__/types';
 
 export function setupMocks(testCase: ITrainCardTestCase) {
-  sdkMocks.sendQuery.mockReturnValueOnce(Promise.resolve(undefined));
-
-  sdkMocks.waitForResult.mockReturnValueOnce(Promise.resolve(testCase.result));
+  return superMocks.setupMocks(testCase);
 }
 
 export function clearMocks() {
-  sdkMocks.create.mockClear();
-
-  sdkMocks.sendQuery.mockReset();
-  sdkMocks.waitForResult.mockReset();
-
-  sdkMocks.runOperation.mockClear();
+  superMocks.clearMocks();
 }
 
 export function expectMockCalls(testCase: ITrainCardTestCase) {
-  expect(sdkMocks.runOperation).toHaveBeenCalledTimes(1);
-  expect(sdkMocks.sendQuery.mock.calls).toEqual([[testCase.query]]);
+  superMocks.expectMockCalls(testCase);
 }

@@ -14,21 +14,22 @@
     "pre-commit": "lint-staged"
   },
   "devDependencies": {
+    "@cypherock/eslint-config": "workspace:*",
+    "@cypherock/prettier-config": "workspace:^0.0.4",
+    "@cypherock/tsconfig": "workspace:*",
     "@jest/globals": "^29.4.1",
     "@types/jest": "^29.4.0",
     "@types/node": "18.11.18",
     "eslint": "^7.32.0",
-    "@cypherock/eslint-config": "workspace:*",
     "jest": "^29.4.1",
     "lint-staged": "^13.2.0",
-    "@cypherock/prettier-config": "workspace:^0.0.4",
     "rimraf": "^4.1.2",
     "ts-jest": "^29.0.5",
     "ts-proto": "^1.139.0",
-    "@cypherock/tsconfig": "workspace:*",
     "typescript": "^4.5.2"
   },
   "dependencies": {
+    "@aws-crypto/sha256-browser": "^4.0.0",
     "@cypherock/sdk-interfaces": "workspace:^0.0.4",
     "compare-versions": "6.0.0-rc.1",
     "protobufjs": "^7.2.2",

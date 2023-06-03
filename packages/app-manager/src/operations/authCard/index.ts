@@ -19,16 +19,20 @@ const verifySerialSignature = async (params: {
   helper: OperationHelper<'authCard', 'authCard'>;
   onStatus: OnStatus;
   forceStatusUpdate: ForceStatusUpdate;
-  cardIndex?: number;
+  cardNumber?: number;
+  isPairRequired?: boolean;
 }) => {
-  const { helper, onStatus, forceStatusUpdate, cardIndex } = params;
+  const { helper, onStatus, forceStatusUpdate, cardNumber, isPairRequired } =
+    params;
 
-  await helper.sendQuery({ initiate: { cardIndex } });
+  await helper.sendQuery({
+    initiate: { cardIndex: cardNumber, isPairRequired },
+  });
 
   const result = await helper.waitForResult(onStatus);
   assertOrThrowInvalidResult(result.serialSignature);
 
-  forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_USER_CONFIRMED);
+  forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_SERIAL_SIGNED);
 
   const challenge = await cardAuthService.verifyCardSerialSignature({
     ...result.serialSignature,
@@ -49,12 +53,13 @@ const verifyChallengeSignature = async (params: {
   challenge: Uint8Array;
   serial: Uint8Array;
 }) => {
-  const { helper, onStatus, challenge, serial } = params;
+  const { helper, onStatus, challenge, serial, forceStatusUpdate } = params;
 
   await helper.sendQuery({ challenge: { challenge } });
 
   const result = await helper.waitForResult(onStatus);
   assertOrThrowInvalidResult(result.challengeSignature);
+  forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_CHALLENGE_SIGNED);
 
   const isVerified = await cardAuthService.verifyCardChallengeSignature({
     ...result.challengeSignature,
@@ -72,10 +77,10 @@ export const authCard = async (
   params?: IAuthCardParams,
 ): Promise<boolean> => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (params?.cardIndex !== undefined && params.cardIndex !== null) {
+  if (params?.cardNumber !== undefined && params.cardNumber !== null) {
     assert(
-      params.cardIndex >= 1 && params.cardIndex <= 4,
-      'Card index should be 1,2,3,4',
+      params.cardNumber >= 1 && params.cardNumber <= 4,
+      'Card number should be one of 1,2,3,4',
     );
   }
 
@@ -91,7 +96,8 @@ export const authCard = async (
       helper,
       onStatus,
       forceStatusUpdate,
-      cardIndex: params?.cardIndex,
+      cardNumber: params?.cardNumber,
+      isPairRequired: params?.isPairRequired,
     });
 
     await verifyChallengeSignature({
@@ -103,13 +109,23 @@ export const authCard = async (
     });
 
     await helper.sendQuery({ result: { verified: true } });
+    const result = await helper.waitForResult();
+    assertOrThrowInvalidResult(result.flowComplete);
+    forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_PAIRING_DONE);
 
     return true;
   } catch (error) {
     if (error === cardNotVerifiedError) {
       await helper.sendQuery({ result: { verified: false } });
+      const result = await helper.waitForResult();
+      assertOrThrowInvalidResult(result.flowComplete);
       return false;
     }
+
+    try {
+      await sdk.sendAbort();
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
 
     throw error;
   }
