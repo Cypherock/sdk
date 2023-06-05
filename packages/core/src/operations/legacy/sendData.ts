@@ -204,9 +204,9 @@ export const sendData = async (
         // eslint-disable-next-line
         await writePacket(connection, packet, version, skipPacketIds, timeout);
         isDone = true;
-      } catch (e) {
+      } catch (e: any) {
         // Don't retry if connection closed
-        if (e instanceof DeviceConnectionError) {
+        if (Object.values(DeviceConnectionErrorType).includes(e?.code)) {
           tries = localMaxTries;
         }
 

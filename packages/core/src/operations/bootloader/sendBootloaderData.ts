@@ -115,7 +115,13 @@ const writePacket = (
         }
 
         recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
-      } catch (error) {
+      } catch (error: any) {
+        if (Object.values(DeviceConnectionErrorType).includes(error?.code)) {
+          cleanUp();
+          reject(error);
+          return;
+        }
+
         logger.warn(
           'Error while rechecking packet on `writePacket`, bootloader',
         );
@@ -187,7 +193,13 @@ const checkIfInReceivingMode = async (
         }
 
         recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
-      } catch (error) {
+      } catch (error: any) {
+        if (Object.values(DeviceConnectionErrorType).includes(error?.code)) {
+          cleanUp();
+          reject(error);
+          return;
+        }
+
         logger.warn('Error while rechecking packet on `sendBootloaderData`');
         logger.warn(error);
         recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
@@ -251,7 +263,7 @@ export const sendBootloaderData = async (
             }
             return;
           } catch (e: any) {
-            if (e instanceof DeviceConnectionError) {
+            if (Object.values(DeviceConnectionErrorType).includes(e?.code)) {
               tries = innerMaxTries;
             }
 
