@@ -248,7 +248,7 @@ export const sendBootloaderData = async (
               reject(errorMsg);
             }
             return;
-          } catch (e) {
+          } catch (e: any) {
             if (e instanceof DeviceConnectionError) {
               tries = innerMaxTries;
             }

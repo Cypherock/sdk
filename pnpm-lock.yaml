@@ -385,6 +385,9 @@ importers:
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.4
         version: link:../interfaces
+      '@cypherock/sdk-utils':
+        specifier: workspace:^
+        version: link:../util
       node-hid:
         specifier: ^2.1.2
         version: 2.1.2
@@ -425,6 +428,9 @@ importers:
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.4
         version: link:../interfaces
+      '@cypherock/sdk-utils':
+        specifier: workspace:^
+        version: link:../util
       serialport:
         specifier: 10.0.0
         version: 10.0.0
@@ -465,6 +471,9 @@ importers:
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.4
         version: link:../interfaces
+      '@cypherock/sdk-utils':
+        specifier: workspace:^
+        version: link:../util
       uuid:
         specifier: ^9.0.0
         version: 9.0.0

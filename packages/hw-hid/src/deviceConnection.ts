@@ -1,6 +1,5 @@
 import {
   IDeviceConnection,
-  DeviceState,
   IDevice,
   ConnectionTypeMap,
   DeviceConnectionError,
@@ -12,10 +11,6 @@ import * as uuid from 'uuid';
 import { getAvailableDevices, DataListener } from './helpers';
 
 export default class DeviceConnection implements IDeviceConnection {
-  protected path: string;
-
-  protected deviceState: DeviceState;
-
   protected connectionId: string;
 
   protected sequenceNumber: number;
@@ -28,14 +23,14 @@ export default class DeviceConnection implements IDeviceConnection {
 
   protected isPortOpen: boolean;
 
-  constructor(device: IDevice) {
-    this.path = device.path;
-    this.deviceState = device.deviceState;
+  private readonly device: IDevice;
 
+  constructor(device: IDevice) {
+    this.device = { ...device };
     this.connectionId = uuid.v4();
     this.sequenceNumber = 0;
 
-    this.connection = new HID.HID(this.path);
+    this.connection = new HID.HID(this.device.path);
     this.initialized = true;
     this.isPortOpen = true;
     this.dataListener = new DataListener({
@@ -72,7 +67,7 @@ export default class DeviceConnection implements IDeviceConnection {
   }
 
   public async getDeviceState() {
-    return this.deviceState;
+    return this.device.deviceState;
   }
 
   public async isInitialized() {

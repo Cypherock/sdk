@@ -4,7 +4,7 @@ import {
   updateLoggerObject,
 } from '@cypherock/sdk-utils';
 
-export const loggerServiceName = 'sdk-core';
+export const loggerServiceName = 'sdk-app-manager';
 
 export const logger: ILogger = {
   ...createDefaultConsoleLogger(loggerServiceName),
