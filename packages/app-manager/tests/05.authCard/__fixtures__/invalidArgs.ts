@@ -3,34 +3,34 @@ import { IAuthCardTestCase } from './types';
 const withCardIndex0: IAuthCardTestCase = {
   name: 'With card index 0',
   params: {
-    cardIndex: 0,
+    cardNumber: 0,
   },
   queries: [],
   results: [],
   errorInstance: Error,
-  errorMessage: /Card index/,
+  errorMessage: /Card number/,
 };
 
 const withCardIndex5: IAuthCardTestCase = {
   name: 'With card index 5',
   params: {
-    cardIndex: 5,
+    cardNumber: 5,
   },
   queries: [],
   results: [],
   errorInstance: Error,
-  errorMessage: /Card index/,
+  errorMessage: /Card number/,
 };
 
 const withNegetiveCardIndex: IAuthCardTestCase = {
   name: 'With negetive card index',
   params: {
-    cardIndex: -5,
+    cardNumber: -5,
   },
   queries: [],
   results: [],
   errorInstance: Error,
-  errorMessage: /Card index/,
+  errorMessage: /Card number/,
 };
 
 const invalidArgs: IAuthCardTestCase[] = [

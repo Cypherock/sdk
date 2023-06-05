@@ -27,7 +27,7 @@ const withOneApplet: IGetDeviceInfoTestCase = {
         },
       },
     ],
-    initialStates: undefined,
+    onboardingStep: 0,
     isInitial: false,
   },
 };
@@ -65,7 +65,7 @@ const withTwoApplet: IGetDeviceInfoTestCase = {
         },
       },
     ],
-    initialStates: undefined,
+    onboardingStep: 0,
     isInitial: false,
   },
 };
@@ -79,7 +79,7 @@ const withOnlyDeviceSerial: IGetDeviceInfoTestCase = {
     firmwareVersion: undefined,
     isAuthenticated: false,
     appletList: [],
-    initialStates: undefined,
+    onboardingStep: 0,
     isInitial: false,
   },
 };
@@ -93,7 +93,7 @@ const withPartialData: IGetDeviceInfoTestCase = {
     firmwareVersion: undefined,
     isAuthenticated: true,
     appletList: [],
-    initialStates: undefined,
+    onboardingStep: 0,
     isInitial: false,
   },
 };
@@ -102,9 +102,8 @@ const withInitialStates: IGetDeviceInfoTestCase = {
   name: 'With initial states',
   query: new Uint8Array([10, 2, 10, 0]),
   result: new Uint8Array([
-    10, 48, 10, 46, 10, 12, 123, 43, 26, 231, 42, 86, 91, 130, 41, 55, 186, 203,
-    18, 2, 8, 1, 24, 1, 34, 8, 8, 12, 18, 4, 8, 1, 24, 26, 40, 1, 50, 12, 10, 2,
-    8, 1, 18, 2, 8, 1, 26, 2, 16, 2,
+    10, 36, 10, 34, 10, 12, 123, 43, 26, 231, 42, 86, 91, 130, 41, 55, 186, 203,
+    18, 2, 8, 1, 24, 1, 34, 8, 8, 12, 18, 4, 8, 1, 24, 26, 40, 1, 48, 4,
   ]),
   output: {
     deviceSerial: new Uint8Array([
@@ -126,21 +125,8 @@ const withInitialStates: IGetDeviceInfoTestCase = {
         },
       },
     ],
-    initialStates: {
-      authDevice: {
-        isCompleted: true,
-        state: undefined,
-      },
-      userTraining: {
-        isCompleted: true,
-        state: undefined,
-      },
-      authCards: {
-        isCompleted: false,
-        state: 2,
-      },
-    },
     isInitial: true,
+    onboardingStep: 4,
   },
 };
 

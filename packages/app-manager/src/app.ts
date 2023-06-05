@@ -53,8 +53,8 @@ export class ManagerApp {
     );
   }
 
-  public async trainCard() {
-    return this.sdk.runOperation(() => operations.trainCard(this.sdk));
+  public async trainCard(params: operations.ITrainCardParams) {
+    return this.sdk.runOperation(() => operations.trainCard(this.sdk, params));
   }
 
   public async destroy() {
