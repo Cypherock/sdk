@@ -3,16 +3,23 @@ import {
   createStatusListener,
   assert,
   hexToUint8Array,
+  createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
 import {
   AddressFormat,
   GetPublicKeysStatus,
   IGetPublicKeysResultResponse,
 } from '../../proto/generated/types';
-import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
+import {
+  assertOrThrowInvalidResult,
+  OperationHelper,
+  logger as rootLogger,
+} from '../../utils';
 import { IGetPublicKeysParams } from './types';
 
 export * from './types';
+
+const logger = createLoggerWithPrefix(rootLogger, 'GetPublicKeys');
 
 const defaultParams = {
   format: AddressFormat.DEFAULT,
@@ -39,10 +46,11 @@ export const getPublicKeys = async (
     'derivationPaths should be greater than 3',
   );
 
-  const { onStatus, forceStatusUpdate } = createStatusListener(
-    GetPublicKeysStatus,
-    params.onEvent,
-  );
+  const { onStatus, forceStatusUpdate } = createStatusListener({
+    enums: GetPublicKeysStatus,
+    onEvent: params.onEvent,
+    logger,
+  });
 
   const helper = new OperationHelper({
     sdk,

@@ -192,7 +192,7 @@ export const waitForPacket = ({
             );
           }
         } catch (error) {
-          logger.error('Error while processing data from device');
+          logger.error('Error while rechecking packet on `waitForPacket`');
           logger.error(error);
           clearTimeout(recheckTimeout);
           recheckTimeout = setTimeout(

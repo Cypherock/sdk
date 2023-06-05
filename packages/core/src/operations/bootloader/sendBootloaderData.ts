@@ -116,8 +116,10 @@ const writePacket = (
 
         recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
       } catch (error) {
-        logger.error('Error while processing data from device');
-        logger.error(error);
+        logger.warn(
+          'Error while rechecking packet on `writePacket`, bootloader',
+        );
+        logger.warn(error);
         recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
       }
     }
@@ -186,8 +188,8 @@ const checkIfInReceivingMode = async (
 
         recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
       } catch (error) {
-        logger.error('Error while processing data from device');
-        logger.error(error);
+        logger.warn('Error while rechecking packet on `sendBootloaderData`');
+        logger.warn(error);
         recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
       }
     }
@@ -256,7 +258,8 @@ export const sendBootloaderData = async (
             if (!firstError) {
               firstError = e as Error;
             }
-            logger.warn('Error in sending data', e);
+            logger.warn('Error in sending bootloader data');
+            logger.warn(e);
           }
           tries += 1;
         }
@@ -273,13 +276,8 @@ export const sendBootloaderData = async (
   );
 
   for (const j of dataList) {
-    try {
-      await new Promise((res, rej) => {
-        j(res, rej);
-      });
-    } catch (e) {
-      logger.error(e);
-      throw e;
-    }
+    await new Promise((res, rej) => {
+      j(res, rej);
+    });
   }
 };

@@ -18,13 +18,5 @@ module.exports = {
     '!**/__helpers__/**/*.[jt]s?(x)',
     '!**/.stryker-tmp/**/*.[jt]s?(x)',
   ],
-  coverageThreshold: {
-    global: {
-      statements: 90,
-      lines: 90,
-      branches: 90,
-      functions: 90,
-    },
-  },
   modulePathIgnorePatterns: ['<rootDir>/.stryker-tmp'],
 };

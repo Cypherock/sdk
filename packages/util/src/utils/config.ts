@@ -15,4 +15,5 @@ export const getEnvVariable = (key: string, defaultValue?: string): string => {
 
 export const config = {
   API_CYPHEROCK: getEnvVariable('API_CYPHEROCK', 'https://api.cypherock.com'),
+  LOG_LEVEL: getEnvVariable('LOG_LEVEL', 'debug'),
 };

@@ -1,6 +1,7 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { DeviceState } from '@cypherock/sdk-interfaces';
 import {
+  createLoggerWithPrefix,
   createStatusListener,
   ForceStatusUpdate,
   OnStatus,
@@ -8,11 +9,17 @@ import {
 import { AuthDeviceStatus } from '../../proto/generated/types';
 import { deviceAuthService } from '../../services';
 
-import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
+import {
+  assertOrThrowInvalidResult,
+  OperationHelper,
+  logger as rootLogger,
+} from '../../utils';
 import { getDeviceInfo } from '../getDeviceInfo';
 import { AuthDeviceEventHandler } from './types';
 
 export * from './types';
+
+const logger = createLoggerWithPrefix(rootLogger, 'AuthDevice');
 
 const deviceNotVerifiedError = new Error('Device not verified');
 
@@ -26,6 +33,7 @@ const verifySerialSignature = async (params: {
   await helper.sendQuery({ initiate: {} });
 
   const result = await helper.waitForResult(onStatus);
+  logger.verbose('AuthDeviceResponse', { result });
   assertOrThrowInvalidResult(result.serialSignature);
 
   forceStatusUpdate(AuthDeviceStatus.AUTH_DEVICE_STATUS_USER_CONFIRMED);
@@ -55,6 +63,7 @@ const verifyChallengeSignature = async (params: {
   await helper.sendQuery({ challenge: { challenge } });
 
   const result = await helper.waitForResult(onStatus);
+  logger.verbose('AuthDeviceResponse', { result });
   assertOrThrowInvalidResult(result.challengeSignature);
 
   const isVerified = await deviceAuthService.verifyDeviceChallengeSignature({
@@ -77,15 +86,17 @@ export const authDevice = async (
   const helper = new OperationHelper(sdk, 'authDevice', 'authDevice');
 
   try {
+    logger.info('Started');
     const info = await getDeviceInfo(sdk);
     assertOrThrowInvalidResult(info.firmwareVersion);
 
     const firmwareVersion = `${info.firmwareVersion.major}.${info.firmwareVersion.minor}.${info.firmwareVersion.patch}`;
 
-    const { onStatus, forceStatusUpdate } = createStatusListener(
-      AuthDeviceStatus,
+    const { onStatus, forceStatusUpdate } = createStatusListener({
+      enums: AuthDeviceStatus,
       onEvent,
-    );
+      logger,
+    });
 
     const { serial, challenge } = await verifySerialSignature({
       helper,
@@ -104,18 +115,23 @@ export const authDevice = async (
 
     await helper.sendQuery({ result: { verified: true } });
     const result = await helper.waitForResult();
+    logger.verbose('AuthDeviceResponse', { result });
     assertOrThrowInvalidResult(result.flowComplete);
 
+    logger.info('Completed', { verified: true });
     return true;
   } catch (error) {
     if (error === deviceNotVerifiedError) {
       await helper.sendQuery({ result: { verified: false } });
       const result = await helper.waitForResult();
+      logger.verbose('AuthDeviceResponse', { result });
       assertOrThrowInvalidResult(result.flowComplete);
 
+      logger.info('Completed', { verified: false });
       return false;
     }
 
+    logger.info('Failed');
     throw error;
   }
 };

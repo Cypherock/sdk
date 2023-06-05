@@ -51,6 +51,8 @@ export const sendAbort = async ({
     throw new Error('Abort command has multiple packets');
   }
 
+  logger.debug('Sending abort');
+
   let firstError: Error | undefined;
 
   let tries = 1;
@@ -91,9 +93,6 @@ export const sendAbort = async ({
       if (!firstError) {
         firstError = e as Error;
       }
-
-      logger.warn('Error in sending data for abort');
-      logger.warn(e);
     }
     tries += 1;
   }

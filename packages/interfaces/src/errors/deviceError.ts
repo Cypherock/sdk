@@ -21,4 +21,13 @@ export abstract class DeviceError extends Error {
       (<any>this).__proto__ = cls.prototype;
     }
   }
+
+  public toJSON() {
+    return {
+      code: this.code,
+      message: `${this.code}: ${this.message}`,
+      isDeviceError: this.isDeviceError,
+      stack: this.stack,
+    };
+  }
 }

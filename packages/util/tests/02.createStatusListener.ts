@@ -12,10 +12,10 @@ describe('createStatusListener', () => {
   describe('should be able to trigger events', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, () => {
-        const { onStatus, forceStatusUpdate } = createStatusListener(
-          testCase.enum,
+        const { onStatus, forceStatusUpdate } = createStatusListener({
+          enums: testCase.enum,
           onEvent,
-        );
+        });
 
         expect(onStatus).toBeDefined();
         expect(forceStatusUpdate).toBeDefined();

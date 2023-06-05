@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src/ tests/ --fix",
-    "test": "jest",
+    "test": "cross-env LOG_LEVEL=error jest",
     "lint:check": "eslint --ext .ts,tsx,js,jsx,js src/",
     "pretty": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
     "pretty:check": "prettier --check 'src/**/*.ts' 'tests/**/*.ts'",
@@ -14,18 +14,19 @@
     "pre-commit": "lint-staged"
   },
   "devDependencies": {
+    "@cypherock/eslint-config": "workspace:*",
+    "@cypherock/prettier-config": "workspace:^0.0.4",
+    "@cypherock/tsconfig": "workspace:*",
     "@jest/globals": "^29.4.1",
     "@types/jest": "^29.4.0",
     "@types/node": "18.11.18",
+    "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
-    "@cypherock/eslint-config": "workspace:*",
     "jest": "^29.4.1",
     "lint-staged": "^13.2.0",
-    "@cypherock/prettier-config": "workspace:^0.0.4",
     "rimraf": "^4.1.2",
     "ts-jest": "^29.0.5",
     "ts-proto": "^1.139.0",
-    "@cypherock/tsconfig": "workspace:*",
     "typescript": "^4.5.2"
   },
   "dependencies": {

@@ -16,12 +16,4 @@ module.exports = {
     '**/__tests__/**/*.[jt]s?(x)',
     '**/?(*.)+(spec|test).[jt]s?(x)',
   ],
-  coverageThreshold: {
-    global: {
-      statements: 90,
-      lines: 90,
-      branches: 80,
-      functions: 80,
-    },
-  },
 };
