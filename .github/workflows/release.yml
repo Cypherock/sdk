@@ -6,7 +6,6 @@ on:
       - main
 
 env:
-  CI: true
   PNPM_CACHE_FOLDER: .pnpm-store
   NPM_AUTH: ${{secrets.NPM_AUTH}}
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
