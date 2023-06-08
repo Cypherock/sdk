@@ -9,7 +9,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { assert } from '@cypherock/sdk-utils';
 
-import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { PacketVersion, PacketVersionMap } from '../../utils';
 import { DecodedPacketData } from '../../encoders/packet';
 
 import { waitForPacket } from './waitForPacket';
@@ -63,8 +63,7 @@ export const writeCommand = async ({
       ackTimeout: timeout,
     });
 
-    connection.send(packet).catch(async (error: any) => {
-      logger.error(error);
+    connection.send(packet).catch(async () => {
       ackPromise.cancel();
       if (!(await connection.isConnected())) {
         reject(

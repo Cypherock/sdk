@@ -1,6 +1,7 @@
 import { ISDK } from '@cypherock/sdk-core';
 import {
   assert,
+  createLoggerWithPrefix,
   createStatusListener,
   ForceStatusUpdate,
   OnStatus,
@@ -8,10 +9,16 @@ import {
 import { AuthCardStatus } from '../../proto/generated/types';
 import { cardAuthService } from '../../services';
 
-import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
+import {
+  assertOrThrowInvalidResult,
+  logger as rootLogger,
+  OperationHelper,
+} from '../../utils';
 import { IAuthCardParams } from './types';
 
 export * from './types';
+
+const logger = createLoggerWithPrefix(rootLogger, 'AuthCard');
 
 const cardNotVerifiedError = new Error('Card not verified');
 
@@ -30,6 +37,7 @@ const verifySerialSignature = async (params: {
   });
 
   const result = await helper.waitForResult(onStatus);
+  logger.verbose('AuthCardResponse', { result });
   assertOrThrowInvalidResult(result.serialSignature);
 
   forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_SERIAL_SIGNED);
@@ -58,6 +66,7 @@ const verifyChallengeSignature = async (params: {
   await helper.sendQuery({ challenge: { challenge } });
 
   const result = await helper.waitForResult(onStatus);
+  logger.verbose('AuthCardResponse', { result });
   assertOrThrowInvalidResult(result.challengeSignature);
   forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_CHALLENGE_SIGNED);
 
@@ -87,10 +96,12 @@ export const authCard = async (
   const helper = new OperationHelper(sdk, 'authCard', 'authCard');
 
   try {
-    const { onStatus, forceStatusUpdate } = createStatusListener(
-      AuthCardStatus,
-      params?.onEvent,
-    );
+    logger.info('Started', { ...params });
+    const { onStatus, forceStatusUpdate } = createStatusListener({
+      enums: AuthCardStatus,
+      onEvent: params?.onEvent,
+      logger,
+    });
 
     const { serial, challenge } = await verifySerialSignature({
       helper,
@@ -113,14 +124,19 @@ export const authCard = async (
     assertOrThrowInvalidResult(result.flowComplete);
     forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_PAIRING_DONE);
 
+    logger.info('Completed', { verified: true });
     return true;
   } catch (error) {
     if (error === cardNotVerifiedError) {
       await helper.sendQuery({ result: { verified: false } });
       const result = await helper.waitForResult();
+      logger.verbose('AuthCardResponse', { result });
       assertOrThrowInvalidResult(result.flowComplete);
+      logger.info('Completed', { verified: false });
       return false;
     }
+
+    logger.info('Failed');
 
     try {
       await sdk.sendAbort();

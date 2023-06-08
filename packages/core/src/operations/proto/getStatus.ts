@@ -1,7 +1,7 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { hexToUint8Array } from '@cypherock/sdk-utils';
 
-import { PacketVersion } from '../../utils';
+import { logger, PacketVersion } from '../../utils';
 import { getStatus as getStatusHelper } from '../helpers';
 import { Status } from '../../encoders/proto/generated/core';
 
@@ -23,5 +23,9 @@ export const getStatus = async ({
     timeout,
   });
 
-  return Status.decode(hexToUint8Array(protobufData));
+  const status = Status.decode(hexToUint8Array(protobufData));
+
+  logger.debug('Received status', status);
+
+  return status;
 };

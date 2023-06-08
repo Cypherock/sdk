@@ -157,6 +157,9 @@ importers:
       '@types/node':
         specifier: 18.11.18
         version: 18.11.18
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
@@ -227,6 +230,9 @@ importers:
       '@types/node':
         specifier: 18.11.18
         version: 18.11.18
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
@@ -300,6 +306,9 @@ importers:
       '@types/node':
         specifier: 18.11.18
         version: 18.11.18
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
@@ -358,6 +367,9 @@ importers:
       '@types/node':
         specifier: 18.11.18
         version: 18.11.18
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
@@ -385,6 +397,9 @@ importers:
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.4
         version: link:../interfaces
+      '@cypherock/sdk-utils':
+        specifier: workspace:^
+        version: link:../util
       node-hid:
         specifier: ^2.1.2
         version: 2.1.2
@@ -425,6 +440,9 @@ importers:
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.4
         version: link:../interfaces
+      '@cypherock/sdk-utils':
+        specifier: workspace:^
+        version: link:../util
       serialport:
         specifier: 10.0.0
         version: 10.0.0
@@ -465,6 +483,9 @@ importers:
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.4
         version: link:../interfaces
+      '@cypherock/sdk-utils':
+        specifier: workspace:^
+        version: link:../util
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
@@ -570,6 +591,9 @@ importers:
       '@types/node':
         specifier: 18.11.18
         version: 18.11.18
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
@@ -3288,6 +3312,14 @@ packages:
 
   /create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+    dev: true
+
+  /cross-env@7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: true
 
   /cross-spawn@5.1.0:

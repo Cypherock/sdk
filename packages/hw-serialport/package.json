@@ -13,18 +13,19 @@
     "pre-commit": "lint-staged"
   },
   "devDependencies": {
+    "@cypherock/eslint-config": "workspace:*",
+    "@cypherock/prettier-config": "workspace:^0.0.4",
+    "@cypherock/tsconfig": "workspace:*",
     "@types/serialport": "8.0.1",
     "@types/uuid": "^9.0.0",
     "eslint": "^7.32.0",
-    "@cypherock/eslint-config": "workspace:*",
     "lint-staged": "^13.2.0",
-    "@cypherock/prettier-config": "workspace:^0.0.4",
     "rimraf": "^4.1.2",
-    "@cypherock/tsconfig": "workspace:*",
     "typescript": "^4.5.2"
   },
   "dependencies": {
     "@cypherock/sdk-interfaces": "workspace:^0.0.4",
+    "@cypherock/sdk-utils": "workspace:^",
     "serialport": "10.0.0",
     "uuid": "^9.0.0"
   },

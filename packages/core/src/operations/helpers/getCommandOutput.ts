@@ -5,7 +5,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { intToUintByte, assert } from '@cypherock/sdk-utils';
 
-import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { PacketVersion, PacketVersionMap } from '../../utils';
 import * as config from '../../config';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
@@ -92,8 +92,6 @@ export const getCommandOutput = async ({
         if (!firstError) {
           firstError = e as Error;
         }
-
-        logger.warn('Error in sending data', e);
       }
       tries += 1;
     }

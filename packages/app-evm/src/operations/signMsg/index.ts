@@ -3,13 +3,20 @@ import {
   createStatusListener,
   assert,
   uint8ArrayToHex,
+  createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
 import { ethers } from 'ethers';
 import { SignMsgStatus } from '../../proto/generated/types';
-import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
+import {
+  assertOrThrowInvalidResult,
+  OperationHelper,
+  logger as rootLogger,
+} from '../../utils';
 import { ISignMsgParams, ISignMsgResult } from './types';
 
 export * from './types';
+
+const logger = createLoggerWithPrefix(rootLogger, 'SignTxn');
 
 export const signMsg = async (
   sdk: ISDK,
@@ -25,10 +32,11 @@ export const signMsg = async (
     'derivationPath should be greater than 3',
   );
 
-  const { onStatus, forceStatusUpdate } = createStatusListener(
-    SignMsgStatus,
-    params.onEvent,
-  );
+  const { onStatus, forceStatusUpdate } = createStatusListener({
+    enums: SignMsgStatus,
+    onEvent: params.onEvent,
+    logger,
+  });
 
   const helper = new OperationHelper({
     sdk,

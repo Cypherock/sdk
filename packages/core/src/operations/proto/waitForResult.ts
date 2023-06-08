@@ -5,8 +5,8 @@ import {
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
 } from '@cypherock/sdk-interfaces';
-import { assert, sleep } from '@cypherock/sdk-utils';
-import { PacketVersion, PacketVersionMap } from '../../utils';
+import { assert, sleep, uint8ArrayToHex } from '@cypherock/sdk-utils';
+import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import {
   CmdState,
   DeviceIdleState,
@@ -57,6 +57,12 @@ export const waitForResult = async ({
 
     if (!response.isStatus) {
       const resp = response.result as Uint8Array;
+
+      logger.debug('Received result', {
+        result: uint8ArrayToHex(resp),
+        appletId,
+      });
+
       return resp;
     }
 

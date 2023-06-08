@@ -1,10 +1,15 @@
+import { ILogger } from '@cypherock/sdk-interfaces';
+
 export type ForceStatusUpdate = (flowStatus: number) => void;
 export type OnStatus = (status: { flowStatus: number }) => void;
 
-export function createStatusListener(
-  enums: object,
-  onEvent?: (event: number) => void,
-) {
+export function createStatusListener(params: {
+  enums: object;
+  onEvent?: (event: number) => void;
+  logger?: ILogger;
+}) {
+  const { enums, onEvent, logger } = params;
+
   const alreadySent: Record<number, boolean> = {};
 
   // Gets the flow status list as numbers from enums
@@ -18,6 +23,13 @@ export function createStatusListener(
     for (const eventIndex of statusList) {
       if (status.flowStatus >= eventIndex && !alreadySent[eventIndex]) {
         alreadySent[eventIndex] = true;
+        if (logger) {
+          logger.verbose('Event', {
+            event: (enums as any)[eventIndex],
+            eventIndex,
+          });
+        }
+
         if (onEvent) {
           onEvent(eventIndex);
         }

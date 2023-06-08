@@ -1,15 +1,22 @@
 import { ISDK } from '@cypherock/sdk-core';
 import {
+  createLoggerWithPrefix,
   createStatusListener,
   hexToUint8Array,
   uint8ArrayToHex,
 } from '@cypherock/sdk-utils';
 import { SignTxnStatus } from '../../proto/generated/types';
-import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
+import {
+  assertOrThrowInvalidResult,
+  OperationHelper,
+  logger as rootLogger,
+} from '../../utils';
 import { assertSignTxnParams } from './helpers';
 import { ISignTxnParams, ISignTxnResult } from './types';
 
 export * from './types';
+
+const logger = createLoggerWithPrefix(rootLogger, 'SignTxn');
 
 const signTxnDefaultParams = {
   version: 2,
@@ -25,11 +32,13 @@ export const signTxn = async (
   params: ISignTxnParams,
 ): Promise<ISignTxnResult> => {
   assertSignTxnParams(params);
+  logger.info('Started');
 
-  const { onStatus, forceStatusUpdate } = createStatusListener(
-    SignTxnStatus,
-    params.onEvent,
-  );
+  const { onStatus, forceStatusUpdate } = createStatusListener({
+    enums: SignTxnStatus,
+    onEvent: params.onEvent,
+    logger,
+  });
 
   const helper = new OperationHelper({
     sdk,
@@ -118,5 +127,6 @@ export const signTxn = async (
 
   forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CARD);
 
+  logger.info('Completed');
   return { signatures };
 };

@@ -1,13 +1,23 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { createStatusListener, assert } from '@cypherock/sdk-utils';
+import {
+  createStatusListener,
+  assert,
+  createLoggerWithPrefix,
+} from '@cypherock/sdk-utils';
 import {
   GetPublicKeyStatus,
   IGetPublicKeyResultResponse,
 } from '../../proto/generated/types';
-import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
+import {
+  assertOrThrowInvalidResult,
+  OperationHelper,
+  logger as rootLogger,
+} from '../../utils';
 import { IGetPublicKeyParams } from './types';
 
 export * from './types';
+
+const logger = createLoggerWithPrefix(rootLogger, 'GetPublicKey');
 
 export const getPublicKey = async (
   sdk: ISDK,
@@ -21,10 +31,11 @@ export const getPublicKey = async (
     'DerivationPath should be of depth 5',
   );
 
-  const { onStatus, forceStatusUpdate } = createStatusListener(
-    GetPublicKeyStatus,
-    params.onEvent,
-  );
+  const { onStatus, forceStatusUpdate } = createStatusListener({
+    enums: GetPublicKeyStatus,
+    onEvent: params.onEvent,
+    logger,
+  });
 
   const helper = new OperationHelper({
     sdk,

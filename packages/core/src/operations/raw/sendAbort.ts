@@ -8,7 +8,7 @@ import {
 import { assert } from '@cypherock/sdk-utils';
 
 import * as config from '../../config';
-import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { PacketVersion, PacketVersionMap } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 import { decodeStatus, StatusData } from '../../encoders/raw';
 
@@ -95,9 +95,6 @@ export const sendAbort = async ({
       if (!firstError) {
         firstError = e as Error;
       }
-
-      logger.warn('Error in sending data for abort');
-      logger.warn(e);
     }
     tries += 1;
   }

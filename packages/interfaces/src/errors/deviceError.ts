@@ -3,6 +3,8 @@ export abstract class DeviceError extends Error {
 
   public message: string;
 
+  public isDeviceError = true;
+
   constructor(errorCode: string, message: string, cls: any) {
     super();
     this.code = errorCode;
@@ -18,5 +20,14 @@ export abstract class DeviceError extends Error {
       // eslint-disable-next-line
       (<any>this).__proto__ = cls.prototype;
     }
+  }
+
+  public toJSON() {
+    return {
+      code: this.code,
+      message: `${this.code}: ${this.message}`,
+      isDeviceError: this.isDeviceError,
+      stack: this.stack,
+    };
   }
 }

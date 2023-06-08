@@ -1,14 +1,24 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { createStatusListener, OnStatus } from '@cypherock/sdk-utils';
+import {
+  createLoggerWithPrefix,
+  createStatusListener,
+  OnStatus,
+} from '@cypherock/sdk-utils';
 import {
   GetLogsStatus,
   IGetLogsErrorResponse,
 } from '../../proto/generated/types';
 
-import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
+import {
+  assertOrThrowInvalidResult,
+  OperationHelper,
+  logger as rootLogger,
+} from '../../utils';
 import { GetLogsError, GetLogsErrorType, GetLogsEventHandler } from './types';
 
 export * from './types';
+
+const logger = createLoggerWithPrefix(rootLogger, 'GetLogs');
 
 const parseGetLogsError = (error?: IGetLogsErrorResponse) => {
   if (error === undefined) return;
@@ -43,12 +53,14 @@ export const getLogs = async (
   sdk: ISDK,
   onEvent?: GetLogsEventHandler,
 ): Promise<string> => {
+  logger.info('Started');
   const helper = new OperationHelper(sdk, 'getLogs', 'getLogs');
 
-  const { onStatus, forceStatusUpdate } = createStatusListener(
-    GetLogsStatus,
+  const { onStatus, forceStatusUpdate } = createStatusListener({
+    enums: GetLogsStatus,
     onEvent,
-  );
+    logger,
+  });
 
   const decoder = new TextDecoder('ascii');
 
@@ -74,5 +86,6 @@ export const getLogs = async (
     }
   } while (hasMore);
 
+  logger.info('Completed');
   return allLogs.join('');
 };

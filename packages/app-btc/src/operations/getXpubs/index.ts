@@ -1,13 +1,23 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { createStatusListener, assert } from '@cypherock/sdk-utils';
+import {
+  createStatusListener,
+  assert,
+  createLoggerWithPrefix,
+} from '@cypherock/sdk-utils';
 import {
   GetXpubsStatus,
   IGetXpubsResultResponse,
 } from '../../proto/generated/types';
-import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
+import {
+  assertOrThrowInvalidResult,
+  OperationHelper,
+  logger as rootLogger,
+} from '../../utils';
 import { IGetXpubsParams } from './types';
 
 export * from './types';
+
+const logger = createLoggerWithPrefix(rootLogger, 'GetXpubs');
 
 export const getXpubs = async (
   sdk: ISDK,
@@ -28,10 +38,11 @@ export const getXpubs = async (
     'DerivationPaths should be of depth 3',
   );
 
-  const { onStatus, forceStatusUpdate } = createStatusListener(
-    GetXpubsStatus,
-    params.onEvent,
-  );
+  const { onStatus, forceStatusUpdate } = createStatusListener({
+    enums: GetXpubsStatus,
+    onEvent: params.onEvent,
+    logger,
+  });
   const helper = new OperationHelper({
     sdk,
     queryKey: 'getXpubs',

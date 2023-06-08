@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach, jest } from '@jest/globals';
-import { getEnvVariable } from '../config';
+import { getEnvVariable } from '../src';
 
 describe('config.ts', () => {
   const originalEnv = { ...process.env };
@@ -15,14 +15,14 @@ describe('config.ts', () => {
 
       process.env.API_CYPHEROCK = customUrl;
 
-      const { config } = await import('../config');
+      const { config } = await import('../src');
 
       expect(config).toBeDefined();
       expect(config.API_CYPHEROCK).toEqual(customUrl);
     });
 
     test('should have default value with no external configuration', async () => {
-      const { config } = await import('../config');
+      const { config } = await import('../src');
 
       expect(config).toBeDefined();
       expect(config.API_CYPHEROCK).toEqual('https://api.cypherock.com');

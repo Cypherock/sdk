@@ -10,7 +10,7 @@ import {
 import { assert, isHex } from '@cypherock/sdk-utils';
 
 import * as config from '../../config';
-import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { PacketVersion, PacketVersionMap } from '../../utils';
 import { xmodemEncode, xmodemDecode } from '../../encoders/packet/legacy';
 
 /**
@@ -120,9 +120,8 @@ export const writePacket = (
             usableConfig.constants.RECHECK_TIME,
           );
         })
-        .catch(error => {
+        .catch(() => {
           cleanUp();
-          logger.error(error);
           reject(
             new DeviceCommunicationError(
               DeviceCommunicationErrorType.WRITE_ERROR,
@@ -205,9 +204,9 @@ export const sendData = async (
         // eslint-disable-next-line
         await writePacket(connection, packet, version, skipPacketIds, timeout);
         isDone = true;
-      } catch (e) {
+      } catch (e: any) {
         // Don't retry if connection closed
-        if (e instanceof DeviceConnectionError) {
+        if (Object.values(DeviceConnectionErrorType).includes(e?.code)) {
           tries = localMaxTries;
         }
 

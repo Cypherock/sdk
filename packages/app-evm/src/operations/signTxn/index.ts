@@ -4,13 +4,20 @@ import {
   assert,
   hexToUint8Array,
   uint8ArrayToHex,
+  createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
 import { ethers } from 'ethers';
 import { AddressFormat, SignTxnStatus } from '../../proto/generated/types';
-import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
+import {
+  assertOrThrowInvalidResult,
+  OperationHelper,
+  logger as rootLogger,
+} from '../../utils';
 import { ISignTxnParams, ISignTxnResult } from './types';
 
 export * from './types';
+
+const logger = createLoggerWithPrefix(rootLogger, 'SignTxn');
 
 const defaultParams = {
   addressFormat: AddressFormat.DEFAULT,
@@ -37,10 +44,11 @@ export const signTxn = async (
     throw new Error('Invalid txn hex');
   }
 
-  const { onStatus, forceStatusUpdate } = createStatusListener(
-    SignTxnStatus,
-    params.onEvent,
-  );
+  const { onStatus, forceStatusUpdate } = createStatusListener({
+    enums: SignTxnStatus,
+    onEvent: params.onEvent,
+    logger,
+  });
 
   const helper = new OperationHelper({
     sdk,

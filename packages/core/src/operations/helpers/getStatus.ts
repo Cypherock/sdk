@@ -6,7 +6,7 @@ import {
 import { assert } from '@cypherock/sdk-utils';
 
 import * as config from '../../config';
-import { logger, PacketVersion, PacketVersionMap } from '../../utils';
+import { PacketVersion, PacketVersionMap } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
 
 import { writeCommand } from './writeCommand';
@@ -79,8 +79,6 @@ export const getStatus = async ({
       if (!firstError) {
         firstError = e as Error;
       }
-
-      logger.warn('Error in sending data', e);
     }
     tries += 1;
   }
