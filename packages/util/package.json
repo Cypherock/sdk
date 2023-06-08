@@ -1,6 +1,6 @@
 {
   "name": "@cypherock/sdk-utils",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@aws-crypto/sha256-browser": "^4.0.0",
-    "@cypherock/sdk-interfaces": "workspace:^0.0.4",
+    "@cypherock/sdk-interfaces": "workspace:^0.0.5",
     "compare-versions": "6.0.0-rc.1",
     "protobufjs": "^7.2.2",
     "uuid": "^9.0.0"

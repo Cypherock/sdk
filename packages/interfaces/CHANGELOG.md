@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.5
+
+### Patch Changes
+
+- [#20](https://github.com/Cypherock/sdk/pull/20) [`7780c02`](https://github.com/Cypherock/sdk/commit/7780c02bb1625d5cc5f658c252b83b20ad20324f) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added static abort, isDeviceError flag on error object, logging
+
 ## 0.0.4
 
 ### Patch Changes

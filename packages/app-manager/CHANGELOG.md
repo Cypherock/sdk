@@ -1,5 +1,16 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.8
+
+### Patch Changes
+
+- [#20](https://github.com/Cypherock/sdk/pull/20) [`7780c02`](https://github.com/Cypherock/sdk/commit/7780c02bb1625d5cc5f658c252b83b20ad20324f) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added static abort, isDeviceError flag on error object, logging
+
+- Updated dependencies [[`7780c02`](https://github.com/Cypherock/sdk/commit/7780c02bb1625d5cc5f658c252b83b20ad20324f)]:
+  - @cypherock/sdk-interfaces@0.0.5
+  - @cypherock/sdk-core@0.0.7
+  - @cypherock/sdk-utils@0.0.6
+
 ## 0.0.7
 
 ### Patch Changes
