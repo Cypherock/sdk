@@ -34,18 +34,18 @@ importers:
         version: 2.8.8
       turbo:
         specifier: latest
-        version: 1.10.1
+        version: 1.10.2
 
   apps/browser:
     dependencies:
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.7
+        specifier: workspace:^0.0.8
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../../packages/core
       '@cypherock/sdk-hw-webusb':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../../packages/hw-webusb
       '@next/font':
         specifier: 13.1.6
@@ -81,16 +81,16 @@ importers:
   apps/node:
     dependencies:
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.7
+        specifier: workspace:^0.0.8
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../../packages/core
       '@cypherock/sdk-hw-hid':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../../packages/hw-hid
       '@cypherock/sdk-hw-serialport':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../../packages/hw-serialport
     devDependencies:
       '@cypherock/eslint-config':
@@ -115,13 +115,13 @@ importers:
   packages/app-btc:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../core
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.5
+        specifier: workspace:^0.0.6
         version: link:../util
       long:
         specifier: ^5.2.1
@@ -185,13 +185,13 @@ importers:
   packages/app-evm:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../core
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.5
+        specifier: workspace:^0.0.6
         version: link:../util
       ethers:
         specifier: ^6.2.2
@@ -258,13 +258,13 @@ importers:
   packages/app-manager:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../core
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.5
+        specifier: workspace:^0.0.6
         version: link:../util
       axios:
         specifier: ^1.3.4
@@ -334,10 +334,10 @@ importers:
   packages/core:
     dependencies:
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.5
+        specifier: workspace:^0.0.6
         version: link:../util
       compare-versions:
         specifier: 6.0.0-rc.1
@@ -395,7 +395,7 @@ importers:
   packages/hw-hid:
     dependencies:
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../interfaces
       '@cypherock/sdk-utils':
         specifier: workspace:^
@@ -438,7 +438,7 @@ importers:
   packages/hw-serialport:
     dependencies:
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../interfaces
       '@cypherock/sdk-utils':
         specifier: workspace:^
@@ -481,7 +481,7 @@ importers:
   packages/hw-webusb:
     dependencies:
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../interfaces
       '@cypherock/sdk-utils':
         specifier: workspace:^
@@ -561,7 +561,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.4
+        specifier: workspace:^0.0.5
         version: link:../interfaces
       compare-versions:
         specifier: 6.0.0-rc.1
@@ -3712,7 +3712,7 @@ packages:
     dependencies:
       confusing-browser-globals: 1.0.11
       eslint: 7.32.0
-      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.49.0)(eslint-import-resolver-typescript@3.5.3)(eslint@7.32.0)
+      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.49.0)(eslint@7.32.0)
       object.assign: 4.1.4
       object.entries: 1.1.6
       semver: 6.3.0
@@ -3840,6 +3840,39 @@ packages:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
+
+  /eslint-plugin-import@2.27.5(@typescript-eslint/parser@5.49.0)(eslint@7.32.0):
+    resolution: {integrity: sha512-LmEt3GVofgiGuiE+ORpnvP+kAm3h6MLZJ4Q5HCyHADofsb4VzXFsRiWj3c0OFiV+3DWFh0qg3v9gcPlfc3zRow==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      '@typescript-eslint/parser': '*'
+      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
+    peerDependenciesMeta:
+      '@typescript-eslint/parser':
+        optional: true
+    dependencies:
+      '@typescript-eslint/parser': 5.49.0(eslint@7.32.0)(typescript@4.9.5)
+      array-includes: 3.1.6
+      array.prototype.flat: 1.3.1
+      array.prototype.flatmap: 1.3.1
+      debug: 3.2.7
+      doctrine: 2.1.0
+      eslint: 7.32.0
+      eslint-import-resolver-node: 0.3.7
+      eslint-module-utils: 2.7.4(@typescript-eslint/parser@5.49.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.3)(eslint@7.32.0)
+      has: 1.0.3
+      is-core-module: 2.11.0
+      is-glob: 4.0.3
+      minimatch: 3.1.2
+      object.values: 1.1.6
+      resolve: 1.22.1
+      semver: 6.3.0
+      tsconfig-paths: 3.14.1
+    transitivePeerDependencies:
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - supports-color
+    dev: true
 
   /eslint-plugin-jsx-a11y@6.7.1(eslint@7.32.0):
     resolution: {integrity: sha512-63Bog4iIethyo8smBklORknVjB0T2dwB8Mr/hIC+fBS0uyHdYYpzM/Ed+YC8VxTjlXHEWFOdmgwcDn1U2L9VCA==}
@@ -7218,65 +7251,65 @@ packages:
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
     dev: true
 
-  /turbo-darwin-64@1.10.1:
-    resolution: {integrity: sha512-isLLoPuAOMNsYovOq9BhuQOZWQuU13zYsW988KkkaA4OJqOn7qwa9V/KBYCJL8uVQqtG+/Y42J37lO8RJjyXuA==}
+  /turbo-darwin-64@1.10.2:
+    resolution: {integrity: sha512-sVLpVVANByfMgqf7OYPcZM4KiDnjGu7ITvAzBSa9Iwe14yoWLn8utrNsWCRaQEB6kEqBGLPmvL7AKwkl8M2Gqg==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64@1.10.1:
-    resolution: {integrity: sha512-x1nloPR10fLElNCv17BKr0kCx/O5gse/UXAcVscMZH2tvRUtXrdBmut62uw2YU3J9hli2fszYjUWXkulVpQvFA==}
+  /turbo-darwin-arm64@1.10.2:
+    resolution: {integrity: sha512-TKG91DSoYQjsCft4XBx4lYycVT5n3UQB/nOKgv/WJCSfwshLWulya3yhP8JT5erv9rPF8gwgnx87lrCmT4EAVA==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64@1.10.1:
-    resolution: {integrity: sha512-abV+ODCeOlz0503OZlHhPWdy3VwJZc1jObf1VQj7uQM+JqJ/kXbMyqJIMQVz+m7QJUFdferYPRxGhYT/NbYK7Q==}
+  /turbo-linux-64@1.10.2:
+    resolution: {integrity: sha512-ZIzAkfrzjJFkSM/uEfxU6JjseCsT5PHRu0s0lmYce37ApQbv/HC7tI0cFhuosI30+O8109/mkyZykKE7AQfgqA==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64@1.10.1:
-    resolution: {integrity: sha512-zRC3nZbHQ63tofOmbuySzEn1ROISWTkemYYr1L98rpmT5aVa0kERlGiYcfDwZh3cBso/Ylg/wxexRAaPzcCJYQ==}
+  /turbo-linux-arm64@1.10.2:
+    resolution: {integrity: sha512-G4uZA+RBQ5S1X/oUxO5KoLL2NDMkrrBZF52+00jQv6UEb9lWDgwzqSwoAGjdXxeDCrqMW5rBVwb/IBIF2/yhwA==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64@1.10.1:
-    resolution: {integrity: sha512-Irqz8IU+o7Q/5V44qatZBTunk+FQAOII1hZTsEU54ah62f9Y297K6/LSp+yncmVQOZlFVccXb6MDqcETExIQtA==}
+  /turbo-windows-64@1.10.2:
+    resolution: {integrity: sha512-ObfQO37kGu1jBzFs/L+hybrCXBwdnimotJwzg7pCoSyGijKITlugrpJoPDKlg0eMr3/1Y6KUeHy26vZaDXrbuQ==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64@1.10.1:
-    resolution: {integrity: sha512-124IT15d2gyjC+NEn11pHOaVFvZDRHpxfF+LDUzV7YxfNIfV0mGkR3R/IyVXtQHOgqOdtQTbC4y411sm31+SEw==}
+  /turbo-windows-arm64@1.10.2:
+    resolution: {integrity: sha512-7S6dx4738R/FIT2cxbsunqgHN5LelXzuzkcaZgdkU33oswRf/6KOfOABzQLdTX7Uos59cBSdwayf6KQJxuOXUg==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo@1.10.1:
-    resolution: {integrity: sha512-wq0YeSv6P/eEDXOL42jkMUr+T4z34dM8mdHu5u6C6OOAq8JuLJ72F/v4EVR1JmY8icyTkFz10ICLV0haUUYhbQ==}
+  /turbo@1.10.2:
+    resolution: {integrity: sha512-m9sR5XHhuzxUQACf0vI2qCG5OqDYAZiPTaAsTwECnwUF4/cXwEmcYddbLJnO+K9orNvcnjjent5oBNBVQ/o0ow==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.10.1
-      turbo-darwin-arm64: 1.10.1
-      turbo-linux-64: 1.10.1
-      turbo-linux-arm64: 1.10.1
-      turbo-windows-64: 1.10.1
-      turbo-windows-arm64: 1.10.1
+      turbo-darwin-64: 1.10.2
+      turbo-darwin-arm64: 1.10.2
+      turbo-linux-64: 1.10.2
+      turbo-linux-arm64: 1.10.2
+      turbo-windows-64: 1.10.2
+      turbo-windows-arm64: 1.10.2
     dev: true
 
   /type-check@0.4.0:
