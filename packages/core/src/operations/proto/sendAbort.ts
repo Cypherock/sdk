@@ -4,16 +4,112 @@ import {
   DeviceAppErrorType,
   DeviceCompatibilityError,
   DeviceCompatibilityErrorType,
+  DeviceCommunicationError,
+  DeviceCommunicationErrorType,
+  DeviceConnectionError,
+  DeviceConnectionErrorType,
 } from '@cypherock/sdk-interfaces';
 import { hexToUint8Array } from '@cypherock/sdk-utils';
 
 import * as config from '../../config';
 import { logger, PacketVersion, PacketVersionMap } from '../../utils';
 import { decodePayloadData, encodePacket } from '../../encoders/packet';
-import { Status } from '../../encoders/proto/generated/core';
+import { DeviceIdleState, Status } from '../../encoders/proto/generated/core';
 
 import { writeCommand } from '../helpers/writeCommand';
 import canRetry from '../helpers/canRetry';
+import { getStatus } from './getStatus';
+
+const checkIfAbortWasSuccessful = async (
+  connection: IDeviceConnection,
+  version: PacketVersion,
+): Promise<void> =>
+  // eslint-disable-next-line no-async-promise-executor
+  new Promise(async (resolve, reject) => {
+    try {
+      const usableConfig = config.v3;
+      let timeout: NodeJS.Timeout | undefined;
+      let recheckTimeout: NodeJS.Timeout | undefined;
+
+      const cleanUp = () => {
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+        if (recheckTimeout) {
+          clearTimeout(recheckTimeout);
+        }
+      };
+
+      const recheckIfSuccessful = async () => {
+        try {
+          if (!(await connection.isConnected())) {
+            cleanUp();
+            reject(
+              new DeviceConnectionError(
+                DeviceConnectionErrorType.CONNECTION_CLOSED,
+              ),
+            );
+            return;
+          }
+
+          const status = await getStatus({ connection, version });
+
+          if (
+            status.deviceIdleState === DeviceIdleState.DEVICE_IDLE_STATE_IDLE
+          ) {
+            cleanUp();
+            resolve();
+            return;
+          }
+
+          clearTimeout(recheckTimeout);
+          recheckTimeout = setTimeout(
+            recheckIfSuccessful,
+            usableConfig.constants.RECHECK_TIME,
+          );
+        } catch (error: any) {
+          if (Object.values(DeviceConnectionErrorType).includes(error?.code)) {
+            cleanUp();
+            reject(error);
+            return;
+          }
+
+          logger.error('Error while rechecking if abort was successful');
+          logger.error(error);
+          clearTimeout(recheckTimeout);
+          recheckTimeout = setTimeout(
+            recheckIfSuccessful,
+            usableConfig.constants.RECHECK_TIME,
+          );
+        }
+      };
+
+      timeout = setTimeout(async () => {
+        cleanUp();
+
+        if (!(await connection.isConnected())) {
+          reject(
+            new DeviceConnectionError(
+              DeviceConnectionErrorType.CONNECTION_CLOSED,
+            ),
+          );
+        } else {
+          reject(
+            new DeviceCommunicationError(
+              DeviceCommunicationErrorType.READ_TIMEOUT,
+            ),
+          );
+        }
+      }, usableConfig.constants.ABORT_TIME);
+
+      recheckTimeout = setTimeout(
+        recheckIfSuccessful,
+        usableConfig.constants.ABORT_RECHECK_TIME,
+      );
+    } catch (error: any) {
+      reject(error);
+    }
+  });
 
 export const sendAbort = async ({
   connection,
@@ -104,6 +200,8 @@ export const sendAbort = async ({
   if (!status) {
     throw new Error('Did not found status');
   }
+
+  await checkIfAbortWasSuccessful(connection, version);
 
   return status;
 };
