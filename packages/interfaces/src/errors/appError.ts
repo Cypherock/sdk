@@ -24,6 +24,8 @@ export enum DeviceAppErrorType {
   CARD_OPERATION_FAILED = 'APP_0400',
 
   USER_REJECTION = 'APP_0501',
+
+  CORRUPT_DATA = 'TODO_CORRUPT_DATA_ERROR', // TODO: add corrupt data error
 }
 
 type CodeToErrorMap = {
@@ -82,6 +84,9 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   },
   [DeviceAppErrorType.USER_REJECTION]: {
     message: 'User rejected the operation',
+  },
+  [DeviceAppErrorType.CORRUPT_DATA]: {
+    message: 'Corrupted data received', // TODO: check corrupt message error
   },
 };
 
