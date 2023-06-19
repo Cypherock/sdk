@@ -8,6 +8,12 @@ const run = async () => {
 
   const deviceInfo = await managerApp.getDeviceInfo();
 
+  await managerApp.authDevice();
+
+  await managerApp.trainCard({ onWallets: async () => true });
+
+  await managerApp.authCard();
+
   console.log(deviceInfo);
 };
 

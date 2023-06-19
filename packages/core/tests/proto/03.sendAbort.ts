@@ -52,8 +52,12 @@ describe('sdk.sendAbort', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         const onData = async (data: Uint8Array) => {
-          expect(testCase.abortRequest).toEqual(data);
-          for (const ackPacket of testCase.ackPackets) {
+          const packetIndex = testCase.packets.findIndex(
+            elem => elem.toString() === data.toString(),
+          );
+          expect(testCase.packets).toContainEqual(data);
+          expect(packetIndex).toBeGreaterThanOrEqual(0);
+          for (const ackPacket of testCase.ackPackets[packetIndex]) {
             await connection.mockDeviceSend(ackPacket);
           }
         };
@@ -73,20 +77,32 @@ describe('sdk.sendAbort', () => {
   describe('should be able to handle multiple retries', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
+        const maxTimeoutTriggers = 3;
+        let totalTimeoutTriggers = 0;
+
         const maxTries = 3;
-        let retries = 0;
+        const retries: Record<number, number | undefined> = {};
 
-        const onData = async () => {
-          const currentRetry = retries + 1;
+        const onData = async (data: Uint8Array) => {
+          const packetIndex = testCase.packets.findIndex(
+            elem => elem.toString() === data.toString(),
+          );
+          expect(testCase.packets).toContainEqual(data);
+          expect(packetIndex).toBeGreaterThanOrEqual(0);
 
-          const doTriggerError = Math.random() > 0.5 && currentRetry < maxTries;
+          const currentRetry = (retries[packetIndex] ?? 0) + 1;
+          const doTriggerError =
+            Math.random() < 0.5 &&
+            currentRetry < maxTries &&
+            totalTimeoutTriggers < maxTimeoutTriggers;
 
           if (!doTriggerError) {
-            for (const ackPacket of testCase.ackPackets) {
+            for (const ackPacket of testCase.ackPackets[packetIndex]) {
               await connection.mockDeviceSend(ackPacket);
             }
           } else {
-            retries = currentRetry;
+            totalTimeoutTriggers += 1;
+            retries[packetIndex] = currentRetry;
           }
         };
 
@@ -127,10 +143,15 @@ describe('sdk.sendAbort', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         const onData = async (data: Uint8Array) => {
-          expect(testCase.abortRequest).toEqual(data);
+          const packetIndex = testCase.packets.findIndex(
+            elem => elem.toString() === data.toString(),
+          );
+          expect(testCase.packets).toContainEqual(data);
+          expect(packetIndex).toBeGreaterThanOrEqual(0);
+
           let i = 0;
-          for (const ackPacket of testCase.ackPackets) {
-            if (i >= testCase.ackPackets.length - 1) {
+          for (const ackPacket of testCase.ackPackets[packetIndex]) {
+            if (i >= testCase.ackPackets[packetIndex].length - 1) {
               await connection.destroy();
             } else {
               await connection.mockDeviceSend(ackPacket);
@@ -155,8 +176,12 @@ describe('sdk.sendAbort', () => {
     fixtures.error.forEach(testCase => {
       test(testCase.name, async () => {
         const onData = async (data: Uint8Array) => {
-          expect(testCase.abortRequest).toEqual(data);
-          for (const ackPacket of testCase.ackPackets) {
+          const packetIndex = testCase.packets.findIndex(
+            elem => elem.toString() === data.toString(),
+          );
+          expect(testCase.packets).toContainEqual(data);
+          expect(packetIndex).toBeGreaterThanOrEqual(0);
+          for (const ackPacket of testCase.ackPackets[packetIndex]) {
             await connection.mockDeviceSend(ackPacket);
           }
         };

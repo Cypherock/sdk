@@ -83,7 +83,11 @@ export interface ISDK {
     onStatus?: operations.IWaitForCommandOutputParams['onStatus'];
     options?: operations.IWaitForCommandOutputParams['options'];
   }): Promise<Uint8Array>;
-  getStatus(maxTries?: number, timeout?: number): Promise<import('.').Status>;
+  getStatus(
+    maxTries?: number,
+    timeout?: number,
+    dontLog?: boolean,
+  ): Promise<import('.').Status>;
   sendAbort(options?: {
     sequenceNumber?: number;
     maxTries?: number;
