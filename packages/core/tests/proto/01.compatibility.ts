@@ -167,18 +167,34 @@ describe('Device Proto Operation: v3', () => {
   });
 
   test('should be able to send abort', async () => {
+    let hasSentAbort = false;
     connection.configureListeners(data => {
-      expect(data).toEqual(
-        new Uint8Array([
-          85, 85, 135, 124, 0, 1, 0, 1, 0, 18, 8, 1, 0, 17, 254, 0,
-        ]),
-      );
-      connection.mockDeviceSend(
-        new Uint8Array([
-          85, 85, 28, 162, 0, 1, 0, 1, 255, 255, 4, 1, 0, 17, 254, 15, 0, 11, 0,
-          0, 8, 2, 16, 3, 32, 18, 40, 7, 48, 132, 1,
-        ]),
-      );
+      if (!hasSentAbort) {
+        expect(data).toEqual(
+          new Uint8Array([
+            85, 85, 135, 124, 0, 1, 0, 1, 0, 18, 8, 1, 0, 17, 254, 0,
+          ]),
+        );
+        connection.mockDeviceSend(
+          new Uint8Array([
+            85, 85, 28, 162, 0, 1, 0, 1, 255, 255, 4, 1, 0, 17, 254, 15, 0, 11,
+            0, 0, 8, 2, 16, 3, 32, 18, 40, 7, 48, 132, 1,
+          ]),
+        );
+        hasSentAbort = true;
+      } else {
+        expect(data).toEqual(
+          new Uint8Array([
+            85, 85, 169, 56, 0, 1, 0, 1, 255, 255, 1, 1, 0, 17, 254, 0,
+          ]),
+        );
+        connection.mockDeviceSend(
+          new Uint8Array([
+            85, 85, 30, 138, 0, 1, 0, 1, 255, 255, 4, 1, 1, 112, 220, 12, 0, 8,
+            0, 0, 8, 1, 16, 1, 32, 1, 40, 7,
+          ]),
+        );
+      }
     });
     const result = await sdk.sendAbort({ sequenceNumber: 18 });
 
