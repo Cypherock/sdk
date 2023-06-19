@@ -53,6 +53,12 @@ export class ManagerApp {
     );
   }
 
+  public async updateFirmware(params: operations.IUpdateFirmwareParams) {
+    return this.sdk.runOperation(() =>
+      operations.updateFirmware(this.sdk, params),
+    );
+  }
+
   public async trainCard(params: operations.ITrainCardParams) {
     return this.sdk.runOperation(() => operations.trainCard(this.sdk, params));
   }

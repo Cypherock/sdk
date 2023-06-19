@@ -23,7 +23,7 @@ export const v3 = {
   CHUNK_SIZE: 48 * 2,
   ACK_TIME: 2000,
   CMD_RESPONSE_TIME: 2000,
-  RECHECK_TIME: 50,
+  RECHECK_TIME: 2,
 };
 
 export default v1;

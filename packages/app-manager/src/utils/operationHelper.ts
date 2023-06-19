@@ -51,6 +51,7 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
     const result = decodeResult(await this.sdk.waitForResult({ onStatus }));
 
     const retrunObj = result[this.resultKey] as Result[R];
+    parseCommonError(result.commonError);
     assertOrThrowInvalidResult(retrunObj);
     parseCommonError((result[this.resultKey] as any).commonError);
 

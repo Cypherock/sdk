@@ -24,6 +24,7 @@
     "@cypherock/sdk-app-manager": "workspace:^0.0.8",
     "@cypherock/sdk-core": "workspace:^0.0.7",
     "@cypherock/sdk-hw-hid": "workspace:^0.0.5",
-    "@cypherock/sdk-hw-serialport": "workspace:^0.0.5"
+    "@cypherock/sdk-hw-serialport": "workspace:^0.0.5",
+    "@cypherock/sdk-interfaces": "workspace:^"
   }
 }
