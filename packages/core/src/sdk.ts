@@ -345,9 +345,12 @@ export class SDK implements ISDK {
   }
 
   public async runOperation<R>(operation: () => Promise<R>) {
+    let wasDeviceReady = false;
+
     try {
       await this.connection.beforeOperation();
       await this.makeDeviceReady();
+      wasDeviceReady = true;
 
       const result = await operation();
 
@@ -356,7 +359,9 @@ export class SDK implements ISDK {
 
       return result;
     } catch (error) {
-      await this.ensureIfIdle();
+      if (wasDeviceReady) {
+        await this.ensureIfIdle();
+      }
       await this.connection.afterOperation();
       throw error;
     }
