@@ -2,4 +2,4 @@
 '@cypherock/sdk-core': patch
 ---
 
-additional check on sendAbort to verify if it was successful
+device idle check after abort and operation

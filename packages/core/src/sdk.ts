@@ -22,6 +22,7 @@ import { ISDK } from './types';
 import DeprecatedCommunication from './deprecated';
 import { DeviceIdleState } from './encoders/proto/types';
 import { DeviceIdleState as RawDeviceIdleState } from './encoders/raw';
+import { logger } from './utils';
 
 export class SDK implements ISDK {
   private readonly version: string;
@@ -230,7 +231,11 @@ export class SDK implements ISDK {
     });
   }
 
-  public async getStatus(maxTries?: number, timeout?: number) {
+  public async getStatus(
+    maxTries?: number,
+    timeout?: number,
+    dontLog?: boolean,
+  ) {
     await this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,
@@ -250,6 +255,7 @@ export class SDK implements ISDK {
       version: this.packetVersion,
       maxTries,
       timeout,
+      dontLog,
     });
   }
 
@@ -344,10 +350,13 @@ export class SDK implements ISDK {
       await this.makeDeviceReady();
 
       const result = await operation();
+
+      await this.ensureIfIdle();
       await this.connection.afterOperation();
 
       return result;
     } catch (error) {
+      await this.ensureIfIdle();
       await this.connection.afterOperation();
       throw error;
     }
@@ -358,6 +367,20 @@ export class SDK implements ISDK {
       throw new DeviceCommunicationError(
         DeviceCommunicationErrorType.IN_BOOTLOADER,
       );
+    }
+  }
+
+  private async ensureIfIdle() {
+    try {
+      if (await this.isSupported()) {
+        await operations.waitForIdle({
+          connection: this.connection,
+          version: this.packetVersion ?? PacketVersionMap.v3,
+        });
+      }
+    } catch (error) {
+      logger.warn('Error while checking for idle state');
+      logger.warn(error);
     }
   }
 
