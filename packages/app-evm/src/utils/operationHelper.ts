@@ -60,11 +60,14 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
       await this.sdk.waitForResult({ onStatus: this.onStatus }),
     );
 
-    const retrunObj = result[this.resultKey] as Result[R];
-    assertOrThrowInvalidResult(retrunObj);
-    parseCommonError((result[this.resultKey] as any).commonError);
+    if (result.commonError) {
+      parseCommonError(result.commonError);
+    }
 
-    return retrunObj;
+    const resultData = result[this.resultKey] as Result[R];
+    assertOrThrowInvalidResult(resultData);
+
+    return resultData;
   }
 
   private static splitIntoChunks(txn: Uint8Array): Uint8Array[] {
