@@ -14,11 +14,7 @@ const commonParams = {
     ]),
     derivationPaths: [
       {
-        path: [
-          { index: 44, isHardened: true },
-          { index: 0, isHardened: true },
-          { index: 0, isHardened: true },
-        ],
+        path: [44, 0, 0],
       },
     ],
   },

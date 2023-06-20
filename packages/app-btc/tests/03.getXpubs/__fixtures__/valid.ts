@@ -10,11 +10,7 @@ const requestOneXpub: IGetXpubsTestCase = {
     ]),
     derivationPaths: [
       {
-        path: [
-          { index: 44, isHardened: true },
-          { index: 0, isHardened: true },
-          { index: 0, isHardened: true },
-        ],
+        path: [44, 0, 0],
       },
     ],
   },
@@ -76,32 +72,16 @@ const requestFourXpubs: IGetXpubsTestCase = {
     ]),
     derivationPaths: [
       {
-        path: [
-          { index: 44, isHardened: true },
-          { index: 0, isHardened: true },
-          { index: 0, isHardened: true },
-        ],
+        path: [44, 0, 0],
       },
       {
-        path: [
-          { index: 44, isHardened: true },
-          { index: 0, isHardened: true },
-          { index: 1, isHardened: true },
-        ],
+        path: [44, 0, 0],
       },
       {
-        path: [
-          { index: 44, isHardened: true },
-          { index: 0, isHardened: true },
-          { index: 2, isHardened: true },
-        ],
+        path: [44, 0, 0],
       },
       {
-        path: [
-          { index: 44, isHardened: true },
-          { index: 0, isHardened: true },
-          { index: 3, isHardened: true },
-        ],
+        path: [44, 0, 0],
       },
     ],
   },

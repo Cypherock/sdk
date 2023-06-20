@@ -34,11 +34,7 @@ const invalidArgs: IGetXpubsTestCase[] = [
     params: {
       derivationPaths: [
         {
-          path: [
-            { index: 44, isHardened: true },
-            { index: 0, isHardened: true },
-            { index: 0, isHardened: true },
-          ],
+          path: [44, 0, 0],
         },
       ],
     } as any,
@@ -58,10 +54,7 @@ const invalidArgs: IGetXpubsTestCase[] = [
       walletId: new Uint8Array([10]),
       derivationPaths: [
         {
-          path: [
-            { index: 44, isHardened: true },
-            { index: 0, isHardened: true },
-          ],
+          path: [44, 0],
         },
       ],
     },
@@ -73,12 +66,7 @@ const invalidArgs: IGetXpubsTestCase[] = [
       walletId: new Uint8Array([10]),
       derivationPaths: [
         {
-          path: [
-            { index: 44, isHardened: true },
-            { index: 0, isHardened: true },
-            { index: 0, isHardened: true },
-            { index: 0, isHardened: false },
-          ],
+          path: [44, 0, 0, 0],
         },
       ],
     },
