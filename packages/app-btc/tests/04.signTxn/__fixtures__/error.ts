@@ -69,8 +69,7 @@ const withInvalidAppId: ISignTxnTestCase = {
   ...commonParams,
   results: [{ name: 'error', data: new Uint8Array([26, 4, 50, 2, 16, 1]) }],
   errorInstance: DeviceAppError,
-  errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
+  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.CORRUPT_DATA],
 };
 
 const withUserRejection: ISignTxnTestCase = {
