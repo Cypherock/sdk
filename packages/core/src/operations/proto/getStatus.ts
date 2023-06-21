@@ -10,11 +10,13 @@ export const getStatus = async ({
   version,
   maxTries = 5,
   timeout,
+  dontLog,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
   maxTries?: number;
   timeout?: number;
+  dontLog?: boolean;
 }) => {
   const { protobufData } = await getStatusHelper({
     connection,
@@ -25,7 +27,9 @@ export const getStatus = async ({
 
   const status = Status.decode(hexToUint8Array(protobufData));
 
-  logger.debug('Received status', status);
+  if (!dontLog) {
+    logger.debug('Received status', status);
+  }
 
   return status;
 };

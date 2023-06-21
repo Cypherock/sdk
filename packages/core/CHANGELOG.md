@@ -1,5 +1,11 @@
 # @cypherock/sdk-core
 
+## 0.0.8
+
+### Patch Changes
+
+- [#23](https://github.com/Cypherock/sdk/pull/23) [`aa0df04`](https://github.com/Cypherock/sdk/commit/aa0df04262c20484d5c745cd4ac1ab5fb6ca6b38) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - device idle check after abort and operation
+
 ## 0.0.7
 
 ### Patch Changes
