@@ -49,14 +49,11 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
   public async waitForResult(onStatus?: (status: Status) => void) {
     const result = decodeResult(await this.sdk.waitForResult({ onStatus }));
-
-    if (result.commonError) {
-      parseCommonError(result.commonError);
-    }
-
     const resultData = result[this.resultKey] as Result[R];
+    if ((resultData as any)?.commonError) {
+      parseCommonError((resultData as any)?.commonError);
+    }
     assertOrThrowInvalidResult(resultData);
-
     return resultData;
   }
 }
