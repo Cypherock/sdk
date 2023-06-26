@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.6
+
+### Patch Changes
+
+- [#25](https://github.com/Cypherock/sdk/pull/25) [`94d4aef`](https://github.com/Cypherock/sdk/commit/94d4aef281617c818745e2eac4bf724bf13dead9) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added firmware update, app level error handling and updated data types
+
 ## 0.0.5
 
 ### Patch Changes

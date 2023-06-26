@@ -1,5 +1,13 @@
 # @cypherock/sdk-hw-hid
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`94d4aef`](https://github.com/Cypherock/sdk/commit/94d4aef281617c818745e2eac4bf724bf13dead9)]:
+  - @cypherock/sdk-interfaces@0.0.6
+  - @cypherock/sdk-utils@0.0.7
+
 ## 0.0.5
 
 ### Patch Changes

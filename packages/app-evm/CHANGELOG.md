@@ -1,5 +1,16 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.9
+
+### Patch Changes
+
+- [#25](https://github.com/Cypherock/sdk/pull/25) [`94d4aef`](https://github.com/Cypherock/sdk/commit/94d4aef281617c818745e2eac4bf724bf13dead9) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added firmware update, app level error handling and updated data types
+
+- Updated dependencies [[`94d4aef`](https://github.com/Cypherock/sdk/commit/94d4aef281617c818745e2eac4bf724bf13dead9)]:
+  - @cypherock/sdk-interfaces@0.0.6
+  - @cypherock/sdk-core@0.0.9
+  - @cypherock/sdk-utils@0.0.7
+
 ## 0.0.8
 
 ### Patch Changes
