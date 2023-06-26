@@ -25,6 +25,7 @@ export function parseCommonError(error?: ICommonError) {
     noWalletExists: DeviceAppErrorType.NO_WALLET_EXISTS,
     cardError: DeviceAppErrorType.CARD_OPERATION_FAILED,
     userRejection: DeviceAppErrorType.USER_REJECTION,
+    corruptData: DeviceAppErrorType.CORRUPT_DATA,
   };
 
   for (const key of keys) {

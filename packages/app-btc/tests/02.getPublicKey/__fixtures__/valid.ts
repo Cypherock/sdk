@@ -1,4 +1,23 @@
+import { Result } from '../../../src/proto/generated/btc/core';
 import { IGetPublicKeyTestCase } from './types';
+
+const data = Uint8Array.from(
+  Result.encode(
+    Result.create({
+      getPublicKey: {
+        result: {
+          publicKey: new Uint8Array([
+            3, 41, 155, 232, 126, 245, 18, 49, 110, 235, 225, 178, 60, 48, 53,
+            109, 26, 117, 222, 193, 192, 185, 147, 11, 59, 191, 155, 17, 129,
+            230, 183, 171, 92,
+          ]),
+        },
+      },
+    }),
+  ).finish(),
+);
+
+console.log(data);
 
 const requestAddress: IGetPublicKeyTestCase = {
   name: 'Request Address',
@@ -8,22 +27,16 @@ const requestAddress: IGetPublicKeyTestCase = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [
-      { index: 44, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: false },
-      { index: 0, isHardened: false },
-    ],
+    derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000, 0, 0],
   },
   queries: [
     {
       name: 'Initate query',
       data: new Uint8Array([
-        10, 60, 10, 58, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
+        10, 57, 10, 55, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
         38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 4, 8, 44, 16, 1, 18, 2, 16, 1, 18,
-        2, 16, 1, 18, 2, 16, 0, 18, 2, 16, 0,
+        53, 86, 128, 26, 3, 187, 121, 64, 18, 17, 172, 128, 128, 128, 8, 128,
+        128, 128, 128, 8, 128, 128, 128, 128, 8, 0, 0,
       ]),
     },
   ],
@@ -31,9 +44,9 @@ const requestAddress: IGetPublicKeyTestCase = {
     {
       name: 'result',
       data: new Uint8Array([
-        10, 38, 10, 36, 10, 34, 49, 76, 56, 81, 98, 49, 115, 75, 80, 80, 78, 77,
-        82, 98, 117, 83, 84, 106, 54, 87, 49, 87, 88, 110, 71, 102, 122, 120,
-        114, 83, 77, 102, 90, 82,
+        10, 37, 10, 35, 10, 33, 3, 41, 155, 232, 126, 245, 18, 49, 110, 235,
+        225, 178, 60, 48, 53, 109, 26, 117, 222, 193, 192, 185, 147, 11, 59,
+        191, 155, 17, 129, 230, 183, 171, 92,
       ]),
       statuses: [
         {
@@ -53,7 +66,11 @@ const requestAddress: IGetPublicKeyTestCase = {
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
   output: {
-    publicKey: '1L8Qb1sKPPNMRbuSTj6W1WXnGfzxrSMfZR',
+    publicKey: new Uint8Array([
+      3, 41, 155, 232, 126, 245, 18, 49, 110, 235, 225, 178, 60, 48, 53, 109,
+      26, 117, 222, 193, 192, 185, 147, 11, 59, 191, 155, 17, 129, 230, 183,
+      171, 92,
+    ]),
   },
 };
 

@@ -8,20 +8,14 @@ import { IGetPublicKeyTestCase } from './types';
 const commonParams = {
   params: {
     walletId: new Uint8Array([10]),
-    derivationPath: [
-      { index: 44, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: false },
-      { index: 0, isHardened: false },
-    ],
+    derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000, 0, 0],
   },
   queries: [
     {
       name: 'Initate query',
       data: new Uint8Array([
-        10, 27, 10, 25, 10, 1, 10, 18, 4, 8, 44, 16, 1, 18, 2, 16, 1, 18, 2, 16,
-        1, 18, 2, 16, 0, 18, 2, 16, 0,
+        10, 24, 10, 22, 10, 1, 10, 18, 17, 172, 128, 128, 128, 8, 128, 128, 128,
+        128, 8, 128, 128, 128, 128, 8, 0, 0,
       ]),
     },
   ],

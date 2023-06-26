@@ -324,6 +324,8 @@ export class SDK implements ISDK {
 
   public async makeDeviceReady() {
     if (await this.isSupported()) {
+      await this.ensureIfUSBIdle();
+
       const status = await this.getStatus();
       if (status.deviceIdleState !== DeviceIdleState.DEVICE_IDLE_STATE_IDLE) {
         if (status.abortDisabled) {
@@ -345,23 +347,16 @@ export class SDK implements ISDK {
   }
 
   public async runOperation<R>(operation: () => Promise<R>) {
-    let wasDeviceReady = false;
-
     try {
       await this.connection.beforeOperation();
       await this.makeDeviceReady();
-      wasDeviceReady = true;
 
       const result = await operation();
 
-      await this.ensureIfIdle();
       await this.connection.afterOperation();
 
       return result;
     } catch (error) {
-      if (wasDeviceReady) {
-        await this.ensureIfIdle();
-      }
       await this.connection.afterOperation();
       throw error;
     }
@@ -375,7 +370,7 @@ export class SDK implements ISDK {
     }
   }
 
-  private async ensureIfIdle() {
+  private async ensureIfUSBIdle() {
     try {
       if (await this.isSupported()) {
         await operations.waitForIdle({

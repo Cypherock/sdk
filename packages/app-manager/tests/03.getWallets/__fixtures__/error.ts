@@ -14,12 +14,11 @@ const withUnknownError: IGetWalletsTestCase = {
 };
 
 const withInvalidAppId: IGetWalletsTestCase = {
-  name: 'With msg from device',
+  name: 'With corrupt msg from device',
   query: new Uint8Array([18, 2, 10, 0]),
   result: new Uint8Array([18, 4, 18, 2, 16, 0]),
   errorInstance: DeviceAppError,
-  errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
+  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.CORRUPT_DATA],
 };
 
 const error: IGetWalletsTestCase[] = [withUnknownError, withInvalidAppId];

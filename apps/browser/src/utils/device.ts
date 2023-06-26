@@ -6,5 +6,5 @@ export default async function run() {
 
   const managerApp = await ManagerApp.create(connection);
 
-  console.log(managerApp);
+  console.log(await managerApp.getDeviceInfo());
 }

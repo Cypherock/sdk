@@ -58,6 +58,7 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
     );
 
     const retrunObj = result[this.resultKey] as Result[R];
+    parseCommonError(result.commonError);
     assertOrThrowInvalidResult(retrunObj);
     parseCommonError((result[this.resultKey] as any).commonError);
 

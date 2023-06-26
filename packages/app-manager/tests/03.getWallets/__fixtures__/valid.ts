@@ -25,6 +25,7 @@ const withOneWallet: IGetWalletsTestCase = {
         name: 'Cypherock',
         hasPin: true,
         hasPassphrase: false,
+        isValid: false,
       },
     ],
   },
@@ -53,6 +54,7 @@ const withFourWallets: IGetWalletsTestCase = {
         name: 'Cypherock',
         hasPin: true,
         hasPassphrase: false,
+        isValid: false,
       },
       {
         id: new Uint8Array([
@@ -62,6 +64,7 @@ const withFourWallets: IGetWalletsTestCase = {
         name: 'Wallet random!!!',
         hasPin: false,
         hasPassphrase: false,
+        isValid: false,
       },
       {
         id: new Uint8Array([
@@ -71,6 +74,7 @@ const withFourWallets: IGetWalletsTestCase = {
         name: 'my@email wallet',
         hasPin: true,
         hasPassphrase: false,
+        isValid: false,
       },
       {
         id: new Uint8Array([
@@ -80,6 +84,7 @@ const withFourWallets: IGetWalletsTestCase = {
         name: '',
         hasPin: false,
         hasPassphrase: false,
+        isValid: false,
       },
     ],
   },
