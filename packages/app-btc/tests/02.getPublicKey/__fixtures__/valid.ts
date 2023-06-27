@@ -8,13 +8,7 @@ const requestAddress: IGetPublicKeyTestCase = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [
-      { index: 44, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: false },
-      { index: 0, isHardened: false },
-    ],
+    derivationPath: [44, 0, 0, 0, 0],
   },
   queries: [
     {
