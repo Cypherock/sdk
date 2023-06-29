@@ -57,10 +57,21 @@ export const getXpubs = async (
     },
   });
 
-  const result = await helper.waitForResult();
-  assertOrThrowInvalidResult(result.result);
+  let xpubs: string[] = [];
+  const hasMore = () => xpubs.length !== params.derivationPaths.length;
+  do {
+    const result = await helper.waitForResult();
+    assertOrThrowInvalidResult(result.result);
+    xpubs = [...xpubs, ...result.result.xpubs];
+    forceStatusUpdate(GetXpubsStatus.GET_XPUBS_STATUS_CARD);
+    if (hasMore()) {
+      await helper.sendQuery({
+        fetchNext: {},
+      });
+    }
+  } while (hasMore());
 
-  forceStatusUpdate(GetXpubsStatus.GET_XPUBS_STATUS_CARD);
-
-  return result.result;
+  return {
+    xpubs,
+  };
 };
