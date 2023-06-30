@@ -5,3 +5,4 @@ export * from './createStatusListener';
 export * from './logger';
 export * from './config';
 export * from './version';
+export * from './querystring';
