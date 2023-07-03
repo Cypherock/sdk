@@ -1,5 +1,10 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
+import {
+  DeviceAppError,
+  DeviceAppErrorType,
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
+} from '@cypherock/sdk-interfaces';
 import { IVersion } from '../../../proto/types';
 
 const createVersionHex = (version: IVersion) => {
@@ -16,7 +21,7 @@ export const handleLegacyDevice = async (sdk: ISDK, version: IVersion) => {
   let isConfirmed = false;
   const firmwareVersionHex = createVersionHex(version);
 
-  if (await sdk.deprecated.isLegacyOperationSupported()) {
+  if (await sdk.deprecated.isRawOperationSupported()) {
     const sequenceNumber = await sdk.getNewSequenceNumber();
 
     await sdk.deprecated.sendCommand({
@@ -32,9 +37,9 @@ export const handleLegacyDevice = async (sdk: ISDK, version: IVersion) => {
 
     isConfirmed = updateConfirmed.data.startsWith('01');
   } else {
-    await sdk.deprecated.sendLegacyCommand(77, firmwareVersionHex);
-    const updateConfirmed = await sdk.deprecated.receiveLegacyCommand([78]);
-    isConfirmed = updateConfirmed.data.startsWith('01');
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.DEVICE_NOT_SUPPORTED,
+    );
   }
 
   if (!isConfirmed) {
