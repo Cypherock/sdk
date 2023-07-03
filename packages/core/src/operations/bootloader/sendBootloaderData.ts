@@ -247,9 +247,9 @@ export const sendBootloaderData = async (
             const errorMsg = await writePacket(
               connection,
               hexToUint8Array(d),
-              // Wait for 10 sec for the 1st packet ACK, there may be heavy processing task
+              // Wait for 10 sec for the 1st and last packet ACK, there may be heavy processing task
               // in device after 1st packet.
-              index === 0
+              index === 0 || index === dataList.length - 1
                 ? { timeout: options?.firstTimeout ?? 10000 }
                 : { timeout: options?.timeout },
             );

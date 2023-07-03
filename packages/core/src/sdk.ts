@@ -353,11 +353,14 @@ export class SDK implements ISDK {
 
       const result = await operation();
 
-      await this.connection.afterOperation();
+      if (await this.connection.isConnected())
+        await this.connection.afterOperation();
 
       return result;
     } catch (error) {
-      await this.connection.afterOperation();
+      if (await this.connection.isConnected())
+        await this.connection.afterOperation();
+
       throw error;
     }
   }

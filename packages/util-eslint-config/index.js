@@ -20,6 +20,7 @@ module.exports = {
   rules: {
     'import/extensions': 0,
     'import/prefer-default-export': 0,
+    'no-continue': 0,
     'no-await-in-loop': 0,
     'no-restricted-syntax': 0,
     'no-shadow': 'off',

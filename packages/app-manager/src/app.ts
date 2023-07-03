@@ -2,6 +2,8 @@ import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { SDK } from '@cypherock/sdk-core';
 
 import * as operations from './operations';
+import { firmwareService } from './services';
+import { GetLatestFirmwareOptions } from './services/firmware';
 
 export class ManagerApp {
   private readonly sdk: SDK;
@@ -65,5 +67,9 @@ export class ManagerApp {
 
   public async destroy() {
     return this.sdk.destroy();
+  }
+
+  public static async getLatestFirmware(params?: GetLatestFirmwareOptions) {
+    return firmwareService.getLatest(params);
   }
 }

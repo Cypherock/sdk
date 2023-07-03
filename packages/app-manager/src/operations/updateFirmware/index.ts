@@ -1,13 +1,15 @@
 import { ISDK } from '@cypherock/sdk-core';
 import {
   createLoggerWithPrefix,
+  createStatusListener,
   stringToVersion,
   uint8ArrayToHex,
 } from '@cypherock/sdk-utils';
 import {
-  FirmwareUpdateError,
   IFirmwareUpdateErrorResponse,
-} from '../../proto/generated/types';
+  FirmwareUpdateError,
+  UpdateFirmwareStatus,
+} from '../../proto/types';
 import { firmwareService } from '../../services';
 import {
   assertOrThrowInvalidResult,
@@ -15,7 +17,11 @@ import {
   logger as rootLogger,
 } from '../../utils';
 import { UpdateFirmwareError, UpdateFirmwareErrorType } from './error';
-import { createBootloaderSDK, waitForReconnection } from './helpers';
+import {
+  createBootloaderSDK,
+  handleLegacyDevice as takeLegacyDeviceToBootloaderMode,
+  waitForReconnection,
+} from './helpers';
 import { IUpdateFirmwareParams } from './types';
 
 export * from './types';
@@ -45,13 +51,26 @@ export const updateFirmware = async (
   logger.info('Started');
 
   let { firmware, version } = params;
+  const { onEvent } = params;
+
+  const { forceStatusUpdate } = createStatusListener({
+    enums: UpdateFirmwareStatus,
+    onEvent,
+    logger,
+  });
 
   if (!firmware || !version) {
     logger.info('Fetching latest firmware version');
 
     const latestFirmware = await firmwareService.getLatest({
       prerelease: params.allowPrerelease,
+      doDownload: true,
     });
+
+    if (!latestFirmware.firmware) {
+      throw new Error('No downloaded firmware found');
+    }
+
     firmware = latestFirmware.firmware;
     version = stringToVersion(latestFirmware.version);
   }
@@ -61,16 +80,23 @@ export const updateFirmware = async (
   const helper = new OperationHelper(sdk, 'firmwareUpdate', 'firmwareUpdate');
 
   if (!(await sdk.isInBootloader())) {
-    await helper.sendQuery({ initiate: { version } });
-    const result = await helper.waitForResult();
-    parseFirmwareUpdateError(result.error);
-    logger.verbose('FirmwareUpdateConfirmedResponse', { result });
-    assertOrThrowInvalidResult(result.confirmed);
+    if (await sdk.isSupported()) {
+      await helper.sendQuery({ initiate: { version } });
+      const result = await helper.waitForResult();
+      parseFirmwareUpdateError(result.error);
+      logger.verbose('FirmwareUpdateConfirmedResponse', { result });
+      assertOrThrowInvalidResult(result.confirmed);
+    } else {
+      await takeLegacyDeviceToBootloaderMode(sdk, version);
+    }
   }
+
+  forceStatusUpdate(UpdateFirmwareStatus.UPDATE_FIRMWARE_STATUS_USER_CONFIRMED);
 
   const bootloaderSdk = await createBootloaderSDK(
     sdk,
-    params.createSerialportConnection,
+    params.getDevices,
+    params.createConnection,
   );
 
   await bootloaderSdk.beforeOperation();
@@ -81,7 +107,7 @@ export const updateFirmware = async (
   await bootloaderSdk.destroy();
 
   try {
-    await waitForReconnection(params.createConnection);
+    await waitForReconnection(params.getDevices, params.createConnection);
   } catch (error) {
     logger.warn('Failed to reconnect to device');
     logger.warn(error);
