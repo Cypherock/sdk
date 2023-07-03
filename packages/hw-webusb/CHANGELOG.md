@@ -1,5 +1,13 @@
 # @cypherock/sdk-hw-webusb
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [[`8dbee53`](https://github.com/Cypherock/sdk/commit/8dbee53a232ce117f88a95a7095595f8f3b00f22)]:
+  - @cypherock/sdk-utils@0.0.8
+  - @cypherock/sdk-interfaces@0.0.6
+
 ## 0.0.6
 
 ### Patch Changes
