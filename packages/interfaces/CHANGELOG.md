@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.7
+
+### Patch Changes
+
+- [#30](https://github.com/Cypherock/sdk/pull/30) [`0608afb`](https://github.com/Cypherock/sdk/commit/0608afbdab2446027437ba41e6cceae0504a2050) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - removed unused errors
+
 ## 0.0.6
 
 ### Patch Changes
