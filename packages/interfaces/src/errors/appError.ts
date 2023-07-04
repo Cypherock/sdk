@@ -3,7 +3,6 @@ import { DeviceError } from './deviceError';
 export enum DeviceAppErrorType {
   UNKNOWN_ERROR = 'APP_0000',
 
-  NO_WORKING_PACKET_VERSION = 'APP_0100',
   EXECUTING_OTHER_COMMAND = 'APP_0101',
   PROCESS_ABORTED = 'APP_0102',
   DEVICE_ABORT = 'APP_0103',
@@ -37,9 +36,6 @@ type CodeToErrorMap = {
 export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.UNKNOWN_ERROR]: {
     message: 'Unknown application error',
-  },
-  [DeviceAppErrorType.NO_WORKING_PACKET_VERSION]: {
-    message: 'No working packet version found',
   },
   [DeviceAppErrorType.EXECUTING_OTHER_COMMAND]: {
     message: 'The device is executing some other command',
