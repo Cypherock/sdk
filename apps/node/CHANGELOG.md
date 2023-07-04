@@ -1,5 +1,16 @@
 # nodejs-test
 
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies [[`0608afb`](https://github.com/Cypherock/sdk/commit/0608afbdab2446027437ba41e6cceae0504a2050)]:
+  - @cypherock/sdk-interfaces@0.0.7
+  - @cypherock/sdk-app-manager@0.0.12
+  - @cypherock/sdk-core@0.0.11
+  - @cypherock/sdk-hw-hid@0.0.8
+  - @cypherock/sdk-hw-serialport@0.0.8
+
 ## 0.0.11
 
 ### Patch Changes

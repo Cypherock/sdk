@@ -1,5 +1,12 @@
 # @cypherock/sdk-utils
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`0608afb`](https://github.com/Cypherock/sdk/commit/0608afbdab2446027437ba41e6cceae0504a2050)]:
+  - @cypherock/sdk-interfaces@0.0.7
+
 ## 0.0.8
 
 ### Patch Changes
