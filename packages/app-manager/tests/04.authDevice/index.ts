@@ -26,9 +26,7 @@ describe('managerApp.authDevice', () => {
       test(testCase.name, async () => {
         const onEvent = setupMocks(testCase);
 
-        const output = await managerApp.authDevice(onEvent);
-
-        expect(output).toEqual(testCase.output);
+        await managerApp.authDevice(onEvent);
 
         expectMockCalls(testCase);
       });
@@ -50,9 +48,9 @@ describe('managerApp.authDevice', () => {
   describe('should throw error when device returns error', () => {
     fixtures.error.forEach(testCase => {
       test(testCase.name, async () => {
-        setupMocks(testCase);
+        const onEvent = setupMocks(testCase);
 
-        const authDevicePromise = managerApp.authDevice();
+        const authDevicePromise = managerApp.authDevice(onEvent);
 
         await expect(authDevicePromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {

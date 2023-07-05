@@ -1,4 +1,5 @@
 import { ISDK } from '@cypherock/sdk-core';
+import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 import {
   assert,
   createLoggerWithPrefix,
@@ -84,7 +85,7 @@ const verifyChallengeSignature = async (params: {
 export const authCard = async (
   sdk: ISDK,
   params?: IAuthCardParams,
-): Promise<boolean> => {
+): Promise<void> => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (params?.cardNumber !== undefined && params.cardNumber !== null) {
     assert(
@@ -125,15 +126,16 @@ export const authCard = async (
     forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_PAIRING_DONE);
 
     logger.info('Completed', { verified: true });
-    return true;
   } catch (error) {
     if (error === cardNotVerifiedError) {
       await helper.sendQuery({ result: { verified: false } });
       const result = await helper.waitForResult();
       logger.verbose('AuthCardResponse', { result });
       assertOrThrowInvalidResult(result.flowComplete);
+
       logger.info('Completed', { verified: false });
-      return false;
+
+      throw new DeviceAppError(DeviceAppErrorType.CARD_AUTH_FAILED);
     }
 
     logger.info('Failed');

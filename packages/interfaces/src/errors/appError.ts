@@ -25,6 +25,9 @@ export enum DeviceAppErrorType {
   USER_REJECTION = 'APP_0501',
 
   CORRUPT_DATA = 'APP_0600',
+
+  DEVICE_AUTH_FAILED = 'APP_0700',
+  CARD_AUTH_FAILED = 'APP_0701',
 }
 
 type CodeToErrorMap = {
@@ -83,6 +86,12 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   },
   [DeviceAppErrorType.CORRUPT_DATA]: {
     message: 'Corrupt data error from device',
+  },
+  [DeviceAppErrorType.DEVICE_AUTH_FAILED]: {
+    message: 'Device seems to be compromised. Contact Cypherock support',
+  },
+  [DeviceAppErrorType.CARD_AUTH_FAILED]: {
+    message: 'Card seems to be compromised. Contact Cypherock support',
   },
 };
 

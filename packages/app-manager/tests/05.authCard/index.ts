@@ -26,12 +26,10 @@ describe('managerApp.authCard', () => {
       test(testCase.name, async () => {
         const onEvent = setupMocks(testCase);
 
-        const output = await managerApp.authCard({
+        await managerApp.authCard({
           cardNumber: testCase.params?.cardNumber,
           onEvent,
         });
-
-        expect(output).toEqual(testCase.output);
 
         expectMockCalls(testCase);
       });
@@ -80,9 +78,12 @@ describe('managerApp.authCard', () => {
   describe('should throw error when device returns error', () => {
     fixtures.error.forEach(testCase => {
       test(testCase.name, async () => {
-        setupMocks(testCase);
+        const onEvent = setupMocks(testCase);
 
-        const rejectedPromise = managerApp.authCard(testCase.params);
+        const rejectedPromise = managerApp.authCard({
+          ...testCase.params,
+          onEvent,
+        });
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
 
