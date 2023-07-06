@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.8
+
+### Patch Changes
+
+- [#32](https://github.com/Cypherock/sdk/pull/32) [`7f0e714`](https://github.com/Cypherock/sdk/commit/7f0e71410c79b96d5068d6406d1a1d8ca81d18be) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - auth operations to throw error when fail instead of returning false
+
 ## 0.0.7
 
 ### Patch Changes
