@@ -12,9 +12,9 @@ export function setupMocks(testCase: IAuthDeviceTestCase) {
   verificationServiceMocks.verifySerialSignature.mockReturnValueOnce(
     testCase.mocks.challenge,
   );
-  verificationServiceMocks.verifyChallengeSignature.mockReturnValueOnce(
-    testCase.mocks.challengeVerified,
-  );
+  verificationServiceMocks.verifyChallengeSignature.mockReturnValueOnce({
+    isVerified: testCase.mocks.challengeVerified,
+  });
   getDeviceInfoMock.mockReturnValueOnce(testCase.mocks.deviceInfo);
 
   return onEvent;

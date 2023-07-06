@@ -35,10 +35,8 @@ export class ManagerApp {
     return this.sdk.runOperation(() => operations.getWallets(this.sdk));
   }
 
-  public async authDevice(onEvent?: operations.AuthDeviceEventHandler) {
-    return this.sdk.runOperation(() =>
-      operations.authDevice(this.sdk, onEvent),
-    );
+  public async authDevice(params?: operations.IAuthDeviceParams) {
+    return this.sdk.runOperation(() => operations.authDevice(this.sdk, params));
   }
 
   public async authCard(params?: operations.IAuthCardParams) {

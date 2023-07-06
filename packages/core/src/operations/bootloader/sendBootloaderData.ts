@@ -135,14 +135,17 @@ const writePacket = (
       reject(err);
     });
 
-    timeout = setTimeout(() => {
-      cleanUp();
-      reject(
-        new DeviceCommunicationError(
-          DeviceCommunicationErrorType.WRITE_TIMEOUT,
-        ),
-      );
-    }, options?.timeout ?? 2000);
+    timeout = setTimeout(
+      () => {
+        cleanUp();
+        reject(
+          new DeviceCommunicationError(
+            DeviceCommunicationErrorType.WRITE_TIMEOUT,
+          ),
+        );
+      },
+      options?.timeout ?? 2000,
+    );
 
     recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
   });
@@ -206,14 +209,17 @@ const checkIfInReceivingMode = async (
       }
     }
 
-    timeout = setTimeout(() => {
-      cleanUp();
-      reject(
-        new DeviceBootloaderError(
-          DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE,
-        ),
-      );
-    }, options?.timeout ?? 2000);
+    timeout = setTimeout(
+      () => {
+        cleanUp();
+        reject(
+          new DeviceBootloaderError(
+            DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE,
+          ),
+        );
+      },
+      options?.timeout ?? 2000,
+    );
 
     recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
   });

@@ -39,7 +39,7 @@ describe('deviceAuth Service', () => {
           );
 
           const challenge = await verifyChallengeSignature(testCase.params);
-          expect(challenge).toEqual(testCase.result);
+          expect(challenge.isVerified).toEqual(testCase.result);
           expect(httpMocks.post.mock.calls).toEqual(
             testCase.httpPostMocks.calls,
           );
