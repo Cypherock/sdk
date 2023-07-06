@@ -1,5 +1,9 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { DeviceState } from '@cypherock/sdk-interfaces';
+import {
+  DeviceAppError,
+  DeviceAppErrorType,
+  DeviceState,
+} from '@cypherock/sdk-interfaces';
 import {
   createLoggerWithPrefix,
   createStatusListener,
@@ -82,7 +86,7 @@ const verifyChallengeSignature = async (params: {
 export const authDevice = async (
   sdk: ISDK,
   onEvent?: AuthDeviceEventHandler,
-): Promise<boolean> => {
+): Promise<void> => {
   const helper = new OperationHelper(sdk, 'authDevice', 'authDevice');
 
   try {
@@ -119,7 +123,6 @@ export const authDevice = async (
     assertOrThrowInvalidResult(result.flowComplete);
 
     logger.info('Completed', { verified: true });
-    return true;
   } catch (error) {
     if (error === deviceNotVerifiedError) {
       await helper.sendQuery({ result: { verified: false } });
@@ -128,7 +131,8 @@ export const authDevice = async (
       assertOrThrowInvalidResult(result.flowComplete);
 
       logger.info('Completed', { verified: false });
-      return false;
+
+      throw new DeviceAppError(DeviceAppErrorType.DEVICE_AUTH_FAILED);
     }
 
     logger.info('Failed');
