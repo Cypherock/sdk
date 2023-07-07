@@ -19,7 +19,7 @@ import {
   logger as rootLogger,
 } from '../../utils';
 import { getDeviceInfo } from '../getDeviceInfo';
-import { AuthDeviceEventHandler } from './types';
+import { IAuthDeviceParams } from './types';
 
 export * from './types';
 
@@ -61,8 +61,18 @@ const verifyChallengeSignature = async (params: {
   challenge: Uint8Array;
   serial: Uint8Array;
   firmwareVersion: string;
+  email?: string;
+  cysyncVersion?: string;
 }) => {
-  const { helper, onStatus, challenge, serial, firmwareVersion } = params;
+  const {
+    helper,
+    onStatus,
+    challenge,
+    serial,
+    firmwareVersion,
+    email,
+    cysyncVersion,
+  } = params;
 
   await helper.sendQuery({ challenge: { challenge } });
 
@@ -70,13 +80,17 @@ const verifyChallengeSignature = async (params: {
   logger.verbose('AuthDeviceResponse', { result });
   assertOrThrowInvalidResult(result.challengeSignature);
 
-  const isVerified = await deviceAuthService.verifyDeviceChallengeSignature({
-    ...result.challengeSignature,
-    challenge,
-    serial,
-    isTestApp: (await helper.sdk.getDeviceState()) === DeviceState.INITIAL,
-    firmwareVersion,
-  });
+  const { isVerified } = await deviceAuthService.verifyDeviceChallengeSignature(
+    {
+      ...result.challengeSignature,
+      challenge,
+      serial,
+      isTestApp: (await helper.sdk.getDeviceState()) === DeviceState.INITIAL,
+      firmwareVersion,
+      email,
+      cysyncVersion,
+    },
+  );
 
   if (!isVerified) {
     throw deviceNotVerifiedError;
@@ -85,8 +99,10 @@ const verifyChallengeSignature = async (params: {
 
 export const authDevice = async (
   sdk: ISDK,
-  onEvent?: AuthDeviceEventHandler,
+  params?: IAuthDeviceParams,
 ): Promise<void> => {
+  const { onEvent, email, cysyncVersion } = params ?? {};
+
   const helper = new OperationHelper(sdk, 'authDevice', 'authDevice');
 
   try {
@@ -115,6 +131,8 @@ export const authDevice = async (
       serial,
       challenge,
       firmwareVersion,
+      email,
+      cysyncVersion,
     });
 
     await helper.sendQuery({ result: { verified: true } });

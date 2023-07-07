@@ -20,5 +20,6 @@ export const verifyCardChallengeSignature = async (params: {
   challenge: Uint8Array;
   email?: string;
   cysyncVersion?: string;
-}): Promise<string | undefined> =>
-  verifyChallengeSignature({ ...params, firmwareVersion: '0.0.0' });
+  onlyFailure?: boolean;
+  sessionId?: string;
+}) => verifyChallengeSignature({ ...params, firmwareVersion: '0.0.0' });

@@ -21,4 +21,4 @@ export const verifyDeviceChallengeSignature = async (params: {
   isTestApp: boolean;
   email?: string;
   cysyncVersion?: string;
-}): Promise<string | undefined> => verifyChallengeSignature(params);
+}) => verifyChallengeSignature(params);

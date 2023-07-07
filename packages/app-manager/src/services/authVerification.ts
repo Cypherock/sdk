@@ -38,7 +38,9 @@ export const verifyChallengeSignature = async (params: {
   isTestApp?: boolean;
   email?: string;
   cysyncVersion?: string;
-}): Promise<string | undefined> => {
+  sessionId?: string;
+  onlyFailure?: boolean;
+}) => {
   const verifyParams = {
     serial: uint8ArrayToHex(params.serial),
     signature: uint8ArrayToHex(params.signature),
@@ -50,9 +52,14 @@ export const verifyChallengeSignature = async (params: {
     isTestApp: params.isTestApp,
     email: params.email,
     cysyncVersion: params.cysyncVersion,
+    sessionId: params.sessionId,
+    onlyFailure: params.onlyFailure,
   };
 
   const res = await http.post(`${baseURL}/challenge`, verifyParams);
 
-  return res.data.verified || false;
+  return {
+    isVerified: res.data.verified || false,
+    sessionId: res.data.sessionId as string | undefined,
+  };
 };
