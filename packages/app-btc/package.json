@@ -1,6 +1,6 @@
 {
   "name": "@cypherock/sdk-app-btc",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -35,7 +35,7 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@cypherock/sdk-core": "workspace:^0.0.12",
+    "@cypherock/sdk-core": "workspace:^0.0.13",
     "@cypherock/sdk-interfaces": "workspace:^0.0.8",
     "@cypherock/sdk-utils": "workspace:^0.0.10",
     "long": "^5.2.1",
