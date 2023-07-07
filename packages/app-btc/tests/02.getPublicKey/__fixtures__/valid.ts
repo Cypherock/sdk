@@ -1,4 +1,5 @@
 import { IGetPublicKeyTestCase } from './types';
+import { Query } from '../../../src/proto/generated/btc/core';
 
 const requestAddress: IGetPublicKeyTestCase = {
   name: 'Request Address',
@@ -8,17 +9,31 @@ const requestAddress: IGetPublicKeyTestCase = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [44, 0, 0, 0, 0],
+    derivationPath: [
+      0x8000002c, 0x80000000, 0x80000000, 0x80000000, 0x80000000,
+    ],
   },
   queries: [
     {
       name: 'Initate query',
-      data: new Uint8Array([
-        10, 60, 10, 58, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
-        38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 4, 8, 44, 16, 1, 18, 2, 16, 1, 18,
-        2, 16, 1, 18, 2, 16, 0, 18, 2, 16, 0,
-      ]),
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            getPublicKey: {
+              initiate: {
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187, 121, 64,
+                ]),
+                derivationPath: [
+                  0x8000002c, 0x80000000, 0x80000000, 0x80000000, 0x80000000,
+                ],
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
   results: [
@@ -47,7 +62,7 @@ const requestAddress: IGetPublicKeyTestCase = {
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
   output: {
-    publicKey: '1L8Qb1sKPPNMRbuSTj6W1WXnGfzxrSMfZR',
+    publicKey: new TextEncoder().encode('1L8Qb1sKPPNMRbuSTj6W1WXnGfzxrSMfZR'),
   },
 };
 
