@@ -3,7 +3,6 @@ import { DeviceError } from './deviceError';
 export enum DeviceAppErrorType {
   UNKNOWN_ERROR = 'APP_0000',
 
-  NO_WORKING_PACKET_VERSION = 'APP_0100',
   EXECUTING_OTHER_COMMAND = 'APP_0101',
   PROCESS_ABORTED = 'APP_0102',
   DEVICE_ABORT = 'APP_0103',
@@ -25,7 +24,10 @@ export enum DeviceAppErrorType {
 
   USER_REJECTION = 'APP_0501',
 
-  CORRUPT_DATA = 'TODO_CORRUPT_DATA_ERROR', // TODO: add corrupt data error
+  CORRUPT_DATA = 'APP_0600',
+
+  DEVICE_AUTH_FAILED = 'APP_0700',
+  CARD_AUTH_FAILED = 'APP_0701',
 }
 
 type CodeToErrorMap = {
@@ -37,9 +39,6 @@ type CodeToErrorMap = {
 export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.UNKNOWN_ERROR]: {
     message: 'Unknown application error',
-  },
-  [DeviceAppErrorType.NO_WORKING_PACKET_VERSION]: {
-    message: 'No working packet version found',
   },
   [DeviceAppErrorType.EXECUTING_OTHER_COMMAND]: {
     message: 'The device is executing some other command',
@@ -86,7 +85,13 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
     message: 'User rejected the operation',
   },
   [DeviceAppErrorType.CORRUPT_DATA]: {
-    message: 'Corrupted data received', // TODO: check corrupt message error
+    message: 'Corrupt data error from device',
+  },
+  [DeviceAppErrorType.DEVICE_AUTH_FAILED]: {
+    message: 'Device seems to be compromised. Contact Cypherock support',
+  },
+  [DeviceAppErrorType.CARD_AUTH_FAILED]: {
+    message: 'Card seems to be compromised. Contact Cypherock support',
   },
 };
 

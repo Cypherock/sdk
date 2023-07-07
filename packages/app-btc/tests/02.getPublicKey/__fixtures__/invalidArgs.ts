@@ -32,13 +32,7 @@ const invalidArgs: IGetPublicKeyTestCase[] = [
     name: 'No wallet id',
     ...commonParams,
     params: {
-      derivationPath: [
-        { index: 44, isHardened: true },
-        { index: 0, isHardened: true },
-        { index: 0, isHardened: true },
-        { index: 0, isHardened: false },
-        { index: 0, isHardened: false },
-      ],
+      derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000, 0, 0],
     } as any,
   },
   {
@@ -46,7 +40,7 @@ const invalidArgs: IGetPublicKeyTestCase[] = [
     ...commonParams,
     params: {
       walletId: new Uint8Array([10]),
-      derivationPath: [{}, {}, {}],
+      derivationPath: [0, 0, 0],
     } as any,
   },
 ];

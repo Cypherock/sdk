@@ -61,8 +61,7 @@ const withInvalidAppId: IGetPublicKeysTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
+  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.CORRUPT_DATA],
 };
 
 const error: IGetPublicKeysTestCase[] = [withUnknownError, withInvalidAppId];

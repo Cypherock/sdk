@@ -15,7 +15,7 @@ const withUnknownError: ITrainCardTestCase = {
 };
 
 const withInvalidAppId: ITrainCardTestCase = {
-  name: 'With msg from device',
+  name: 'With invalid msg from device',
   queries: [{ name: 'Initiate', data: new Uint8Array([58, 2, 10, 0]) }],
   results: [{ name: 'Result', data: new Uint8Array([58, 4, 18, 2, 0]) }],
   errorInstance: DeviceAppError,

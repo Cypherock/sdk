@@ -34,7 +34,7 @@ const invalidArgs: IGetXpubsTestCase[] = [
     params: {
       derivationPaths: [
         {
-          path: [44, 0, 0],
+          path: [0x80000000 + 44, 0x80000000, 0x80000000],
         },
       ],
     } as any,
@@ -54,7 +54,7 @@ const invalidArgs: IGetXpubsTestCase[] = [
       walletId: new Uint8Array([10]),
       derivationPaths: [
         {
-          path: [44, 0],
+          path: [0x80000000 + 44, 0x80000000],
         },
       ],
     },
@@ -66,7 +66,7 @@ const invalidArgs: IGetXpubsTestCase[] = [
       walletId: new Uint8Array([10]),
       derivationPaths: [
         {
-          path: [44, 0, 0, 0],
+          path: [0x80000000 + 44, 0x80000000, 0x80000000, 0x80000000],
         },
       ],
     },

@@ -1,6 +1,6 @@
 {
   "name": "@cypherock/sdk-utils",
-  "version": "0.0.6",
+  "version": "0.0.10",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "@jest/globals": "^29.4.1",
     "@types/jest": "^29.4.0",
     "@types/node": "18.11.18",
+    "@types/semver": "^7.5.0",
     "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
     "jest": "^29.4.1",
@@ -31,9 +32,10 @@
   },
   "dependencies": {
     "@aws-crypto/sha256-browser": "^4.0.0",
-    "@cypherock/sdk-interfaces": "workspace:^0.0.5",
+    "@cypherock/sdk-interfaces": "workspace:^0.0.8",
     "compare-versions": "6.0.0-rc.1",
     "protobufjs": "^7.2.2",
+    "semver": "^7.5.2",
     "uuid": "^9.0.0"
   },
   "lint-staged": {

@@ -135,14 +135,17 @@ const writePacket = (
       reject(err);
     });
 
-    timeout = setTimeout(() => {
-      cleanUp();
-      reject(
-        new DeviceCommunicationError(
-          DeviceCommunicationErrorType.WRITE_TIMEOUT,
-        ),
-      );
-    }, options?.timeout ?? 2000);
+    timeout = setTimeout(
+      () => {
+        cleanUp();
+        reject(
+          new DeviceCommunicationError(
+            DeviceCommunicationErrorType.WRITE_TIMEOUT,
+          ),
+        );
+      },
+      options?.timeout ?? 2000,
+    );
 
     recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
   });
@@ -206,14 +209,17 @@ const checkIfInReceivingMode = async (
       }
     }
 
-    timeout = setTimeout(() => {
-      cleanUp();
-      reject(
-        new DeviceBootloaderError(
-          DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE,
-        ),
-      );
-    }, options?.timeout ?? 2000);
+    timeout = setTimeout(
+      () => {
+        cleanUp();
+        reject(
+          new DeviceBootloaderError(
+            DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE,
+          ),
+        );
+      },
+      options?.timeout ?? 2000,
+    );
 
     recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
   });
@@ -247,9 +253,9 @@ export const sendBootloaderData = async (
             const errorMsg = await writePacket(
               connection,
               hexToUint8Array(d),
-              // Wait for 10 sec for the 1st packet ACK, there may be heavy processing task
+              // Wait for 10 sec for the 1st and last packet ACK, there may be heavy processing task
               // in device after 1st packet.
-              index === 0
+              index === 0 || index === dataList.length - 1
                 ? { timeout: options?.firstTimeout ?? 10000 }
                 : { timeout: options?.timeout },
             );

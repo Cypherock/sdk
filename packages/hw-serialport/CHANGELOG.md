@@ -1,5 +1,37 @@
 # @cypherock/sdk-hw-serialport
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`7f0e714`](https://github.com/Cypherock/sdk/commit/7f0e71410c79b96d5068d6406d1a1d8ca81d18be)]:
+  - @cypherock/sdk-interfaces@0.0.8
+  - @cypherock/sdk-utils@0.0.10
+
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [[`0608afb`](https://github.com/Cypherock/sdk/commit/0608afbdab2446027437ba41e6cceae0504a2050)]:
+  - @cypherock/sdk-interfaces@0.0.7
+  - @cypherock/sdk-utils@0.0.9
+
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [[`8dbee53`](https://github.com/Cypherock/sdk/commit/8dbee53a232ce117f88a95a7095595f8f3b00f22)]:
+  - @cypherock/sdk-utils@0.0.8
+  - @cypherock/sdk-interfaces@0.0.6
+
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`94d4aef`](https://github.com/Cypherock/sdk/commit/94d4aef281617c818745e2eac4bf724bf13dead9)]:
+  - @cypherock/sdk-interfaces@0.0.6
+  - @cypherock/sdk-utils@0.0.7
+
 ## 0.0.5
 
 ### Patch Changes

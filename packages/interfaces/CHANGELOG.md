@@ -1,5 +1,23 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.8
+
+### Patch Changes
+
+- [#32](https://github.com/Cypherock/sdk/pull/32) [`7f0e714`](https://github.com/Cypherock/sdk/commit/7f0e71410c79b96d5068d6406d1a1d8ca81d18be) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - auth operations to throw error when fail instead of returning false
+
+## 0.0.7
+
+### Patch Changes
+
+- [#30](https://github.com/Cypherock/sdk/pull/30) [`0608afb`](https://github.com/Cypherock/sdk/commit/0608afbdab2446027437ba41e6cceae0504a2050) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - removed unused errors
+
+## 0.0.6
+
+### Patch Changes
+
+- [#25](https://github.com/Cypherock/sdk/pull/25) [`94d4aef`](https://github.com/Cypherock/sdk/commit/94d4aef281617c818745e2eac4bf724bf13dead9) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added firmware update, app level error handling and updated data types
+
 ## 0.0.5
 
 ### Patch Changes

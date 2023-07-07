@@ -5,10 +5,9 @@ export enum DeviceCommunicationErrorType {
 
   UNKNOWN_COMMUNICATION_ERROR = 'COM_0100',
   WRITE_ERROR = 'COM_0101',
-  TIMEOUT_ERROR = 'COM_0102',
-  WRITE_TIMEOUT = 'COM_0103',
-  READ_TIMEOUT = 'COM_0104',
-  WRITE_REJECTED = 'COM_0105',
+  WRITE_TIMEOUT = 'COM_0102',
+  READ_TIMEOUT = 'COM_0103',
+  WRITE_REJECTED = 'COM_0104',
 }
 
 type CodeToErrorMap = {
@@ -26,10 +25,6 @@ export const deviceCommunicationErrorTypeDetails: CodeToErrorMap = {
   },
   [DeviceCommunicationErrorType.WRITE_ERROR]: {
     message: 'Unable to write packet to the device',
-  },
-
-  [DeviceCommunicationErrorType.TIMEOUT_ERROR]: {
-    message: 'Timeout Error due to write/read',
   },
   [DeviceCommunicationErrorType.WRITE_TIMEOUT]: {
     message: 'Did not receive ACK of sent packet on time',

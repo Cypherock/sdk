@@ -1,5 +1,51 @@
 # browser-test
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [[`7f0e714`](https://github.com/Cypherock/sdk/commit/7f0e71410c79b96d5068d6406d1a1d8ca81d18be)]:
+  - @cypherock/sdk-app-manager@0.0.13
+  - @cypherock/sdk-core@0.0.12
+  - @cypherock/sdk-hw-webusb@0.0.9
+
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @cypherock/sdk-app-manager@0.0.12
+  - @cypherock/sdk-core@0.0.11
+  - @cypherock/sdk-hw-webusb@0.0.8
+
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [[`8dbee53`](https://github.com/Cypherock/sdk/commit/8dbee53a232ce117f88a95a7095595f8f3b00f22)]:
+  - @cypherock/sdk-app-manager@0.0.11
+  - @cypherock/sdk-core@0.0.10
+  - @cypherock/sdk-hw-webusb@0.0.7
+
+## 0.0.10
+
+### Patch Changes
+
+- [#25](https://github.com/Cypherock/sdk/pull/25) [`94d4aef`](https://github.com/Cypherock/sdk/commit/94d4aef281617c818745e2eac4bf724bf13dead9) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added firmware update, app level error handling and updated data types
+
+- Updated dependencies [[`94d4aef`](https://github.com/Cypherock/sdk/commit/94d4aef281617c818745e2eac4bf724bf13dead9)]:
+  - @cypherock/sdk-app-manager@0.0.10
+  - @cypherock/sdk-core@0.0.9
+  - @cypherock/sdk-hw-webusb@0.0.6
+
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`aa0df04`](https://github.com/Cypherock/sdk/commit/aa0df04262c20484d5c745cd4ac1ab5fb6ca6b38)]:
+  - @cypherock/sdk-core@0.0.8
+  - @cypherock/sdk-app-manager@0.0.9
+
 ## 0.0.8
 
 ### Patch Changes

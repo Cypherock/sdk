@@ -11,7 +11,7 @@ const requestOneXpub: IGetXpubsTestCase = {
     ]),
     derivationPaths: [
       {
-        path: [44, 0, 0],
+        path: [0x80000000 + 44, 0x80000000, 0x80000000],
       },
     ],
   },
@@ -30,7 +30,7 @@ const requestOneXpub: IGetXpubsTestCase = {
                 ]),
                 derivationPaths: [
                   {
-                    path: [44, 0, 0],
+                    path: [0x80000000 + 44, 0x80000000, 0x80000000],
                   },
                 ],
               },
@@ -90,16 +90,16 @@ const requestFourXpubs: IGetXpubsTestCase = {
     ]),
     derivationPaths: [
       {
-        path: [44, 0, 0],
+        path: [0x80000000 + 44, 0x80000000, 0x80000000],
       },
       {
-        path: [44, 0, 0],
+        path: [0x80000000 + 44, 0x80000000, 0x80000000 + 1],
       },
       {
-        path: [44, 0, 0],
+        path: [0x80000000 + 44, 0x80000000, 0x80000000 + 2],
       },
       {
-        path: [44, 0, 0],
+        path: [0x80000000 + 44, 0x80000000, 0x80000000 + 3],
       },
     ],
   },
@@ -118,16 +118,16 @@ const requestFourXpubs: IGetXpubsTestCase = {
                 ]),
                 derivationPaths: [
                   {
-                    path: [44, 0, 0],
+                    path: [0x80000000 + 44, 0x80000000, 0x80000000],
                   },
                   {
-                    path: [44, 0, 0],
+                    path: [0x80000000 + 44, 0x80000000, 0x80000000 + 1],
                   },
                   {
-                    path: [44, 0, 0],
+                    path: [0x80000000 + 44, 0x80000000, 0x80000000 + 2],
                   },
                   {
-                    path: [44, 0, 0],
+                    path: [0x80000000 + 44, 0x80000000, 0x80000000 + 3],
                   },
                 ],
               },

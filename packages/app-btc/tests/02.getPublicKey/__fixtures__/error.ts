@@ -9,9 +9,7 @@ import { Query, Result } from '../../../src/proto/generated/btc/core';
 const commonParams = {
   params: {
     walletId: new Uint8Array([10]),
-    derivationPath: [
-      0x8000002c, 0x80000000, 0x80000000, 0x80000000, 0x80000000,
-    ],
+    derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000, 0, 0],
   },
   queries: [
     {
@@ -22,9 +20,7 @@ const commonParams = {
             getPublicKey: {
               initiate: {
                 walletId: new Uint8Array([10]),
-                derivationPath: [
-                  0x8000002c, 0x80000000, 0x80000000, 0x80000000, 0x80000000,
-                ],
+                derivationPath: [0x8000002c, 0x80000000, 0x80000000, 0, 0],
               },
             },
           }),

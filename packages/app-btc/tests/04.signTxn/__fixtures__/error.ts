@@ -5,7 +5,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { ISignTxnTestCase } from './types';
 import { Result } from '../../../src/proto/generated/btc/core';
-import { UserRejection } from '../../../src/proto/generated/error';
+import { DataFlow, UserRejection } from '../../../src/proto/generated/error';
 
 const commonParams = {
   params: {
@@ -87,12 +87,19 @@ const withInvalidAppId: ISignTxnTestCase = {
   results: [
     {
       name: 'error',
-      data: Uint8Array.from(Result.encode(Result.create({})).finish()),
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            commonError: {
+              corruptData: DataFlow.DATA_FLOW_INVALID_DATA,
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
+  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.CORRUPT_DATA],
 };
 
 const withUserRejection: ISignTxnTestCase = {

@@ -14,6 +14,7 @@ import { Status } from '../../encoders/proto/generated/core';
 
 import { writeCommand } from '../helpers/writeCommand';
 import canRetry from '../helpers/canRetry';
+import { waitForIdle } from './waitForIdle';
 
 export const sendAbort = async ({
   connection,
@@ -104,6 +105,8 @@ export const sendAbort = async ({
   if (!status) {
     throw new Error('Did not found status');
   }
+
+  await waitForIdle({ connection, version });
 
   return status;
 };

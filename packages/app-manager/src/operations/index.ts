@@ -5,3 +5,4 @@ export * from './authCard';
 export * from './getLogs';
 export * from './trainJoystick';
 export * from './trainCard';
+export * from './updateFirmware';
