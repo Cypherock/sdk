@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.14
+
+### Patch Changes
+
+- [#34](https://github.com/Cypherock/sdk/pull/34) [`b5688d4`](https://github.com/Cypherock/sdk/commit/b5688d4cd610d03f2fa7e2548544a241a8989aec) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added email auth
+
 ## 0.0.13
 
 ### Patch Changes
