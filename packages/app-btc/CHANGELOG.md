@@ -1,5 +1,14 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.13
+
+### Patch Changes
+
+- [#28](https://github.com/Cypherock/sdk/pull/28) [`55d7714`](https://github.com/Cypherock/sdk/commit/55d77144359eb4cf85491f3364f5eb9a93c155fd) Thanks [@Suraj-Tiwari](https://github.com/Suraj-Tiwari)! - added support for new bitcoin proto definitions
+
+- Updated dependencies [[`55d7714`](https://github.com/Cypherock/sdk/commit/55d77144359eb4cf85491f3364f5eb9a93c155fd)]:
+  - @cypherock/sdk-core@0.0.13
+
 ## 0.0.12
 
 ### Patch Changes

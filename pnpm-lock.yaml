@@ -39,10 +39,10 @@ importers:
   apps/browser:
     dependencies:
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.14
+        specifier: workspace:^0.0.15
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.12
+        specifier: workspace:^0.0.13
         version: link:../../packages/core
       '@cypherock/sdk-hw-webusb':
         specifier: workspace:^0.0.9
@@ -81,10 +81,10 @@ importers:
   apps/node:
     dependencies:
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.14
+        specifier: workspace:^0.0.15
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.12
+        specifier: workspace:^0.0.13
         version: link:../../packages/core
       '@cypherock/sdk-hw-hid':
         specifier: workspace:^0.0.9
@@ -118,7 +118,7 @@ importers:
   packages/app-btc:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.12
+        specifier: workspace:^0.0.13
         version: link:../core
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.8
@@ -188,7 +188,7 @@ importers:
   packages/app-evm:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.12
+        specifier: workspace:^0.0.13
         version: link:../core
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.8
@@ -261,7 +261,7 @@ importers:
   packages/app-manager:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.12
+        specifier: workspace:^0.0.13
         version: link:../core
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.8
