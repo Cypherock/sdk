@@ -115,7 +115,7 @@ export const authCard = async (sdk: ISDK, params?: IAuthCardParams) => {
   const helper = new OperationHelper(sdk, 'authCard', 'authCard');
 
   try {
-    logger.info('Started', params);
+    // logger.info('Started', params);
     const { onStatus, forceStatusUpdate } = createStatusListener({
       enums: AuthCardStatus,
       onEvent: params?.onEvent,
