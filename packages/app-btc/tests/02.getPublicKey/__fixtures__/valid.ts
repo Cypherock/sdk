@@ -1,23 +1,5 @@
-import { Result } from '../../../src/proto/generated/btc/core';
 import { IGetPublicKeyTestCase } from './types';
-
-const data = Uint8Array.from(
-  Result.encode(
-    Result.create({
-      getPublicKey: {
-        result: {
-          publicKey: new Uint8Array([
-            3, 41, 155, 232, 126, 245, 18, 49, 110, 235, 225, 178, 60, 48, 53,
-            109, 26, 117, 222, 193, 192, 185, 147, 11, 59, 191, 155, 17, 129,
-            230, 183, 171, 92,
-          ]),
-        },
-      },
-    }),
-  ).finish(),
-);
-
-console.log(data);
+import { Query } from '../../../src/proto/generated/btc/core';
 
 const requestAddress: IGetPublicKeyTestCase = {
   name: 'Request Address',
@@ -32,12 +14,22 @@ const requestAddress: IGetPublicKeyTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: new Uint8Array([
-        10, 57, 10, 55, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
-        38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 17, 172, 128, 128, 128, 8, 128,
-        128, 128, 128, 8, 128, 128, 128, 128, 8, 0, 0,
-      ]),
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            getPublicKey: {
+              initiate: {
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187, 121, 64,
+                ]),
+                derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000, 0, 0],
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
   results: [

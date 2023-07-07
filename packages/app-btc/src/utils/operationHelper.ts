@@ -57,11 +57,10 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
       await this.sdk.waitForResult({ onStatus: this.onStatus }),
     );
 
-    const retrunObj = result[this.resultKey] as Result[R];
+    const resultData = result[this.resultKey] as Result[R];
     parseCommonError(result.commonError);
-    assertOrThrowInvalidResult(retrunObj);
+    assertOrThrowInvalidResult(resultData);
     parseCommonError((result[this.resultKey] as any).commonError);
-
-    return retrunObj;
+    return resultData;
   }
 }

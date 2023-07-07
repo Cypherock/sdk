@@ -4,6 +4,7 @@ import {
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
 import { IGetPublicKeyTestCase } from './types';
+import { Query } from '../../../src/proto/generated/btc/core';
 
 const commonParams = {
   params: {
@@ -13,10 +14,18 @@ const commonParams = {
   queries: [
     {
       name: 'Initate query',
-      data: new Uint8Array([
-        10, 24, 10, 22, 10, 1, 10, 18, 17, 172, 128, 128, 128, 8, 128, 128, 128,
-        128, 8, 128, 128, 128, 128, 8, 0, 0,
-      ]),
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            getPublicKey: {
+              initiate: {
+                walletId: new Uint8Array([10]),
+                derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000, 0, 0],
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
   errorInstance: DeviceAppError,

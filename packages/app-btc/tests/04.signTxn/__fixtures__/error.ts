@@ -4,6 +4,8 @@ import {
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
 import { ISignTxnTestCase } from './types';
+import { Result } from '../../../src/proto/generated/btc/core';
+import { DataFlow, UserRejection } from '../../../src/proto/generated/error';
 
 const commonParams = {
   params: {
@@ -59,7 +61,22 @@ const commonParams = {
 const withUnknownError: ISignTxnTestCase = {
   name: 'With unknown error',
   ...commonParams,
-  results: [{ name: 'error', data: new Uint8Array([26, 4, 50, 2, 8, 1]) }],
+  results: [
+    {
+      name: 'error',
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            signTxn: {
+              commonError: {
+                unknownError: 1,
+              },
+            },
+          }),
+        ).finish(),
+      ),
+    },
+  ],
   errorInstance: DeviceAppError,
   errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR],
 };
@@ -67,7 +84,20 @@ const withUnknownError: ISignTxnTestCase = {
 const withInvalidAppId: ISignTxnTestCase = {
   name: 'With invalid msg from device',
   ...commonParams,
-  results: [{ name: 'error', data: new Uint8Array([26, 4, 50, 2, 16, 1]) }],
+  results: [
+    {
+      name: 'error',
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            commonError: {
+              corruptData: DataFlow.DATA_FLOW_INVALID_DATA,
+            },
+          }),
+        ).finish(),
+      ),
+    },
+  ],
   errorInstance: DeviceAppError,
   errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.CORRUPT_DATA],
 };
@@ -75,7 +105,22 @@ const withInvalidAppId: ISignTxnTestCase = {
 const withUserRejection: ISignTxnTestCase = {
   name: 'With user rejection',
   ...commonParams,
-  results: [{ name: 'error', data: new Uint8Array([26, 5, 50, 3, 176, 1, 1]) }],
+  results: [
+    {
+      name: 'error',
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            signTxn: {
+              commonError: {
+                userRejection: UserRejection.USER_REJECTION_UNKNOWN,
+              },
+            },
+          }),
+        ).finish(),
+      ),
+    },
+  ],
   errorInstance: DeviceAppError,
   errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.USER_REJECTION],
 };
