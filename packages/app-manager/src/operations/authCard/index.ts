@@ -61,8 +61,22 @@ const verifyChallengeSignature = async (params: {
   forceStatusUpdate: ForceStatusUpdate;
   challenge: Uint8Array;
   serial: Uint8Array;
+  email?: string;
+  cysyncVersion?: string;
+  onlyFailure?: boolean;
+  sessionId?: string;
 }) => {
-  const { helper, onStatus, challenge, serial, forceStatusUpdate } = params;
+  const {
+    helper,
+    onStatus,
+    challenge,
+    serial,
+    forceStatusUpdate,
+    cysyncVersion,
+    onlyFailure,
+    sessionId,
+    email,
+  } = params;
 
   await helper.sendQuery({ challenge: { challenge } });
 
@@ -71,21 +85,25 @@ const verifyChallengeSignature = async (params: {
   assertOrThrowInvalidResult(result.challengeSignature);
   forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_CHALLENGE_SIGNED);
 
-  const isVerified = await cardAuthService.verifyCardChallengeSignature({
-    ...result.challengeSignature,
-    challenge,
-    serial,
-  });
+  const { isVerified, sessionId: newSessionId } =
+    await cardAuthService.verifyCardChallengeSignature({
+      ...result.challengeSignature,
+      challenge,
+      serial,
+      cysyncVersion,
+      onlyFailure,
+      sessionId,
+      email,
+    });
 
   if (!isVerified) {
     throw cardNotVerifiedError;
   }
+
+  return newSessionId;
 };
 
-export const authCard = async (
-  sdk: ISDK,
-  params?: IAuthCardParams,
-): Promise<void> => {
+export const authCard = async (sdk: ISDK, params?: IAuthCardParams) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (params?.cardNumber !== undefined && params.cardNumber !== null) {
     assert(
@@ -112,12 +130,16 @@ export const authCard = async (
       isPairRequired: params?.isPairRequired,
     });
 
-    await verifyChallengeSignature({
+    const newSessionId = await verifyChallengeSignature({
       helper,
       onStatus,
       forceStatusUpdate,
       serial,
       challenge,
+      email: params?.email,
+      cysyncVersion: params?.cysyncVersion,
+      onlyFailure: params?.onlyFailure,
+      sessionId: params?.sessionId,
     });
 
     await helper.sendQuery({ result: { verified: true } });
@@ -126,6 +148,7 @@ export const authCard = async (
     forceStatusUpdate(AuthCardStatus.AUTH_CARD_STATUS_PAIRING_DONE);
 
     logger.info('Completed', { verified: true });
+    return { sessionId: newSessionId };
   } catch (error) {
     if (error === cardNotVerifiedError) {
       await helper.sendQuery({ result: { verified: false } });

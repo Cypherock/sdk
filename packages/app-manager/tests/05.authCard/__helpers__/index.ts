@@ -12,9 +12,9 @@ export function setupMocks(testCase: IAuthCardTestCase) {
     verificationServiceMocks.verifySerialSignature.mockReturnValueOnce(
       testCase.mocks.challenge,
     );
-    verificationServiceMocks.verifyChallengeSignature.mockReturnValueOnce(
-      testCase.mocks.challengeVerified,
-    );
+    verificationServiceMocks.verifyChallengeSignature.mockReturnValueOnce({
+      isVerified: testCase.mocks.challengeVerified,
+    });
   }
 
   return onEvent;

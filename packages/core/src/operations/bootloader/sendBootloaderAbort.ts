@@ -80,14 +80,17 @@ const writePacket = (
       reject(err);
     });
 
-    timeout = setTimeout(() => {
-      cleanUp();
-      reject(
-        new DeviceCommunicationError(
-          DeviceCommunicationErrorType.WRITE_TIMEOUT,
-        ),
-      );
-    }, options?.timeout ?? 2000);
+    timeout = setTimeout(
+      () => {
+        cleanUp();
+        reject(
+          new DeviceCommunicationError(
+            DeviceCommunicationErrorType.WRITE_TIMEOUT,
+          ),
+        );
+      },
+      options?.timeout ?? 2000,
+    );
 
     recheckTimeout = setTimeout(
       recheckPacket,

@@ -39,7 +39,7 @@ importers:
   apps/browser:
     dependencies:
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
         specifier: workspace:^0.0.12
@@ -81,7 +81,7 @@ importers:
   apps/node:
     dependencies:
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
         specifier: workspace:^0.0.12
