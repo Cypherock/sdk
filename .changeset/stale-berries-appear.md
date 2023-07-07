@@ -5,4 +5,4 @@
 '@cypherock/sdk-core': patch
 ---
 
-added support for new proto definitions
+added support for new bitcoin proto definitions
