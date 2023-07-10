@@ -38,8 +38,9 @@ const withCardError: IAuthCardTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.CARD_OPERATION_FAILED],
+  errorMessage: {
+    message: 'Card is not paired',
+  },
 };
 
 const withSerialSignatureFailure: IAuthCardTestCase = {

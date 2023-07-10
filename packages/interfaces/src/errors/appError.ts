@@ -1,4 +1,5 @@
 import { DeviceError } from './deviceError';
+import { cardErrorTypeDetails } from './cardError';
 
 export enum DeviceAppErrorType {
   UNKNOWN_ERROR = 'APP_0000',
@@ -30,8 +31,9 @@ export enum DeviceAppErrorType {
   CARD_AUTH_FAILED = 'APP_0701',
 }
 
-type CodeToErrorMap = {
+export type CodeToErrorMap = {
   [property in DeviceAppErrorType]: {
+    errorCode?: Record<number, { message: string }>;
     message: string;
   };
 };
@@ -49,7 +51,6 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.DEVICE_ABORT]: {
     message: 'The request was timed out on the device',
   },
-
   [DeviceAppErrorType.INVALID_MSG_FROM_DEVICE]: {
     message: 'Invalid result received from device',
   },
@@ -68,7 +69,6 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.DEVICE_SETUP_REQUIRED]: {
     message: 'Device setup is required',
   },
-
   [DeviceAppErrorType.WALLET_NOT_FOUND]: {
     message: 'Selected wallet is not present on the device',
   },
@@ -79,6 +79,7 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
     message: 'No wallet exists on the device',
   },
   [DeviceAppErrorType.CARD_OPERATION_FAILED]: {
+    errorCode: cardErrorTypeDetails,
     message: 'Card operation failed',
   },
   [DeviceAppErrorType.USER_REJECTION]: {
@@ -96,11 +97,21 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
 };
 
 export class DeviceAppError extends DeviceError {
-  constructor(errorCode: DeviceAppErrorType) {
-    super(
-      errorCode,
-      deviceAppErrorTypeDetails[errorCode].message,
-      DeviceAppError,
-    );
+  constructor(
+    errorCode: DeviceAppErrorType,
+    errorValue: number | undefined = undefined,
+  ) {
+    let message: string;
+    if (
+      errorValue &&
+      deviceAppErrorTypeDetails[errorCode].errorCode?.[errorValue].message
+    ) {
+      message =
+        deviceAppErrorTypeDetails[errorCode].errorCode?.[errorValue].message ??
+        deviceAppErrorTypeDetails[errorCode].message;
+    } else {
+      message = deviceAppErrorTypeDetails[errorCode].message;
+    }
+    super(errorCode, message, DeviceAppError);
   }
 }

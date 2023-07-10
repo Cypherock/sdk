@@ -5,6 +5,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { IGetPublicKeyTestCase } from './types';
 import { Query, Result } from '../../../src/proto/generated/btc/core';
+import { CardError } from '../../../src/proto/generated/error';
 
 const commonParams = {
   params: {
@@ -52,6 +53,33 @@ const withInvalidAppId: IGetPublicKeyTestCase = {
     deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
 };
 
-const error: IGetPublicKeyTestCase[] = [withUnknownError, withInvalidAppId];
+const withCardError: IGetPublicKeyTestCase = {
+  name: 'With card error from device',
+  ...commonParams,
+  results: [
+    {
+      name: 'error',
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            commonError: {
+              cardError: CardError.CARD_ERROR_SW_FILE_INVALID,
+            },
+          }),
+        ).finish(),
+      ),
+    },
+  ],
+  errorInstance: DeviceAppError,
+  errorMessage: {
+    message: 'Tapped card family id mismatch',
+  },
+};
+
+const error: IGetPublicKeyTestCase[] = [
+  withUnknownError,
+  withInvalidAppId,
+  withCardError,
+];
 
 export default error;
