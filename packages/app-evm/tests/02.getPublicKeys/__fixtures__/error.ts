@@ -3,7 +3,10 @@ import {
   DeviceAppErrorType,
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
+import { hexToUint8Array } from '@cypherock/sdk-utils';
 import { IGetPublicKeysTestCase } from './types';
+import { Query } from '../../../src/proto/generated/evm/core';
+import { AddressFormat } from '../../../src/proto/generated/evm/common';
 
 const commonParams = {
   params: {
@@ -14,13 +17,7 @@ const commonParams = {
     ]),
     derivationPaths: [
       {
-        path: [
-          { index: 44, isHardened: true },
-          { index: 60, isHardened: true },
-          { index: 0, isHardened: true },
-          { index: 0, isHardened: false },
-          { index: 0, isHardened: false },
-        ],
+        path: [0x80000000 + 44, 0x80000000 + 60, 0x80000000, 0, 0],
       },
     ],
     chainId: 1,
@@ -28,12 +25,29 @@ const commonParams = {
   queries: [
     {
       name: 'Initate query',
-      data: new Uint8Array([
-        10, 69, 10, 67, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
-        38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 24, 10, 4, 8, 44, 16, 1, 10, 4, 8,
-        60, 16, 1, 10, 2, 16, 1, 10, 2, 16, 0, 10, 2, 16, 0, 24, 1, 34, 1, 1,
-      ]),
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            getPublicKeys: {
+              initiate: {
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187, 121, 64,
+                ]),
+                derivationPaths: [
+                  {
+                    path: [0x80000000 + 44, 0x80000000 + 60, 0x80000000, 0, 0],
+                  },
+                ],
+                chainId: hexToUint8Array((1).toString(16)),
+                format: AddressFormat.DEFAULT,
+                doVerify: true,
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
 };

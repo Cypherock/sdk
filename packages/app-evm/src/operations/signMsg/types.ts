@@ -1,8 +1,4 @@
-import {
-  IDerivationPath,
-  SignMsgStatus,
-  SignMsgType,
-} from '../../proto/generated/types';
+import { SignMsgStatus, SignMsgType } from '../../proto/generated/types';
 
 export type SignMsgEventHandler = (event: SignMsgStatus) => void;
 
@@ -10,7 +6,7 @@ export interface ISignMsgParams {
   onEvent?: SignMsgEventHandler;
 
   walletId: Uint8Array;
-  derivationPath: IDerivationPath[];
+  derivationPath: number[];
   message: Uint8Array;
   messageType: SignMsgType;
 }

@@ -3,7 +3,9 @@ import {
   DeviceAppErrorType,
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
+import { hexToUint8Array } from '@cypherock/sdk-utils';
 import { ISignTxnTestCase } from './types';
+import { Query } from '../../../src/proto/generated/evm/core';
 
 const commonParams = {
   params: {
@@ -12,24 +14,35 @@ const commonParams = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [
-      { index: 44, isHardened: true },
-      { index: 60, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: false },
-      { index: 0, isHardened: false },
-    ],
+    derivationPath: [0x80000000 + 44, 0x80000000 + 60, 0x80000000, 0, 0],
     txn: '0xed8205a385059aaf0d8082520894292f04a44506c2fd49bac032e1ca148c35a478c887c962225a2ab40080018080',
   },
   queries: [
     {
       name: 'Initate query',
-      data: new Uint8Array([
-        18, 65, 10, 63, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
-        38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 4, 8, 44, 16, 1, 18, 4, 8, 60, 16,
-        1, 18, 2, 16, 1, 18, 2, 16, 0, 18, 2, 16, 0, 26, 1, 1,
-      ]),
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            signTxn: {
+              initiate: {
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187, 121, 64,
+                ]),
+                derivationPath: [
+                  0x80000000 + 44,
+                  0x80000000 + 60,
+                  0x80000000,
+                  0,
+                  0,
+                ],
+                chainId: hexToUint8Array((1).toString(16)),
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
   errorInstance: DeviceAppError,

@@ -4,7 +4,7 @@ import {
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
 import { ISignTxnTestCase } from './types';
-import { Result } from '../../../src/proto/generated/btc/core';
+import { Query, Result } from '../../../src/proto/generated/btc/core';
 import { DataFlow, UserRejection } from '../../../src/proto/generated/error';
 
 const commonParams = {
@@ -14,11 +14,7 @@ const commonParams = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [
-      { index: 44, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: true },
-    ],
+    derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
     txn: {
       inputs: [
         {
@@ -48,12 +44,22 @@ const commonParams = {
   queries: [
     {
       name: 'Initate query',
-      data: new Uint8Array([
-        26, 52, 10, 50, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
-        38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 4, 8, 44, 16, 1, 18, 2, 16, 1, 18,
-        2, 16, 1,
-      ]),
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            signTxn: {
+              initiate: {
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187, 121, 64,
+                ]),
+                derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
 };
