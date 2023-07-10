@@ -12,6 +12,7 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
+  configureAppId,
 } from '../../utils';
 import { IGetXpubsParams } from './types';
 
@@ -36,6 +37,11 @@ export const getXpubs = async (
       true,
     ),
     'DerivationPaths should be of depth 3',
+  );
+
+  configureAppId(
+    sdk,
+    params.derivationPaths.map(path => path.path),
   );
 
   const { onStatus, forceStatusUpdate } = createStatusListener({

@@ -9,6 +9,8 @@ export const sendAbort = jest.fn<ISDK['sendAbort']>();
 export const getResult = jest.fn<ISDK['getResult']>();
 export const sendQuery = jest.fn<ISDK['sendQuery']>();
 
+export const configureAppletId = jest.fn<ISDK['configureAppletId']>();
+
 export const waitForResult = jest.fn<ISDK['waitForResult']>();
 export const getSequenceNumber = jest.fn<ISDK['getSequenceNumber']>(
   async () => sequenceNumber,
@@ -29,6 +31,7 @@ export const getDeviceState = jest.fn<ISDK['getDeviceState']>(
 
 export const create = jest.fn(async () =>
   Promise.resolve({
+    configureAppletId,
     sendAbort,
     getResult,
     getStatus,

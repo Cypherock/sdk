@@ -12,6 +12,7 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
+  configureAppId,
 } from '../../utils';
 import { IGetPublicKeyParams } from './types';
 
@@ -30,6 +31,8 @@ export const getPublicKey = async (
     params.derivationPath.length === 5,
     'DerivationPath should be of depth 5',
   );
+
+  configureAppId(sdk, [params.derivationPath]);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: GetPublicKeyStatus,
