@@ -71,9 +71,9 @@ const withCardError: IGetPublicKeyTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: {
-    message: 'Tapped card family id mismatch',
-  },
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.CARD_OPERATION_FAILED]
+      .subError[CardError.CARD_ERROR_SW_FILE_INVALID],
 };
 
 const error: IGetPublicKeyTestCase[] = [
