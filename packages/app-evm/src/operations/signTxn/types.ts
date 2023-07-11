@@ -1,8 +1,4 @@
-import {
-  AddressFormat,
-  IDerivationPath,
-  SignTxnStatus,
-} from '../../proto/generated/types';
+import { AddressFormat, SignTxnStatus } from '../../proto/generated/types';
 
 export type SignTxnEventHandler = (event: SignTxnStatus) => void;
 
@@ -10,7 +6,7 @@ export interface ISignTxnParams {
   onEvent?: SignTxnEventHandler;
 
   walletId: Uint8Array;
-  derivationPath: IDerivationPath[];
+  derivationPath: number[];
   txn: string;
 
   addressFormat?: AddressFormat;

@@ -15,13 +15,7 @@ const validParams = {
   ]),
   derivationPaths: [
     {
-      path: [
-        { index: 44, isHardened: true },
-        { index: 60, isHardened: true },
-        { index: 0, isHardened: true },
-        { index: 0, isHardened: false },
-        { index: 0, isHardened: false },
-      ],
+      path: [0x80000000 + 44, 0x80000000 + 60, 0x80000000, 0, 0],
     },
   ],
   chainId: '1',

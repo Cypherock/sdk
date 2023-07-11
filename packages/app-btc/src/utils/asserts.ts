@@ -30,7 +30,7 @@ export function parseCommonError(error?: ICommonError) {
 
   for (const key of keys) {
     if (error[key] !== undefined) {
-      throw new DeviceAppError(errorTypesMap[key]);
+      throw new DeviceAppError(errorTypesMap[key], error[key]);
     }
   }
 }
