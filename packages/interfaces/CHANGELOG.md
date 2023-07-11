@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.9
+
+### Patch Changes
+
+- [#38](https://github.com/Cypherock/sdk/pull/38) [`e4dcc2b`](https://github.com/Cypherock/sdk/commit/e4dcc2b2d7a91b3f4da26465e452add0aa46412b) Thanks [@Suraj-Tiwari](https://github.com/Suraj-Tiwari)! - card error added and updated proto files
+
 ## 0.0.8
 
 ### Patch Changes
