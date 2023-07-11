@@ -122,7 +122,7 @@ export class DeviceAppError extends DeviceError {
     let message: string;
     let errorCodeKey: string;
     if (
-      errorValue &&
+      errorValue !== undefined &&
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       deviceAppErrorTypeDetails[errorCode].subError[errorValue]
     ) {
