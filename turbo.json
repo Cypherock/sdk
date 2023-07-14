@@ -35,27 +35,27 @@
     },
     "@cypherock/sdk-core#prebuild": {
       "cache": true,
-      "outputs": ["src/encoders/proto/**"],
+      "outputs": ["src/encoders/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
     "@cypherock/sdk-app-manager#prebuild": {
       "cache": true,
-      "outputs": ["src/proto/**"],
+      "outputs": ["src/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
     "@cypherock/sdk-app-btc#prebuild": {
       "cache": true,
-      "outputs": ["src/proto/**"],
+      "outputs": ["src/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
     "@cypherock/sdk-app-evm#prebuild": {
       "cache": true,
-      "outputs": ["src/proto/**"],
+      "outputs": ["src/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
     "@cypherock/sdk-interfaces#prebuild": {
       "cache": true,
-      "outputs": ["src/proto/**"],
+      "outputs": ["src/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
     "start:node": {
