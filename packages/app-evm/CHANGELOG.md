@@ -1,5 +1,16 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.16
+
+### Patch Changes
+
+- [#43](https://github.com/Cypherock/sdk/pull/43) [`9ce9afc`](https://github.com/Cypherock/sdk/commit/9ce9afc2cd88f7c3334eda8120afe6365bc728da) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed skipped proto files on npm release
+
+- Updated dependencies [[`9ce9afc`](https://github.com/Cypherock/sdk/commit/9ce9afc2cd88f7c3334eda8120afe6365bc728da)]:
+  - @cypherock/sdk-core@0.0.16
+  - @cypherock/sdk-interfaces@0.0.11
+  - @cypherock/sdk-utils@0.0.13
+
 ## 0.0.15
 
 ### Patch Changes

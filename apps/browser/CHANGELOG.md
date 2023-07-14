@@ -1,5 +1,16 @@
 # browser-test
 
+## 0.0.18
+
+### Patch Changes
+
+- [#43](https://github.com/Cypherock/sdk/pull/43) [`9ce9afc`](https://github.com/Cypherock/sdk/commit/9ce9afc2cd88f7c3334eda8120afe6365bc728da) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed skipped proto files on npm release
+
+- Updated dependencies [[`9ce9afc`](https://github.com/Cypherock/sdk/commit/9ce9afc2cd88f7c3334eda8120afe6365bc728da)]:
+  - @cypherock/sdk-app-manager@0.0.18
+  - @cypherock/sdk-core@0.0.16
+  - @cypherock/sdk-hw-webusb@0.0.12
+
 ## 0.0.17
 
 ### Patch Changes
