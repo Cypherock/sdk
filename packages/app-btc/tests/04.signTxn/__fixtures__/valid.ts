@@ -1,4 +1,5 @@
 import { ISignTxnTestCase } from './types';
+import { Query } from '../../../src/proto/generated/btc/core';
 
 const withOneInput: ISignTxnTestCase = {
   name: 'With 1 input',
@@ -8,11 +9,7 @@ const withOneInput: ISignTxnTestCase = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [
-      { index: 44, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: true },
-    ],
+    derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
     txn: {
       inputs: [
         {
@@ -42,12 +39,22 @@ const withOneInput: ISignTxnTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: new Uint8Array([
-        26, 52, 10, 50, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
-        38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 4, 8, 44, 16, 1, 18, 2, 16, 1, 18,
-        2, 16, 1,
-      ]),
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            signTxn: {
+              initiate: {
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187, 121, 64,
+                ]),
+                derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
     {
       name: 'Send meta',
@@ -153,11 +160,7 @@ const withMultipleInputs: ISignTxnTestCase = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [
-      { index: 44, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: true },
-    ],
+    derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
     txn: {
       locktime: 12,
       hashType: 2,
@@ -239,12 +242,22 @@ const withMultipleInputs: ISignTxnTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: new Uint8Array([
-        26, 52, 10, 50, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
-        38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 4, 8, 44, 16, 1, 18, 2, 16, 1, 18,
-        2, 16, 1,
-      ]),
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            signTxn: {
+              initiate: {
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187, 121, 64,
+                ]),
+                derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
     {
       name: 'Send meta',

@@ -4,6 +4,8 @@ import {
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
 import { ISignPersonalMsgTestCase } from './types';
+import { Query } from '../../../src/proto/generated/evm/core';
+import { SignMsgType } from '../../../src';
 
 const commonParams = {
   params: {
@@ -12,25 +14,36 @@ const commonParams = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [
-      { index: 44, isHardened: true },
-      { index: 60, isHardened: true },
-      { index: 0, isHardened: true },
-      { index: 0, isHardened: false },
-      { index: 0, isHardened: false },
-    ],
+    derivationPath: [0x80000000 + 44, 0x80000000 + 60, 0x80000000, 0, 0],
     message:
       '0x74657374696e67207465787420666f72207369676e696e6720706572736f6e616c206d657373616765',
   },
   queries: [
     {
       name: 'Initate query',
-      data: new Uint8Array([
-        26, 64, 10, 62, 10, 34, 199, 89, 252, 26, 32, 135, 183, 211, 90, 220,
-        38, 17, 160, 103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8,
-        53, 86, 128, 26, 3, 187, 121, 64, 18, 4, 8, 44, 16, 1, 18, 4, 8, 60, 16,
-        1, 18, 2, 16, 1, 18, 2, 16, 0, 18, 2, 16, 0, 24, 1,
-      ]),
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            signMsg: {
+              initiate: {
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187, 121, 64,
+                ]),
+                derivationPath: [
+                  0x80000000 + 44,
+                  0x80000000 + 60,
+                  0x80000000,
+                  0,
+                  0,
+                ],
+                messageType: SignMsgType.SIGN_MSG_TYPE_PERSONAL_SIGN,
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
 };

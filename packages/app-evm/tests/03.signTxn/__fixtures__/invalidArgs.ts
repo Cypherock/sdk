@@ -13,13 +13,7 @@ const validParams = {
     110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
     64,
   ]),
-  derivationPath: [
-    { index: 44, isHardened: true },
-    { index: 60, isHardened: true },
-    { index: 0, isHardened: true },
-    { index: 0, isHardened: false },
-    { index: 0, isHardened: false },
-  ],
+  derivationPath: [0x80000000 + 44, 0x80000000 + 60, 0x80000000, 0, 0],
   txn: '0xed8205a385059aaf0d8082520894292f04a44506c2fd49bac032e1ca148c35a478c887c962225a2ab40080018080',
 };
 

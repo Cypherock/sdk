@@ -4,6 +4,7 @@ import {
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
 import { IAuthCardTestCase } from './types';
+import { CardError } from '../../../src';
 
 const withUserRejection: IAuthCardTestCase = {
   name: 'When user rejects the card auth',
@@ -39,7 +40,8 @@ const withCardError: IAuthCardTestCase = {
   ],
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.CARD_OPERATION_FAILED],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.CARD_OPERATION_FAILED]
+      .subError[CardError.CARD_ERROR_NOT_PAIRED],
 };
 
 const withSerialSignatureFailure: IAuthCardTestCase = {
