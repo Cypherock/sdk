@@ -1,16 +1,16 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { assert } from '@cypherock/sdk-utils';
-import { coinIdToAppIdMap } from '../constants/appId';
+import { coinIndexToAppIdMap } from '../constants/appId';
 
 const getAppIdFromDerivationPaths = (derivationPaths: number[][]) => {
-  const coinIds = derivationPaths.map(derivationPath => derivationPath[1]);
-  const firstCoinId = coinIds[0];
+  const coinIndexes = derivationPaths.map(derivationPath => derivationPath[1]);
+  const firstCoinIndex = coinIndexes[0];
 
-  const isSame = coinIds.every(x => x === firstCoinId);
+  const isSame = coinIndexes.every(x => x === firstCoinIndex);
   assert(isSame, `Derivation paths must be for the same coin`);
 
-  const appId = coinIdToAppIdMap[firstCoinId];
-  assert(appId, `Coin ${firstCoinId.toString(16)} is not supported`);
+  const appId = coinIndexToAppIdMap[firstCoinIndex];
+  assert(appId, `Coin ${firstCoinIndex.toString(16)} is not supported`);
 
   return appId;
 };

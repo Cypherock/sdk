@@ -1,4 +1,4 @@
-export const coinIdToAppIdMap: Record<number, number | undefined> = {
+export const coinIndexToAppIdMap: Record<number, number | undefined> = {
   // BTC
   0x80000000: 2,
   // LTC
