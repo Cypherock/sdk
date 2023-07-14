@@ -14,7 +14,7 @@ const packages = {
   'packages/hw-hid': [...commonTSFolders],
   'packages/hw-serialport': [...commonTSFolders],
   'packages/hw-webusb': [...commonTSFolders],
-  'packages/interfaces': [...commonTSFolders],
+  'packages/interfaces': [...commonTSFolders, 'src/proto/generated'],
   'packages/util': [...commonTSFolders],
 };
 
