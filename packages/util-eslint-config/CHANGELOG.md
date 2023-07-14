@@ -1,5 +1,11 @@
 # @cypherock/eslint-config
 
+## 0.0.6
+
+### Patch Changes
+
+- [#41](https://github.com/Cypherock/sdk/pull/41) [`5278b9e`](https://github.com/Cypherock/sdk/commit/5278b9ee6327e7835e4366cf91c087d7bb4941fd) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed generated proto release
+
 ## 0.0.5
 
 ### Patch Changes

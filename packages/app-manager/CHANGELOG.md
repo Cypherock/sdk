@@ -1,5 +1,16 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.17
+
+### Patch Changes
+
+- [#41](https://github.com/Cypherock/sdk/pull/41) [`5278b9e`](https://github.com/Cypherock/sdk/commit/5278b9ee6327e7835e4366cf91c087d7bb4941fd) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed generated proto release
+
+- Updated dependencies [[`5278b9e`](https://github.com/Cypherock/sdk/commit/5278b9ee6327e7835e4366cf91c087d7bb4941fd)]:
+  - @cypherock/sdk-core@0.0.15
+  - @cypherock/sdk-interfaces@0.0.10
+  - @cypherock/sdk-utils@0.0.12
+
 ## 0.0.16
 
 ### Patch Changes
