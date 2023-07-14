@@ -1,5 +1,11 @@
 # @cypherock/eslint-config
 
+## 0.0.7
+
+### Patch Changes
+
+- [#43](https://github.com/Cypherock/sdk/pull/43) [`9ce9afc`](https://github.com/Cypherock/sdk/commit/9ce9afc2cd88f7c3334eda8120afe6365bc728da) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed skipped proto files on npm release
+
 ## 0.0.6
 
 ### Patch Changes

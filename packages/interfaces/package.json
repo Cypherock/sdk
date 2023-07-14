@@ -1,6 +1,6 @@
 {
   "name": "@cypherock/sdk-interfaces",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@cypherock/eslint-config": "workspace:*",
-    "@cypherock/prettier-config": "workspace:^0.0.5",
+    "@cypherock/prettier-config": "workspace:^0.0.6",
     "@cypherock/tsconfig": "workspace:*",
     "@types/uuid": "^9.0.0",
     "eslint": "^7.32.0",
