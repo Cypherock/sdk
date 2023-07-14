@@ -63,10 +63,6 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
         output.chainIndex,
         `txn.outputs[${i}].chainIndex should be define when it's a change output`,
       );
-      assert(
-        output.addressIndex,
-        `txn.outputs[${i}].addressIndex should be define  when it's a change output`,
-      );
     }
   }
 };

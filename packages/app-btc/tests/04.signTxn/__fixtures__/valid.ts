@@ -1,5 +1,6 @@
+import { hexToUint8Array } from '@cypherock/sdk-utils';
 import { ISignTxnTestCase } from './types';
-import { Query } from '../../../src/proto/generated/btc/core';
+import { queryToUint8Array, resultToUint8Array } from '../__helpers__';
 
 const withOneInput: ISignTxnTestCase = {
   name: 'With 1 input',
@@ -39,26 +40,32 @@ const withOneInput: ISignTxnTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            signTxn: {
-              initiate: {
-                walletId: new Uint8Array([
-                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
-                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
-                  86, 128, 26, 3, 187, 121, 64,
-                ]),
-                derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: queryToUint8Array({
+        signTxn: {
+          initiate: {
+            walletId: new Uint8Array([
+              199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
+              233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
+              26, 3, 187, 121, 64,
+            ]),
+            derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
+          },
+        },
+      }),
     },
     {
       name: 'Send meta',
-      data: new Uint8Array([26, 10, 18, 8, 8, 2, 16, 1, 24, 1, 40, 1]),
+      data: queryToUint8Array({
+        signTxn: {
+          meta: {
+            version: 2,
+            locktime: 0,
+            inputCount: 1,
+            outputCount: 1,
+            sighash: 1,
+          },
+        },
+      }),
     },
     {
       name: 'Input 1',
@@ -95,11 +102,17 @@ const withOneInput: ISignTxnTestCase = {
     },
     {
       name: 'Output 1',
-      data: new Uint8Array([
-        26, 31, 34, 29, 8, 135, 193, 216, 1, 18, 22, 0, 20, 2, 216, 164, 197,
-        121, 83, 184, 111, 179, 157, 71, 190, 157, 149, 186, 225, 235, 117, 110,
-        206,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          output: {
+            scriptPubKey: hexToUint8Array(
+              '001402d8a4c57953b86fb39d47be9d95bae1eb756ece',
+            ),
+            value: '3547271',
+            isChange: false,
+          },
+        },
+      }),
     },
     {
       name: 'Signature request 1',
@@ -122,26 +135,40 @@ const withOneInput: ISignTxnTestCase = {
       ],
     },
     {
-      name: 'Input request: 1',
-      data: new Uint8Array([26, 2, 18, 0]),
+      name: 'Meta Accepted',
+      data: resultToUint8Array({
+        signTxn: {
+          metaAccepted: {},
+        },
+      }),
     },
     {
-      name: 'Output request: 1',
-      data: new Uint8Array([26, 2, 26, 0]),
+      name: 'Input accepted: 1',
+      data: resultToUint8Array({
+        signTxn: {
+          inputAccepted: {},
+        },
+      }),
     },
     {
-      name: 'Verify',
-      data: new Uint8Array([26, 2, 34, 0]),
+      name: 'Output accepted: 1',
+      data: resultToUint8Array({
+        signTxn: {
+          outputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Signature: 1',
-      data: new Uint8Array([
-        26, 76, 42, 74, 10, 72, 48, 69, 2, 33, 0, 159, 145, 126, 199, 137, 200,
-        164, 29, 186, 220, 223, 105, 74, 131, 25, 99, 96, 118, 133, 243, 150,
-        144, 144, 130, 41, 58, 26, 218, 70, 13, 67, 79, 2, 32, 38, 90, 145, 175,
-        77, 46, 1, 203, 103, 13, 34, 116, 155, 48, 15, 199, 238, 15, 171, 18,
-        78, 91, 201, 236, 159, 119, 15, 252, 32, 50, 24, 25, 1,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            signature: hexToUint8Array(
+              '30450221009f917ec789c8a41dbadcdf694a831963607685f396909082293a1ada460d434f0220265a91af4d2e01cb670d22749b300fc7ee0fab124e5bc9ec9f770ffc2032181901',
+            ),
+          },
+        },
+      }),
     },
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
@@ -234,7 +261,6 @@ const withMultipleInputs: ISignTxnTestCase = {
           scriptPubKey: '00149e4280f5196acd95aafa3897d4a592ff3fc065ee',
           isChange: true,
           chainIndex: 1,
-          addressIndex: 32,
         },
       ],
     },
@@ -242,26 +268,32 @@ const withMultipleInputs: ISignTxnTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            signTxn: {
-              initiate: {
-                walletId: new Uint8Array([
-                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
-                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
-                  86, 128, 26, 3, 187, 121, 64,
-                ]),
-                derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: queryToUint8Array({
+        signTxn: {
+          initiate: {
+            walletId: new Uint8Array([
+              199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
+              233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
+              26, 3, 187, 121, 64,
+            ]),
+            derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
+          },
+        },
+      }),
     },
     {
       name: 'Send meta',
-      data: new Uint8Array([26, 12, 18, 10, 8, 2, 16, 4, 24, 4, 32, 12, 40, 2]),
+      data: queryToUint8Array({
+        signTxn: {
+          meta: {
+            version: 2,
+            locktime: 12,
+            inputCount: 4,
+            outputCount: 3,
+            sighash: 2,
+          },
+        },
+      }),
     },
     {
       name: 'Input 1',
@@ -356,25 +388,46 @@ const withMultipleInputs: ISignTxnTestCase = {
     },
     {
       name: 'Output 1',
-      data: new Uint8Array([
-        26, 31, 34, 29, 8, 148, 203, 232, 1, 18, 22, 0, 20, 132, 4, 40, 1, 106,
-        201, 146, 135, 181, 121, 61, 103, 117, 190, 223, 142, 182, 173, 109, 89,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          output: {
+            scriptPubKey: hexToUint8Array(
+              '0014840428016ac99287b5793d6775bedf8eb6ad6d59',
+            ),
+            value: '3810708',
+            isChange: false,
+          },
+        },
+      }),
     },
     {
       name: 'Output 2',
-      data: new Uint8Array([
-        26, 31, 34, 29, 8, 243, 128, 222, 1, 18, 22, 0, 20, 241, 64, 153, 230,
-        78, 130, 39, 112, 28, 80, 12, 166, 232, 113, 16, 25, 187, 172, 36, 254,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          output: {
+            scriptPubKey: hexToUint8Array(
+              '0014f14099e64e8227701c500ca6e8711019bbac24fe',
+            ),
+            value: '3637363',
+            isChange: false,
+          },
+        },
+      }),
     },
     {
       name: 'Output 3',
-      data: new Uint8Array([
-        26, 36, 34, 34, 8, 224, 172, 23, 18, 22, 0, 20, 158, 66, 128, 245, 25,
-        106, 205, 149, 170, 250, 56, 151, 212, 165, 146, 255, 63, 192, 101, 238,
-        24, 1, 32, 1, 40, 32,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          output: {
+            scriptPubKey: hexToUint8Array(
+              '00149e4280f5196acd95aafa3897d4a592ff3fc065ee',
+            ),
+            value: '382560',
+            isChange: true,
+            changesIndex: 1,
+          },
+        },
+      }),
     },
     {
       name: 'Signature request 1',
@@ -409,87 +462,116 @@ const withMultipleInputs: ISignTxnTestCase = {
       ],
     },
     {
+      name: 'Meta Accepted',
+      data: resultToUint8Array({
+        signTxn: {
+          metaAccepted: {},
+        },
+      }),
+    },
+    {
       name: 'Input request: 1',
-      data: new Uint8Array([26, 2, 18, 0]),
+      data: resultToUint8Array({
+        signTxn: {
+          inputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Input request: 2',
-      data: new Uint8Array([26, 4, 18, 2, 8, 1]),
+      data: resultToUint8Array({
+        signTxn: {
+          inputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Input request: 3',
-      data: new Uint8Array([26, 4, 18, 2, 8, 2]),
+      data: resultToUint8Array({
+        signTxn: {
+          inputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Input request: 4',
-      data: new Uint8Array([26, 4, 18, 2, 8, 3]),
+      data: resultToUint8Array({
+        signTxn: {
+          inputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Output request: 1',
-      data: new Uint8Array([26, 2, 26, 0]),
+      data: resultToUint8Array({
+        signTxn: {
+          outputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Output request: 2',
-      data: new Uint8Array([26, 4, 26, 2, 8, 1]),
+      data: resultToUint8Array({
+        signTxn: {
+          outputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Output request: 3',
-      data: new Uint8Array([26, 4, 26, 2, 8, 2]),
-    },
-    {
-      name: 'Verify',
-      data: new Uint8Array([26, 2, 34, 0]),
+      data: resultToUint8Array({
+        signTxn: {
+          outputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Signature: 1',
-      data: new Uint8Array([
-        26, 111, 42, 109, 10, 107, 72, 48, 69, 2, 33, 0, 249, 150, 100, 46, 161,
-        83, 133, 89, 142, 229, 106, 113, 2, 66, 3, 117, 230, 44, 73, 207, 92,
-        210, 86, 58, 53, 21, 178, 27, 117, 64, 88, 242, 2, 32, 55, 101, 255, 70,
-        234, 101, 13, 230, 104, 83, 10, 146, 77, 113, 142, 120, 62, 160, 73,
-        252, 132, 65, 93, 186, 17, 86, 93, 53, 77, 237, 152, 206, 1, 33, 2, 82,
-        104, 75, 233, 112, 179, 208, 60, 84, 187, 54, 204, 152, 128, 131, 164,
-        31, 112, 234, 211, 41, 114, 63, 252, 218, 23, 161, 112, 55, 9, 238, 113,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            signature: hexToUint8Array(
+              '483045022100f996642ea15385598ee56a7102420375e62c49cf5cd2563a3515b21b754058f202203765ff46ea650de668530a924d718e783ea049fc84415dba11565d354ded98ce01210252684be970b3d03c54bb36cc988083a41f70ead329723ffcda17a1703709ee71',
+            ),
+          },
+        },
+      }),
     },
     {
       name: 'Signature: 2',
-      data: new Uint8Array([
-        26, 110, 42, 108, 10, 106, 71, 48, 68, 2, 32, 125, 136, 41, 253, 29, 25,
-        144, 222, 169, 73, 63, 179, 154, 53, 51, 242, 33, 81, 145, 243, 143,
-        197, 170, 154, 47, 38, 74, 173, 199, 111, 154, 144, 2, 32, 105, 40, 16,
-        196, 37, 135, 150, 146, 126, 168, 144, 60, 168, 31, 46, 47, 74, 147,
-        118, 190, 107, 49, 6, 194, 218, 206, 43, 26, 162, 89, 131, 101, 1, 33,
-        2, 111, 126, 129, 0, 173, 3, 91, 26, 225, 48, 107, 237, 235, 236, 33,
-        173, 194, 162, 186, 90, 154, 67, 42, 21, 220, 211, 20, 235, 3, 167, 163,
-        20,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            signature: hexToUint8Array(
+              '47304402207d8829fd1d1990dea9493fb39a3533f2215191f38fc5aa9a2f264aadc76f9a900220692810c4258796927ea8903ca81f2e2f4a9376be6b3106c2dace2b1aa25983650121026f7e8100ad035b1ae1306bedebec21adc2a2ba5a9a432a15dcd314eb03a7a314',
+            ),
+          },
+        },
+      }),
     },
     {
       name: 'Signature: 3',
-      data: new Uint8Array([
-        26, 110, 42, 108, 10, 106, 71, 48, 68, 2, 32, 91, 117, 51, 83, 18, 232,
-        31, 151, 22, 18, 77, 143, 159, 244, 250, 118, 11, 37, 132, 48, 180, 162,
-        240, 170, 54, 121, 76, 99, 91, 211, 159, 182, 2, 32, 123, 20, 241, 106,
-        230, 243, 54, 167, 196, 63, 201, 41, 247, 205, 249, 250, 6, 249, 206,
-        14, 141, 73, 59, 226, 231, 77, 222, 117, 215, 61, 223, 217, 1, 33, 3,
-        131, 138, 117, 2, 115, 124, 6, 200, 218, 250, 8, 71, 57, 247, 83, 219,
-        221, 168, 95, 195, 64, 123, 214, 192, 216, 153, 204, 145, 19, 45, 246,
-        132,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            signature: hexToUint8Array(
+              '47304402205b75335312e81f9716124d8f9ff4fa760b258430b4a2f0aa36794c635bd39fb602207b14f16ae6f336a7c43fc929f7cdf9fa06f9ce0e8d493be2e74dde75d73ddfd9012103838a7502737c06c8dafa084739f753dbdda85fc3407bd6c0d899cc91132df684',
+            ),
+          },
+        },
+      }),
     },
     {
       name: 'Signature: 4',
-      data: new Uint8Array([
-        26, 111, 42, 109, 10, 107, 72, 48, 69, 2, 33, 0, 199, 221, 1, 121, 54,
-        250, 191, 79, 182, 13, 21, 238, 153, 244, 234, 101, 239, 227, 6, 57, 96,
-        222, 235, 204, 50, 134, 236, 0, 104, 207, 244, 163, 2, 32, 42, 57, 18,
-        46, 31, 240, 230, 219, 58, 105, 169, 233, 164, 198, 155, 133, 112, 15,
-        95, 191, 96, 50, 222, 253, 186, 221, 39, 249, 101, 102, 113, 153, 1, 33,
-        3, 39, 148, 112, 76, 156, 247, 197, 196, 204, 253, 46, 66, 69, 30, 108,
-        74, 148, 144, 35, 98, 196, 28, 136, 255, 120, 82, 225, 10, 55, 84, 136,
-        25,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            signature: hexToUint8Array(
+              '483045022100c7dd017936fabf4fb60d15ee99f4ea65efe3063960deebcc3286ec0068cff4a302202a39122e1ff0e6db3a69a9e9a4c69b85700f5fbf6032defdbadd27f9656671990121032794704c9cf7c5c4ccfd2e42451e6c4a94902362c41c88ff7852e10a37548819',
+            ),
+          },
+        },
+      }),
     },
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },

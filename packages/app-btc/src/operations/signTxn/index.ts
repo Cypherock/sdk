@@ -62,51 +62,45 @@ export const signTxn = async (
     meta: {
       version: signTxnDefaultParams.version,
       locktime: params.txn.locktime ?? signTxnDefaultParams.locktime,
-      inputSize: params.txn.inputs.length,
-      outputSize: params.txn.inputs.length,
-      hashType: params.txn.hashType ?? signTxnDefaultParams.hashtype,
+      inputCount: params.txn.inputs.length,
+      outputCount: params.txn.outputs.length,
+      sighash: params.txn.hashType ?? signTxnDefaultParams.hashtype,
     },
   });
+  const { metaAccepted } = await helper.waitForResult();
+  assertOrThrowInvalidResult(metaAccepted);
 
   for (let i = 0; i < params.txn.inputs.length; i += 1) {
-    const { input: inputRequest } = await helper.waitForResult();
-    assertOrThrowInvalidResult(inputRequest);
-    assertOrThrowInvalidResult(inputRequest.index === i);
-
     const input = params.txn.inputs[i];
     await helper.sendQuery({
       input: {
         prevTxn: hexToUint8Array(input.prevTxn),
         prevTxnHash: hexToUint8Array(input.prevTxnHash),
-        prevIndex: input.prevIndex,
+        prevOutputIndex: input.prevIndex,
         scriptPubKey: hexToUint8Array(input.scriptPubKey),
         value: input.value,
         sequence: input.sequence ?? signTxnDefaultParams.input.sequence,
-        chainIndex: input.chainIndex,
+        changeIndex: input.chainIndex,
         addressIndex: input.addressIndex,
       },
     });
+    const { inputAccepted } = await helper.waitForResult();
+    assertOrThrowInvalidResult(inputAccepted);
   }
 
   for (let i = 0; i < params.txn.outputs.length; i += 1) {
-    const { output: outputRequest } = await helper.waitForResult();
-    assertOrThrowInvalidResult(outputRequest);
-    assertOrThrowInvalidResult(outputRequest.index === i);
-
     const output = params.txn.outputs[i];
     await helper.sendQuery({
       output: {
         scriptPubKey: hexToUint8Array(output.scriptPubKey),
         value: output.value,
         isChange: output.isChange,
-        chainIndex: output.chainIndex,
-        addressIndex: output.addressIndex,
+        changesIndex: output.chainIndex,
       },
     });
+    const { outputAccepted } = await helper.waitForResult();
+    assertOrThrowInvalidResult(outputAccepted);
   }
-
-  const { verified } = await helper.waitForResult();
-  assertOrThrowInvalidResult(verified);
 
   forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_VERIFY);
 
