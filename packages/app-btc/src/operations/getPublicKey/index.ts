@@ -4,17 +4,15 @@ import {
   assert,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
-import {
-  GetPublicKeyStatus,
-  IGetPublicKeyResultResponse,
-} from '../../proto/generated/types';
+import { GetPublicKeyStatus } from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
   configureAppId,
 } from '../../utils';
-import { IGetPublicKeyParams } from './types';
+import { IGetPublicKeyParams, IGetPublicKeyResult } from './types';
+import { getAddressFromPublicKey } from './publicKeyToAddress';
 
 export * from './types';
 
@@ -23,7 +21,7 @@ const logger = createLoggerWithPrefix(rootLogger, 'GetPublicKey');
 export const getPublicKey = async (
   sdk: ISDK,
   params: IGetPublicKeyParams,
-): Promise<IGetPublicKeyResultResponse> => {
+): Promise<IGetPublicKeyResult> => {
   assert(params, 'Params should be defined');
   assert(params.derivationPath, 'DerivationPath should be defined');
   assert(params.walletId, 'WalletId should be defined');
@@ -59,5 +57,13 @@ export const getPublicKey = async (
 
   forceStatusUpdate(GetPublicKeyStatus.GET_PUBLIC_KEY_STATUS_VERIFY);
 
-  return result.result;
+  const address = getAddressFromPublicKey(
+    result.result.publicKey,
+    params.derivationPath,
+  );
+
+  return {
+    publicKey: result.result.publicKey,
+    address,
+  };
 };

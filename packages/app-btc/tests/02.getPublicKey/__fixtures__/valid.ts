@@ -63,6 +63,7 @@ const requestAddress: IGetPublicKeyTestCase = {
       26, 117, 222, 193, 192, 185, 147, 11, 59, 191, 155, 17, 129, 230, 183,
       171, 92,
     ]),
+    address: '1B87oKEs97mnEC9zi2Pkn8BNT9cAExEqYF',
   },
 };
 
