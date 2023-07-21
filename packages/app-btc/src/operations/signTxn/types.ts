@@ -10,8 +10,6 @@ export interface ISignTxnInputData {
 
   chainIndex: number;
   addressIndex: number;
-
-  prevTxn: string;
   sequence?: number;
 }
 
@@ -32,6 +30,7 @@ export interface ISignTxnParams {
   txn: {
     inputs: ISignTxnInputData[];
     outputs: ISignTxnOutputData[];
+    rawTxn: string[];
     locktime?: number;
     hashType?: number;
   };

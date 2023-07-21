@@ -74,7 +74,6 @@ export const signTxn = async (
     const input = params.txn.inputs[i];
     await helper.sendQuery({
       input: {
-        prevTxn: hexToUint8Array(input.prevTxn),
         prevTxnHash: hexToUint8Array(input.prevTxnHash),
         prevOutputIndex: input.prevIndex,
         scriptPubKey: hexToUint8Array(input.scriptPubKey),
@@ -86,6 +85,11 @@ export const signTxn = async (
     });
     const { inputAccepted } = await helper.waitForResult();
     assertOrThrowInvalidResult(inputAccepted);
+  }
+
+  for (let i = 0; i < params.txn.rawTxn.length; i += 1) {
+    const txnBytes = hexToUint8Array(params.txn.rawTxn[i]);
+    await helper.sendInChunks(txnBytes, 'rawTxn', 'rawTxn');
   }
 
   for (let i = 0; i < params.txn.outputs.length; i += 1) {
@@ -116,7 +120,7 @@ export const signTxn = async (
     const { signature } = await helper.waitForResult();
     assertOrThrowInvalidResult(signature);
 
-    signatures.push(uint8ArrayToHex(signature.signature));
+    signatures.push(uint8ArrayToHex(signature.unlockingScript));
   }
 
   forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CARD);
