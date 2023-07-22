@@ -1,5 +1,5 @@
 import { payments } from 'bitcoinjs-lib';
-import * as ecc from 'tiny-secp256k1';
+import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs';
 import { assert } from '@cypherock/sdk-utils';
 import { getNetworkFromPath } from './networks';
 
