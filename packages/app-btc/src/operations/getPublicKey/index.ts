@@ -57,7 +57,7 @@ export const getPublicKey = async (
 
   forceStatusUpdate(GetPublicKeyStatus.GET_PUBLIC_KEY_STATUS_VERIFY);
 
-  const address = getAddressFromPublicKey(
+  const address = await getAddressFromPublicKey(
     result.result.publicKey,
     params.derivationPath,
   );
