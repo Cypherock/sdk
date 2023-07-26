@@ -6,9 +6,11 @@
     "dev:browser": "next dev",
     "build": "next build",
     "start:browser": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prebuild": "bash ./scripts/prebuild.sh"
   },
   "dependencies": {
+    "@cypherock/sdk-app-btc": "workspace",
     "@cypherock/sdk-app-manager": "workspace:^0.0.18",
     "@cypherock/sdk-core": "workspace:^0.0.16",
     "@cypherock/sdk-hw-webusb": "workspace:^0.0.12",
@@ -16,6 +18,7 @@
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
+    "browserify": "^17.0.0",
     "eslint": "^7.32.0",
     "eslint-config-next": "13.1.6",
     "next": "13.1.6",
@@ -26,5 +29,8 @@
   "resolutions": {
     "@types/react": "^18.11.18",
     "@types/react-dom": "^18.0.27"
+  },
+  "devDependencies": {
+    "bitcoinjs-lib": "^6.1.3"
   }
 }

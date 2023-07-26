@@ -1,8 +1,14 @@
 import { describe, expect, test } from '@jest/globals';
+import * as bitcoinJsLib from 'bitcoinjs-lib';
 import { getAddressFromPublicKeyTestCases } from '../__fixtures__';
 import { getAddressFromPublicKey } from '..';
+import { setBitcoinJSLib } from '../../../../utils/bitcoinjs-lib';
 
 describe('getAddressFromPublicKey', () => {
+  beforeEach(async () => {
+    setBitcoinJSLib(bitcoinJsLib);
+  });
+
   test('should return valid packets', async () => {
     for (const testCase of getAddressFromPublicKeyTestCases.valid) {
       const result = await getAddressFromPublicKey(
