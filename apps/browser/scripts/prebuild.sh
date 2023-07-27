@@ -3,8 +3,8 @@
 set -e
 
 # browserify bitcoinjs-lib
-basepath='src/generated'
-npx browserify --standalone bitcoin - -o ${basepath}/bitcoinjs-lib <<<"module.exports = require('bitcoinjs-lib');"
-echo "/* eslint-disable */" > ${basepath}/bitcoinjs-lib.js
-cat ${basepath}/bitcoinjs-lib >> ${basepath}/bitcoinjs-lib.js
-rm ${basepath}/bitcoinjs-lib
+BASEPATH='src/generated'
+npx browserify --standalone bitcoin - -o ${BASEPATH}/bitcoinjs-lib <<<"module.exports = require('bitcoinjs-lib');"
+echo "/* eslint-disable */" > ${BASEPATH}/bitcoinjs-lib.js
+cat ${BASEPATH}/bitcoinjs-lib >> ${BASEPATH}/bitcoinjs-lib.js
+rm ${BASEPATH}/bitcoinjs-lib

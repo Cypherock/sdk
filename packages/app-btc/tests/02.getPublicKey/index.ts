@@ -5,7 +5,7 @@ import * as bitcoinJsLib from 'bitcoinjs-lib';
 import { clearMocks, expectMockCalls, setupMocks } from './__helpers__';
 import fixtures from './__fixtures__';
 
-import { BtcApp, setBitcoinJSLib } from '../../src/index';
+import { BtcApp, setBitcoinJSLib } from '../../src';
 
 describe('btcApp.getPublicKey', () => {
   let connection: MockDeviceConnection;

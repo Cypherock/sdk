@@ -1,8 +1,8 @@
-import { describe, expect, test } from '@jest/globals';
+import { beforeEach, describe, expect, test } from '@jest/globals';
 import * as bitcoinJsLib from 'bitcoinjs-lib';
 import { getAddressFromPublicKeyTestCases } from '../__fixtures__';
 import { getAddressFromPublicKey } from '..';
-import { setBitcoinJSLib } from '../../../../utils/bitcoinjs-lib';
+import { setBitcoinJSLib } from '../../../../utils';
 
 describe('getAddressFromPublicKey', () => {
   beforeEach(async () => {

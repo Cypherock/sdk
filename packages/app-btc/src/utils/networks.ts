@@ -1,5 +1,16 @@
 import { assert } from '@cypherock/sdk-utils';
 
+export const HARDENED_BASE = 0x80000000;
+
+export const LEGACY_PURPOSE = HARDENED_BASE + 44;
+export const SEGWIT_PURPOSE = HARDENED_BASE + 84;
+
+export const BITCOIN_COIN_INDEX = HARDENED_BASE + 0;
+export const TESTNET_COIN_INDEX = HARDENED_BASE + 1;
+export const LITECOIN_COIN_INDEX = HARDENED_BASE + 2;
+export const DOGECOIN_COIN_INDEX = HARDENED_BASE + 3;
+export const DASH_COIN_INDEX = HARDENED_BASE + 5;
+
 const bitcoin = {
   messagePrefix: '\x18Bitcoin Signed Message:\n',
   bech32: 'bc',
@@ -46,11 +57,18 @@ const dogecoin = {
 };
 
 const coinIndexToNetworkMap: Record<number, typeof bitcoin> = {
-  0x80000000: bitcoin,
-  0x80000001: testnet,
-  0x80000002: litecoin,
-  0x80000003: dogecoin,
-  0x80000005: dash,
+  [BITCOIN_COIN_INDEX]: bitcoin,
+  [TESTNET_COIN_INDEX]: testnet,
+  [LITECOIN_COIN_INDEX]: litecoin,
+  [DOGECOIN_COIN_INDEX]: dogecoin,
+  [DASH_COIN_INDEX]: dash,
+};
+
+export type purposeType = 'segwit' | 'legacy';
+
+const purposeMap: Record<number, purposeType> = {
+  [SEGWIT_PURPOSE]: 'segwit',
+  [LEGACY_PURPOSE]: 'legacy',
 };
 
 export const getNetworkFromPath = (path: number[]) => {
@@ -59,4 +77,12 @@ export const getNetworkFromPath = (path: number[]) => {
 
   assert(network, 'Coin index not supported');
   return network;
+};
+
+export const getPurposeType = (path: number[]) => {
+  const purpose = path[0];
+  const purposeType = purposeMap[purpose];
+
+  assert(purposeType, 'Purpose index not supported');
+  return purposeType;
 };
