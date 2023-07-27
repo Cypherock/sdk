@@ -75,7 +75,7 @@ export const getNetworkFromPath = (path: number[]) => {
   const coinIndex = path[1];
   const network = coinIndexToNetworkMap[coinIndex];
 
-  assert(network, 'Coin index not supported');
+  assert(network, `Coin index: 0x${coinIndex.toString(16)} not supported`);
   return network;
 };
 
@@ -83,7 +83,7 @@ export const getPurposeType = (path: number[]) => {
   const purpose = path[0];
   const purposeType = purposeMap[purpose];
 
-  assert(purposeType, 'Purpose index not supported');
+  assert(purposeType, `Purpose index: 0x${purpose.toString(16)} not supported`);
   return purposeType;
 };
 
@@ -96,10 +96,15 @@ const supportedPurposeMap: Record<number, purposeType[] | undefined> = {
 
 export const assertDerivationPath = (path: number[]) => {
   const supportedPurposes = supportedPurposeMap[path[1]];
-  assert(supportedPurposes, 'Coin index not supported');
+  assert(
+    supportedPurposes,
+    `Coin index: 0x${path[1].toString(16)} not supported`,
+  );
   const purposeType = getPurposeType(path);
   assert(
     supportedPurposes.includes(purposeType),
-    'Purpose not supported for given coin index',
+    `Purpose: 0x${path[0].toString(
+      16,
+    )} not supported for given coin index: 0x${path[1].toString(16)}`,
   );
 };
