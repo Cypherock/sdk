@@ -56,7 +56,7 @@ const dogecoin = {
   bech32: '',
 };
 
-const coinIndexToNetworkMap: Record<number, typeof bitcoin> = {
+const coinIndexToNetworkMap: Record<number, typeof bitcoin | undefined> = {
   [BITCOIN_COIN_INDEX]: bitcoin,
   [TESTNET_COIN_INDEX]: testnet,
   [LITECOIN_COIN_INDEX]: litecoin,
@@ -66,7 +66,7 @@ const coinIndexToNetworkMap: Record<number, typeof bitcoin> = {
 
 export type purposeType = 'segwit' | 'legacy';
 
-const purposeMap: Record<number, purposeType> = {
+const purposeMap: Record<number, purposeType | undefined> = {
   [SEGWIT_PURPOSE]: 'segwit',
   [LEGACY_PURPOSE]: 'legacy',
 };
@@ -85,4 +85,21 @@ export const getPurposeType = (path: number[]) => {
 
   assert(purposeType, 'Purpose index not supported');
   return purposeType;
+};
+
+const supportedPurposeMap: Record<number, purposeType[] | undefined> = {
+  [BITCOIN_COIN_INDEX]: ['legacy', 'segwit'],
+  [LITECOIN_COIN_INDEX]: ['legacy', 'segwit'],
+  [DOGECOIN_COIN_INDEX]: ['legacy'],
+  [DASH_COIN_INDEX]: ['legacy'],
+};
+
+export const assertDerivationPath = (path: number[]) => {
+  const supportedPurposes = supportedPurposeMap[path[1]];
+  assert(supportedPurposes, 'Coin index not supported');
+  const purposeType = getPurposeType(path);
+  assert(
+    supportedPurposes.includes(purposeType),
+    'Purpose not supported for given coin index',
+  );
 };

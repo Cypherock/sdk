@@ -10,6 +10,7 @@ import {
   OperationHelper,
   logger as rootLogger,
   configureAppId,
+  assertDerivationPath,
 } from '../../utils';
 import { IGetPublicKeyParams, IGetPublicKeyResult } from './types';
 import { getAddressFromPublicKey } from './publicKeyToAddress';
@@ -29,6 +30,7 @@ export const getPublicKey = async (
     params.derivationPath.length === 5,
     'DerivationPath should be of depth 5',
   );
+  assertDerivationPath(params.derivationPath);
 
   configureAppId(sdk, [params.derivationPath]);
 
