@@ -1,5 +1,14 @@
 # nodejs-test
 
+## 0.0.20
+
+### Patch Changes
+
+- [#45](https://github.com/Cypherock/sdk/pull/45) [`bd52a84`](https://github.com/Cypherock/sdk/commit/bd52a8438653dbdc5934637b7e05407d50a94a23) Thanks [@TejasvCypherock](https://github.com/TejasvCypherock)! - derive address from uncompressed public key for bitcoin receive flow
+
+- Updated dependencies [[`bd52a84`](https://github.com/Cypherock/sdk/commit/bd52a8438653dbdc5934637b7e05407d50a94a23), [`bd52a84`](https://github.com/Cypherock/sdk/commit/bd52a8438653dbdc5934637b7e05407d50a94a23)]:
+  - @cypherock/sdk-app-btc@0.0.18
+
 ## 0.0.19
 
 ### Patch Changes
