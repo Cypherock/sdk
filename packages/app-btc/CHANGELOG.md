@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.19
+
+### Patch Changes
+
+- [#47](https://github.com/Cypherock/sdk/pull/47) [`0d22424`](https://github.com/Cypherock/sdk/commit/0d22424ca46c71bf505766be79ea34e6305bee56) Thanks [@TejasvCypherock](https://github.com/TejasvCypherock)! - export bitcoin library type
+
 ## 0.0.18
 
 ### Patch Changes
