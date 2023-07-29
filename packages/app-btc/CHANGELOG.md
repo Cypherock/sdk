@@ -1,5 +1,19 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.19
+
+### Patch Changes
+
+- [#47](https://github.com/Cypherock/sdk/pull/47) [`0d22424`](https://github.com/Cypherock/sdk/commit/0d22424ca46c71bf505766be79ea34e6305bee56) Thanks [@TejasvCypherock](https://github.com/TejasvCypherock)! - export bitcoin library type
+
+## 0.0.18
+
+### Patch Changes
+
+- [#45](https://github.com/Cypherock/sdk/pull/45) [`bd52a84`](https://github.com/Cypherock/sdk/commit/bd52a8438653dbdc5934637b7e05407d50a94a23) Thanks [@TejasvCypherock](https://github.com/TejasvCypherock)! - derive address from uncompressed public key for bitcoin receive flow
+
+- [#45](https://github.com/Cypherock/sdk/pull/45) [`bd52a84`](https://github.com/Cypherock/sdk/commit/bd52a8438653dbdc5934637b7e05407d50a94a23) Thanks [@TejasvCypherock](https://github.com/TejasvCypherock)! - return address with public key in btc getPublicKey flow
+
 ## 0.0.17
 
 ### Patch Changes

@@ -13,6 +13,7 @@ import {
   OperationHelper,
   logger as rootLogger,
   configureAppId,
+  assertDerivationPath,
 } from '../../utils';
 import { IGetXpubsParams } from './types';
 
@@ -38,6 +39,7 @@ export const getXpubs = async (
     ),
     'DerivationPaths should be of depth 3',
   );
+  params.derivationPaths.forEach(item => assertDerivationPath(item.path));
 
   configureAppId(
     sdk,
