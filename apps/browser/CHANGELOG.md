@@ -1,5 +1,13 @@
 # browser-test
 
+## 0.0.21
+
+### Patch Changes
+
+- Updated dependencies [[`91ab207`](https://github.com/Cypherock/sdk/commit/91ab207de0dedf963e993c82a120cf4af5d923fb)]:
+  - @cypherock/sdk-app-manager@0.0.19
+  - @cypherock/sdk-app-btc@0.0.20
+
 ## 0.0.20
 
 ### Patch Changes
