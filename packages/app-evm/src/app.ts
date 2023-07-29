@@ -47,4 +47,8 @@ export class EvmApp {
   public async destroy() {
     return this.sdk.destroy();
   }
+
+  public async abort() {
+    await this.sdk.sendAbort();
+  }
 }

@@ -67,6 +67,10 @@ export class ManagerApp {
     return this.sdk.destroy();
   }
 
+  public async abort() {
+    await this.sdk.sendAbort();
+  }
+
   public static async getLatestFirmware(params?: GetLatestFirmwareOptions) {
     return firmwareService.getLatest(params);
   }
