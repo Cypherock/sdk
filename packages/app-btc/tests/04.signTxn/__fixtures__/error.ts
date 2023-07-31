@@ -32,6 +32,7 @@ const commonParams = {
           sequence: 0xffffffff,
         },
       ],
+      rawTxn: ['0000'],
       outputs: [
         {
           value: '3547271',

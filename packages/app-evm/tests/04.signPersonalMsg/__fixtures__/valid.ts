@@ -1,7 +1,10 @@
 import { hexToUint8Array } from '@cypherock/sdk-utils';
-import { Query, Result } from '../../../src/proto/generated/evm/core';
 import { ISignPersonalMsgTestCase } from './types';
 import { SignMsgType } from '../../../src';
+import {
+  queryToUint8Array,
+  resultToUint8Array,
+} from '../../03.signTxn/__helpers__';
 
 const withSmallMsg: ISignPersonalMsgTestCase = {
   name: 'With small msg',
@@ -18,29 +21,25 @@ const withSmallMsg: ISignPersonalMsgTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            signMsg: {
-              initiate: {
-                walletId: new Uint8Array([
-                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
-                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
-                  86, 128, 26, 3, 187, 121, 64,
-                ]),
-                derivationPath: [
-                  0x80000000 + 44,
-                  0x80000000 + 60,
-                  0x80000000,
-                  0,
-                  0,
-                ],
-                messageType: SignMsgType.SIGN_MSG_TYPE_PERSONAL_SIGN,
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: queryToUint8Array({
+        signMsg: {
+          initiate: {
+            walletId: new Uint8Array([
+              199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
+              233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
+              26, 3, 187, 121, 64,
+            ]),
+            derivationPath: [
+              0x80000000 + 44,
+              0x80000000 + 60,
+              0x80000000,
+              0,
+              0,
+            ],
+            messageType: SignMsgType.SIGN_MSG_TYPE_PERSONAL_SIGN,
+          },
+        },
+      }),
     },
     {
       name: 'Msg data chunk response',
@@ -55,20 +54,15 @@ const withSmallMsg: ISignPersonalMsgTestCase = {
   results: [
     {
       name: 'Msg data chunk request',
-      // data: new Uint8Array([18, 4, 10, 2, 10, 0]),
-      data: Uint8Array.from(
-        Result.encode(
-          Result.create({
-            signMsg: {
-              msgData: {
-                chunkRequest: {
-                  chunkIndex: 0,
-                },
-              },
+      data: resultToUint8Array({
+        signMsg: {
+          msgData: {
+            chunkAck: {
+              chunkIndex: 0,
             },
-          }),
-        ).finish(),
-      ),
+          },
+        },
+      }),
       statuses: [
         {
           flowStatus: 0,
@@ -89,23 +83,19 @@ const withSmallMsg: ISignPersonalMsgTestCase = {
       //   83, 56, 239, 30, 129, 203, 103, 64, 146, 73, 70, 164, 110, 53, 55, 10,
       //   139, 147, 1, 9, 162, 60, 146, 105, 26, 1, 38,
       // ]),
-      data: Uint8Array.from(
-        Result.encode(
-          Result.create({
-            signMsg: {
-              signature: {
-                r: hexToUint8Array(
-                  '0xf891cb3f97d011391f24ba4815731306b0eb7b2b656bb7fa119257c2d36166bf',
-                ),
-                s: hexToUint8Array(
-                  '0x1b3944d396f30bf85338ef1e81cb6740924946a46e35370a8b930109a23c9269',
-                ),
-                v: hexToUint8Array('0x26'),
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: resultToUint8Array({
+        signMsg: {
+          signature: {
+            r: hexToUint8Array(
+              '0xf891cb3f97d011391f24ba4815731306b0eb7b2b656bb7fa119257c2d36166bf',
+            ),
+            s: hexToUint8Array(
+              '0x1b3944d396f30bf85338ef1e81cb6740924946a46e35370a8b930109a23c9269',
+            ),
+            v: hexToUint8Array('0x26'),
+          },
+        },
+      }),
     },
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
@@ -135,29 +125,25 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            signMsg: {
-              initiate: {
-                walletId: new Uint8Array([
-                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
-                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
-                  86, 128, 26, 3, 187, 121, 64,
-                ]),
-                derivationPath: [
-                  0x80000000 + 44,
-                  0x80000000 + 60,
-                  0x80000000,
-                  0,
-                  0,
-                ],
-                messageType: SignMsgType.SIGN_MSG_TYPE_PERSONAL_SIGN,
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: queryToUint8Array({
+        signMsg: {
+          initiate: {
+            walletId: new Uint8Array([
+              199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
+              233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
+              26, 3, 187, 121, 64,
+            ]),
+            derivationPath: [
+              0x80000000 + 44,
+              0x80000000 + 60,
+              0x80000000,
+              0,
+              0,
+            ],
+            messageType: SignMsgType.SIGN_MSG_TYPE_PERSONAL_SIGN,
+          },
+        },
+      }),
     },
     {
       name: 'Msg data chunk response 1',
@@ -575,19 +561,15 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
     {
       name: 'Msg data chunk request 1',
       // data: new Uint8Array([18, 4, 10, 2, 10, 0]),
-      data: Uint8Array.from(
-        Result.encode(
-          Result.create({
-            signMsg: {
-              msgData: {
-                chunkRequest: {
-                  chunkIndex: 0,
-                },
-              },
+      data: resultToUint8Array({
+        signMsg: {
+          msgData: {
+            chunkAck: {
+              chunkIndex: 0,
             },
-          }),
-        ).finish(),
-      ),
+          },
+        },
+      }),
       statuses: [
         {
           flowStatus: 0,
@@ -602,19 +584,15 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
     {
       name: 'Msg data chunk request 2',
       // data: new Uint8Array([18, 4, 10, 2, 10, 0]),
-      data: Uint8Array.from(
-        Result.encode(
-          Result.create({
-            signMsg: {
-              msgData: {
-                chunkRequest: {
-                  chunkIndex: 1,
-                },
-              },
+      data: resultToUint8Array({
+        signMsg: {
+          msgData: {
+            chunkAck: {
+              chunkIndex: 1,
             },
-          }),
-        ).finish(),
-      ),
+          },
+        },
+      }),
     },
     {
       name: 'Signature',
@@ -625,23 +603,19 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
       //   83, 56, 239, 30, 129, 203, 103, 64, 146, 73, 70, 164, 110, 53, 55, 10,
       //   139, 147, 1, 9, 162, 60, 146, 105, 26, 1, 38,
       // ]),
-      data: Uint8Array.from(
-        Result.encode(
-          Result.create({
-            signMsg: {
-              signature: {
-                r: hexToUint8Array(
-                  '0xa39e9ff12916bdaa7ba5c55bb5dcfe1d26f6f20e6ee18f60b4bee6cf099830cb',
-                ),
-                s: hexToUint8Array(
-                  '0x539ebd86f6ed10a2cacb5960e23cc894d6c8f23244b09e96c7a88624ee8a7c93',
-                ),
-                v: hexToUint8Array('0x00'),
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: resultToUint8Array({
+        signMsg: {
+          signature: {
+            r: hexToUint8Array(
+              '0xa39e9ff12916bdaa7ba5c55bb5dcfe1d26f6f20e6ee18f60b4bee6cf099830cb',
+            ),
+            s: hexToUint8Array(
+              '0x539ebd86f6ed10a2cacb5960e23cc894d6c8f23244b09e96c7a88624ee8a7c93',
+            ),
+            v: hexToUint8Array('0x00'),
+          },
+        },
+      }),
     },
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },

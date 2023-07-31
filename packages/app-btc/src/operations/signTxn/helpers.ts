@@ -18,6 +18,12 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
   assert(params.txn.inputs.length > 0, 'txn.inputs should not be empty');
   assert(params.txn.outputs, 'txn.outputs should be defined');
   assert(params.txn.outputs.length > 0, 'txn.outputs should not be empty');
+  assert(params.txn.rawTxn, 'txn.rawTxn should be defined');
+  assert(params.txn.rawTxn.length > 0, 'txn.rawTxn should not be empty');
+  assert(
+    params.txn.inputs.length === params.txn.rawTxn.length,
+    'txn.rawTxn should not be same length as txn.inputs',
+  );
 
   for (let i = 0; i < params.txn.inputs.length; i += 1) {
     const input = params.txn.inputs[i];
@@ -42,13 +48,6 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
       isHex(input.prevTxnHash),
       `txn.inputs[${i}].prevTxnHash should be valid hex string`,
     );
-
-    if (input.prevTxn) {
-      assert(
-        isHex(input.prevTxn),
-        `txn.inputs[${i}].prevTxn should be valid hex string`,
-      );
-    }
   }
 
   for (let i = 0; i < params.txn.outputs.length; i += 1) {
@@ -64,10 +63,6 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
       assert(
         output.chainIndex,
         `txn.outputs[${i}].chainIndex should be define when it's a change output`,
-      );
-      assert(
-        output.addressIndex,
-        `txn.outputs[${i}].addressIndex should be define  when it's a change output`,
       );
     }
   }
