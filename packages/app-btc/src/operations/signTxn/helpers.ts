@@ -1,5 +1,6 @@
 import { assert, isHex } from '@cypherock/sdk-utils';
 import { ISignTxnParams } from './types';
+import { assertDerivationPath } from '../../utils';
 
 export const assertSignTxnParams = (params: ISignTxnParams) => {
   assert(params, 'params should be defined');
@@ -10,6 +11,7 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
     params.derivationPath.length === 3,
     'derivationPath should be of depth 3',
   );
+  assertDerivationPath(params.derivationPath);
 
   assert(params.txn, 'txn be defined');
   assert(params.txn.inputs, 'txn.inputs should be defined');

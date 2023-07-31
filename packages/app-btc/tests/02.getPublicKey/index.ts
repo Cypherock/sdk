@@ -1,10 +1,11 @@
 import { MockDeviceConnection } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
+import * as bitcoinJsLib from 'bitcoinjs-lib';
 import { clearMocks, expectMockCalls, setupMocks } from './__helpers__';
 import fixtures from './__fixtures__';
 
-import { BtcApp } from '../../src/index';
+import { BtcApp, setBitcoinJSLib } from '../../src';
 
 describe('btcApp.getPublicKey', () => {
   let connection: MockDeviceConnection;
@@ -15,6 +16,7 @@ describe('btcApp.getPublicKey', () => {
 
     connection = await MockDeviceConnection.create();
     btcApp = await BtcApp.create(connection);
+    setBitcoinJSLib(bitcoinJsLib);
   });
 
   afterEach(async () => {

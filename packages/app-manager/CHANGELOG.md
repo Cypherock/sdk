@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.19
+
+### Patch Changes
+
+- [#49](https://github.com/Cypherock/sdk/pull/49) [`91ab207`](https://github.com/Cypherock/sdk/commit/91ab207de0dedf963e993c82a120cf4af5d923fb) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added abort on all apps
+
 ## 0.0.18
 
 ### Patch Changes

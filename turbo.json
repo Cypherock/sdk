@@ -58,6 +58,11 @@
       "outputs": ["src/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
+    "browser-test#prebuild": {
+      "cache": true,
+      "outputs": ["src/generated/bitcoinjs-lib.js"],
+      "inputs": ["package.json"]
+    },
     "start:node": {
       "dependsOn": ["nodejs-test#build", "^start:node"],
       "cache": false
