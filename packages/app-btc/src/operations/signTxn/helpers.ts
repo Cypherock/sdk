@@ -23,10 +23,7 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
     const input = params.txn.inputs[i];
 
     assert(input.value, `txn.inputs[${i}].value should be defined`);
-    assert(
-      input.scriptPubKey,
-      `txn.inputs[${i}].scriptPubKey should be define`,
-    );
+    assert(input.address, `txn.inputs[${i}].address should be define`);
     assert(input.chainIndex, `txn.inputs[${i}].chainIndex should be define`);
     assert(
       input.addressIndex,
@@ -55,10 +52,7 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
     const output = params.txn.outputs[i];
 
     assert(output.value, `txn.outputs[${i}].value should be defined`);
-    assert(
-      output.scriptPubKey,
-      `txn.outputs[${i}].scriptPubKey should be define`,
-    );
+    assert(output.address, `txn.outputs[${i}].address should be define`);
 
     if (output.isChange) {
       assert(

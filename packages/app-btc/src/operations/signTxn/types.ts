@@ -6,7 +6,7 @@ export interface ISignTxnInput {
   prevTxnHash: string;
   prevIndex: number;
   value: string;
-  scriptPubKey: string;
+  address: string;
 
   chainIndex: number;
   addressIndex: number;
@@ -17,7 +17,7 @@ export interface ISignTxnInput {
 
 export interface ISignTxnOutput {
   value: string;
-  scriptPubKey: string;
+  address: string;
 
   isChange: boolean;
   chainIndex?: number;

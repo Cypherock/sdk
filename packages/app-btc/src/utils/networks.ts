@@ -56,13 +56,14 @@ const dogecoin = {
   bech32: '',
 };
 
-const coinIndexToNetworkMap: Record<number, typeof bitcoin | undefined> = {
-  [BITCOIN_COIN_INDEX]: bitcoin,
-  [TESTNET_COIN_INDEX]: testnet,
-  [LITECOIN_COIN_INDEX]: litecoin,
-  [DOGECOIN_COIN_INDEX]: dogecoin,
-  [DASH_COIN_INDEX]: dash,
-};
+export const coinIndexToNetworkMap: Record<number, typeof bitcoin | undefined> =
+  {
+    [BITCOIN_COIN_INDEX]: bitcoin,
+    [TESTNET_COIN_INDEX]: testnet,
+    [LITECOIN_COIN_INDEX]: litecoin,
+    [DOGECOIN_COIN_INDEX]: dogecoin,
+    [DASH_COIN_INDEX]: dash,
+  };
 
 export type purposeType = 'segwit' | 'legacy';
 
