@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.21
+
+### Patch Changes
+
+- [#53](https://github.com/Cypherock/sdk/pull/53) [`d2f96cb`](https://github.com/Cypherock/sdk/commit/d2f96cb6435cdc9d70354ae7a2610dfbb2d2c9d1) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - btc sign txn takes address as input
+
 ## 0.0.20
 
 ### Patch Changes
