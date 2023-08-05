@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.18
+
+### Patch Changes
+
+- [#55](https://github.com/Cypherock/sdk/pull/55) [`b87b900`](https://github.com/Cypherock/sdk/commit/b87b9004bde6520201548a4268deb4de6a7010fe) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - getting ethers from external env
+
 ## 0.0.17
 
 ### Patch Changes
