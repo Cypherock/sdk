@@ -5,12 +5,12 @@ import {
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
-import { ethers } from 'ethers';
 import { SignMsgStatus } from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
+  getEthersLib,
 } from '../../utils';
 import { ISignMsgParams, ISignMsgResult } from './types';
 
@@ -31,6 +31,8 @@ export const signMsg = async (
     params.derivationPath.length > 3,
     'derivationPath should be greater than 3',
   );
+
+  const ethers = getEthersLib();
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignMsgStatus,
