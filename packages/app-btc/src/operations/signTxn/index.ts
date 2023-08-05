@@ -10,6 +10,8 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
+  getBitcoinJsLib,
+  getNetworkFromPath,
 } from '../../utils';
 import { assertSignTxnParams } from './helpers';
 import { ISignTxnParams, ISignTxnResult } from './types';
@@ -25,6 +27,14 @@ const signTxnDefaultParams = {
   input: {
     sequence: 0xffffffff,
   },
+};
+
+const addressToScriptPubKey = (address: string, derivationPath: number[]) => {
+  const network = getNetworkFromPath(derivationPath);
+
+  return getBitcoinJsLib()
+    .address.toOutputScript(address, network)
+    .toString('hex');
 };
 
 export const signTxn = async (
@@ -79,7 +89,9 @@ export const signTxn = async (
         prevTxn: hexToUint8Array(input.prevTxn),
         prevTxnHash: hexToUint8Array(input.prevTxnHash),
         prevIndex: input.prevIndex,
-        scriptPubKey: hexToUint8Array(input.scriptPubKey),
+        scriptPubKey: hexToUint8Array(
+          addressToScriptPubKey(input.address, params.derivationPath),
+        ),
         value: input.value,
         sequence: input.sequence ?? signTxnDefaultParams.input.sequence,
         chainIndex: input.chainIndex,
@@ -96,7 +108,9 @@ export const signTxn = async (
     const output = params.txn.outputs[i];
     await helper.sendQuery({
       output: {
-        scriptPubKey: hexToUint8Array(output.scriptPubKey),
+        scriptPubKey: hexToUint8Array(
+          addressToScriptPubKey(output.address, params.derivationPath),
+        ),
         value: output.value,
         isChange: output.isChange,
         chainIndex: output.chainIndex,
