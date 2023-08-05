@@ -6,12 +6,13 @@ import {
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
-import { ethers } from 'ethers';
+import type { Transaction } from 'ethers';
 import { AddressFormat, SignTxnStatus } from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
+  getEthersLib,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult } from './types';
 
@@ -36,7 +37,9 @@ export const signTxn = async (
     'derivationPath should be greater than 3',
   );
 
-  let decodedTxn: ethers.Transaction;
+  const ethers = getEthersLib();
+
+  let decodedTxn: Transaction;
 
   try {
     decodedTxn = ethers.Transaction.from(params.txn);
