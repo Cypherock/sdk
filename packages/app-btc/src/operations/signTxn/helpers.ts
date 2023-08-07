@@ -39,6 +39,13 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
       isHex(input.prevTxnHash),
       `txn.inputs[${i}].prevTxnHash should be valid hex string`,
     );
+
+    if (input.prevTxn) {
+      assert(
+        isHex(input.prevTxn),
+        `txn.inputs[${i}].prevTxn should be valid hex string`,
+      );
+    }
   }
 
   for (let i = 0; i < params.txn.outputs.length; i += 1) {

@@ -72,6 +72,14 @@ const purposeMap: Record<number, purposeType | undefined> = {
   [LEGACY_PURPOSE]: 'legacy',
 };
 
+export const coinIndexToCoinTypeMap: Record<number, string | undefined> = {
+  [BITCOIN_COIN_INDEX]: 'btc',
+  [TESTNET_COIN_INDEX]: 'btct',
+  [LITECOIN_COIN_INDEX]: 'ltc',
+  [DOGECOIN_COIN_INDEX]: 'doge',
+  [DASH_COIN_INDEX]: 'dash',
+};
+
 export const getNetworkFromPath = (path: number[]) => {
   const coinIndex = path[1];
   const network = coinIndexToNetworkMap[coinIndex];
@@ -86,6 +94,14 @@ export const getPurposeType = (path: number[]) => {
 
   assert(purposeType, `Purpose index: 0x${purpose.toString(16)} not supported`);
   return purposeType;
+};
+
+export const getCoinTypeFromPath = (path: number[]) => {
+  const coinIndex = path[1];
+  const network = coinIndexToCoinTypeMap[coinIndex];
+
+  assert(network, `Coin index: 0x${coinIndex.toString(16)} not supported`);
+  return network;
 };
 
 const supportedPurposeMap: Record<number, purposeType[] | undefined> = {

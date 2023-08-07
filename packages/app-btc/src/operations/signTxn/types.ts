@@ -2,7 +2,7 @@ import { SignTxnStatus } from '../../proto/generated/types';
 
 export type SignTxnEventHandler = (event: SignTxnStatus) => void;
 
-export interface ISignTxnInput {
+export interface ISignTxnInputData {
   prevTxnHash: string;
   prevIndex: number;
   value: string;
@@ -15,12 +15,11 @@ export interface ISignTxnInput {
   sequence?: number;
 }
 
-export interface ISignTxnOutput {
+export interface ISignTxnOutputData {
   value: string;
   address: string;
 
   isChange: boolean;
-  changeIndex?: number;
   addressIndex?: number;
 }
 
@@ -30,8 +29,8 @@ export interface ISignTxnParams {
   onEvent?: SignTxnEventHandler;
 
   txn: {
-    inputs: ISignTxnInput[];
-    outputs: ISignTxnOutput[];
+    inputs: ISignTxnInputData[];
+    outputs: ISignTxnOutputData[];
     locktime?: number;
     hashType?: number;
   };

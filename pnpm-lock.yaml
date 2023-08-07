@@ -145,6 +145,9 @@ importers:
       '@cypherock/sdk-utils':
         specifier: workspace:^0.0.13
         version: link:../util
+      axios:
+        specifier: ^1.3.4
+        version: 1.3.4
       long:
         specifier: ^5.2.1
         version: 5.2.1
