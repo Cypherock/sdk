@@ -8,10 +8,10 @@ export interface ISignTxnInput {
   value: string;
   address: string;
 
-  chainIndex: number;
+  changeIndex: number;
   addressIndex: number;
 
-  prevTxn: string;
+  prevTxn?: string;
   sequence?: number;
 }
 
@@ -20,7 +20,7 @@ export interface ISignTxnOutput {
   address: string;
 
   isChange: boolean;
-  chainIndex?: number;
+  changeIndex?: number;
   addressIndex?: number;
 }
 

@@ -27,7 +27,7 @@ const commonParams = {
           value: '3572363',
           address: 'bc1qgjr28pdztqd6ueh52eah8ttk4nvtx7l65husa9',
 
-          chainIndex: 0,
+          changeIndex: 0,
           addressIndex: 10,
           sequence: 0xffffffff,
         },
