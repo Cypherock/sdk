@@ -10,9 +10,8 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
-  getBitcoinJsLib,
-  getNetworkFromPath,
 } from '../../utils';
+import { addressToScriptPubKey } from '../../utils/transaction';
 import { assertSignTxnParams } from './helpers';
 import { ISignTxnParams, ISignTxnResult } from './types';
 
@@ -27,14 +26,6 @@ const signTxnDefaultParams = {
   input: {
     sequence: 0xffffffff,
   },
-};
-
-const addressToScriptPubKey = (address: string, derivationPath: number[]) => {
-  const network = getNetworkFromPath(derivationPath);
-
-  return getBitcoinJsLib()
-    .address.toOutputScript(address, network)
-    .toString('hex');
 };
 
 export const signTxn = async (
