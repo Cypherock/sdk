@@ -41,6 +41,7 @@
     "@cypherock/sdk-interfaces": "workspace:^0.0.11",
     "@cypherock/sdk-utils": "workspace:^0.0.13",
     "axios": "^1.3.4",
+    "bip66": "^1.1.5",
     "long": "^5.2.1",
     "protobufjs": "^7.2.2"
   },
