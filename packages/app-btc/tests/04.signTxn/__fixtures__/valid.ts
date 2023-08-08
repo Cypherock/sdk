@@ -20,7 +20,7 @@ const withOneInput: ISignTxnTestCase = {
           prevTxn:
             '0200000000010211f852bd83a5ba61877026abda944b419d05c4768df7005a8b8f6cae14e4a57f2600000000fffffffff1ba6c76c0e31ef0b3cbf605d89b523c5bef16a58ec4cfb2550f49a4108aff4f0100000000ffffffff02cda4130000000000160014826979058429649e3160783f8c03c480f98329bb8b8236000000000017a9143291522f1cd6699e8a076a7618da8fa0d68c40e98702483045022100f25f539965a10312dd6657d21c43872618fbab3a2bc6a665192735e5e19b080c022038a8e186621abc01a90e735d50e967e1485f12793a8c10e8ea4a56dc5dca619b0121034ee63fbc1dd72c317179ae76597bd28e8b3fca1c6238760f8fc9bcc1a6b0630802483045022100a5094498a19913bbf1bb9ca129d700b771d637f1cfd46ff419ac0188ad6376c50220346f23f281990f1aaf833c406f23f8439f561a11657310a97a371ee6191c020401210235ec79fc08cf43f6e470e8526ba70c0e92eb65d917f266210eb5a2b4e9eb942400000000',
           value: '3572363',
-          address: '138BJQbgKvZZMG6d3k8uGXidBeGgWfeacV',
+          address: '36JPoDa64vsdWSsm4fCHuuFmcCe4LQrZAS',
           changeIndex: 0,
           addressIndex: 10,
           sequence: 0xffffffff,
@@ -70,13 +70,15 @@ const withOneInput: ISignTxnTestCase = {
       data: queryToUint8Array({
         signTxn: {
           input: {
-            prevTxn: hexToUint8Array(''),
+            prevTxn: hexToUint8Array(
+              '0200000000010211f852bd83a5ba61877026abda944b419d05c4768df7005a8b8f6cae14e4a57f2600000000fffffffff1ba6c76c0e31ef0b3cbf605d89b523c5bef16a58ec4cfb2550f49a4108aff4f0100000000ffffffff02cda4130000000000160014826979058429649e3160783f8c03c480f98329bb8b8236000000000017a9143291522f1cd6699e8a076a7618da8fa0d68c40e98702483045022100f25f539965a10312dd6657d21c43872618fbab3a2bc6a665192735e5e19b080c022038a8e186621abc01a90e735d50e967e1485f12793a8c10e8ea4a56dc5dca619b0121034ee63fbc1dd72c317179ae76597bd28e8b3fca1c6238760f8fc9bcc1a6b0630802483045022100a5094498a19913bbf1bb9ca129d700b771d637f1cfd46ff419ac0188ad6376c50220346f23f281990f1aaf833c406f23f8439f561a11657310a97a371ee6191c020401210235ec79fc08cf43f6e470e8526ba70c0e92eb65d917f266210eb5a2b4e9eb942400000000',
+            ),
             prevTxnHash: hexToUint8Array(
               'a99155df72ea86ca6be1c9d039ade79e6feb7c4f5904f12b4b168b7416a22fd9',
             ),
             prevOutputIndex: 1,
             scriptPubKey: hexToUint8Array(
-              '1600141085e0eb5e344427e7bf622d4d3bf2c51709c31b',
+              'a9143291522f1cd6699e8a076a7618da8fa0d68c40e987',
             ),
             value: '3572363',
             sequence: 0xffffffff,
@@ -92,7 +94,7 @@ const withOneInput: ISignTxnTestCase = {
         signTxn: {
           output: {
             scriptPubKey: hexToUint8Array(
-              '001402d8a4c57953b86fb39d47be9d95bae1eb756ece',
+              '76a91436fd473970f3b559dd2f9b670ccae892e657111d88ac',
             ),
             value: '3547271',
             isChange: false,
@@ -186,6 +188,8 @@ const withMultipleInputs: ISignTxnTestCase = {
           prevIndex: 0,
           prevTxnHash:
             '1ac7346b1256ae92e619140e2e27cd4ce6e5e66a8948819d4d11a0c8a5c2e243',
+          prevTxn:
+            '02000000000101d1fdfbab759804e210bf2f87d38f161383a9d6747bab7aabf576dc2ca2338fa32a00000000ffffffff0280841e0000000000160014c140259b3f2b5ebe911ca799f7ab9b4b1065d8fc884d0100000000001600142eb5cdaecb0eb8748f33b159c41808226316a5c302483045022100aa45df282372bf3483ced44c2c69c20a956e1afbca62cc8994f0b815330a466302207d3364516cc4af1acca752c942de4ae87bd88851c8fbb1ee010f5250bd406c69012102adddb9a9dc988284134809c08a45291eb8f99b8486324b8069a763fad46b6bb300000000',
           value: '2000000',
           address: '3F1k49NgiVUQ2rhDAovhk2aw2GmEzXYGC8',
 
@@ -208,6 +212,8 @@ const withMultipleInputs: ISignTxnTestCase = {
           prevIndex: 1,
           prevTxnHash:
             '7774e05cd70c4c64abe48796295a143400c09f430645417937a9649f5329e531',
+          prevTxn:
+            '020000000001011fdeeaccbf3a30cd6658b6cdf42aafe9f1dba5840f550d38a5b2d2c2205f94c60000000000ffffffff0296c6950d00000000160014e494512f5c3dabec37c7fb02409482940d8ef80ab0ea1d0000000000160014eefc04e0e863a72b90605e52bf8d39e221924c690247304402202890a4c849a922b21f71ecb474f4c0732204db50fcac18c675ccdbb90c34c1d102200a0d81e2304d58b2231546e2cfe70bbbe039c00e9b134d1ae3ad69990bc6e5dd012102edd32b4cb44e9e821ea835b77ae1f73dc30b6ad7ee1b28385117a5ffa89810a300000000',
           value: '1960624',
           address: '3MboCrh8Rnn5HUphnz1kikEkRG5mZdWGgq',
 
@@ -218,6 +224,8 @@ const withMultipleInputs: ISignTxnTestCase = {
           prevIndex: 3,
           prevTxnHash:
             '16447d5c065942eb1f6d2bb92c9c9411e2bcbeac3ca2c57bb26dab523af59297',
+          prevTxn:
+            '02000000000101929833853b3e67c20475a47ed055000df3571934603927fb7f78c0bbb50c789d0000000000ffffffff04c9856e0000000000160014b211d81734360266bb678607e4c92fc7496da7aa4a850a0000000000160014a93163b3247860b7a1544aa5aeb5c6d4c66bcb71f0642b0000000000160014752939efacf0fba63223d3000d1079fc5fbaf52a7ce91c000000000016001478f6c64f867e053ab52830722280772f8e4d878d02483045022100cc1aa3166ea569dd1386d5f97f2f940c88a1dbefe1d8c6982b8960e0f76368cc0220490a751343a2560db60f70dff4417603beb692c7493b209bdd04adbb058fff5a012103838a7502737c06c8dafa084739f753dbdda85fc3407bd6c0d899cc91132df68400000000',
           value: '1894780',
           address: '3BtejuNNGJp7Pa2HwoG92TpKyq15PjfxR4',
 
@@ -280,12 +288,16 @@ const withMultipleInputs: ISignTxnTestCase = {
       data: queryToUint8Array({
         signTxn: {
           input: {
-            prevTxn: hexToUint8Array(''),
+            prevTxn: hexToUint8Array(
+              '02000000000101d1fdfbab759804e210bf2f87d38f161383a9d6747bab7aabf576dc2ca2338fa32a00000000ffffffff0280841e0000000000160014c140259b3f2b5ebe911ca799f7ab9b4b1065d8fc884d0100000000001600142eb5cdaecb0eb8748f33b159c41808226316a5c302483045022100aa45df282372bf3483ced44c2c69c20a956e1afbca62cc8994f0b815330a466302207d3364516cc4af1acca752c942de4ae87bd88851c8fbb1ee010f5250bd406c69012102adddb9a9dc988284134809c08a45291eb8f99b8486324b8069a763fad46b6bb300000000',
+            ),
             prevTxnHash: hexToUint8Array(
               '1ac7346b1256ae92e619140e2e27cd4ce6e5e66a8948819d4d11a0c8a5c2e243',
             ),
             prevOutputIndex: 0,
-            scriptPubKey: hexToUint8Array(''),
+            scriptPubKey: hexToUint8Array(
+              'a91492244aaf60224118995d5ca605fddf104860892387',
+            ),
             value: '2000000',
             sequence: 0xffffffff,
             changeIndex: 0,
@@ -299,12 +311,16 @@ const withMultipleInputs: ISignTxnTestCase = {
       data: queryToUint8Array({
         signTxn: {
           input: {
-            prevTxn: hexToUint8Array(''),
+            prevTxn: hexToUint8Array(
+              '02000000000101dfcbb360d737e7a82f820a1d79d5e6d0bfef8b0df82621d62329f947dcf403d70000000000ffffffff01fb6d1e0000000000160014d878934ce2df135f11b04c492c372f01dbc943550247304402206c9e32d16d1bd88b4460c779db02d1b90467c4f38254dbeb4009035068f6dddd0220792e2288f6e05e11fa7f312b94e2602cf272344ecae8a7ed3cd7f7179b59372b0121035af542863d92528a30c20a9925921189272ceeaa2b62cf6e24c0ca00ad891eb800000000',
+            ),
             prevTxnHash: hexToUint8Array(
               'e0beda6c1b3ee20e8d37cef25035baf7ceb95359b0915088dc3c8e400b62a4e9',
             ),
             prevOutputIndex: 0,
-            scriptPubKey: hexToUint8Array(''),
+            scriptPubKey: hexToUint8Array(
+              'a9149d4c23c12e4f338673342d39870cd121a71a088a87',
+            ),
             value: '1994235',
             sequence: 0xffffffff,
             changeIndex: 0,
@@ -325,7 +341,9 @@ const withMultipleInputs: ISignTxnTestCase = {
               '020000000001011fdeeaccbf3a30cd6658b6cdf42aafe9f1dba5840f550d38a5b2d2c2205f94c60000000000ffffffff0296c6950d00000000160014e494512f5c3dabec37c7fb02409482940d8ef80ab0ea1d0000000000160014eefc04e0e863a72b90605e52bf8d39e221924c690247304402202890a4c849a922b21f71ecb474f4c0732204db50fcac18c675ccdbb90c34c1d102200a0d81e2304d58b2231546e2cfe70bbbe039c00e9b134d1ae3ad69990bc6e5dd012102edd32b4cb44e9e821ea835b77ae1f73dc30b6ad7ee1b28385117a5ffa89810a300000000',
             ),
             prevOutputIndex: 1,
-            scriptPubKey: hexToUint8Array(''),
+            scriptPubKey: hexToUint8Array(
+              'a914da65d19d62b6bda3603aee5f47cc672ff4b3f44c87',
+            ),
             value: '1960624',
             sequence: 0xffffffff,
             changeIndex: 1,
@@ -346,7 +364,9 @@ const withMultipleInputs: ISignTxnTestCase = {
               '16447d5c065942eb1f6d2bb92c9c9411e2bcbeac3ca2c57bb26dab523af59297',
             ),
             prevOutputIndex: 3,
-            scriptPubKey: hexToUint8Array(''),
+            scriptPubKey: hexToUint8Array(
+              'a9146fe490fac88fdc48dbef29f7af46f21c9dc7999c87',
+            ),
             value: '1894780',
             sequence: 0xffffffff,
             changeIndex: 1,
@@ -361,7 +381,7 @@ const withMultipleInputs: ISignTxnTestCase = {
         signTxn: {
           output: {
             scriptPubKey: hexToUint8Array(
-              '0014840428016ac99287b5793d6775bedf8eb6ad6d59',
+              'a914e34e9a353cfff223f53c1916035e20fd7ac6cf0487',
             ),
             value: '3810708',
             isChange: false,
@@ -375,7 +395,7 @@ const withMultipleInputs: ISignTxnTestCase = {
         signTxn: {
           output: {
             scriptPubKey: hexToUint8Array(
-              '0014f14099e64e8227701c500ca6e8711019bbac24fe',
+              'a914724fcd5efea5305003a3542e1eb13345d3f0b50587',
             ),
             value: '3637363',
             isChange: false,
@@ -389,7 +409,7 @@ const withMultipleInputs: ISignTxnTestCase = {
         signTxn: {
           output: {
             scriptPubKey: hexToUint8Array(
-              '00149e4280f5196acd95aafa3897d4a592ff3fc065ee',
+              'a9143679575fedaa63e893e97f0669830ac28a53da0b87',
             ),
             value: '382560',
             isChange: true,
