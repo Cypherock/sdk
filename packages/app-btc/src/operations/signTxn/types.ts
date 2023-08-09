@@ -37,5 +37,5 @@ export interface ISignTxnParams {
 }
 
 export interface ISignTxnResult {
-  signatures: string[];
+  signedTransaction: string;
 }

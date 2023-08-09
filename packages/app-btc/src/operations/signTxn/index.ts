@@ -13,7 +13,10 @@ import {
   getCoinTypeFromPath,
 } from '../../utils';
 import { getRawTxnHash } from '../../services/transaction';
-import { addressToScriptPubKey } from '../../utils/transaction';
+import {
+  addressToScriptPubKey,
+  createSignedTransaction,
+} from '../../utils/transaction';
 import { assertSignTxnParams } from './helpers';
 import { ISignTxnParams, ISignTxnResult } from './types';
 
@@ -73,21 +76,24 @@ export const signTxn = async (
   const { metaAccepted } = await helper.waitForResult();
   assertOrThrowInvalidResult(metaAccepted);
 
+  // duplicate locally and fill `prevTxn` if missing; we need completed inputs for preparing signed transaction
+  const { inputs } = params.txn;
   for (let i = 0; i < params.txn.inputs.length; i += 1) {
     const input = params.txn.inputs[i];
     // API needs transaction id which is reversed byte order of the transaction hash
-    const hash = Buffer.from(input.prevTxnHash, 'hex')
+    const txnId = Buffer.from(input.prevTxnHash, 'hex')
       .reverse()
       .toString('hex');
+    const prevTxn =
+      input.prevTxn ??
+      (await getRawTxnHash({
+        hash: txnId,
+        coinType: getCoinTypeFromPath(params.derivationPath),
+      }));
+    inputs[i].prevTxn = prevTxn;
     await helper.sendQuery({
       input: {
-        prevTxn: hexToUint8Array(
-          input.prevTxn ??
-            (await getRawTxnHash({
-              hash,
-              coinType: getCoinTypeFromPath(params.derivationPath),
-            })),
-        ),
+        prevTxn: hexToUint8Array(prevTxn),
         prevTxnHash: hexToUint8Array(input.prevTxnHash),
         prevOutputIndex: input.prevIndex,
         scriptPubKey: hexToUint8Array(
@@ -137,8 +143,13 @@ export const signTxn = async (
   }
 
   forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CARD);
-  // TODO: prepare signed transaction from scriptSigs
+  const signedTransaction: string = createSignedTransaction({
+    inputs,
+    outputs: params.txn.outputs,
+    signatures,
+    derivationPath: params.derivationPath,
+  });
 
   logger.info('Completed');
-  return { signatures };
+  return { signedTransaction };
 };

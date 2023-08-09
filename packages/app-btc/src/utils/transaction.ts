@@ -42,9 +42,10 @@ export const createSignedTransaction = (params: {
 
     const isSegwit = isScriptSegwit(script);
 
+    // txnInput needs txnId as value for `hash`
     const txnInput: any = {
-      hash: input.prevTxnHash,
-      index: i,
+      hash: Buffer.from(input.prevTxnHash, 'hex').reverse().toString('hex'),
+      index: input.prevIndex,
     };
 
     if (isSegwit) {
@@ -76,10 +77,14 @@ export const createSignedTransaction = (params: {
 
     const signer: Signer = {
       publicKey: Buffer.from(signature.slice(signature.length - 66), 'hex'),
-      sign: () => Buffer.concat([decoded.r, decoded.s]),
+      sign: () =>
+        Buffer.concat([
+          decoded.r.subarray(decoded.r.length - 32),
+          decoded.s.subarray(decoded.s.length - 32),
+        ]),
     };
 
-    transaction.signInput(0, signer);
+    transaction.signInput(i, signer);
   }
 
   transaction.finalizeAllInputs();
