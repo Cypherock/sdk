@@ -3,7 +3,7 @@ import { SignTxnStatus } from '../../proto/generated/types';
 export type SignTxnEventHandler = (event: SignTxnStatus) => void;
 
 export interface ISignTxnInputData {
-  prevTxnHash: string;
+  prevTxnId: string;
   prevIndex: number;
   value: string;
   address: string;

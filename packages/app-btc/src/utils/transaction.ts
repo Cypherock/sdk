@@ -35,16 +35,13 @@ export const createSignedTransaction = (params: {
   const bitcoinjs = getBitcoinJsLib();
   const transaction = new bitcoinjs.Psbt();
 
-  for (let i = 0; i < inputs.length; i += 1) {
-    const input = inputs[i];
-
+  for (const input of inputs) {
     const script = addressToScriptPubKey(input.address, derivationPath);
 
     const isSegwit = isScriptSegwit(script);
 
-    // txnInput needs txnId as value for `hash`
     const txnInput: any = {
-      hash: Buffer.from(input.prevTxnHash, 'hex').reverse().toString('hex'),
+      hash: input.prevTxnId,
       index: input.prevIndex,
     };
 

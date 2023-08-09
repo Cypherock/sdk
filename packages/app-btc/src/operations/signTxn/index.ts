@@ -80,21 +80,21 @@ export const signTxn = async (
   const inputs = JSON.parse(JSON.stringify(params.txn.inputs));
   for (let i = 0; i < params.txn.inputs.length; i += 1) {
     const input = params.txn.inputs[i];
-    // API needs transaction id which is reversed byte order of the transaction hash
-    const txnId = Buffer.from(input.prevTxnHash, 'hex')
+    // Device needs transaction hash which is reversed byte order of the transaction id
+    const prevTxnHash = Buffer.from(input.prevTxnId, 'hex')
       .reverse()
       .toString('hex');
     const prevTxn =
       input.prevTxn ??
       (await getRawTxnHash({
-        hash: txnId,
+        hash: input.prevTxnId,
         coinType: getCoinTypeFromPath(params.derivationPath),
       }));
     inputs[i].prevTxn = prevTxn;
     await helper.sendQuery({
       input: {
         prevTxn: hexToUint8Array(prevTxn),
-        prevTxnHash: hexToUint8Array(input.prevTxnHash),
+        prevTxnHash: hexToUint8Array(prevTxnHash),
         prevOutputIndex: input.prevIndex,
         scriptPubKey: hexToUint8Array(
           addressToScriptPubKey(input.address, params.derivationPath),
@@ -109,8 +109,7 @@ export const signTxn = async (
     assertOrThrowInvalidResult(inputAccepted);
   }
 
-  for (let i = 0; i < params.txn.outputs.length; i += 1) {
-    const output = params.txn.outputs[i];
+  for (const output of params.txn.outputs) {
     await helper.sendQuery({
       output: {
         scriptPubKey: hexToUint8Array(

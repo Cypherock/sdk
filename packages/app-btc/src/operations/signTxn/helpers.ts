@@ -31,13 +31,10 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
     );
     assert(input.prevIndex, `txn.inputs[${i}].addressIndex should be define`);
 
+    assert(input.prevTxnId, `txn.inputs[${i}].prevTxnId should not be empty`);
     assert(
-      input.prevTxnHash,
-      `txn.inputs[${i}].prevTxnHash should not be empty`,
-    );
-    assert(
-      isHex(input.prevTxnHash),
-      `txn.inputs[${i}].prevTxnHash should be valid hex string`,
+      isHex(input.prevTxnId),
+      `txn.inputs[${i}].prevTxnId should be valid hex string`,
     );
 
     if (input.prevTxn) {
