@@ -77,7 +77,7 @@ export const signTxn = async (
   assertOrThrowInvalidResult(metaAccepted);
 
   // duplicate locally and fill `prevTxn` if missing; we need completed inputs for preparing signed transaction
-  const { inputs } = params.txn;
+  const inputs = JSON.parse(JSON.stringify(params.txn.inputs));
   for (let i = 0; i < params.txn.inputs.length; i += 1) {
     const input = params.txn.inputs[i];
     // API needs transaction id which is reversed byte order of the transaction hash
@@ -151,5 +151,5 @@ export const signTxn = async (
   });
 
   logger.info('Completed');
-  return { signedTransaction };
+  return { signedTransaction, signatures };
 };
