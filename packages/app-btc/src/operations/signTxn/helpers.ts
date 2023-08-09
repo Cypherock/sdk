@@ -24,20 +24,17 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
 
     assert(input.value, `txn.inputs[${i}].value should be defined`);
     assert(input.address, `txn.inputs[${i}].address should be define`);
-    assert(input.chainIndex, `txn.inputs[${i}].chainIndex should be define`);
+    assert(input.changeIndex, `txn.inputs[${i}].changeIndex should be define`);
     assert(
       input.addressIndex,
       `txn.inputs[${i}].addressIndex should be define`,
     );
     assert(input.prevIndex, `txn.inputs[${i}].addressIndex should be define`);
 
+    assert(input.prevTxnId, `txn.inputs[${i}].prevTxnId should not be empty`);
     assert(
-      input.prevTxnHash,
-      `txn.inputs[${i}].prevTxnHash should not be empty`,
-    );
-    assert(
-      isHex(input.prevTxnHash),
-      `txn.inputs[${i}].prevTxnHash should be valid hex string`,
+      isHex(input.prevTxnId),
+      `txn.inputs[${i}].prevTxnId should be valid hex string`,
     );
 
     if (input.prevTxn) {
@@ -56,12 +53,8 @@ export const assertSignTxnParams = (params: ISignTxnParams) => {
 
     if (output.isChange) {
       assert(
-        output.chainIndex,
-        `txn.outputs[${i}].chainIndex should be define when it's a change output`,
-      );
-      assert(
         output.addressIndex,
-        `txn.outputs[${i}].addressIndex should be define  when it's a change output`,
+        `txn.outputs[${i}].addressIndex should be define when it's a change output`,
       );
     }
   }

@@ -1,5 +1,6 @@
+import { hexToUint8Array } from '@cypherock/sdk-utils';
 import { ISignTxnTestCase } from './types';
-import { Query } from '../../../src/proto/generated/btc/core';
+import { queryToUint8Array, resultToUint8Array } from '../__helpers__';
 
 const withOneInput: ISignTxnTestCase = {
   name: 'With 1 input',
@@ -13,24 +14,22 @@ const withOneInput: ISignTxnTestCase = {
     txn: {
       inputs: [
         {
-          prevIndex: 1,
-          prevTxnHash:
-            'a99155df72ea86ca6be1c9d039ade79e6feb7c4f5904f12b4b168b7416a22fd9',
+          prevIndex: 0,
+          prevTxnId:
+            'e1483376a1cd64027f386c2e28650536a13c813e955469f1f486dafb4f4b861d',
           prevTxn:
-            '0200000000010211f852bd83a5ba61877026abda944b419d05c4768df7005a8b8f6cae14e4a57f2600000000fffffffff1ba6c76c0e31ef0b3cbf605d89b523c5bef16a58ec4cfb2550f49a4108aff4f0100000000ffffffff02cda4130000000000160014826979058429649e3160783f8c03c480f98329bb8b8236000000000017a9143291522f1cd6699e8a076a7618da8fa0d68c40e98702483045022100f25f539965a10312dd6657d21c43872618fbab3a2bc6a665192735e5e19b080c022038a8e186621abc01a90e735d50e967e1485f12793a8c10e8ea4a56dc5dca619b0121034ee63fbc1dd72c317179ae76597bd28e8b3fca1c6238760f8fc9bcc1a6b0630802483045022100a5094498a19913bbf1bb9ca129d700b771d637f1cfd46ff419ac0188ad6376c50220346f23f281990f1aaf833c406f23f8439f561a11657310a97a371ee6191c020401210235ec79fc08cf43f6e470e8526ba70c0e92eb65d917f266210eb5a2b4e9eb942400000000',
-
-          value: '3572363',
-          address: '138BJQbgKvZZMG6d3k8uGXidBeGgWfeacV',
-
-          chainIndex: 0,
-          addressIndex: 10,
+            '0200000002e5937831604534dfe013f9a6a983ae6d6bd853f42f235ce70ca5a7fe81643738000000006b483045022100ced63a4d44463475dacc752dc0a6f67b892eb4894ec99117c9fb04ac03b05bae022036c9985920b9d838858082223eaa480172d00a78bc556a0a8550f6f64cb613c60121020e7f64d7dad196fd8fe07d667b50aa2be77c79dd841136d0f0659be3aa8e5ba6ffffffff1ef0dba72077858b5388513263a62678a0bff7bc45dc04164dcafac673d9fdbd000000006b483045022100bb32a2ac921737e958da4e44ba0dcd60e85b5583dab6cbbeb2efc81ca0bf3b410220464415e8a18ee2612fccb034a977c80bc9575adb358aa982b25e3eaed42927bb012102c8a84d4370f37d079896b2f296947ecb9d3812ba074cd38d79f2dc1ef137781affffffff01601800000000000016001429f267742a8cea09dce9853d7c4c4653909f345a00000000',
+          value: '6240',
+          address: 'bc1q98exwap23n4qnh8fs57hcnzx2wgf7dz6up764t',
+          changeIndex: 0, // dummy value
+          addressIndex: 10, // dummy value
           sequence: 0xffffffff,
         },
       ],
       outputs: [
         {
-          value: '3547271',
-          address: '161kuSQmUch28WMndPEaw4uZUiyGye6UxF',
+          value: '3168',
+          address: 'bc1qe5pjgzk9ml6r6xsze8zqz73taehms4e59ttpdf',
           isChange: false,
         },
       ],
@@ -39,72 +38,77 @@ const withOneInput: ISignTxnTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            signTxn: {
-              initiate: {
-                walletId: new Uint8Array([
-                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
-                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
-                  86, 128, 26, 3, 187, 121, 64,
-                ]),
-                derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: queryToUint8Array({
+        signTxn: {
+          initiate: {
+            walletId: new Uint8Array([
+              199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
+              233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
+              26, 3, 187, 121, 64,
+            ]),
+            derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
+          },
+        },
+      }),
     },
     {
       name: 'Send meta',
-      data: new Uint8Array([26, 10, 18, 8, 8, 2, 16, 1, 24, 1, 40, 1]),
+      data: queryToUint8Array({
+        signTxn: {
+          meta: {
+            version: 2,
+            locktime: 0,
+            inputCount: 1,
+            outputCount: 1,
+            sighash: 1,
+          },
+        },
+      }),
     },
     {
       name: 'Input 1',
-      data: new Uint8Array([
-        26, 199, 3, 26, 196, 3, 10, 245, 2, 2, 0, 0, 0, 0, 1, 2, 17, 248, 82,
-        189, 131, 165, 186, 97, 135, 112, 38, 171, 218, 148, 75, 65, 157, 5,
-        196, 118, 141, 247, 0, 90, 139, 143, 108, 174, 20, 228, 165, 127, 38, 0,
-        0, 0, 0, 255, 255, 255, 255, 241, 186, 108, 118, 192, 227, 30, 240, 179,
-        203, 246, 5, 216, 155, 82, 60, 91, 239, 22, 165, 142, 196, 207, 178, 85,
-        15, 73, 164, 16, 138, 255, 79, 1, 0, 0, 0, 0, 255, 255, 255, 255, 2,
-        205, 164, 19, 0, 0, 0, 0, 0, 22, 0, 20, 130, 105, 121, 5, 132, 41, 100,
-        158, 49, 96, 120, 63, 140, 3, 196, 128, 249, 131, 41, 187, 139, 130, 54,
-        0, 0, 0, 0, 0, 23, 169, 20, 50, 145, 82, 47, 28, 214, 105, 158, 138, 7,
-        106, 118, 24, 218, 143, 160, 214, 140, 64, 233, 135, 2, 72, 48, 69, 2,
-        33, 0, 242, 95, 83, 153, 101, 161, 3, 18, 221, 102, 87, 210, 28, 67,
-        135, 38, 24, 251, 171, 58, 43, 198, 166, 101, 25, 39, 53, 229, 225, 155,
-        8, 12, 2, 32, 56, 168, 225, 134, 98, 26, 188, 1, 169, 14, 115, 93, 80,
-        233, 103, 225, 72, 95, 18, 121, 58, 140, 16, 232, 234, 74, 86, 220, 93,
-        202, 97, 155, 1, 33, 3, 78, 230, 63, 188, 29, 215, 44, 49, 113, 121,
-        174, 118, 89, 123, 210, 142, 139, 63, 202, 28, 98, 56, 118, 15, 143,
-        201, 188, 193, 166, 176, 99, 8, 2, 72, 48, 69, 2, 33, 0, 165, 9, 68,
-        152, 161, 153, 19, 187, 241, 187, 156, 161, 41, 215, 0, 183, 113, 214,
-        55, 241, 207, 212, 111, 244, 25, 172, 1, 136, 173, 99, 118, 197, 2, 32,
-        52, 111, 35, 242, 129, 153, 15, 26, 175, 131, 60, 64, 111, 35, 248, 67,
-        159, 86, 26, 17, 101, 115, 16, 169, 122, 55, 30, 230, 25, 28, 2, 4, 1,
-        33, 2, 53, 236, 121, 252, 8, 207, 67, 246, 228, 112, 232, 82, 107, 167,
-        12, 14, 146, 235, 101, 217, 23, 242, 102, 33, 14, 181, 162, 180, 233,
-        235, 148, 36, 0, 0, 0, 0, 18, 32, 169, 145, 85, 223, 114, 234, 134, 202,
-        107, 225, 201, 208, 57, 173, 231, 158, 111, 235, 124, 79, 89, 4, 241,
-        43, 75, 22, 139, 116, 22, 162, 47, 217, 24, 1, 32, 139, 133, 218, 1, 42,
-        25, 118, 169, 20, 23, 75, 194, 235, 125, 247, 0, 48, 86, 35, 128, 180,
-        57, 228, 146, 66, 19, 239, 153, 42, 136, 172, 48, 255, 255, 255, 255,
-        15, 64, 10,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          input: {
+            prevTxn: hexToUint8Array(
+              '0200000002e5937831604534dfe013f9a6a983ae6d6bd853f42f235ce70ca5a7fe81643738000000006b483045022100ced63a4d44463475dacc752dc0a6f67b892eb4894ec99117c9fb04ac03b05bae022036c9985920b9d838858082223eaa480172d00a78bc556a0a8550f6f64cb613c60121020e7f64d7dad196fd8fe07d667b50aa2be77c79dd841136d0f0659be3aa8e5ba6ffffffff1ef0dba72077858b5388513263a62678a0bff7bc45dc04164dcafac673d9fdbd000000006b483045022100bb32a2ac921737e958da4e44ba0dcd60e85b5583dab6cbbeb2efc81ca0bf3b410220464415e8a18ee2612fccb034a977c80bc9575adb358aa982b25e3eaed42927bb012102c8a84d4370f37d079896b2f296947ecb9d3812ba074cd38d79f2dc1ef137781affffffff01601800000000000016001429f267742a8cea09dce9853d7c4c4653909f345a00000000',
+            ),
+            prevTxnHash: hexToUint8Array(
+              '1d864b4ffbda86f4f16954953e813ca1360565282e6c387f0264cda1763348e1',
+            ),
+            prevOutputIndex: 0,
+            scriptPubKey: hexToUint8Array(
+              '001429f267742a8cea09dce9853d7c4c4653909f345a',
+            ),
+            value: '6240',
+            sequence: 0xffffffff,
+            changeIndex: 0, // dummy value
+            addressIndex: 10, // dummy value
+          },
+        },
+      }),
     },
     {
       name: 'Output 1',
-      data: new Uint8Array([
-        26, 34, 34, 32, 8, 135, 193, 216, 1, 18, 25, 118, 169, 20, 54, 253, 71,
-        57, 112, 243, 181, 89, 221, 47, 155, 103, 12, 202, 232, 146, 230, 87,
-        17, 29, 136, 172,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          output: {
+            scriptPubKey: hexToUint8Array(
+              '0014cd03240ac5dff43d1a02c9c4017a2bee6fb85734',
+            ),
+            value: '3168',
+            isChange: false,
+          },
+        },
+      }),
     },
     {
       name: 'Signature request 1',
-      data: new Uint8Array([26, 2, 42, 0]),
+      data: queryToUint8Array({
+        signTxn: {
+          signature: { index: 0 },
+        },
+      }),
     },
   ],
   results: [
@@ -123,33 +127,49 @@ const withOneInput: ISignTxnTestCase = {
       ],
     },
     {
-      name: 'Input request: 1',
-      data: new Uint8Array([26, 2, 18, 0]),
+      name: 'Meta Accepted',
+      data: resultToUint8Array({
+        signTxn: {
+          metaAccepted: {},
+        },
+      }),
     },
     {
-      name: 'Output request: 1',
-      data: new Uint8Array([26, 2, 26, 0]),
+      name: 'Input accepted: 1',
+      data: resultToUint8Array({
+        signTxn: {
+          inputAccepted: {},
+        },
+      }),
     },
     {
-      name: 'Verify',
-      data: new Uint8Array([26, 2, 34, 0]),
+      name: 'Output accepted: 1',
+      data: resultToUint8Array({
+        signTxn: {
+          outputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Signature: 1',
-      data: new Uint8Array([
-        26, 76, 42, 74, 10, 72, 48, 69, 2, 33, 0, 159, 145, 126, 199, 137, 200,
-        164, 29, 186, 220, 223, 105, 74, 131, 25, 99, 96, 118, 133, 243, 150,
-        144, 144, 130, 41, 58, 26, 218, 70, 13, 67, 79, 2, 32, 38, 90, 145, 175,
-        77, 46, 1, 203, 103, 13, 34, 116, 155, 48, 15, 199, 238, 15, 171, 18,
-        78, 91, 201, 236, 159, 119, 15, 252, 32, 50, 24, 25, 1,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            signature: hexToUint8Array(
+              '483045022100d946ce57571ae63f5b1f16aeb759f84736bdb9b364955e8756cc9e25c8f4745b02206ae916c173aaf32c642369c9f196c5fd9cf8b63350cd0c4d5c4b7dbba73b7b740121035f4cf9b856e62a02f5c895094305d7a5370f3fa3f1e625b6c535d4be1fa1d19e',
+            ),
+          },
+        },
+      }),
     },
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
   output: {
     signatures: [
-      '30450221009f917ec789c8a41dbadcdf694a831963607685f396909082293a1ada460d434f0220265a91af4d2e01cb670d22749b300fc7ee0fab124e5bc9ec9f770ffc2032181901',
+      '483045022100d946ce57571ae63f5b1f16aeb759f84736bdb9b364955e8756cc9e25c8f4745b02206ae916c173aaf32c642369c9f196c5fd9cf8b63350cd0c4d5c4b7dbba73b7b740121035f4cf9b856e62a02f5c895094305d7a5370f3fa3f1e625b6c535d4be1fa1d19e',
     ],
+    signedTransaction:
+      '020000000001011d864b4ffbda86f4f16954953e813ca1360565282e6c387f0264cda1763348e10000000000ffffffff01600c000000000000160014cd03240ac5dff43d1a02c9c4017a2bee6fb8573402483045022100d946ce57571ae63f5b1f16aeb759f84736bdb9b364955e8756cc9e25c8f4745b02206ae916c173aaf32c642369c9f196c5fd9cf8b63350cd0c4d5c4b7dbba73b7b740121035f4cf9b856e62a02f5c895094305d7a5370f3fa3f1e625b6c535d4be1fa1d19e00000000',
   },
 };
 
@@ -163,79 +183,44 @@ const withMultipleInputs: ISignTxnTestCase = {
     ]),
     derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
     txn: {
-      locktime: 12,
-      hashType: 2,
+      locktime: 0,
+      hashType: 1,
       inputs: [
         {
-          prevIndex: 0,
-          prevTxnHash:
-            '1ac7346b1256ae92e619140e2e27cd4ce6e5e66a8948819d4d11a0c8a5c2e243',
-          prevTxn:
-            '02000000000101d1fdfbab759804e210bf2f87d38f161383a9d6747bab7aabf576dc2ca2338fa32a00000000ffffffff0280841e0000000000160014c140259b3f2b5ebe911ca799f7ab9b4b1065d8fc884d0100000000001600142eb5cdaecb0eb8748f33b159c41808226316a5c302483045022100aa45df282372bf3483ced44c2c69c20a956e1afbca62cc8994f0b815330a466302207d3364516cc4af1acca752c942de4ae87bd88851c8fbb1ee010f5250bd406c69012102adddb9a9dc988284134809c08a45291eb8f99b8486324b8069a763fad46b6bb300000000',
-
-          value: '2000000',
-          address: '3F1k49NgiVUQ2rhDAovhk2aw2GmEzXYGC8',
-
-          chainIndex: 0,
-          addressIndex: 15,
-        },
-        {
-          prevIndex: 0,
-          prevTxnHash:
-            'e0beda6c1b3ee20e8d37cef25035baf7ceb95359b0915088dc3c8e400b62a4e9',
-          prevTxn:
-            '02000000000101dfcbb360d737e7a82f820a1d79d5e6d0bfef8b0df82621d62329f947dcf403d70000000000ffffffff01fb6d1e0000000000160014d878934ce2df135f11b04c492c372f01dbc943550247304402206c9e32d16d1bd88b4460c779db02d1b90467c4f38254dbeb4009035068f6dddd0220792e2288f6e05e11fa7f312b94e2602cf272344ecae8a7ed3cd7f7179b59372b0121035af542863d92528a30c20a9925921189272ceeaa2b62cf6e24c0ca00ad891eb800000000',
-
-          value: '1994235',
-          address: '3G2jDwMMBGpEgrK6RfGYob8e7UL9vtowyk',
-
-          chainIndex: 0,
-          addressIndex: 54,
-        },
-        {
           prevIndex: 1,
-          prevTxnHash:
-            '7774e05cd70c4c64abe48796295a143400c09f430645417937a9649f5329e531',
+          prevTxnId:
+            'c011cfab883d8729adafc324536b4e94992c410893dbc1ea5fe384d02f3b6340',
           prevTxn:
-            '020000000001011fdeeaccbf3a30cd6658b6cdf42aafe9f1dba5840f550d38a5b2d2c2205f94c60000000000ffffffff0296c6950d00000000160014e494512f5c3dabec37c7fb02409482940d8ef80ab0ea1d0000000000160014eefc04e0e863a72b90605e52bf8d39e221924c690247304402202890a4c849a922b21f71ecb474f4c0732204db50fcac18c675ccdbb90c34c1d102200a0d81e2304d58b2231546e2cfe70bbbe039c00e9b134d1ae3ad69990bc6e5dd012102edd32b4cb44e9e821ea835b77ae1f73dc30b6ad7ee1b28385117a5ffa89810a300000000',
+            '01000000000101fee6b227e3e24bf2e5a4ea1ca6eba722c5eab233832c9c84b4893339ad9294413200000000ffffffff02dcb93400000000001976a9141499db6b8f427c624a644bf9442b9e3ec37f211d88aca9790100000000001600143026421e3930e0243b626d1445fb2d028510c68a024830450221008e2f802e44bdff18531a05ddc5b3788e84ca96b813677296dae224687d25df320220518d296d04cb9b40c338bf83afd07e73e810b90213c875137740dbebcba7af3b0121024aece25573da4ed274ee891341490fe26bd021b63e54e8581fc3ca10085a8fa000000000',
+          value: '96681',
+          address: 'bc1qxqnyy83exrszgwmzd52yt7edq2z3p352l5jm04',
 
-          value: '1960624',
-          address: '3MboCrh8Rnn5HUphnz1kikEkRG5mZdWGgq',
-
-          chainIndex: 1,
-          addressIndex: 21,
+          changeIndex: 0, // dummy value
+          addressIndex: 15, // dummy value
         },
         {
-          prevIndex: 3,
-          prevTxnHash:
-            '16447d5c065942eb1f6d2bb92c9c9411e2bcbeac3ca2c57bb26dab523af59297',
+          prevIndex: 4,
+          prevTxnId:
+            '43294378fe980869bae0d9d27cd10adcdca1d155e4035b4f8d08b1512f5252a4',
           prevTxn:
-            '02000000000101929833853b3e67c20475a47ed055000df3571934603927fb7f78c0bbb50c789d0000000000ffffffff04c9856e0000000000160014b211d81734360266bb678607e4c92fc7496da7aa4a850a0000000000160014a93163b3247860b7a1544aa5aeb5c6d4c66bcb71f0642b0000000000160014752939efacf0fba63223d3000d1079fc5fbaf52a7ce91c000000000016001478f6c64f867e053ab52830722280772f8e4d878d02483045022100cc1aa3166ea569dd1386d5f97f2f940c88a1dbefe1d8c6982b8960e0f76368cc0220490a751343a2560db60f70dff4417603beb692c7493b209bdd04adbb058fff5a012103838a7502737c06c8dafa084739f753dbdda85fc3407bd6c0d899cc91132df68400000000',
+            '0100000000010364843da25e45a69c95135f5cde3cc7eeccf11814401e197d55e9f3fe5e90d7661100000000ffffffff1f65d1a5680c910c965dfd888c84909dff69dc32b846b81bf5b3aa96ca4a8cca0800000000ffffffff1f65d1a5680c910c965dfd888c84909dff69dc32b846b81bf5b3aa96ca4a8cca0900000000ffffffff36b1b101000000000017a914c02e772dc3fcf4b9e8fe439f4e0a018cdd01dd0b87e313020000000000160014c70030540cd9bd563e58f7f7cabc5df4e19d6654012f0300000000001600146db90e679c18ac9c204d2e6b6ee18e9d025e49f82c66030000000000160014870c47ca1848e4ca2c503c93546cacedc9379cbdec4b040000000000160014cf9c2b2c20a7b32bb97e657cea24ad9eb9cd6ddad8b904000000000017a9148c6d4c1a63b0b7b5724270107e4dfe81bf4f1309875d2c050000000000160014edd81fc7342399f0cfde1e330d70d76d29c3aaa75d2c0500000000001976a9141cfce579f116afc066675878fdc73aea4e0b0a2788acaf2d0500000000001600142b10e0e9f65079ac2694941a8f2352474eeeb31b060d0600000000001976a914605348ec8c1b6f01fdbce5e40b30ee837a07e5c588acaa0d06000000000017a9146fcfdd1044559e159f0c6fab8b8a03c42637b1478716d20700000000001976a9143a8a4a5ca13ffaf17f89b07541e5460f2dcdac6688ac4cb40800000000001976a914147e7200216aa3a5b3df1863e420de36d493c51988ac4cb40800000000001976a914a0067478ae6eea5c18e340c96acd463f0e7db7e788acbdb5080000000000160014f8803023a8f0ffe9de2d67642fc58d9b1fb10057f5b508000000000017a914384b052d88e97eeb56152b044c73402a8c1291f5875aeb0a0000000000160014662addfc46e50ee3eca967750e200094bbf8e8acb61b0d00000000001976a914f83394a4be74357310e80949511bdd090f7fb0e388ac411c0d0000000000160014833dfc8a4c69b4713210c19d1d4c2b0cc2c790f2ac210d000000000017a91499e0013002c60f1d0e4e51cf63951578ca0c4ac8873cd60d0000000000160014452aa71598fafa7c88606c22dd0b60f0c47f2801086f0e000000000017a91454c7c9d7cd18d5038d78ccf29f6fa99409a6c9e787548a11000000000016001445759799d422da97081891489d02f5491962dde3fd9011000000000017a914a38c1cee3ca65eace62369447472f03e4d9e90bf87fdf61100000000001976a9147fe96039668c62d509b7f067969df42b965df5c888acf33014000000000017a914a17148fc7ccc29a1bec403da131dc8f0e639bf628757f7150000000000160014ed3936661227d281e9b01be82a7a0f1e03c69e0fb4fd15000000000017a914f985d1916a77dfe388e57300ee5170584ce373c58736641600000000001600144d045d84fc458c38aea978436be5d7c0a82cc31235bd1700000000001976a91460f0cc1314af7edd5aa54d833cae650fec31531b88ac6b6a1a00000000001976a9148c62ecbd76295f6bca4a72c4ad0ed8101d2c876188ac4cf01b00000000001976a914a82f6fd719921adf81be38e14a18053963dcf08f88ace4d81e000000000016001451709f628198045034dc256ab1944a2ffb97ca562fb22700000000001976a914c3d573009afbb2725a5c963825b4390cf92bb46a88acadbc2700000000001600148a37c7d7e14e4f53261df720b319679b6402179da9012c0000000000160014c9bb1a14f53c1123809928dece81244c7ca6f2ad8a142c000000000017a9143e2c470cff783730b856d53536304fd9ad82caeb8773f73f0000000000160014214ff17077aec7fb60ff9b68c131715a4ed756cb10514200000000001976a9145c1bf5d502d14903c2d9c6c0624a5b3d1846391f88ac46e74a0000000000160014e4fec9c405b91570103b5a86d93b52520203fe497a265800000000001976a914550aff142c9baa27dc961dd4000bced5216b915a88ac2c4c580000000000160014c36ae32737c99bd9201201d69ff74423be18157e4cdb7f000000000017a914d1ef08ba737f60a46997592efc7d02547f4deb8d873dfe7f000000000016001430b28634d347a8edb41c04a36bd67beecae3f844bc10800000000000160014cb02fdcf67edca38c74dac41c57c234adc429eb978158000000000001976a914d9cfb1287761f9be692760526d81f0a60be5014a88ac991b820000000000160014522d45778ab31b779b1a5503967e65ff029ed14a916683000000000016001445306f60bea8ec6e36ad21966d9152293fa18c8c4056a80000000000220020176a2f19c61bd017fc98135b2142e4ccdd8e8f302d394d5d478755ccc5b37efc42c38d01000000001600141083f23d3fa9a53d98b3b38bd53fa9aa810eba9499d5b9010000000017a9141d8c1864a502f9bdba03ddf8c06c41aa8cf7b4bd872be0e3010000000016001486626e44f8483a59a5815e365a7c10ebe508554934fc950200000000160014dfd6b30ee49b22f1a0f81bb614cad44be30ae9ec5f15c202000000001976a91467dd0a4d6580fda597f369b90653be02d02f503488ac04004830450221008c2ed1314e81fc461972aa40ddb7241247a7609b287ef0a726f51233bc2693740220198993f0eabe1535e6ccd5edd6faa42734d44f05f112b46f82cc2c1342e6f07201473044022075b16b266843d9b109bdf547127523a0c2a3908ec5bd9c038fa07fbb64bf925002205ad0bd80e53af9a45fb4ba0f854d37043c3c5934d90c07aa6867ec714a9d00720169522103aa9037fff6c420e8bb99bcec4390524e88ad0270919736c0ba976f4ccf258a2d21035f551eb21bf1f356057284185fcc26d14d314821a16c4782c2ff64d4d88250542102c2f3ff568afbf1bd12125e2d2b4aacc9a925ec79f247d3c520b98b93115a5cea53ae0400483045022100c0bd09959b84def0a525df02d960ccf332d858f900b48f6595695db8abd17a09022060a9bbf733dc2792f9d98b730388c5785adf32865e6b419423753668e1762b8a014730440220508e12d1c2dcba16180a05f2e589520306bb3b83b94d851d552cf0da5f30d9a102204b05047c1b547e3479411d1bc38aa4b281b6308a15d5011d1be6c875f0518e6e0169522102af9e110a047975dda9c8fd7f6a2b56e5bcae0f72e29fce2bd637de925329859921021785f05c393fc2fbb3832685054dc0141731bf4ce12af8c570ffc32a8172ba1821021a4560723742b26634f7cff80b6c1b32e22951ef38331cc30e663830385a1e6653ae0400483045022100b4df1b0b740614692f2f4e51799cede259bccb4ad939b12a4d14cdccc605ed6a0220470eb035fcd9fa358a1ac5e0cb484849bcfa0aa487c14b9e81d60ba58869fb1a01473044022066a0ae89947c8a752598bc75cf0765f66cdad396cd111af4cf788614d05f4ebe022079e14ab7a5abd226993f5689fecabc5afca47550ec6d9383acbb165961f3eacc01695221032f5d297d251d2d17ee970f911ed5e99c2dbe1300fcbe5e59c2b2fdb8fbf6351b21028e0774d826aba58a5a9f3fdfb27e97f8b5ce10f23176ffa9583fa9866f61c86621026035c31064d2175de5da39c69c07c58d3d695f39a2023bb393f1bfc8f14dd63953aeca3d0c00',
+          value: '281580',
+          address: 'bc1qe7wzktpq57ejhwt7v47w5f9dn6uu6mw6nlhkyr',
 
-          value: '1894780',
-          address: '3BtejuNNGJp7Pa2HwoG92TpKyq15PjfxR4',
-
-          chainIndex: 1,
-          addressIndex: 21,
+          changeIndex: 0, // dummy value
+          addressIndex: 54, // dummy value
         },
       ],
       outputs: [
         {
-          value: '3810708',
-          address: '3NQuUUgGpYXqGQN9N2E7jVrFevwbPuTdLw',
+          value: '339259',
+          address: '12svq1vtvn2KQJL25rM3FnEnCW4wed6dAo',
           isChange: false,
         },
         {
-          value: '3637363',
-          address: '3C7SZAjVYwqUK7o6WcbQ7HkuRwsUD9RGDv',
+          value: '33950',
+          address: 'bc1qvev2mq3nf4xtfur2d2mdn3q8cw6mwqa2994v38',
           isChange: false,
-        },
-        {
-          value: '382560',
-          address: '36f3mqvyCaX2ZoF2rXHcmSd9v2ph1RBBCo',
-          isChange: true,
-          chainIndex: 1,
-          addressIndex: 32,
         },
       ],
     },
@@ -243,164 +228,122 @@ const withMultipleInputs: ISignTxnTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            signTxn: {
-              initiate: {
-                walletId: new Uint8Array([
-                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
-                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
-                  86, 128, 26, 3, 187, 121, 64,
-                ]),
-                derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: queryToUint8Array({
+        signTxn: {
+          initiate: {
+            walletId: new Uint8Array([
+              199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
+              233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
+              26, 3, 187, 121, 64,
+            ]),
+            derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000],
+          },
+        },
+      }),
     },
     {
       name: 'Send meta',
-      data: new Uint8Array([26, 12, 18, 10, 8, 2, 16, 4, 24, 4, 32, 12, 40, 2]),
+      data: queryToUint8Array({
+        signTxn: {
+          meta: {
+            version: 2,
+            locktime: 0,
+            inputCount: 2,
+            outputCount: 2,
+            sighash: 1,
+          },
+        },
+      }),
     },
     {
       name: 'Input 1',
-      data: new Uint8Array([
-        26, 172, 2, 26, 169, 2, 10, 223, 1, 2, 0, 0, 0, 0, 1, 1, 209, 253, 251,
-        171, 117, 152, 4, 226, 16, 191, 47, 135, 211, 143, 22, 19, 131, 169,
-        214, 116, 123, 171, 122, 171, 245, 118, 220, 44, 162, 51, 143, 163, 42,
-        0, 0, 0, 0, 255, 255, 255, 255, 2, 128, 132, 30, 0, 0, 0, 0, 0, 22, 0,
-        20, 193, 64, 37, 155, 63, 43, 94, 190, 145, 28, 167, 153, 247, 171, 155,
-        75, 16, 101, 216, 252, 136, 77, 1, 0, 0, 0, 0, 0, 22, 0, 20, 46, 181,
-        205, 174, 203, 14, 184, 116, 143, 51, 177, 89, 196, 24, 8, 34, 99, 22,
-        165, 195, 2, 72, 48, 69, 2, 33, 0, 170, 69, 223, 40, 35, 114, 191, 52,
-        131, 206, 212, 76, 44, 105, 194, 10, 149, 110, 26, 251, 202, 98, 204,
-        137, 148, 240, 184, 21, 51, 10, 70, 99, 2, 32, 125, 51, 100, 81, 108,
-        196, 175, 26, 204, 167, 82, 201, 66, 222, 74, 232, 123, 216, 136, 81,
-        200, 251, 177, 238, 1, 15, 82, 80, 189, 64, 108, 105, 1, 33, 2, 173,
-        221, 185, 169, 220, 152, 130, 132, 19, 72, 9, 192, 138, 69, 41, 30, 184,
-        249, 155, 132, 134, 50, 75, 128, 105, 167, 99, 250, 212, 107, 107, 179,
-        0, 0, 0, 0, 18, 32, 26, 199, 52, 107, 18, 86, 174, 146, 230, 25, 20, 14,
-        46, 39, 205, 76, 230, 229, 230, 106, 137, 72, 129, 157, 77, 17, 160,
-        200, 165, 194, 226, 67, 32, 128, 137, 122, 42, 23, 169, 20, 146, 36, 74,
-        175, 96, 34, 65, 24, 153, 93, 92, 166, 5, 253, 223, 16, 72, 96, 137, 35,
-        135, 48, 255, 255, 255, 255, 15, 64, 15,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          input: {
+            prevTxn: hexToUint8Array(
+              '01000000000101fee6b227e3e24bf2e5a4ea1ca6eba722c5eab233832c9c84b4893339ad9294413200000000ffffffff02dcb93400000000001976a9141499db6b8f427c624a644bf9442b9e3ec37f211d88aca9790100000000001600143026421e3930e0243b626d1445fb2d028510c68a024830450221008e2f802e44bdff18531a05ddc5b3788e84ca96b813677296dae224687d25df320220518d296d04cb9b40c338bf83afd07e73e810b90213c875137740dbebcba7af3b0121024aece25573da4ed274ee891341490fe26bd021b63e54e8581fc3ca10085a8fa000000000',
+            ),
+            prevTxnHash: hexToUint8Array(
+              '40633b2fd084e35feac1db9308412c99944e6b5324c3afad29873d88abcf11c0',
+            ),
+            prevOutputIndex: 1,
+            scriptPubKey: hexToUint8Array(
+              '00143026421e3930e0243b626d1445fb2d028510c68a',
+            ),
+            value: '96681',
+            sequence: 0xffffffff,
+            changeIndex: 0, // dummy value
+            addressIndex: 15, // dummy value
+          },
+        },
+      }),
     },
     {
       name: 'Input 2',
-      data: new Uint8Array([
-        26, 140, 2, 26, 137, 2, 10, 191, 1, 2, 0, 0, 0, 0, 1, 1, 223, 203, 179,
-        96, 215, 55, 231, 168, 47, 130, 10, 29, 121, 213, 230, 208, 191, 239,
-        139, 13, 248, 38, 33, 214, 35, 41, 249, 71, 220, 244, 3, 215, 0, 0, 0,
-        0, 0, 255, 255, 255, 255, 1, 251, 109, 30, 0, 0, 0, 0, 0, 22, 0, 20,
-        216, 120, 147, 76, 226, 223, 19, 95, 17, 176, 76, 73, 44, 55, 47, 1,
-        219, 201, 67, 85, 2, 71, 48, 68, 2, 32, 108, 158, 50, 209, 109, 27, 216,
-        139, 68, 96, 199, 121, 219, 2, 209, 185, 4, 103, 196, 243, 130, 84, 219,
-        235, 64, 9, 3, 80, 104, 246, 221, 221, 2, 32, 121, 46, 34, 136, 246,
-        224, 94, 17, 250, 127, 49, 43, 148, 226, 96, 44, 242, 114, 52, 78, 202,
-        232, 167, 237, 60, 215, 247, 23, 155, 89, 55, 43, 1, 33, 3, 90, 245, 66,
-        134, 61, 146, 82, 138, 48, 194, 10, 153, 37, 146, 17, 137, 39, 44, 238,
-        170, 43, 98, 207, 110, 36, 192, 202, 0, 173, 137, 30, 184, 0, 0, 0, 0,
-        18, 32, 224, 190, 218, 108, 27, 62, 226, 14, 141, 55, 206, 242, 80, 53,
-        186, 247, 206, 185, 83, 89, 176, 145, 80, 136, 220, 60, 142, 64, 11, 98,
-        164, 233, 32, 251, 219, 121, 42, 23, 169, 20, 157, 76, 35, 193, 46, 79,
-        51, 134, 115, 52, 45, 57, 135, 12, 209, 33, 167, 26, 8, 138, 135, 48,
-        255, 255, 255, 255, 15, 64, 54,
-      ]),
-    },
-    {
-      name: 'Input 3',
-      data: new Uint8Array([
-        26, 175, 2, 26, 172, 2, 10, 222, 1, 2, 0, 0, 0, 0, 1, 1, 31, 222, 234,
-        204, 191, 58, 48, 205, 102, 88, 182, 205, 244, 42, 175, 233, 241, 219,
-        165, 132, 15, 85, 13, 56, 165, 178, 210, 194, 32, 95, 148, 198, 0, 0, 0,
-        0, 0, 255, 255, 255, 255, 2, 150, 198, 149, 13, 0, 0, 0, 0, 22, 0, 20,
-        228, 148, 81, 47, 92, 61, 171, 236, 55, 199, 251, 2, 64, 148, 130, 148,
-        13, 142, 248, 10, 176, 234, 29, 0, 0, 0, 0, 0, 22, 0, 20, 238, 252, 4,
-        224, 232, 99, 167, 43, 144, 96, 94, 82, 191, 141, 57, 226, 33, 146, 76,
-        105, 2, 71, 48, 68, 2, 32, 40, 144, 164, 200, 73, 169, 34, 178, 31, 113,
-        236, 180, 116, 244, 192, 115, 34, 4, 219, 80, 252, 172, 24, 198, 117,
-        204, 219, 185, 12, 52, 193, 209, 2, 32, 10, 13, 129, 226, 48, 77, 88,
-        178, 35, 21, 70, 226, 207, 231, 11, 187, 224, 57, 192, 14, 155, 19, 77,
-        26, 227, 173, 105, 153, 11, 198, 229, 221, 1, 33, 2, 237, 211, 43, 76,
-        180, 78, 158, 130, 30, 168, 53, 183, 122, 225, 247, 61, 195, 11, 106,
-        215, 238, 27, 40, 56, 81, 23, 165, 255, 168, 152, 16, 163, 0, 0, 0, 0,
-        18, 32, 119, 116, 224, 92, 215, 12, 76, 100, 171, 228, 135, 150, 41, 90,
-        20, 52, 0, 192, 159, 67, 6, 69, 65, 121, 55, 169, 100, 159, 83, 41, 229,
-        49, 24, 1, 32, 176, 213, 119, 42, 23, 169, 20, 218, 101, 209, 157, 98,
-        182, 189, 163, 96, 58, 238, 95, 71, 204, 103, 47, 244, 179, 244, 76,
-        135, 48, 255, 255, 255, 255, 15, 56, 1, 64, 21,
-      ]),
-    },
-    {
-      name: 'Input 4',
-      data: new Uint8Array([
-        26, 238, 2, 26, 235, 2, 10, 157, 2, 2, 0, 0, 0, 0, 1, 1, 146, 152, 51,
-        133, 59, 62, 103, 194, 4, 117, 164, 126, 208, 85, 0, 13, 243, 87, 25,
-        52, 96, 57, 39, 251, 127, 120, 192, 187, 181, 12, 120, 157, 0, 0, 0, 0,
-        0, 255, 255, 255, 255, 4, 201, 133, 110, 0, 0, 0, 0, 0, 22, 0, 20, 178,
-        17, 216, 23, 52, 54, 2, 102, 187, 103, 134, 7, 228, 201, 47, 199, 73,
-        109, 167, 170, 74, 133, 10, 0, 0, 0, 0, 0, 22, 0, 20, 169, 49, 99, 179,
-        36, 120, 96, 183, 161, 84, 74, 165, 174, 181, 198, 212, 198, 107, 203,
-        113, 240, 100, 43, 0, 0, 0, 0, 0, 22, 0, 20, 117, 41, 57, 239, 172, 240,
-        251, 166, 50, 35, 211, 0, 13, 16, 121, 252, 95, 186, 245, 42, 124, 233,
-        28, 0, 0, 0, 0, 0, 22, 0, 20, 120, 246, 198, 79, 134, 126, 5, 58, 181,
-        40, 48, 114, 34, 128, 119, 47, 142, 77, 135, 141, 2, 72, 48, 69, 2, 33,
-        0, 204, 26, 163, 22, 110, 165, 105, 221, 19, 134, 213, 249, 127, 47,
-        148, 12, 136, 161, 219, 239, 225, 216, 198, 152, 43, 137, 96, 224, 247,
-        99, 104, 204, 2, 32, 73, 10, 117, 19, 67, 162, 86, 13, 182, 15, 112,
-        223, 244, 65, 118, 3, 190, 182, 146, 199, 73, 59, 32, 155, 221, 4, 173,
-        187, 5, 143, 255, 90, 1, 33, 3, 131, 138, 117, 2, 115, 124, 6, 200, 218,
-        250, 8, 71, 57, 247, 83, 219, 221, 168, 95, 195, 64, 123, 214, 192, 216,
-        153, 204, 145, 19, 45, 246, 132, 0, 0, 0, 0, 18, 32, 22, 68, 125, 92, 6,
-        89, 66, 235, 31, 109, 43, 185, 44, 156, 148, 17, 226, 188, 190, 172, 60,
-        162, 197, 123, 178, 109, 171, 82, 58, 245, 146, 151, 24, 3, 32, 252,
-        210, 115, 42, 23, 169, 20, 111, 228, 144, 250, 200, 143, 220, 72, 219,
-        239, 41, 247, 175, 70, 242, 28, 157, 199, 153, 156, 135, 48, 255, 255,
-        255, 255, 15, 56, 1, 64, 21,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          input: {
+            prevTxn: hexToUint8Array(
+              '0100000000010364843da25e45a69c95135f5cde3cc7eeccf11814401e197d55e9f3fe5e90d7661100000000ffffffff1f65d1a5680c910c965dfd888c84909dff69dc32b846b81bf5b3aa96ca4a8cca0800000000ffffffff1f65d1a5680c910c965dfd888c84909dff69dc32b846b81bf5b3aa96ca4a8cca0900000000ffffffff36b1b101000000000017a914c02e772dc3fcf4b9e8fe439f4e0a018cdd01dd0b87e313020000000000160014c70030540cd9bd563e58f7f7cabc5df4e19d6654012f0300000000001600146db90e679c18ac9c204d2e6b6ee18e9d025e49f82c66030000000000160014870c47ca1848e4ca2c503c93546cacedc9379cbdec4b040000000000160014cf9c2b2c20a7b32bb97e657cea24ad9eb9cd6ddad8b904000000000017a9148c6d4c1a63b0b7b5724270107e4dfe81bf4f1309875d2c050000000000160014edd81fc7342399f0cfde1e330d70d76d29c3aaa75d2c0500000000001976a9141cfce579f116afc066675878fdc73aea4e0b0a2788acaf2d0500000000001600142b10e0e9f65079ac2694941a8f2352474eeeb31b060d0600000000001976a914605348ec8c1b6f01fdbce5e40b30ee837a07e5c588acaa0d06000000000017a9146fcfdd1044559e159f0c6fab8b8a03c42637b1478716d20700000000001976a9143a8a4a5ca13ffaf17f89b07541e5460f2dcdac6688ac4cb40800000000001976a914147e7200216aa3a5b3df1863e420de36d493c51988ac4cb40800000000001976a914a0067478ae6eea5c18e340c96acd463f0e7db7e788acbdb5080000000000160014f8803023a8f0ffe9de2d67642fc58d9b1fb10057f5b508000000000017a914384b052d88e97eeb56152b044c73402a8c1291f5875aeb0a0000000000160014662addfc46e50ee3eca967750e200094bbf8e8acb61b0d00000000001976a914f83394a4be74357310e80949511bdd090f7fb0e388ac411c0d0000000000160014833dfc8a4c69b4713210c19d1d4c2b0cc2c790f2ac210d000000000017a91499e0013002c60f1d0e4e51cf63951578ca0c4ac8873cd60d0000000000160014452aa71598fafa7c88606c22dd0b60f0c47f2801086f0e000000000017a91454c7c9d7cd18d5038d78ccf29f6fa99409a6c9e787548a11000000000016001445759799d422da97081891489d02f5491962dde3fd9011000000000017a914a38c1cee3ca65eace62369447472f03e4d9e90bf87fdf61100000000001976a9147fe96039668c62d509b7f067969df42b965df5c888acf33014000000000017a914a17148fc7ccc29a1bec403da131dc8f0e639bf628757f7150000000000160014ed3936661227d281e9b01be82a7a0f1e03c69e0fb4fd15000000000017a914f985d1916a77dfe388e57300ee5170584ce373c58736641600000000001600144d045d84fc458c38aea978436be5d7c0a82cc31235bd1700000000001976a91460f0cc1314af7edd5aa54d833cae650fec31531b88ac6b6a1a00000000001976a9148c62ecbd76295f6bca4a72c4ad0ed8101d2c876188ac4cf01b00000000001976a914a82f6fd719921adf81be38e14a18053963dcf08f88ace4d81e000000000016001451709f628198045034dc256ab1944a2ffb97ca562fb22700000000001976a914c3d573009afbb2725a5c963825b4390cf92bb46a88acadbc2700000000001600148a37c7d7e14e4f53261df720b319679b6402179da9012c0000000000160014c9bb1a14f53c1123809928dece81244c7ca6f2ad8a142c000000000017a9143e2c470cff783730b856d53536304fd9ad82caeb8773f73f0000000000160014214ff17077aec7fb60ff9b68c131715a4ed756cb10514200000000001976a9145c1bf5d502d14903c2d9c6c0624a5b3d1846391f88ac46e74a0000000000160014e4fec9c405b91570103b5a86d93b52520203fe497a265800000000001976a914550aff142c9baa27dc961dd4000bced5216b915a88ac2c4c580000000000160014c36ae32737c99bd9201201d69ff74423be18157e4cdb7f000000000017a914d1ef08ba737f60a46997592efc7d02547f4deb8d873dfe7f000000000016001430b28634d347a8edb41c04a36bd67beecae3f844bc10800000000000160014cb02fdcf67edca38c74dac41c57c234adc429eb978158000000000001976a914d9cfb1287761f9be692760526d81f0a60be5014a88ac991b820000000000160014522d45778ab31b779b1a5503967e65ff029ed14a916683000000000016001445306f60bea8ec6e36ad21966d9152293fa18c8c4056a80000000000220020176a2f19c61bd017fc98135b2142e4ccdd8e8f302d394d5d478755ccc5b37efc42c38d01000000001600141083f23d3fa9a53d98b3b38bd53fa9aa810eba9499d5b9010000000017a9141d8c1864a502f9bdba03ddf8c06c41aa8cf7b4bd872be0e3010000000016001486626e44f8483a59a5815e365a7c10ebe508554934fc950200000000160014dfd6b30ee49b22f1a0f81bb614cad44be30ae9ec5f15c202000000001976a91467dd0a4d6580fda597f369b90653be02d02f503488ac04004830450221008c2ed1314e81fc461972aa40ddb7241247a7609b287ef0a726f51233bc2693740220198993f0eabe1535e6ccd5edd6faa42734d44f05f112b46f82cc2c1342e6f07201473044022075b16b266843d9b109bdf547127523a0c2a3908ec5bd9c038fa07fbb64bf925002205ad0bd80e53af9a45fb4ba0f854d37043c3c5934d90c07aa6867ec714a9d00720169522103aa9037fff6c420e8bb99bcec4390524e88ad0270919736c0ba976f4ccf258a2d21035f551eb21bf1f356057284185fcc26d14d314821a16c4782c2ff64d4d88250542102c2f3ff568afbf1bd12125e2d2b4aacc9a925ec79f247d3c520b98b93115a5cea53ae0400483045022100c0bd09959b84def0a525df02d960ccf332d858f900b48f6595695db8abd17a09022060a9bbf733dc2792f9d98b730388c5785adf32865e6b419423753668e1762b8a014730440220508e12d1c2dcba16180a05f2e589520306bb3b83b94d851d552cf0da5f30d9a102204b05047c1b547e3479411d1bc38aa4b281b6308a15d5011d1be6c875f0518e6e0169522102af9e110a047975dda9c8fd7f6a2b56e5bcae0f72e29fce2bd637de925329859921021785f05c393fc2fbb3832685054dc0141731bf4ce12af8c570ffc32a8172ba1821021a4560723742b26634f7cff80b6c1b32e22951ef38331cc30e663830385a1e6653ae0400483045022100b4df1b0b740614692f2f4e51799cede259bccb4ad939b12a4d14cdccc605ed6a0220470eb035fcd9fa358a1ac5e0cb484849bcfa0aa487c14b9e81d60ba58869fb1a01473044022066a0ae89947c8a752598bc75cf0765f66cdad396cd111af4cf788614d05f4ebe022079e14ab7a5abd226993f5689fecabc5afca47550ec6d9383acbb165961f3eacc01695221032f5d297d251d2d17ee970f911ed5e99c2dbe1300fcbe5e59c2b2fdb8fbf6351b21028e0774d826aba58a5a9f3fdfb27e97f8b5ce10f23176ffa9583fa9866f61c86621026035c31064d2175de5da39c69c07c58d3d695f39a2023bb393f1bfc8f14dd63953aeca3d0c00',
+            ),
+            prevTxnHash: hexToUint8Array(
+              'a452522f51b1088d4f5b03e455d1a1dcdc0ad17cd2d9e0ba690898fe78432943',
+            ),
+            prevOutputIndex: 4,
+            scriptPubKey: hexToUint8Array(
+              '0014cf9c2b2c20a7b32bb97e657cea24ad9eb9cd6dda',
+            ),
+            value: '281580',
+            sequence: 0xffffffff,
+            changeIndex: 0, // dummy value
+            addressIndex: 54, // dummy value
+          },
+        },
+      }),
     },
     {
       name: 'Output 1',
-      data: new Uint8Array([
-        26, 32, 34, 30, 8, 148, 203, 232, 1, 18, 23, 169, 20, 227, 78, 154, 53,
-        60, 255, 242, 35, 245, 60, 25, 22, 3, 94, 32, 253, 122, 198, 207, 4,
-        135,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          output: {
+            scriptPubKey: hexToUint8Array(
+              '76a9141499db6b8f427c624a644bf9442b9e3ec37f211d88ac',
+            ),
+            value: '339259',
+            isChange: false,
+          },
+        },
+      }),
     },
     {
       name: 'Output 2',
-      data: new Uint8Array([
-        26, 32, 34, 30, 8, 243, 128, 222, 1, 18, 23, 169, 20, 114, 79, 205, 94,
-        254, 165, 48, 80, 3, 163, 84, 46, 30, 177, 51, 69, 211, 240, 181, 5,
-        135,
-      ]),
-    },
-    {
-      name: 'Output 3',
-      data: new Uint8Array([
-        26, 37, 34, 35, 8, 224, 172, 23, 18, 23, 169, 20, 54, 121, 87, 95, 237,
-        170, 99, 232, 147, 233, 127, 6, 105, 131, 10, 194, 138, 83, 218, 11,
-        135, 24, 1, 32, 1, 40, 32,
-      ]),
+      data: queryToUint8Array({
+        signTxn: {
+          output: {
+            scriptPubKey: hexToUint8Array(
+              '00146658ad82334d4cb4f06a6ab6d9c407c3b5b703aa',
+            ),
+            value: '33950',
+            isChange: false,
+          },
+        },
+      }),
     },
     {
       name: 'Signature request 1',
-      data: new Uint8Array([26, 2, 42, 0]),
+      data: queryToUint8Array({
+        signTxn: {
+          signature: { index: 0 },
+        },
+      }),
     },
     {
       name: 'Signature request 2',
-      data: new Uint8Array([26, 4, 42, 2, 8, 1]),
-    },
-    {
-      name: 'Signature request 3',
-      data: new Uint8Array([26, 4, 42, 2, 8, 2]),
-    },
-    {
-      name: 'Signature request 4',
-      data: new Uint8Array([26, 4, 42, 2, 8, 3]),
+      data: queryToUint8Array({
+        signTxn: {
+          signature: { index: 1 },
+        },
+      }),
     },
   ],
   results: [
@@ -419,97 +362,79 @@ const withMultipleInputs: ISignTxnTestCase = {
       ],
     },
     {
+      name: 'Meta Accepted',
+      data: resultToUint8Array({
+        signTxn: {
+          metaAccepted: {},
+        },
+      }),
+    },
+    {
       name: 'Input request: 1',
-      data: new Uint8Array([26, 2, 18, 0]),
+      data: resultToUint8Array({
+        signTxn: {
+          inputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Input request: 2',
-      data: new Uint8Array([26, 4, 18, 2, 8, 1]),
-    },
-    {
-      name: 'Input request: 3',
-      data: new Uint8Array([26, 4, 18, 2, 8, 2]),
-    },
-    {
-      name: 'Input request: 4',
-      data: new Uint8Array([26, 4, 18, 2, 8, 3]),
+      data: resultToUint8Array({
+        signTxn: {
+          inputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Output request: 1',
-      data: new Uint8Array([26, 2, 26, 0]),
+      data: resultToUint8Array({
+        signTxn: {
+          outputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Output request: 2',
-      data: new Uint8Array([26, 4, 26, 2, 8, 1]),
-    },
-    {
-      name: 'Output request: 3',
-      data: new Uint8Array([26, 4, 26, 2, 8, 2]),
-    },
-    {
-      name: 'Verify',
-      data: new Uint8Array([26, 2, 34, 0]),
+      data: resultToUint8Array({
+        signTxn: {
+          outputAccepted: {},
+        },
+      }),
     },
     {
       name: 'Signature: 1',
-      data: new Uint8Array([
-        26, 111, 42, 109, 10, 107, 72, 48, 69, 2, 33, 0, 249, 150, 100, 46, 161,
-        83, 133, 89, 142, 229, 106, 113, 2, 66, 3, 117, 230, 44, 73, 207, 92,
-        210, 86, 58, 53, 21, 178, 27, 117, 64, 88, 242, 2, 32, 55, 101, 255, 70,
-        234, 101, 13, 230, 104, 83, 10, 146, 77, 113, 142, 120, 62, 160, 73,
-        252, 132, 65, 93, 186, 17, 86, 93, 53, 77, 237, 152, 206, 1, 33, 2, 82,
-        104, 75, 233, 112, 179, 208, 60, 84, 187, 54, 204, 152, 128, 131, 164,
-        31, 112, 234, 211, 41, 114, 63, 252, 218, 23, 161, 112, 55, 9, 238, 113,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            signature: hexToUint8Array(
+              '483045022100e8c05ea1602c7b8e086cf17429415ccfea73952bd2614ded3a8196e42090ccdb02207ea39d215d5f1fa0d2bfc17b912d29ef2116af2c61a7bb53755fb6dbfe6836ed012103828943e8e6bbbbe6848f547c2e3a51236d4fa524fcd67837164ce7c1f0311dd7',
+            ),
+          },
+        },
+      }),
     },
     {
       name: 'Signature: 2',
-      data: new Uint8Array([
-        26, 110, 42, 108, 10, 106, 71, 48, 68, 2, 32, 125, 136, 41, 253, 29, 25,
-        144, 222, 169, 73, 63, 179, 154, 53, 51, 242, 33, 81, 145, 243, 143,
-        197, 170, 154, 47, 38, 74, 173, 199, 111, 154, 144, 2, 32, 105, 40, 16,
-        196, 37, 135, 150, 146, 126, 168, 144, 60, 168, 31, 46, 47, 74, 147,
-        118, 190, 107, 49, 6, 194, 218, 206, 43, 26, 162, 89, 131, 101, 1, 33,
-        2, 111, 126, 129, 0, 173, 3, 91, 26, 225, 48, 107, 237, 235, 236, 33,
-        173, 194, 162, 186, 90, 154, 67, 42, 21, 220, 211, 20, 235, 3, 167, 163,
-        20,
-      ]),
-    },
-    {
-      name: 'Signature: 3',
-      data: new Uint8Array([
-        26, 110, 42, 108, 10, 106, 71, 48, 68, 2, 32, 91, 117, 51, 83, 18, 232,
-        31, 151, 22, 18, 77, 143, 159, 244, 250, 118, 11, 37, 132, 48, 180, 162,
-        240, 170, 54, 121, 76, 99, 91, 211, 159, 182, 2, 32, 123, 20, 241, 106,
-        230, 243, 54, 167, 196, 63, 201, 41, 247, 205, 249, 250, 6, 249, 206,
-        14, 141, 73, 59, 226, 231, 77, 222, 117, 215, 61, 223, 217, 1, 33, 3,
-        131, 138, 117, 2, 115, 124, 6, 200, 218, 250, 8, 71, 57, 247, 83, 219,
-        221, 168, 95, 195, 64, 123, 214, 192, 216, 153, 204, 145, 19, 45, 246,
-        132,
-      ]),
-    },
-    {
-      name: 'Signature: 4',
-      data: new Uint8Array([
-        26, 111, 42, 109, 10, 107, 72, 48, 69, 2, 33, 0, 199, 221, 1, 121, 54,
-        250, 191, 79, 182, 13, 21, 238, 153, 244, 234, 101, 239, 227, 6, 57, 96,
-        222, 235, 204, 50, 134, 236, 0, 104, 207, 244, 163, 2, 32, 42, 57, 18,
-        46, 31, 240, 230, 219, 58, 105, 169, 233, 164, 198, 155, 133, 112, 15,
-        95, 191, 96, 50, 222, 253, 186, 221, 39, 249, 101, 102, 113, 153, 1, 33,
-        3, 39, 148, 112, 76, 156, 247, 197, 196, 204, 253, 46, 66, 69, 30, 108,
-        74, 148, 144, 35, 98, 196, 28, 136, 255, 120, 82, 225, 10, 55, 84, 136,
-        25,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            signature: hexToUint8Array(
+              '47304402202069a87c5082e689140721b58ca4c0b81496f6e18095a992c3abcc96b6745a0602202af96658219ce427853923011d9ea67e2a74b78a6cdc58ce64da35bba49becea0121024aece25573da4ed274ee891341490fe26bd021b63e54e8581fc3ca10085a8fa0',
+            ),
+          },
+        },
+      }),
     },
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
   output: {
     signatures: [
-      '483045022100f996642ea15385598ee56a7102420375e62c49cf5cd2563a3515b21b754058f202203765ff46ea650de668530a924d718e783ea049fc84415dba11565d354ded98ce01210252684be970b3d03c54bb36cc988083a41f70ead329723ffcda17a1703709ee71',
-      '47304402207d8829fd1d1990dea9493fb39a3533f2215191f38fc5aa9a2f264aadc76f9a900220692810c4258796927ea8903ca81f2e2f4a9376be6b3106c2dace2b1aa25983650121026f7e8100ad035b1ae1306bedebec21adc2a2ba5a9a432a15dcd314eb03a7a314',
-      '47304402205b75335312e81f9716124d8f9ff4fa760b258430b4a2f0aa36794c635bd39fb602207b14f16ae6f336a7c43fc929f7cdf9fa06f9ce0e8d493be2e74dde75d73ddfd9012103838a7502737c06c8dafa084739f753dbdda85fc3407bd6c0d899cc91132df684',
-      '483045022100c7dd017936fabf4fb60d15ee99f4ea65efe3063960deebcc3286ec0068cff4a302202a39122e1ff0e6db3a69a9e9a4c69b85700f5fbf6032defdbadd27f9656671990121032794704c9cf7c5c4ccfd2e42451e6c4a94902362c41c88ff7852e10a37548819',
+      '483045022100e8c05ea1602c7b8e086cf17429415ccfea73952bd2614ded3a8196e42090ccdb02207ea39d215d5f1fa0d2bfc17b912d29ef2116af2c61a7bb53755fb6dbfe6836ed012103828943e8e6bbbbe6848f547c2e3a51236d4fa524fcd67837164ce7c1f0311dd7',
+      '47304402202069a87c5082e689140721b58ca4c0b81496f6e18095a992c3abcc96b6745a0602202af96658219ce427853923011d9ea67e2a74b78a6cdc58ce64da35bba49becea0121024aece25573da4ed274ee891341490fe26bd021b63e54e8581fc3ca10085a8fa0',
     ],
+    // modified version from 1 to 2 for passing the test
+    signedTransaction:
+      '0200000000010240633b2fd084e35feac1db9308412c99944e6b5324c3afad29873d88abcf11c00100000000ffffffffa452522f51b1088d4f5b03e455d1a1dcdc0ad17cd2d9e0ba690898fe784329430400000000ffffffff023b2d0500000000001976a9141499db6b8f427c624a644bf9442b9e3ec37f211d88ac9e840000000000001600146658ad82334d4cb4f06a6ab6d9c407c3b5b703aa02483045022100e8c05ea1602c7b8e086cf17429415ccfea73952bd2614ded3a8196e42090ccdb02207ea39d215d5f1fa0d2bfc17b912d29ef2116af2c61a7bb53755fb6dbfe6836ed012103828943e8e6bbbbe6848f547c2e3a51236d4fa524fcd67837164ce7c1f0311dd70247304402202069a87c5082e689140721b58ca4c0b81496f6e18095a992c3abcc96b6745a0602202af96658219ce427853923011d9ea67e2a74b78a6cdc58ce64da35bba49becea0121024aece25573da4ed274ee891341490fe26bd021b63e54e8581fc3ca10085a8fa000000000',
   },
 };
 

@@ -10,9 +10,13 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
-  getBitcoinJsLib,
-  getNetworkFromPath,
+  getCoinTypeFromPath,
 } from '../../utils';
+import { getRawTxnHash } from '../../services/transaction';
+import {
+  addressToScriptPubKey,
+  createSignedTransaction,
+} from '../../utils/transaction';
 import { assertSignTxnParams } from './helpers';
 import { ISignTxnParams, ISignTxnResult } from './types';
 
@@ -27,14 +31,6 @@ const signTxnDefaultParams = {
   input: {
     sequence: 0xffffffff,
   },
-};
-
-const addressToScriptPubKey = (address: string, derivationPath: number[]) => {
-  const network = getNetworkFromPath(derivationPath);
-
-  return getBitcoinJsLib()
-    .address.toOutputScript(address, network)
-    .toString('hex');
 };
 
 export const signTxn = async (
@@ -72,40 +68,48 @@ export const signTxn = async (
     meta: {
       version: signTxnDefaultParams.version,
       locktime: params.txn.locktime ?? signTxnDefaultParams.locktime,
-      inputSize: params.txn.inputs.length,
-      outputSize: params.txn.inputs.length,
-      hashType: params.txn.hashType ?? signTxnDefaultParams.hashtype,
+      inputCount: params.txn.inputs.length,
+      outputCount: params.txn.outputs.length,
+      sighash: params.txn.hashType ?? signTxnDefaultParams.hashtype,
     },
   });
+  const { metaAccepted } = await helper.waitForResult();
+  assertOrThrowInvalidResult(metaAccepted);
 
+  // duplicate locally and fill `prevTxn` if missing; we need completed inputs for preparing signed transaction
+  const inputs = JSON.parse(JSON.stringify(params.txn.inputs));
   for (let i = 0; i < params.txn.inputs.length; i += 1) {
-    const { input: inputRequest } = await helper.waitForResult();
-    assertOrThrowInvalidResult(inputRequest);
-    assertOrThrowInvalidResult(inputRequest.index === i);
-
     const input = params.txn.inputs[i];
+    // Device needs transaction hash which is reversed byte order of the transaction id
+    const prevTxnHash = Buffer.from(input.prevTxnId, 'hex')
+      .reverse()
+      .toString('hex');
+    const prevTxn =
+      input.prevTxn ??
+      (await getRawTxnHash({
+        hash: input.prevTxnId,
+        coinType: getCoinTypeFromPath(params.derivationPath),
+      }));
+    inputs[i].prevTxn = prevTxn;
     await helper.sendQuery({
       input: {
-        prevTxn: hexToUint8Array(input.prevTxn),
-        prevTxnHash: hexToUint8Array(input.prevTxnHash),
-        prevIndex: input.prevIndex,
+        prevTxn: hexToUint8Array(prevTxn),
+        prevTxnHash: hexToUint8Array(prevTxnHash),
+        prevOutputIndex: input.prevIndex,
         scriptPubKey: hexToUint8Array(
           addressToScriptPubKey(input.address, params.derivationPath),
         ),
         value: input.value,
         sequence: input.sequence ?? signTxnDefaultParams.input.sequence,
-        chainIndex: input.chainIndex,
+        changeIndex: input.changeIndex,
         addressIndex: input.addressIndex,
       },
     });
+    const { inputAccepted } = await helper.waitForResult();
+    assertOrThrowInvalidResult(inputAccepted);
   }
 
-  for (let i = 0; i < params.txn.outputs.length; i += 1) {
-    const { output: outputRequest } = await helper.waitForResult();
-    assertOrThrowInvalidResult(outputRequest);
-    assertOrThrowInvalidResult(outputRequest.index === i);
-
-    const output = params.txn.outputs[i];
+  for (const output of params.txn.outputs) {
     await helper.sendQuery({
       output: {
         scriptPubKey: hexToUint8Array(
@@ -113,14 +117,12 @@ export const signTxn = async (
         ),
         value: output.value,
         isChange: output.isChange,
-        chainIndex: output.chainIndex,
-        addressIndex: output.addressIndex,
+        changesIndex: output.addressIndex,
       },
     });
+    const { outputAccepted } = await helper.waitForResult();
+    assertOrThrowInvalidResult(outputAccepted);
   }
-
-  const { verified } = await helper.waitForResult();
-  assertOrThrowInvalidResult(verified);
 
   forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_VERIFY);
 
@@ -140,7 +142,13 @@ export const signTxn = async (
   }
 
   forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CARD);
+  const signedTransaction: string = createSignedTransaction({
+    inputs,
+    outputs: params.txn.outputs,
+    signatures,
+    derivationPath: params.derivationPath,
+  });
 
   logger.info('Completed');
-  return { signatures };
+  return { signedTransaction, signatures };
 };
