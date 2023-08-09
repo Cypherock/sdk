@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.22
+
+### Patch Changes
+
+- [#52](https://github.com/Cypherock/sdk/pull/52) [`4375dba`](https://github.com/Cypherock/sdk/commit/4375dbab466adc8eea1a43ccadb2b875320a905c) Thanks [@ujjwal-cyph](https://github.com/ujjwal-cyph)! - sign txn proto, test cases and flow update
+
 ## 0.0.21
 
 ### Patch Changes
