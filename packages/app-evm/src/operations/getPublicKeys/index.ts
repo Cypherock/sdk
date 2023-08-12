@@ -2,7 +2,6 @@ import { ISDK } from '@cypherock/sdk-core';
 import {
   createStatusListener,
   assert,
-  hexToUint8Array,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
 import {
@@ -63,16 +62,27 @@ export const getPublicKeys = async (
     initiate: {
       walletId: params.walletId,
       derivationPaths: params.derivationPaths,
-      chainId: hexToUint8Array(params.chainId.toString(16)),
+      chainId: params.chainId.toString(),
       format: params.format ?? defaultParams.format,
       doVerify: params.doVerifyOnDevice ?? defaultParams.doVerifyOnDevice,
     },
   });
 
-  const result = await helper.waitForResult();
-  assertOrThrowInvalidResult(result.result);
+  let publicKeys: Uint8Array[] = [];
+  const hasMore = () => publicKeys.length !== params.derivationPaths.length;
+  do {
+    const result = await helper.waitForResult();
+    assertOrThrowInvalidResult(result.result);
+    publicKeys = [...publicKeys, ...result.result.publicKeys];
+    forceStatusUpdate(GetPublicKeysStatus.GET_PUBLIC_KEYS_STATUS_CARD);
+    if (hasMore()) {
+      await helper.sendQuery({
+        fetchNext: {},
+      });
+    }
+  } while (hasMore());
 
-  forceStatusUpdate(GetPublicKeysStatus.GET_PUBLIC_KEYS_STATUS_VERIFY);
-
-  return result.result;
+  return {
+    publicKeys,
+  };
 };
