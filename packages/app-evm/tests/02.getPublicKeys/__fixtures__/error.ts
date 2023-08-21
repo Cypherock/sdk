@@ -3,7 +3,6 @@ import {
   DeviceAppErrorType,
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
-import { hexToUint8Array } from '@cypherock/sdk-utils';
 import { IGetPublicKeysTestCase } from './types';
 import { Query } from '../../../src/proto/generated/evm/core';
 import { AddressFormat } from '../../../src/proto/generated/evm/common';
@@ -40,7 +39,7 @@ const commonParams = {
                     path: [0x80000000 + 44, 0x80000000 + 60, 0x80000000, 0, 0],
                   },
                 ],
-                chainId: hexToUint8Array((1).toString(16)),
+                chainId: (1).toString(),
                 format: AddressFormat.DEFAULT,
                 doVerify: true,
               },

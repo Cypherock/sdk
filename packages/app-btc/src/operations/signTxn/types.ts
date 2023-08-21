@@ -1,6 +1,12 @@
-import { SignTxnStatus } from '../../proto/generated/types';
+export enum SignTxnEvent {
+  INIT = 0,
+  CONFIRM = 1,
+  VERIFY = 2,
+  PASSPHRASE = 3,
+  PIN_CARD = 4,
+}
 
-export type SignTxnEventHandler = (event: SignTxnStatus) => void;
+export type SignTxnEventHandler = (event: SignTxnEvent) => void;
 
 export interface ISignTxnInputData {
   prevTxnId: string;
