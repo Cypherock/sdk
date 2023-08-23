@@ -55,7 +55,9 @@ const requestOneAddress: IGetPublicKeysTestCase = {
             getPublicKeys: {
               result: {
                 publicKeys: [
-                  hexToUint8Array('0xd59719483104d4b1a161c35a8df421a2936a8f0a'),
+                  hexToUint8Array(
+                    '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
+                  ),
                 ],
               },
             },
@@ -80,7 +82,10 @@ const requestOneAddress: IGetPublicKeysTestCase = {
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
-    publicKeys: ['0xd59719483104d4b1a161c35a8df421a2936a8f0a'],
+    publicKeys: [
+      '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
+    ],
+    addresses: ['0x847d9388Cd7AF9629932907B54d43Be08208dF5a'],
   },
 };
 
@@ -162,9 +167,9 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
             getPublicKeys: {
               result: {
                 publicKeys: [
-                  '0xa24ba3d47fd7a5e086f1495cd4eb00dd232eee1f',
-                  '0x6294840c1676afd973c1f248b3b6b5f58e638f85',
-                  '0x8d4ee18988f577746438216a4f0a7037809ec9bf',
+                  '0x02a4744ea78a168047e0f5cdbcf4161c88b8b7b2671cd943d4b4d2c4daed5594c0',
+                  '0x03c728b86bda7c26d32a5049c25d95f56d23f967ee3cb88467fb3660afedb738f0',
+                  '0x02493ebfba970023379dee5197b342ba8c30a5a7f51121fa2a48f49d2db2ea4643',
                 ].map(e => hexToUint8Array(e)),
               },
             },
@@ -190,9 +195,14 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     publicKeys: [
-      '0xa24ba3d47fd7a5e086f1495cd4eb00dd232eee1f',
-      '0x6294840c1676afd973c1f248b3b6b5f58e638f85',
-      '0x8d4ee18988f577746438216a4f0a7037809ec9bf',
+      '0x02a4744ea78a168047e0f5cdbcf4161c88b8b7b2671cd943d4b4d2c4daed5594c0',
+      '0x03c728b86bda7c26d32a5049c25d95f56d23f967ee3cb88467fb3660afedb738f0',
+      '0x02493ebfba970023379dee5197b342ba8c30a5a7f51121fa2a48f49d2db2ea4643',
+    ],
+    addresses: [
+      '0xCcA852f9Bbc7b4fc753275d8A74BE0a4C200D012',
+      '0x911C1279D687b3F596cF1E6a57be7B81F5Dcbeed',
+      '0x6a7Fa501F13F83fec0188a61b5B6EaCAA40b93Fd',
     ],
   },
 };

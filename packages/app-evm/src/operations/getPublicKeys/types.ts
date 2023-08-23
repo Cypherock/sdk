@@ -25,4 +25,5 @@ export interface IGetPublicKeysParams {
 
 export interface IGetPublicKeysResult {
   publicKeys: string[];
+  addresses: string[];
 }

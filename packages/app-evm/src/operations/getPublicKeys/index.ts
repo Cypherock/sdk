@@ -14,6 +14,7 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
+  getAddressFromPublicKey,
 } from '../../utils';
 import {
   GetPublicKeysEvent,
@@ -93,5 +94,6 @@ export const getPublicKeys = async (
 
   return {
     publicKeys: publicKeys.map(e => `0x${uint8ArrayToHex(e)}`),
+    addresses: publicKeys.map(e => getAddressFromPublicKey(e)),
   };
 };
