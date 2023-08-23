@@ -7,14 +7,18 @@ import {
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
 import type { Transaction } from 'ethers';
-import { AddressFormat, SignTxnStatus } from '../../proto/generated/types';
+import {
+  AddressFormat,
+  SeedGenerationStatus,
+  SignTxnStatus,
+} from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
   getEthersLib,
 } from '../../utils';
-import { ISignTxnParams, ISignTxnResult } from './types';
+import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
 
 export * from './types';
 
@@ -48,7 +52,9 @@ export const signTxn = async (
   }
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
-    enums: SignTxnStatus,
+    enums: SignTxnEvent,
+    operationEnums: SignTxnStatus,
+    seedGenerationEnums: SeedGenerationStatus,
     onEvent: params.onEvent,
     logger,
   });
@@ -71,12 +77,12 @@ export const signTxn = async (
 
   const txnBytes = hexToUint8Array(params.txn);
   await helper.sendInChunks(txnBytes, 'txnData', 'txnData');
-  forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CONFIRM);
+  forceStatusUpdate(SignTxnEvent.CONFIRM);
 
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.signature);
 
-  forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CARD);
+  forceStatusUpdate(SignTxnEvent.PIN_CARD);
 
   const signature = {
     r: `0x${uint8ArrayToHex(result.signature.r)}`,

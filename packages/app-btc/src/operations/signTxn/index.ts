@@ -5,7 +5,10 @@ import {
   hexToUint8Array,
   uint8ArrayToHex,
 } from '@cypherock/sdk-utils';
-import { SignTxnStatus } from '../../proto/generated/types';
+import {
+  SeedGenerationStatus,
+  SignTxnStatus,
+} from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
@@ -18,7 +21,7 @@ import {
   createSignedTransaction,
 } from '../../utils/transaction';
 import { assertSignTxnParams } from './helpers';
-import { ISignTxnParams, ISignTxnResult } from './types';
+import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
 
 export * from './types';
 
@@ -41,7 +44,9 @@ export const signTxn = async (
   logger.info('Started');
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
-    enums: SignTxnStatus,
+    enums: SignTxnEvent,
+    operationEnums: SignTxnStatus,
+    seedGenerationEnums: SeedGenerationStatus,
     onEvent: params.onEvent,
     logger,
   });
@@ -62,7 +67,7 @@ export const signTxn = async (
 
   const { confirmation } = await helper.waitForResult();
   assertOrThrowInvalidResult(confirmation);
-  forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CONFIRM);
+  forceStatusUpdate(SignTxnEvent.CONFIRM);
 
   await helper.sendQuery({
     meta: {
@@ -124,7 +129,7 @@ export const signTxn = async (
     assertOrThrowInvalidResult(outputAccepted);
   }
 
-  forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_VERIFY);
+  forceStatusUpdate(SignTxnEvent.VERIFY);
 
   const signatures: string[] = [];
 
@@ -141,7 +146,7 @@ export const signTxn = async (
     signatures.push(uint8ArrayToHex(signature.signature));
   }
 
-  forceStatusUpdate(SignTxnStatus.SIGN_TXN_STATUS_CARD);
+  forceStatusUpdate(SignTxnEvent.PIN_CARD);
   const signedTransaction: string = createSignedTransaction({
     inputs,
     outputs: params.txn.outputs,
