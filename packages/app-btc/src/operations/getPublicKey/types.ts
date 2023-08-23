@@ -1,9 +1,14 @@
-import {
-  GetPublicKeyStatus,
-  IGetPublicKeyIntiateRequest,
-} from '../../proto/generated/types';
+import { IGetPublicKeyIntiateRequest } from '../../proto/generated/types';
 
-export type GetPublicKeyEventHandler = (event: GetPublicKeyStatus) => void;
+export enum GetPublicKeyEvent {
+  INIT = 0,
+  CONFIRM = 1,
+  PASSPHRASE = 2,
+  PIN_CARD = 3,
+  VERIFY = 4,
+}
+
+export type GetPublicKeyEventHandler = (event: GetPublicKeyEvent) => void;
 
 export interface IGetPublicKeyParams extends IGetPublicKeyIntiateRequest {
   onEvent?: GetPublicKeyEventHandler;

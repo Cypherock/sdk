@@ -5,14 +5,17 @@ import {
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
-import { SignMsgStatus } from '../../proto/generated/types';
+import {
+  SeedGenerationStatus,
+  SignMsgStatus,
+} from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
   getEthersLib,
 } from '../../utils';
-import { ISignMsgParams, ISignMsgResult } from './types';
+import { ISignMsgParams, ISignMsgResult, SignMsgEvent } from './types';
 
 export * from './types';
 
@@ -35,7 +38,9 @@ export const signMsg = async (
   const ethers = getEthersLib();
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
-    enums: SignMsgStatus,
+    enums: SignMsgEvent,
+    operationEnums: SignMsgStatus,
+    seedGenerationEnums: SeedGenerationStatus,
     onEvent: params.onEvent,
     logger,
   });
@@ -56,12 +61,12 @@ export const signMsg = async (
   });
 
   await helper.sendInChunks(params.message, 'msgData', 'msgData');
-  forceStatusUpdate(SignMsgStatus.SIGN_MSG_STATUS_CONFIRM);
+  forceStatusUpdate(SignMsgEvent.CONFIRM);
 
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.signature);
 
-  forceStatusUpdate(SignMsgStatus.SIGN_MSG_STATUS_CARD);
+  forceStatusUpdate(SignMsgEvent.PIN_CARD);
 
   const signature = {
     r: `0x${uint8ArrayToHex(result.signature.r)}`,

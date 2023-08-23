@@ -1,10 +1,17 @@
 import {
   AddressFormat,
-  GetPublicKeysStatus,
   IGetPublicKeysDerivationPath,
 } from '../../proto/generated/types';
 
-export type GetPublicKeysEventHandler = (event: GetPublicKeysStatus) => void;
+export enum GetPublicKeysEvent {
+  INIT = 0,
+  CONFIRM = 1,
+  PASSPHRASE = 2,
+  PIN_CARD = 3,
+  VERIFY = 4,
+}
+
+export type GetPublicKeysEventHandler = (event: GetPublicKeysEvent) => void;
 
 export interface IGetPublicKeysParams {
   onEvent?: GetPublicKeysEventHandler;
@@ -14,4 +21,8 @@ export interface IGetPublicKeysParams {
   chainId: number;
   format?: AddressFormat;
   doVerifyOnDevice?: boolean;
+}
+
+export interface IGetPublicKeysResult {
+  publicKeys: string[];
 }

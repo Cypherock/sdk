@@ -1,3 +1,4 @@
+import { createFlowStatus } from '@cypherock/sdk-utils';
 import { IGetPublicKeyTestCase } from './types';
 import { Query } from '../../../src/proto/generated/btc/core';
 
@@ -42,21 +43,21 @@ const requestAddress: IGetPublicKeyTestCase = {
       ]),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
         {
-          flowStatus: 2,
+          flowStatus: createFlowStatus(2, 1),
           expectEventCalls: [2],
         },
       ],
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     publicKey: new Uint8Array([
       3, 41, 155, 232, 126, 245, 18, 49, 110, 235, 225, 178, 60, 48, 53, 109,

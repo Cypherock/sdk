@@ -7,6 +7,7 @@ import {
 import {
   GetXpubsStatus,
   IGetXpubsResultResponse,
+  SeedGenerationStatus,
 } from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
@@ -15,7 +16,7 @@ import {
   configureAppId,
   assertDerivationPath,
 } from '../../utils';
-import { IGetXpubsParams } from './types';
+import { GetXpubsEvent, IGetXpubsParams } from './types';
 
 export * from './types';
 
@@ -47,7 +48,9 @@ export const getXpubs = async (
   );
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
-    enums: GetXpubsStatus,
+    enums: GetXpubsEvent,
+    operationEnums: GetXpubsStatus,
+    seedGenerationEnums: SeedGenerationStatus,
     onEvent: params.onEvent,
     logger,
   });
@@ -71,7 +74,7 @@ export const getXpubs = async (
     const result = await helper.waitForResult();
     assertOrThrowInvalidResult(result.result);
     xpubs = [...xpubs, ...result.result.xpubs];
-    forceStatusUpdate(GetXpubsStatus.GET_XPUBS_STATUS_CARD);
+    forceStatusUpdate(GetXpubsEvent.PIN_CARD);
     if (hasMore()) {
       await helper.sendQuery({
         fetchNext: {},

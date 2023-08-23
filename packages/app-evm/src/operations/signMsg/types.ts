@@ -1,6 +1,14 @@
-import { SignMsgStatus, SignMsgType } from '../../proto/generated/types';
+import { SignMsgType } from '../../proto/generated/types';
 
-export type SignMsgEventHandler = (event: SignMsgStatus) => void;
+export enum SignMsgEvent {
+  INIT = 0,
+  CONFIRM = 1,
+  VERIFY = 2,
+  PASSPHRASE = 3,
+  PIN_CARD = 4,
+}
+
+export type SignMsgEventHandler = (event: SignMsgEvent) => void;
 
 export interface ISignMsgParams {
   onEvent?: SignMsgEventHandler;

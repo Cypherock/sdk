@@ -42,13 +42,13 @@ importers:
         specifier: workspace:^
         version: link:../../packages/app-btc
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.19
+        specifier: workspace:^0.0.20
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^0.0.17
         version: link:../../packages/core
       '@cypherock/sdk-hw-webusb':
-        specifier: workspace:^0.0.12
+        specifier: workspace:^0.0.13
         version: link:../../packages/hw-webusb
       '@next/font':
         specifier: 13.1.6
@@ -97,16 +97,16 @@ importers:
         specifier: workspace:^
         version: link:../../packages/app-evm
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.19
+        specifier: workspace:^
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^
         version: link:../../packages/core
       '@cypherock/sdk-hw-hid':
-        specifier: workspace:^0.0.12
+        specifier: workspace:^
         version: link:../../packages/hw-hid
       '@cypherock/sdk-hw-serialport':
-        specifier: workspace:^0.0.12
+        specifier: workspace:^
         version: link:../../packages/hw-serialport
       '@cypherock/sdk-interfaces':
         specifier: workspace:^
@@ -143,13 +143,13 @@ importers:
         specifier: ^2.2.3
         version: 2.2.3
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^0.0.17
         version: link:../core
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.11
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../util
       axios:
         specifier: ^1.3.4
@@ -222,13 +222,13 @@ importers:
   packages/app-evm:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^0.0.17
         version: link:../core
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.11
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../util
       long:
         specifier: ^5.2.1
@@ -295,13 +295,13 @@ importers:
   packages/app-manager:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^0.0.17
         version: link:../core
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.11
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../util
       axios:
         specifier: ^1.3.4
@@ -374,7 +374,7 @@ importers:
         specifier: workspace:^0.0.11
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../util
       compare-versions:
         specifier: 6.0.0-rc.1

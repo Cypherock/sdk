@@ -1,3 +1,4 @@
+import { createFlowStatus } from '@cypherock/sdk-utils';
 import { IGetXpubsTestCase } from './types';
 import { Query, Result } from '../../../src/proto/generated/btc/core';
 
@@ -58,21 +59,21 @@ const requestOneXpub: IGetXpubsTestCase = {
       ),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
         {
-          flowStatus: 2,
+          flowStatus: createFlowStatus(2, 1),
           expectEventCalls: [2],
         },
       ],
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
+  mocks: { eventCalls: [[0], [1], [2], [3]] },
   output: {
     xpubs: [
       'xpub6BsXdv4PfBcemMJH8Pea913XswhLexTZQFSbRBbSaJ8jkpyi26r4qA9WALLLSYxiNRp8YiSwPqMuJGCyN6sRWRptY41SAS1Bha2u2yLvGks',
@@ -158,21 +159,21 @@ const requestFourXpubs: IGetXpubsTestCase = {
       ),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
         {
-          flowStatus: 2,
+          flowStatus: createFlowStatus(2, 1),
           expectEventCalls: [2],
         },
       ],
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
+  mocks: { eventCalls: [[0], [1], [2], [3]] },
   output: {
     xpubs: [
       'xpub6BsXdv4PfBcemMJH8Pea913XswhLexTZQFSbRBbSaJ8jkpyi26r4qA9WALLLSYxiNRp8YiSwPqMuJGCyN6sRWRptY41SAS1Bha2u2yLvGks',

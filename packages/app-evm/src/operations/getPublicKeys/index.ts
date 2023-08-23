@@ -3,18 +3,23 @@ import {
   createStatusListener,
   assert,
   createLoggerWithPrefix,
+  uint8ArrayToHex,
 } from '@cypherock/sdk-utils';
 import {
   AddressFormat,
   GetPublicKeysStatus,
-  IGetPublicKeysResultResponse,
+  SeedGenerationStatus,
 } from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
-import { IGetPublicKeysParams } from './types';
+import {
+  GetPublicKeysEvent,
+  IGetPublicKeysParams,
+  IGetPublicKeysResult,
+} from './types';
 
 export * from './types';
 
@@ -28,7 +33,7 @@ const defaultParams = {
 export const getPublicKeys = async (
   sdk: ISDK,
   params: IGetPublicKeysParams,
-): Promise<IGetPublicKeysResultResponse> => {
+): Promise<IGetPublicKeysResult> => {
   assert(params, 'Params should be defined');
   assert(params.walletId, 'walletId should be defined');
   assert(params.chainId, 'chainId should be defined');
@@ -46,7 +51,9 @@ export const getPublicKeys = async (
   );
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
-    enums: GetPublicKeysStatus,
+    enums: GetPublicKeysEvent,
+    operationEnums: GetPublicKeysStatus,
+    seedGenerationEnums: SeedGenerationStatus,
     onEvent: params.onEvent,
     logger,
   });
@@ -74,7 +81,7 @@ export const getPublicKeys = async (
     const result = await helper.waitForResult();
     assertOrThrowInvalidResult(result.result);
     publicKeys = [...publicKeys, ...result.result.publicKeys];
-    forceStatusUpdate(GetPublicKeysStatus.GET_PUBLIC_KEYS_STATUS_CARD);
+    forceStatusUpdate(GetPublicKeysEvent.PIN_CARD);
     if (hasMore()) {
       await helper.sendQuery({
         fetchNext: {},
@@ -82,7 +89,9 @@ export const getPublicKeys = async (
     }
   } while (hasMore());
 
+  forceStatusUpdate(GetPublicKeysEvent.VERIFY);
+
   return {
-    publicKeys,
+    publicKeys: publicKeys.map(e => `0x${uint8ArrayToHex(e)}`),
   };
 };
