@@ -9,7 +9,7 @@ const getNumbersFromEnums = (enums: object) =>
     .filter(e => !Number.isNaN(Number(e)))
     .map(e => parseInt(e, 10))
     .filter(e => e >= 0)
-    .sort();
+    .sort((a, b) => a - b);
 
 const getNamesFromEnums = (enums: object) =>
   Object.keys(enums).filter(e => Number.isNaN(Number(e)));
