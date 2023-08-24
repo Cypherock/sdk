@@ -69,9 +69,11 @@ describe('managerApp.trainCard', () => {
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
-          await expect(rejectedPromise).rejects.toThrowError(
-            testCase.errorMessage,
-          );
+          try {
+            await rejectedPromise;
+          } catch (error: any) {
+            expect(error.message).toMatch(testCase.errorMessage);
+          }
         }
 
         expectMockCalls(testCase);
@@ -95,9 +97,11 @@ describe('managerApp.trainCard', () => {
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
-          await expect(rejectedPromise).rejects.toThrowError(
-            testCase.errorMessage,
-          );
+          try {
+            await rejectedPromise;
+          } catch (error: any) {
+            expect(error.message).toMatch(testCase.errorMessage);
+          }
         }
 
         expectMockCalls(testCase);

@@ -64,7 +64,8 @@ const withUnknownError: IGetXpubsTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR].message,
 };
 
 const withInvalidAppId: IGetXpubsTestCase = {
@@ -78,7 +79,8 @@ const withInvalidAppId: IGetXpubsTestCase = {
   ],
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE]
+      .message,
 };
 
 const error: IGetXpubsTestCase[] = [withUnknownError, withInvalidAppId];

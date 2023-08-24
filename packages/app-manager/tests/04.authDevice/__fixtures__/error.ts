@@ -20,7 +20,8 @@ const withUserRejection: IAuthDeviceTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.USER_REJECTION],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.USER_REJECTION].message,
   mocks: {
     deviceInfo: {
       firmwareVersion: {
@@ -96,7 +97,7 @@ const withSerialSignatureFailure: IAuthDeviceTestCase = {
   },
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.DEVICE_AUTH_FAILED],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.DEVICE_AUTH_FAILED].message,
 };
 
 const withChallengeSignatureFailure: IAuthDeviceTestCase = {
@@ -206,7 +207,7 @@ const withChallengeSignatureFailure: IAuthDeviceTestCase = {
   },
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.DEVICE_AUTH_FAILED],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.DEVICE_AUTH_FAILED].message,
 };
 
 const error: IAuthDeviceTestCase[] = [

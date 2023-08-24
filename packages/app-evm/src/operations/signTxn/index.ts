@@ -17,6 +17,7 @@ import {
   OperationHelper,
   logger as rootLogger,
   getEthersLib,
+  configureAppId,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
 
@@ -50,6 +51,8 @@ export const signTxn = async (
   } catch (error) {
     throw new Error('Invalid txn hex');
   }
+
+  configureAppId(sdk, Number(decodedTxn.chainId));
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,

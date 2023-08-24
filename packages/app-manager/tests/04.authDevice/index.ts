@@ -54,9 +54,11 @@ describe('managerApp.authDevice', () => {
 
         await expect(authDevicePromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
-          await expect(authDevicePromise).rejects.toThrowError(
-            testCase.errorMessage,
-          );
+          try {
+            await authDevicePromise;
+          } catch (error: any) {
+            expect(error.message).toMatch(testCase.errorMessage);
+          }
         }
       });
     });

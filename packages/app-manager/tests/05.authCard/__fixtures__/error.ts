@@ -21,7 +21,8 @@ const withUserRejection: IAuthCardTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.USER_REJECTION],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.USER_REJECTION].message,
 };
 
 const withCardError: IAuthCardTestCase = {
@@ -41,7 +42,7 @@ const withCardError: IAuthCardTestCase = {
   errorInstance: DeviceAppError,
   errorMessage:
     deviceAppErrorTypeDetails[DeviceAppErrorType.CARD_OPERATION_FAILED]
-      .subError[CardError.CARD_ERROR_NOT_PAIRED],
+      .subError[CardError.CARD_ERROR_NOT_PAIRED].message,
 };
 
 const withSerialSignatureFailure: IAuthCardTestCase = {
@@ -104,7 +105,8 @@ const withSerialSignatureFailure: IAuthCardTestCase = {
     ],
   },
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.CARD_AUTH_FAILED],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.CARD_AUTH_FAILED].message,
 };
 
 const withChallengeSignatureFailure: IAuthCardTestCase = {
@@ -201,7 +203,8 @@ const withChallengeSignatureFailure: IAuthCardTestCase = {
     ],
   },
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.CARD_AUTH_FAILED],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.CARD_AUTH_FAILED].message,
 };
 
 const error: IAuthCardTestCase[] = [

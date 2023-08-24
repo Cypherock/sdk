@@ -84,7 +84,8 @@ const withUnknownError: ISignTxnTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR].message,
 };
 
 const withInvalidAppId: ISignTxnTestCase = {
@@ -105,7 +106,8 @@ const withInvalidAppId: ISignTxnTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.CORRUPT_DATA],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.CORRUPT_DATA].message,
 };
 
 const withUserRejection: ISignTxnTestCase = {
@@ -128,7 +130,8 @@ const withUserRejection: ISignTxnTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.USER_REJECTION],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.USER_REJECTION].message,
 };
 
 const error: ISignTxnTestCase[] = [

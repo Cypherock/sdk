@@ -15,6 +15,7 @@ import {
   OperationHelper,
   logger as rootLogger,
   getAddressFromPublicKey,
+  configureAppId,
 } from '../../utils';
 import {
   GetPublicKeysEvent,
@@ -50,6 +51,8 @@ export const getPublicKeys = async (
     ),
     'derivationPaths should be greater than 3',
   );
+
+  configureAppId(sdk, params.chainId);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: GetPublicKeysEvent,

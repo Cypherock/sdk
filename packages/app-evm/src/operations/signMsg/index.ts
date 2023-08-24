@@ -14,6 +14,7 @@ import {
   OperationHelper,
   logger as rootLogger,
   getEthersLib,
+  configureAppId,
 } from '../../utils';
 import { ISignMsgParams, ISignMsgResult, SignMsgEvent } from './types';
 
@@ -34,6 +35,7 @@ export const signMsg = async (
     params.derivationPath.length > 3,
     'derivationPath should be greater than 3',
   );
+  configureAppId(sdk, 1);
 
   const ethers = getEthersLib();
 
