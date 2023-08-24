@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.24
+
+### Patch Changes
+
+- [#60](https://github.com/Cypherock/sdk/pull/60) [`5caa99e`](https://github.com/Cypherock/sdk/commit/5caa99ee4cd00dcf86194d283efedd2ef4ee514e) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fix btc transaction signature
+
 ## 0.0.23
 
 ### Patch Changes
