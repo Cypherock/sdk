@@ -42,10 +42,10 @@ importers:
         specifier: workspace:^
         version: link:../../packages/app-btc
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.20
+        specifier: workspace:^0.0.21
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.17
+        specifier: workspace:^0.0.18
         version: link:../../packages/core
       '@cypherock/sdk-hw-webusb':
         specifier: workspace:^0.0.13
@@ -94,16 +94,16 @@ importers:
         specifier: workspace:^
         version: link:../../packages/app-btc
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.20
+        specifier: workspace:^0.0.21
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.17
+        specifier: workspace:^0.0.18
         version: link:../../packages/core
       '@cypherock/sdk-hw-hid':
         specifier: workspace:^0.0.13
         version: link:../../packages/hw-hid
       '@cypherock/sdk-hw-serialport':
-        specifier: workspace:^0.0.14
+        specifier: workspace:^0.0.15
         version: link:../../packages/hw-serialport
       '@cypherock/sdk-interfaces':
         specifier: workspace:^
@@ -137,7 +137,7 @@ importers:
         specifier: ^2.2.3
         version: 2.2.3
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.17
+        specifier: workspace:^0.0.18
         version: link:../core
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.11
@@ -216,7 +216,7 @@ importers:
   packages/app-evm:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.17
+        specifier: workspace:^0.0.18
         version: link:../core
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.11
@@ -289,7 +289,7 @@ importers:
   packages/app-manager:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.17
+        specifier: workspace:^0.0.18
         version: link:../core
       '@cypherock/sdk-interfaces':
         specifier: workspace:^0.0.11
