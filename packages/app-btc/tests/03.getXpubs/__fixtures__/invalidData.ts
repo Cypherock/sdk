@@ -46,7 +46,8 @@ const commonParams = {
   ],
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE]
+      .message,
 };
 
 const invalidData: IGetXpubsTestCase[] = [

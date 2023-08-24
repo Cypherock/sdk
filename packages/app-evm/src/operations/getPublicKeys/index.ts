@@ -14,6 +14,8 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
+  getAddressFromPublicKey,
+  configureAppId,
 } from '../../utils';
 import {
   GetPublicKeysEvent,
@@ -50,6 +52,8 @@ export const getPublicKeys = async (
     'derivationPaths should be greater than 3',
   );
 
+  configureAppId(sdk, params.chainId);
+
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: GetPublicKeysEvent,
     operationEnums: GetPublicKeysStatus,
@@ -75,12 +79,24 @@ export const getPublicKeys = async (
     },
   });
 
-  const result = await helper.waitForResult();
-  assertOrThrowInvalidResult(result.result);
+  let publicKeys: Uint8Array[] = [];
+  const hasMore = () => publicKeys.length !== params.derivationPaths.length;
+  do {
+    const result = await helper.waitForResult();
+    assertOrThrowInvalidResult(result.result);
+    publicKeys = [...publicKeys, ...result.result.publicKeys];
+    forceStatusUpdate(GetPublicKeysEvent.PIN_CARD);
+    if (hasMore()) {
+      await helper.sendQuery({
+        fetchNext: {},
+      });
+    }
+  } while (hasMore());
 
   forceStatusUpdate(GetPublicKeysEvent.VERIFY);
 
   return {
-    publicKeys: result.result.publicKeys.map(e => `0x${uint8ArrayToHex(e)}`),
+    publicKeys: publicKeys.map(e => `0x${uint8ArrayToHex(e)}`),
+    addresses: publicKeys.map(e => getAddressFromPublicKey(e)),
   };
 };

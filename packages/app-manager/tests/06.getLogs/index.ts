@@ -57,9 +57,11 @@ describe('managerApp.getLogs', () => {
 
         await expect(getLogsPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
-          await expect(getLogsPromise).rejects.toThrowError(
-            testCase.errorMessage,
-          );
+          try {
+            await getLogsPromise;
+          } catch (error: any) {
+            expect(error.message).toMatch(testCase.errorMessage);
+          }
         }
       });
     });

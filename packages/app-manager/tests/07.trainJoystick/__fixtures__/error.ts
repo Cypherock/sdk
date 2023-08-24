@@ -21,7 +21,8 @@ const withInvalidResult: ITrainJoystickTestCase = {
   ],
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE]
+      .message,
 };
 
 const withUnknownError: ITrainJoystickTestCase = {
@@ -39,7 +40,8 @@ const withUnknownError: ITrainJoystickTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR].message,
 };
 
 const error: ITrainJoystickTestCase[] = [withInvalidResult, withUnknownError];

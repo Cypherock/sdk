@@ -59,7 +59,8 @@ const withUnknownError: ISignTxnTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.UNKNOWN_ERROR].message,
 };
 
 const withInvalidResult: ISignTxnTestCase = {
@@ -73,7 +74,8 @@ const withInvalidResult: ISignTxnTestCase = {
   ],
   errorInstance: DeviceAppError,
   errorMessage:
-    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE],
+    deviceAppErrorTypeDetails[DeviceAppErrorType.INVALID_MSG_FROM_DEVICE]
+      .message,
 };
 
 const error: ISignTxnTestCase[] = [withUnknownError, withInvalidResult];

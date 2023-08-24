@@ -132,6 +132,9 @@ export class DeviceAppError extends DeviceError {
       errorCodeKey = subError.errorCode;
     } else {
       message = deviceAppErrorTypeDetails[errorCode].message;
+      if (errorValue !== undefined) {
+        message = `${message} (${errorValue})`;
+      }
       errorCodeKey = errorCode;
     }
     super(errorCodeKey, message, DeviceAppError);

@@ -4,9 +4,12 @@ import { ManagerApp } from '@cypherock/sdk-app-manager';
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as bitcoinJsLib from 'bitcoinjs-lib';
 import { setBitcoinJSLib } from '@cypherock/sdk-app-btc';
+import { setEthersLib } from '@cypherock/sdk-app-evm';
+import { ethers } from 'ethers';
 
 const run = async () => {
   setBitcoinJSLib(bitcoinJsLib);
+  setEthersLib(ethers);
   let connection: IDeviceConnection;
 
   try {

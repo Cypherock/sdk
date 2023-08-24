@@ -25,7 +25,8 @@ const withUserRejection: IGetLogsTestCase = {
     },
   ],
   errorInstance: DeviceAppError,
-  errorMessage: deviceAppErrorTypeDetails[DeviceAppErrorType.USER_REJECTION],
+  errorMessage:
+    deviceAppErrorTypeDetails[DeviceAppErrorType.USER_REJECTION].message,
 };
 
 const withLogsDisabled: IGetLogsTestCase = {
@@ -43,7 +44,7 @@ const withLogsDisabled: IGetLogsTestCase = {
     },
   ],
   errorInstance: GetLogsError,
-  errorMessage: getLogsErrorTypeDetails[GetLogsErrorType.LOGS_DISABLED],
+  errorMessage: getLogsErrorTypeDetails[GetLogsErrorType.LOGS_DISABLED].message,
 };
 
 const error: IGetLogsTestCase[] = [withUserRejection, withLogsDisabled];

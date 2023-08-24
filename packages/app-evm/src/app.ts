@@ -9,7 +9,7 @@ import { SignMsgType } from './proto/generated/types';
 export class EvmApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 3;
+  private static readonly APPLET_ID = 7;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;
