@@ -14,32 +14,27 @@ import {
   configureAppId,
 } from '../../utils';
 import { runGetPublicKeysOnDevice } from '../runGetPublicKeys';
+import { GetPublicKeysEvent } from '../types';
 import {
-  IGetPublicKeysParams,
-  IGetPublicKeysResult,
-  GetPublicKeysEvent,
-} from '../types';
+  IGetUserVerifiedPublicKeyParams,
+  IGetUserVerifiedPublicKeyResult,
+} from './types';
+
+export * from './types';
 
 const logger = createLoggerWithPrefix(rootLogger, 'GetPublicKeys');
 
-export const getPublicKeys = async (
+export const getUserVerifiedPublicKey = async (
   sdk: ISDK,
-  params: IGetPublicKeysParams,
-): Promise<IGetPublicKeysResult> => {
+  params: IGetUserVerifiedPublicKeyParams,
+): Promise<IGetUserVerifiedPublicKeyResult> => {
   assert(params, 'Params should be defined');
   assert(params.walletId, 'walletId should be defined');
   assert(params.chainId, 'chainId should be defined');
-  assert(params.derivationPaths, 'derivationPaths should be defined');
+  assert(params.derivationPath, 'derivationPath should be defined');
   assert(
-    params.derivationPaths.length > 0,
-    'derivationPaths should not be empty',
-  );
-  assert(
-    params.derivationPaths.reduce(
-      (acc, path) => acc && path.path.length > 3,
-      true,
-    ),
-    'derivationPaths should be greater than 3',
+    params.derivationPath.length > 3,
+    'derivationPath should be greater than 3',
   );
 
   configureAppId(sdk, params.chainId);
@@ -54,10 +49,26 @@ export const getPublicKeys = async (
 
   const helper = new OperationHelper({
     sdk,
-    queryKey: 'getPublicKeys',
-    resultKey: 'getPublicKeys',
+    queryKey: 'getUserVerifiedPublicKey',
+    resultKey: 'getUserVerifiedPublicKey',
     onStatus,
   });
 
-  return runGetPublicKeysOnDevice(helper, params, forceStatusUpdate);
+  const result = await runGetPublicKeysOnDevice(
+    helper,
+    {
+      chainId: params.chainId,
+      walletId: params.walletId,
+      derivationPaths: [{ path: params.derivationPath }],
+      doVerifyOnDevice: params.doVerifyOnDevice,
+      format: params.format,
+      onEvent: params.onEvent,
+    },
+    forceStatusUpdate,
+  );
+
+  return {
+    address: result.addresses[0],
+    publicKey: result.publicKeys[0],
+  };
 };
