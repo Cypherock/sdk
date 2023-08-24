@@ -1,5 +1,20 @@
 # nodejs-test
 
+## 0.0.29
+
+### Patch Changes
+
+- [#58](https://github.com/Cypherock/sdk/pull/58) [`8c511bc`](https://github.com/Cypherock/sdk/commit/8c511bc78c53d88e62ae77dc99f3aa863a5ce4e9) Thanks [@natto1784](https://github.com/natto1784)! - update app-evm to reflect protobuf changes
+
+- Updated dependencies [[`8c511bc`](https://github.com/Cypherock/sdk/commit/8c511bc78c53d88e62ae77dc99f3aa863a5ce4e9)]:
+  - @cypherock/sdk-app-manager@0.0.22
+  - @cypherock/sdk-interfaces@0.0.12
+  - @cypherock/sdk-app-btc@0.0.26
+  - @cypherock/sdk-app-evm@0.0.21
+  - @cypherock/sdk-core@0.0.19
+  - @cypherock/sdk-hw-hid@0.0.14
+  - @cypherock/sdk-hw-serialport@0.0.16
+
 ## 0.0.28
 
 ### Patch Changes

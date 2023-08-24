@@ -1,5 +1,13 @@
 # @cypherock/sdk-core
 
+## 0.0.19
+
+### Patch Changes
+
+- Updated dependencies [[`8c511bc`](https://github.com/Cypherock/sdk/commit/8c511bc78c53d88e62ae77dc99f3aa863a5ce4e9)]:
+  - @cypherock/sdk-interfaces@0.0.12
+  - @cypherock/sdk-utils@0.0.15
+
 ## 0.0.18
 
 ### Patch Changes

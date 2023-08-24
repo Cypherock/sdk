@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.12
+
+### Patch Changes
+
+- [#58](https://github.com/Cypherock/sdk/pull/58) [`8c511bc`](https://github.com/Cypherock/sdk/commit/8c511bc78c53d88e62ae77dc99f3aa863a5ce4e9) Thanks [@natto1784](https://github.com/natto1784)! - update app-evm to reflect protobuf changes
+
 ## 0.0.11
 
 ### Patch Changes
