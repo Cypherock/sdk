@@ -74,11 +74,26 @@ export const createSignedTransaction = (params: {
 
     const signer: Signer = {
       publicKey: Buffer.from(signature.slice(signature.length - 66), 'hex'),
-      sign: () =>
-        Buffer.concat([
-          decoded.r.subarray(decoded.r.length - 32),
-          decoded.s.subarray(decoded.s.length - 32),
-        ]),
+      sign: () => {
+        let rValue =
+          decoded.r.length > 32
+            ? decoded.r.subarray(decoded.r.length - 32, 33)
+            : decoded.r;
+        let sValue =
+          decoded.s.length > 32
+            ? decoded.s.subarray(decoded.s.length - 32, 33)
+            : decoded.s;
+
+        if (rValue.length !== 32) {
+          rValue = Buffer.concat([Buffer.alloc(32 - rValue.length), rValue]);
+        }
+
+        if (sValue.length !== 32) {
+          sValue = Buffer.concat([Buffer.alloc(32 - sValue.length), sValue]);
+        }
+
+        return Buffer.concat([rValue, sValue]);
+      },
     };
 
     transaction.signInput(i, signer);
