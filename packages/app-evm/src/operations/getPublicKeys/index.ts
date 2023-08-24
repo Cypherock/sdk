@@ -2,20 +2,24 @@ import { ISDK } from '@cypherock/sdk-core';
 import {
   createStatusListener,
   assert,
-  hexToUint8Array,
   createLoggerWithPrefix,
+  uint8ArrayToHex,
 } from '@cypherock/sdk-utils';
 import {
   AddressFormat,
   GetPublicKeysStatus,
-  IGetPublicKeysResultResponse,
+  SeedGenerationStatus,
 } from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
-import { IGetPublicKeysParams } from './types';
+import {
+  GetPublicKeysEvent,
+  IGetPublicKeysParams,
+  IGetPublicKeysResult,
+} from './types';
 
 export * from './types';
 
@@ -29,7 +33,7 @@ const defaultParams = {
 export const getPublicKeys = async (
   sdk: ISDK,
   params: IGetPublicKeysParams,
-): Promise<IGetPublicKeysResultResponse> => {
+): Promise<IGetPublicKeysResult> => {
   assert(params, 'Params should be defined');
   assert(params.walletId, 'walletId should be defined');
   assert(params.chainId, 'chainId should be defined');
@@ -47,7 +51,9 @@ export const getPublicKeys = async (
   );
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
-    enums: GetPublicKeysStatus,
+    enums: GetPublicKeysEvent,
+    operationEnums: GetPublicKeysStatus,
+    seedGenerationEnums: SeedGenerationStatus,
     onEvent: params.onEvent,
     logger,
   });
@@ -63,7 +69,7 @@ export const getPublicKeys = async (
     initiate: {
       walletId: params.walletId,
       derivationPaths: params.derivationPaths,
-      chainId: hexToUint8Array(params.chainId.toString(16)),
+      chainId: params.chainId.toString(),
       format: params.format ?? defaultParams.format,
       doVerify: params.doVerifyOnDevice ?? defaultParams.doVerifyOnDevice,
     },
@@ -72,7 +78,9 @@ export const getPublicKeys = async (
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.result);
 
-  forceStatusUpdate(GetPublicKeysStatus.GET_PUBLIC_KEYS_STATUS_VERIFY);
+  forceStatusUpdate(GetPublicKeysEvent.VERIFY);
 
-  return result.result;
+  return {
+    publicKeys: result.result.publicKeys.map(e => `0x${uint8ArrayToHex(e)}`),
+  };
 };
