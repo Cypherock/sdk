@@ -1,5 +1,16 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.26
+
+### Patch Changes
+
+- [#58](https://github.com/Cypherock/sdk/pull/58) [`8c511bc`](https://github.com/Cypherock/sdk/commit/8c511bc78c53d88e62ae77dc99f3aa863a5ce4e9) Thanks [@natto1784](https://github.com/natto1784)! - update app-evm to reflect protobuf changes
+
+- Updated dependencies [[`8c511bc`](https://github.com/Cypherock/sdk/commit/8c511bc78c53d88e62ae77dc99f3aa863a5ce4e9)]:
+  - @cypherock/sdk-interfaces@0.0.12
+  - @cypherock/sdk-core@0.0.19
+  - @cypherock/sdk-utils@0.0.15
+
 ## 0.0.25
 
 ### Patch Changes
