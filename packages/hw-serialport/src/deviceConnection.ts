@@ -92,7 +92,7 @@ export default class DeviceConnection implements IDeviceConnection {
    * Returns if the device is connected or not
    */
   public async isConnected() {
-    return !this.connection.destroyed;
+    return !this.connection.destroyed && this.connection.isOpen;
   }
 
   /**
@@ -100,7 +100,7 @@ export default class DeviceConnection implements IDeviceConnection {
    */
   public async destroy() {
     this.dataListener.destroy();
-    this.close();
+    await this.close();
     this.connection.destroy();
   }
 
@@ -108,7 +108,7 @@ export default class DeviceConnection implements IDeviceConnection {
    * Run this function before starting every operation on the device.
    */
   public async beforeOperation() {
-    this.open();
+    return this.open();
   }
 
   /**
@@ -169,7 +169,7 @@ export default class DeviceConnection implements IDeviceConnection {
       return;
     }
 
-    openConnection(this.connection);
+    await openConnection(this.connection);
   }
 
   /**

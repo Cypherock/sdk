@@ -1,5 +1,17 @@
 # @cypherock/sdk-hw-serialport
 
+## 0.0.15
+
+### Patch Changes
+
+- [#61](https://github.com/Cypherock/sdk/pull/61) [`776ef40`](https://github.com/Cypherock/sdk/commit/776ef4076b5d7685e747d0791aa734ddd0849d31) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fix device update error on connection remove
+
+## 0.0.14
+
+### Patch Changes
+
+- [#62](https://github.com/Cypherock/sdk/pull/62) [`f3de08a`](https://github.com/Cypherock/sdk/commit/f3de08a368b0d92ee3c1a522c7a712cb98f392b7) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fix serialport connection error
+
 ## 0.0.13
 
 ### Patch Changes
