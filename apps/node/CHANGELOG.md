@@ -1,5 +1,19 @@
 # nodejs-test
 
+## 0.0.27
+
+### Patch Changes
+
+- Updated dependencies [[`5caa99e`](https://github.com/Cypherock/sdk/commit/5caa99ee4cd00dcf86194d283efedd2ef4ee514e)]:
+  - @cypherock/sdk-app-btc@0.0.24
+
+## 0.0.26
+
+### Patch Changes
+
+- Updated dependencies [[`f3de08a`](https://github.com/Cypherock/sdk/commit/f3de08a368b0d92ee3c1a522c7a712cb98f392b7)]:
+  - @cypherock/sdk-hw-serialport@0.0.14
+
 ## 0.0.25
 
 ### Patch Changes
