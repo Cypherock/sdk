@@ -136,13 +136,21 @@ const writePacket = (
     });
 
     timeout = setTimeout(
-      () => {
+      async () => {
         cleanUp();
-        reject(
-          new DeviceCommunicationError(
-            DeviceCommunicationErrorType.WRITE_TIMEOUT,
-          ),
-        );
+        if (!(await connection.isConnected())) {
+          reject(
+            new DeviceConnectionError(
+              DeviceConnectionErrorType.CONNECTION_CLOSED,
+            ),
+          );
+        } else {
+          reject(
+            new DeviceCommunicationError(
+              DeviceCommunicationErrorType.WRITE_TIMEOUT,
+            ),
+          );
+        }
       },
       options?.timeout ?? 2000,
     );
@@ -210,13 +218,21 @@ const checkIfInReceivingMode = async (
     }
 
     timeout = setTimeout(
-      () => {
+      async () => {
         cleanUp();
-        reject(
-          new DeviceBootloaderError(
-            DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE,
-          ),
-        );
+        if (!(await connection.isConnected())) {
+          reject(
+            new DeviceConnectionError(
+              DeviceConnectionErrorType.CONNECTION_CLOSED,
+            ),
+          );
+        } else {
+          reject(
+            new DeviceBootloaderError(
+              DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE,
+            ),
+          );
+        }
       },
       options?.timeout ?? 2000,
     );
