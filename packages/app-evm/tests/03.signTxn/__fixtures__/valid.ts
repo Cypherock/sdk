@@ -1,4 +1,4 @@
-import { hexToUint8Array } from '@cypherock/sdk-utils';
+import { hexToUint8Array, createFlowStatus } from '@cypherock/sdk-utils';
 import { AddressFormat } from '../../../src';
 import { ISignTxnTestCase } from './types';
 import { Query } from '../../../src/proto/generated/evm/core';
@@ -59,15 +59,15 @@ const ethTransfer: ISignTxnTestCase = {
       data: new Uint8Array([18, 4, 10, 2, 10, 0]),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
         {
-          flowStatus: 2,
+          flowStatus: createFlowStatus(2, 0),
           expectEventCalls: [2],
         },
       ],
@@ -83,7 +83,7 @@ const ethTransfer: ISignTxnTestCase = {
       ]),
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     signature: {
       r: '0xf891cb3f97d011391f24ba4815731306b0eb7b2b656bb7fa119257c2d36166bf',
@@ -152,15 +152,15 @@ const erc20Transfer: ISignTxnTestCase = {
       data: new Uint8Array([18, 4, 10, 2, 10, 0]),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
         {
-          flowStatus: 2,
+          flowStatus: createFlowStatus(2, 0),
           expectEventCalls: [2],
         },
       ],
@@ -176,7 +176,7 @@ const erc20Transfer: ISignTxnTestCase = {
       ]),
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     signature: {
       r: '0x0bce0d9003e539be6ba3d2bf4645fe8be38d0d017fe5c75827f1b010c9ec2817',
@@ -1029,15 +1029,15 @@ const withLargeData: ISignTxnTestCase = {
       data: new Uint8Array([18, 4, 10, 2, 10, 0]),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
         {
-          flowStatus: 2,
+          flowStatus: createFlowStatus(2, 0),
           expectEventCalls: [2],
         },
       ],
@@ -1061,7 +1061,7 @@ const withLargeData: ISignTxnTestCase = {
       ]),
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     signature: {
       r: '0xa39e9ff12916bdaa7ba5c55bb5dcfe1d26f6f20e6ee18f60b4bee6cf099830cb',

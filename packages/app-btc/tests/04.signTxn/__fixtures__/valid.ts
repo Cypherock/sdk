@@ -1,4 +1,4 @@
-import { hexToUint8Array } from '@cypherock/sdk-utils';
+import { hexToUint8Array, createFlowStatus } from '@cypherock/sdk-utils';
 import { ISignTxnTestCase } from './types';
 import { queryToUint8Array, resultToUint8Array } from '../__helpers__';
 
@@ -117,11 +117,11 @@ const withOneInput: ISignTxnTestCase = {
       data: new Uint8Array([26, 2, 10, 0]),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
       ],
@@ -163,7 +163,7 @@ const withOneInput: ISignTxnTestCase = {
       }),
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     signatures: [
       '483045022100d946ce57571ae63f5b1f16aeb759f84736bdb9b364955e8756cc9e25c8f4745b02206ae916c173aaf32c642369c9f196c5fd9cf8b63350cd0c4d5c4b7dbba73b7b740121035f4cf9b856e62a02f5c895094305d7a5370f3fa3f1e625b6c535d4be1fa1d19e',
@@ -352,11 +352,11 @@ const withMultipleInputs: ISignTxnTestCase = {
       data: new Uint8Array([26, 2, 10, 0]),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
       ],
@@ -426,7 +426,7 @@ const withMultipleInputs: ISignTxnTestCase = {
       }),
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     signatures: [
       '483045022100e8c05ea1602c7b8e086cf17429415ccfea73952bd2614ded3a8196e42090ccdb02207ea39d215d5f1fa0d2bfc17b912d29ef2116af2c61a7bb53755fb6dbfe6836ed012103828943e8e6bbbbe6848f547c2e3a51236d4fa524fcd67837164ce7c1f0311dd7',

@@ -1,6 +1,14 @@
-import { AddressFormat, SignTxnStatus } from '../../proto/generated/types';
+import { AddressFormat } from '../../proto/generated/types';
 
-export type SignTxnEventHandler = (event: SignTxnStatus) => void;
+export enum SignTxnEvent {
+  INIT = 0,
+  CONFIRM = 1,
+  VERIFY = 2,
+  PASSPHRASE = 3,
+  PIN_CARD = 4,
+}
+
+export type SignTxnEventHandler = (event: SignTxnEvent) => void;
 
 export interface ISignTxnParams {
   onEvent?: SignTxnEventHandler;

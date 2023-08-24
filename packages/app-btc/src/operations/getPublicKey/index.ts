@@ -4,7 +4,10 @@ import {
   assert,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
-import { GetPublicKeyStatus } from '../../proto/generated/types';
+import {
+  GetPublicKeyStatus,
+  SeedGenerationStatus,
+} from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
@@ -12,7 +15,11 @@ import {
   configureAppId,
   assertDerivationPath,
 } from '../../utils';
-import { IGetPublicKeyParams, IGetPublicKeyResult } from './types';
+import {
+  GetPublicKeyEvent,
+  IGetPublicKeyParams,
+  IGetPublicKeyResult,
+} from './types';
 import { getAddressFromPublicKey } from './publicKeyToAddress';
 
 export * from './types';
@@ -35,7 +42,9 @@ export const getPublicKey = async (
   configureAppId(sdk, [params.derivationPath]);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
-    enums: GetPublicKeyStatus,
+    enums: GetPublicKeyEvent,
+    operationEnums: GetPublicKeyStatus,
+    seedGenerationEnums: SeedGenerationStatus,
     onEvent: params.onEvent,
     logger,
   });
@@ -57,7 +66,7 @@ export const getPublicKey = async (
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.result);
 
-  forceStatusUpdate(GetPublicKeyStatus.GET_PUBLIC_KEY_STATUS_VERIFY);
+  forceStatusUpdate(GetPublicKeyEvent.VERIFY);
 
   const address = await getAddressFromPublicKey(
     result.result.publicKey,

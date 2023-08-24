@@ -14,6 +14,8 @@ describe('createStatusListener', () => {
       test(testCase.name, () => {
         const { onStatus, forceStatusUpdate } = createStatusListener({
           enums: testCase.enum,
+          operationEnums: testCase.operationEnum,
+          seedGenerationEnums: testCase.seedGenerationEnum,
           onEvent,
         });
 

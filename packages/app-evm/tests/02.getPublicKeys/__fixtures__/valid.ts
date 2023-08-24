@@ -1,6 +1,6 @@
-import { hexToUint8Array } from '@cypherock/sdk-utils';
+import { hexToUint8Array, createFlowStatus } from '@cypherock/sdk-utils';
 import { IGetPublicKeysTestCase } from './types';
-import { Query } from '../../../src/proto/generated/evm/core';
+import { Query, Result } from '../../../src/proto/generated/evm/core';
 import { AddressFormat } from '../../../src/proto/generated/evm/common';
 
 const requestOneAddress: IGetPublicKeysTestCase = {
@@ -36,7 +36,7 @@ const requestOneAddress: IGetPublicKeysTestCase = {
                     path: [0x80000000 + 44, 0x80000000 + 60, 0x80000000, 0, 0],
                   },
                 ],
-                chainId: hexToUint8Array((1).toString(16)),
+                chainId: (1).toString(),
                 format: AddressFormat.DEFAULT,
                 doVerify: true,
               },
@@ -49,30 +49,38 @@ const requestOneAddress: IGetPublicKeysTestCase = {
   results: [
     {
       name: 'result',
-      data: new Uint8Array([
-        10, 46, 10, 44, 10, 42, 48, 120, 68, 53, 57, 55, 49, 57, 52, 56, 51, 49,
-        48, 52, 100, 52, 98, 49, 97, 49, 54, 49, 67, 51, 53, 97, 56, 68, 70, 52,
-        50, 49, 65, 50, 57, 51, 54, 65, 56, 70, 48, 97,
-      ]),
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            getPublicKeys: {
+              result: {
+                publicKeys: [
+                  hexToUint8Array('0xd59719483104d4b1a161c35a8df421a2936a8f0a'),
+                ],
+              },
+            },
+          }),
+        ).finish(),
+      ),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
         {
-          flowStatus: 2,
+          flowStatus: createFlowStatus(2, 1),
           expectEventCalls: [2],
         },
       ],
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
-    publicKeys: ['0xD59719483104d4b1a161C35a8DF421A2936A8F0a'],
+    publicKeys: ['0xd59719483104d4b1a161c35a8df421a2936a8f0a'],
   },
 };
 
@@ -135,7 +143,7 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
                     ],
                   },
                 ],
-                chainId: hexToUint8Array((1666600000).toString(16)),
+                chainId: (1666600000).toString(),
                 format: AddressFormat.HARMONY,
                 doVerify: false,
               },
@@ -148,39 +156,43 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
   results: [
     {
       name: 'result',
-      data: new Uint8Array([
-        10, 135, 1, 10, 132, 1, 10, 42, 111, 110, 101, 49, 54, 107, 116, 51,
-        106, 106, 112, 51, 113, 110, 50, 116, 114, 103, 116, 112, 99, 100, 100,
-        103, 109, 97, 112, 112, 53, 50, 102, 107, 52, 114, 99, 50, 100, 108,
-        100, 102, 48, 107, 10, 42, 111, 110, 101, 49, 52, 116, 55, 103, 118, 97,
-        108, 117, 116, 50, 48, 103, 100, 56, 106, 106, 109, 121, 102, 104, 121,
-        104, 116, 54, 97, 97, 115, 48, 118, 120, 112, 103, 103, 109, 99, 112,
-        107, 103, 10, 42, 111, 110, 101, 49, 54, 106, 54, 48, 101, 52, 53, 50,
-        57, 113, 103, 109, 120, 106, 99, 55, 116, 118, 103, 57, 121, 54, 121,
-        48, 56, 110, 100, 122, 114, 51, 101, 107, 104, 97, 114, 119, 121, 97,
-      ]),
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            getPublicKeys: {
+              result: {
+                publicKeys: [
+                  '0xa24ba3d47fd7a5e086f1495cd4eb00dd232eee1f',
+                  '0x6294840c1676afd973c1f248b3b6b5f58e638f85',
+                  '0x8d4ee18988f577746438216a4f0a7037809ec9bf',
+                ].map(e => hexToUint8Array(e)),
+              },
+            },
+          }),
+        ).finish(),
+      ),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
         {
-          flowStatus: 2,
+          flowStatus: createFlowStatus(2, 1),
           expectEventCalls: [2],
         },
       ],
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     publicKeys: [
-      'one16kt3jjp3qn2trgtpcddgmapp52fk4rc2dldf0k',
-      'one14t7gvalut20gd8jjmyfhyht6aas0vxpggmcpkg',
-      'one16j60e4529qgmxjc7tvg9y6y08ndzr3ekharwya',
+      '0xa24ba3d47fd7a5e086f1495cd4eb00dd232eee1f',
+      '0x6294840c1676afd973c1f248b3b6b5f58e638f85',
+      '0x8d4ee18988f577746438216a4f0a7037809ec9bf',
     ],
   },
 };

@@ -163,3 +163,16 @@ export const sha256 = async (data: Uint8Array) => {
 
   return result;
 };
+
+export const numToByteArray = (num: number) => {
+  let n = num;
+  const byteArray = [];
+
+  while (n > 0) {
+    const byte = n & 0xff;
+    byteArray.push(byte);
+    n = (n - byte) / 256;
+  }
+
+  return byteArray.reverse();
+};

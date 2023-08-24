@@ -1,7 +1,4 @@
-import {
-  IGetPublicKeysParams,
-  IGetPublicKeysResultResponse,
-} from '../../../src';
+import { IGetPublicKeysParams, IGetPublicKeysResult } from '../../../src';
 
 export interface IGetPublicKeysTestCase {
   name: string;
@@ -18,7 +15,7 @@ export interface IGetPublicKeysTestCase {
   mocks?: {
     eventCalls?: number[][];
   };
-  output?: Partial<IGetPublicKeysResultResponse>;
+  output?: Partial<IGetPublicKeysResult>;
   errorInstance?: any;
   [key: string]: any;
 }

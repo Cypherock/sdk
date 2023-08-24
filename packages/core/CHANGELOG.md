@@ -1,5 +1,12 @@
 # @cypherock/sdk-core
 
+## 0.0.17
+
+### Patch Changes
+
+- Updated dependencies [[`915267a`](https://github.com/Cypherock/sdk/commit/915267a995d35f9d801ede72a8285eff60887207)]:
+  - @cypherock/sdk-utils@0.0.14
+
 ## 0.0.16
 
 ### Patch Changes
