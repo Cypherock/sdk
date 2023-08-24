@@ -1,5 +1,11 @@
 # @cypherock/sdk-utils
 
+## 0.0.14
+
+### Patch Changes
+
+- [#59](https://github.com/Cypherock/sdk/pull/59) [`915267a`](https://github.com/Cypherock/sdk/commit/915267a995d35f9d801ede72a8285eff60887207) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added core flow status
+
 ## 0.0.13
 
 ### Patch Changes

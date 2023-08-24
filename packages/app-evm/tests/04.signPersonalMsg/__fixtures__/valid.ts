@@ -1,4 +1,4 @@
-import { hexToUint8Array } from '@cypherock/sdk-utils';
+import { hexToUint8Array, createFlowStatus } from '@cypherock/sdk-utils';
 import { Query, Result } from '../../../src/proto/generated/evm/core';
 import { ISignPersonalMsgTestCase } from './types';
 import { SignMsgType } from '../../../src';
@@ -55,7 +55,6 @@ const withSmallMsg: ISignPersonalMsgTestCase = {
   results: [
     {
       name: 'Msg data chunk request',
-      // data: new Uint8Array([18, 4, 10, 2, 10, 0]),
       data: Uint8Array.from(
         Result.encode(
           Result.create({
@@ -71,24 +70,17 @@ const withSmallMsg: ISignPersonalMsgTestCase = {
       ),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
       ],
     },
     {
       name: 'Signature',
-      // data: new Uint8Array([
-      //   18, 73, 18, 71, 10, 32, 248, 145, 203, 63, 151, 208, 17, 57, 31, 36,
-      //   186, 72, 21, 115, 19, 6, 176, 235, 123, 43, 101, 107, 183, 250, 17, 146,
-      //   87, 194, 211, 97, 102, 191, 18, 32, 27, 57, 68, 211, 150, 243, 11, 248,
-      //   83, 56, 239, 30, 129, 203, 103, 64, 146, 73, 70, 164, 110, 53, 55, 10,
-      //   139, 147, 1, 9, 162, 60, 146, 105, 26, 1, 38,
-      // ]),
       data: Uint8Array.from(
         Result.encode(
           Result.create({
@@ -108,7 +100,7 @@ const withSmallMsg: ISignPersonalMsgTestCase = {
       ),
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     signature: {
       r: '0xf891cb3f97d011391f24ba4815731306b0eb7b2b656bb7fa119257c2d36166bf',
@@ -574,7 +566,6 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
   results: [
     {
       name: 'Msg data chunk request 1',
-      // data: new Uint8Array([18, 4, 10, 2, 10, 0]),
       data: Uint8Array.from(
         Result.encode(
           Result.create({
@@ -590,18 +581,17 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
       ),
       statuses: [
         {
-          flowStatus: 0,
+          flowStatus: createFlowStatus(0, 0),
           expectEventCalls: [0],
         },
         {
-          flowStatus: 1,
+          flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
       ],
     },
     {
       name: 'Msg data chunk request 2',
-      // data: new Uint8Array([18, 4, 10, 2, 10, 0]),
       data: Uint8Array.from(
         Result.encode(
           Result.create({
@@ -618,13 +608,6 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
     },
     {
       name: 'Signature',
-      // data: new Uint8Array([
-      //   18, 73, 18, 71, 10, 32, 248, 145, 203, 63, 151, 208, 17, 57, 31, 36,
-      //   186, 72, 21, 115, 19, 6, 176, 235, 123, 43, 101, 107, 183, 250, 17, 146,
-      //   87, 194, 211, 97, 102, 191, 18, 32, 27, 57, 68, 211, 150, 243, 11, 248,
-      //   83, 56, 239, 30, 129, 203, 103, 64, 146, 73, 70, 164, 110, 53, 55, 10,
-      //   139, 147, 1, 9, 162, 60, 146, 105, 26, 1, 38,
-      // ]),
       data: Uint8Array.from(
         Result.encode(
           Result.create({
@@ -644,7 +627,7 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
       ),
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     signature: {
       r: '0xa39e9ff12916bdaa7ba5c55bb5dcfe1d26f6f20e6ee18f60b4bee6cf099830cb',
