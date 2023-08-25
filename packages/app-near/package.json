@@ -39,6 +39,7 @@
     "@cypherock/sdk-interfaces": "workspace:^0.0.12",
     "@cypherock/sdk-utils": "workspace:^0.0.15",
     "long": "^5.2.1",
+    "near-api-js": "^2.1.4",
     "protobufjs": "^7.2.2"
   },
   "lint-staged": {
