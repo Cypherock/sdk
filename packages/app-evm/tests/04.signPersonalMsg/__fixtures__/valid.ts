@@ -59,7 +59,7 @@ const withSmallMsg: ISignPersonalMsgTestCase = {
         Result.encode(
           Result.create({
             signMsg: {
-              msgData: {
+              dataAccepted: {
                 chunkAck: {
                   chunkIndex: 0,
                 },
@@ -570,7 +570,7 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
         Result.encode(
           Result.create({
             signMsg: {
-              msgData: {
+              dataAccepted: {
                 chunkAck: {
                   chunkIndex: 0,
                 },
@@ -596,7 +596,7 @@ const withLargeMsg: ISignPersonalMsgTestCase = {
         Result.encode(
           Result.create({
             signMsg: {
-              msgData: {
+              dataAccepted: {
                 chunkAck: {
                   chunkIndex: 1,
                 },
