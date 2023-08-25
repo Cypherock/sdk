@@ -35,6 +35,6 @@ export const runGetPublicKeysOnDevice = async (
   forceStatusUpdate(GetPublicKeysEvent.VERIFY);
 
   return {
-    publicKeys: publicKeys.map(e => `0x${uint8ArrayToHex(e)}`),
+    publicKeys: publicKeys.map(e => uint8ArrayToHex(e)),
   };
 };

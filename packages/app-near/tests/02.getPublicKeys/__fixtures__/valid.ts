@@ -51,7 +51,7 @@ const requestOneAddress: IGetPublicKeysTestCase = {
               result: {
                 publicKeys: [
                   hexToUint8Array(
-                    '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
+                    '032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
                   ),
                 ],
               },
@@ -78,7 +78,7 @@ const requestOneAddress: IGetPublicKeysTestCase = {
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     publicKeys: [
-      '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
+      '032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
     ],
   },
 };
@@ -155,9 +155,9 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
             getPublicKeys: {
               result: {
                 publicKeys: [
-                  '0x02a4744ea78a168047e0f5cdbcf4161c88b8b7b2671cd943d4b4d2c4daed5594c0',
-                  '0x03c728b86bda7c26d32a5049c25d95f56d23f967ee3cb88467fb3660afedb738f0',
-                  '0x02493ebfba970023379dee5197b342ba8c30a5a7f51121fa2a48f49d2db2ea4643',
+                  '02a4744ea78a168047e0f5cdbcf4161c88b8b7b2671cd943d4b4d2c4daed5594c0',
+                  '03c728b86bda7c26d32a5049c25d95f56d23f967ee3cb88467fb3660afedb738f0',
+                  '02493ebfba970023379dee5197b342ba8c30a5a7f51121fa2a48f49d2db2ea4643',
                 ].map(e => hexToUint8Array(e)),
               },
             },
@@ -183,9 +183,9 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     publicKeys: [
-      '0x02a4744ea78a168047e0f5cdbcf4161c88b8b7b2671cd943d4b4d2c4daed5594c0',
-      '0x03c728b86bda7c26d32a5049c25d95f56d23f967ee3cb88467fb3660afedb738f0',
-      '0x02493ebfba970023379dee5197b342ba8c30a5a7f51121fa2a48f49d2db2ea4643',
+      '02a4744ea78a168047e0f5cdbcf4161c88b8b7b2671cd943d4b4d2c4daed5594c0',
+      '03c728b86bda7c26d32a5049c25d95f56d23f967ee3cb88467fb3660afedb738f0',
+      '02493ebfba970023379dee5197b342ba8c30a5a7f51121fa2a48f49d2db2ea4643',
     ],
   },
 };

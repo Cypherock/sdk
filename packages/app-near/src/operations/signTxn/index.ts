@@ -6,7 +6,6 @@ import {
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
-import * as nearAPI from 'near-api-js';
 import {
   SeedGenerationStatus,
   SignTxnStatus,
@@ -15,6 +14,7 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
+  getNearApiJs,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
 
@@ -81,6 +81,8 @@ export const signTxn = async (
   forceStatusUpdate(SignTxnEvent.PIN_CARD);
 
   const signature = uint8ArrayToHex(result.signature.signature);
+
+  const nearAPI = getNearApiJs();
   const transaction = nearAPI.transactions.Transaction.decode(
     Buffer.from(params.txn, 'hex'),
   );
