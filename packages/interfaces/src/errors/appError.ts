@@ -20,7 +20,6 @@ export enum DeviceAppErrorType {
 
   WALLET_NOT_FOUND = 'APP_0300',
   WALLET_PARTIAL_STATE = 'APP_0301',
-  NO_WALLET_EXISTS = 'APP_0302',
 
   CARD_OPERATION_FAILED = 'APP_0400',
 
@@ -87,10 +86,6 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.WALLET_PARTIAL_STATE]: {
     subError: {},
     message: 'Selected wallet is in partial state',
-  },
-  [DeviceAppErrorType.NO_WALLET_EXISTS]: {
-    subError: {},
-    message: 'No wallet exists on the device',
   },
   [DeviceAppErrorType.CARD_OPERATION_FAILED]: {
     subError: cardErrorTypeDetails,
