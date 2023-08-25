@@ -26,6 +26,14 @@ export class EvmApp {
     );
   }
 
+  public async getUserVerifiedPublicKey(
+    params: operations.IGetUserVerifiedPublicKeyParams,
+  ) {
+    return this.sdk.runOperation(() =>
+      operations.getUserVerifiedPublicKey(this.sdk, params),
+    );
+  }
+
   public async signTxn(params: operations.ISignTxnParams) {
     return this.sdk.runOperation(() => operations.signTxn(this.sdk, params));
   }
