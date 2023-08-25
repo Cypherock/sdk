@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.22
+
+### Patch Changes
+
+- [#68](https://github.com/Cypherock/sdk/pull/68) [`0a81576`](https://github.com/Cypherock/sdk/commit/0a8157630618984ca9edd286cd9d85cc198d4ec5) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added evm get user verified public key
+
 ## 0.0.21
 
 ### Patch Changes
