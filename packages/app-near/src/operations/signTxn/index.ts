@@ -90,7 +90,7 @@ export const signTxn = async (
     transaction,
     signature: new nearAPI.transactions.Signature({
       keyType: transaction.publicKey.keyType,
-      data: signature,
+      data: result.signature.signature,
     }),
   });
   const serializedTxn = uint8ArrayToHex(stxn.encode());
