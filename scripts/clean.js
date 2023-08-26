@@ -10,6 +10,7 @@ const packages = {
   'packages/app-btc': [...commonTSFolders, 'src/proto/generated'],
   'packages/app-evm': [...commonTSFolders, 'src/proto/generated'],
   'packages/app-manager': [...commonTSFolders, 'src/proto/generated'],
+  'packages/app-near': [...commonTSFolders, 'src/proto/generated'],
   'packages/core': [...commonTSFolders, 'src/encoders/proto/generated'],
   'packages/hw-hid': [...commonTSFolders],
   'packages/hw-serialport': [...commonTSFolders],
