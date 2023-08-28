@@ -22,7 +22,6 @@ export function parseCommonError(error?: ICommonError) {
     deviceSetupRequired: DeviceAppErrorType.DEVICE_SETUP_REQUIRED,
     walletNotFound: DeviceAppErrorType.WALLET_NOT_FOUND,
     walletPartialState: DeviceAppErrorType.WALLET_PARTIAL_STATE,
-    noWalletExists: DeviceAppErrorType.NO_WALLET_EXISTS,
     cardError: DeviceAppErrorType.CARD_OPERATION_FAILED,
     userRejection: DeviceAppErrorType.USER_REJECTION,
     corruptData: DeviceAppErrorType.CORRUPT_DATA,
