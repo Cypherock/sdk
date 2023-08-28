@@ -39,6 +39,8 @@
     "@cypherock/sdk-core": "workspace:^0.0.19",
     "@cypherock/sdk-interfaces": "workspace:^0.0.12",
     "@cypherock/sdk-utils": "workspace:^0.0.15",
+    "bignumber.js": "^9.1.2",
+    "eip-712": "^1.0.0",
     "long": "^5.2.1",
     "protobufjs": "^7.2.2"
   },
