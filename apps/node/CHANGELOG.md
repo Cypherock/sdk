@@ -1,5 +1,17 @@
 # nodejs-test
 
+## 0.0.31
+
+### Patch Changes
+
+- [#70](https://github.com/Cypherock/sdk/pull/70) [`f1c6bc4`](https://github.com/Cypherock/sdk/commit/f1c6bc414598e7cadb744f98c720d78ed07ea87e) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added near app
+
+- Updated dependencies [[`f1c6bc4`](https://github.com/Cypherock/sdk/commit/f1c6bc414598e7cadb744f98c720d78ed07ea87e)]:
+  - @cypherock/sdk-app-manager@0.0.23
+  - @cypherock/sdk-app-near@0.0.23
+  - @cypherock/sdk-app-btc@0.0.27
+  - @cypherock/sdk-app-evm@0.0.23
+
 ## 0.0.30
 
 ### Patch Changes
