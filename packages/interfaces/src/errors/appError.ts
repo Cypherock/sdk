@@ -18,6 +18,8 @@ export enum DeviceAppErrorType {
 
   DEVICE_SETUP_REQUIRED = 'APP_0205',
 
+  APP_TIMEOUT = 'APP_0206',
+
   WALLET_NOT_FOUND = 'APP_0300',
   WALLET_PARTIAL_STATE = 'APP_0301',
   NO_WALLET_EXISTS = 'APP_0302',
@@ -75,6 +77,10 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.APP_NOT_ACTIVE]: {
     subError: {},
     message: 'The app is active on the device',
+  },
+  [DeviceAppErrorType.APP_TIMEOUT]: {
+    subError: {},
+    message: 'Operation timed out on device',
   },
   [DeviceAppErrorType.DEVICE_SETUP_REQUIRED]: {
     subError: {},
