@@ -1,7 +1,8 @@
-import { createFlowStatus } from '@cypherock/sdk-utils';
+import { createFlowStatus, hexToUint8Array } from '@cypherock/sdk-utils';
 import { AddressFormat } from '../../../src';
 import { ISignTxnTestCase } from './types';
 import { Query } from '../../../src/proto/generated/evm/core';
+import { queryToUint8Array, resultToUint8Array } from '../__helpers__';
 
 const ethTransfer: ISignTxnTestCase = {
   name: 'Eth transfer',
@@ -18,69 +19,86 @@ const ethTransfer: ISignTxnTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            signTxn: {
-              initiate: {
-                walletId: new Uint8Array([
-                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
-                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
-                  86, 128, 26, 3, 187, 121, 64,
-                ]),
-                derivationPath: [
-                  0x80000000 + 44,
-                  0x80000000 + 60,
-                  0x80000000,
-                  0,
-                  0,
-                ],
-                chainId: '1',
-                addressFormat: AddressFormat.HARMONY,
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: queryToUint8Array({
+        signTxn: {
+          initiate: {
+            walletId: new Uint8Array([
+              199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
+              233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
+              26, 3, 187, 121, 64,
+            ]),
+            derivationPath: [
+              0x80000000 + 44,
+              0x80000000 + 60,
+              0x80000000,
+              0,
+              0,
+            ],
+            chainId: '1',
+            addressFormat: AddressFormat.HARMONY,
+            transactionSize: 46,
+          },
+        },
+      }),
     },
     {
-      name: 'Txn data chunk response',
-      data: new Uint8Array([
-        18, 54, 18, 52, 10, 50, 10, 46, 237, 130, 5, 163, 133, 5, 154, 175, 13,
-        128, 130, 82, 8, 148, 41, 47, 4, 164, 69, 6, 194, 253, 73, 186, 192, 50,
-        225, 202, 20, 140, 53, 164, 120, 200, 135, 201, 98, 34, 90, 42, 180, 0,
-        128, 1, 128, 128, 32, 1,
-      ]),
+      name: 'Txn data chunk payload',
+      data: queryToUint8Array({
+        signTxn: {
+          txnData: {
+            chunkPayload: {
+              chunk: hexToUint8Array(
+                '0xed8205a385059aaf0d8082520894292f04a44506c2fd49bac032e1ca148c35a478c887c962225a2ab40080018080',
+              ),
+              chunkIndex: 0,
+              totalChunks: 1,
+              remainingSize: 0,
+            },
+          },
+        },
+      }),
+    },
+    {
+      name: 'Signature request',
+      data: queryToUint8Array({
+        signTxn: {
+          signature: {},
+        },
+      }),
     },
   ],
   results: [
     {
-      name: 'Txn data chunk request',
-      data: new Uint8Array([18, 4, 10, 2, 10, 0]),
-      statuses: [
-        {
-          flowStatus: createFlowStatus(0, 0),
-          expectEventCalls: [0],
+      name: 'Confirmation',
+      data: resultToUint8Array({
+        signTxn: {
+          confirmation: {},
         },
-        {
-          flowStatus: createFlowStatus(1, 0),
-          expectEventCalls: [1],
+      }),
+    },
+    {
+      name: 'Data accepted',
+      data: resultToUint8Array({
+        signTxn: {
+          dataAccepted: { chunkAck: { chunkIndex: 0 } },
         },
-        {
-          flowStatus: createFlowStatus(2, 0),
-          expectEventCalls: [2],
-        },
-      ],
+      }),
     },
     {
       name: 'Signature',
-      data: new Uint8Array([
-        18, 73, 18, 71, 10, 32, 248, 145, 203, 63, 151, 208, 17, 57, 31, 36,
-        186, 72, 21, 115, 19, 6, 176, 235, 123, 43, 101, 107, 183, 250, 17, 146,
-        87, 194, 211, 97, 102, 191, 18, 32, 27, 57, 68, 211, 150, 243, 11, 248,
-        83, 56, 239, 30, 129, 203, 103, 64, 146, 73, 70, 164, 110, 53, 55, 10,
-        139, 147, 1, 9, 162, 60, 146, 105, 26, 1, 38,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            r: hexToUint8Array(
+              '0xf891cb3f97d011391f24ba4815731306b0eb7b2b656bb7fa119257c2d36166bf',
+            ),
+            s: hexToUint8Array(
+              '0x1b3944d396f30bf85338ef1e81cb6740924946a46e35370a8b930109a23c9269',
+            ),
+            v: hexToUint8Array('0x26'),
+          },
+        },
+      }),
     },
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
@@ -108,48 +126,62 @@ const erc20Transfer: ISignTxnTestCase = {
   queries: [
     {
       name: 'Initate query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            signTxn: {
-              initiate: {
-                walletId: new Uint8Array([
-                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
-                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
-                  86, 128, 26, 3, 187, 121, 64,
-                ]),
-                derivationPath: [
-                  0x80000000 + 44,
-                  0x80000000 + 60,
-                  0x80000000,
-                  0,
-                  0,
-                ],
-                chainId: '1',
-                addressFormat: AddressFormat.DEFAULT,
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: queryToUint8Array({
+        signTxn: {
+          initiate: {
+            walletId: new Uint8Array([
+              199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
+              233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
+              26, 3, 187, 121, 64,
+            ]),
+            derivationPath: [
+              0x80000000 + 44,
+              0x80000000 + 60,
+              0x80000000,
+              0,
+              0,
+            ],
+            chainId: '1',
+            addressFormat: AddressFormat.DEFAULT,
+            transactionSize: 111,
+          },
+        },
+      }),
     },
     {
-      name: 'Txn data chunk response',
-      data: new Uint8Array([
-        18, 119, 18, 117, 10, 115, 10, 111, 248, 109, 131, 128, 6, 183, 133, 5,
-        155, 27, 40, 223, 131, 5, 87, 48, 148, 160, 184, 105, 145, 198, 33, 139,
-        54, 193, 209, 157, 74, 46, 158, 176, 206, 54, 6, 235, 72, 128, 184, 68,
-        169, 5, 156, 187, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 203, 147, 219, 73,
-        191, 250, 18, 73, 74, 184, 6, 213, 225, 148, 104, 115, 103, 184, 90,
-        121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 93, 4, 26, 112, 1, 128, 128, 32, 1,
-      ]),
+      name: 'Txn data chunk payload',
+      data: queryToUint8Array({
+        signTxn: {
+          txnData: {
+            chunkPayload: {
+              chunk: hexToUint8Array(
+                '0xf86d838006b785059b1b28df8305573094a0b86991c6218b36c1d19d4a2e9eb0ce3606eb4880b844a9059cbb000000000000000000000000cb93db49bffa12494ab806d5e194687367b85a79000000000000000000000000000000000000000000000000000000005d041a70018080',
+              ),
+              chunkIndex: 0,
+              totalChunks: 1,
+              remainingSize: 0,
+            },
+          },
+        },
+      }),
+    },
+    {
+      name: 'Signature request',
+      data: queryToUint8Array({
+        signTxn: {
+          signature: {},
+        },
+      }),
     },
   ],
   results: [
     {
-      name: 'Txn data chunk request',
-      data: new Uint8Array([18, 4, 10, 2, 10, 0]),
+      name: 'Confirmation',
+      data: resultToUint8Array({
+        signTxn: {
+          confirmation: {},
+        },
+      }),
       statuses: [
         {
           flowStatus: createFlowStatus(0, 0),
@@ -166,14 +198,28 @@ const erc20Transfer: ISignTxnTestCase = {
       ],
     },
     {
-      name: 'Signature',
-      data: new Uint8Array([
-        18, 73, 18, 71, 10, 32, 11, 206, 13, 144, 3, 229, 57, 190, 107, 163,
-        210, 191, 70, 69, 254, 139, 227, 141, 13, 1, 127, 229, 199, 88, 39, 241,
-        176, 16, 201, 236, 40, 23, 18, 32, 39, 14, 59, 138, 185, 153, 150, 197,
-        29, 39, 108, 247, 31, 232, 177, 182, 44, 82, 47, 134, 121, 27, 89, 104,
-        79, 112, 164, 109, 252, 89, 104, 238, 26, 1, 37,
-      ]),
+      name: 'Data accepted',
+      data: resultToUint8Array({
+        signTxn: {
+          dataAccepted: { chunkAck: { chunkIndex: 0 } },
+        },
+      }),
+    },
+    {
+      name: 'Signature response',
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            r: hexToUint8Array(
+              '0x0bce0d9003e539be6ba3d2bf4645fe8be38d0d017fe5c75827f1b010c9ec2817',
+            ),
+            s: hexToUint8Array(
+              '0x270e3b8ab99996c51d276cf71fe8b1b62c522f86791b59684f70a46dfc5968ee',
+            ),
+            v: hexToUint8Array('0x25'),
+          },
+        },
+      }),
     },
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
@@ -222,6 +268,7 @@ const withLargeData: ISignTxnTestCase = {
                 ],
                 chainId: '1',
                 addressFormat: AddressFormat.DEFAULT,
+                transactionSize: 12090,
               },
             },
           }),
@@ -1022,11 +1069,23 @@ const withLargeData: ISignTxnTestCase = {
         0, 255, 255, 116, 159, 90, 181, 192, 24, 2, 32, 3,
       ]),
     },
+    {
+      name: 'Signature request',
+      data: queryToUint8Array({
+        signTxn: {
+          signature: {},
+        },
+      }),
+    },
   ],
   results: [
     {
-      name: 'Txn data chunk request 1',
-      data: new Uint8Array([18, 4, 10, 2, 10, 0]),
+      name: 'Initiate query confirmed',
+      data: resultToUint8Array({
+        signTxn: {
+          confirmation: {},
+        },
+      }),
       statuses: [
         {
           flowStatus: createFlowStatus(0, 0),
@@ -1044,21 +1103,43 @@ const withLargeData: ISignTxnTestCase = {
     },
     {
       name: 'Txn data chunk request 2',
-      data: new Uint8Array([18, 6, 10, 4, 10, 2, 8, 1]),
+      data: resultToUint8Array({
+        signTxn: {
+          dataAccepted: { chunkAck: { chunkIndex: 0 } },
+        },
+      }),
     },
     {
       name: 'Txn data chunk request 3',
-      data: new Uint8Array([18, 6, 10, 4, 10, 2, 8, 2]),
+      data: resultToUint8Array({
+        signTxn: {
+          dataAccepted: { chunkAck: { chunkIndex: 1 } },
+        },
+      }),
+    },
+    {
+      name: 'Txn data chunk request 3',
+      data: resultToUint8Array({
+        signTxn: {
+          dataAccepted: { chunkAck: { chunkIndex: 2 } },
+        },
+      }),
     },
     {
       name: 'Signature',
-      data: new Uint8Array([
-        18, 73, 18, 71, 10, 32, 163, 158, 159, 241, 41, 22, 189, 170, 123, 165,
-        197, 91, 181, 220, 254, 29, 38, 246, 242, 14, 110, 225, 143, 96, 180,
-        190, 230, 207, 9, 152, 48, 203, 18, 32, 83, 158, 189, 134, 246, 237, 16,
-        162, 202, 203, 89, 96, 226, 60, 200, 148, 214, 200, 242, 50, 68, 176,
-        158, 150, 199, 168, 134, 36, 238, 138, 124, 147, 26, 1, 0,
-      ]),
+      data: resultToUint8Array({
+        signTxn: {
+          signature: {
+            r: hexToUint8Array(
+              '0xa39e9ff12916bdaa7ba5c55bb5dcfe1d26f6f20e6ee18f60b4bee6cf099830cb',
+            ),
+            s: hexToUint8Array(
+              '0x539ebd86f6ed10a2cacb5960e23cc894d6c8f23244b09e96c7a88624ee8a7c93',
+            ),
+            v: hexToUint8Array('0x00'),
+          },
+        },
+      }),
     },
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },

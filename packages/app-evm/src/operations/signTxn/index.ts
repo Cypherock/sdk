@@ -68,6 +68,7 @@ export const signTxn = async (
     resultKey: 'signTxn',
     onStatus,
   });
+  const txnBytes = hexToUint8Array(params.txn);
 
   await helper.sendQuery({
     initiate: {
@@ -75,14 +76,19 @@ export const signTxn = async (
       derivationPath: params.derivationPath,
       addressFormat: params.addressFormat ?? defaultParams.addressFormat,
       chainId: decodedTxn.chainId.toString(),
-      transactionSize: params.txn.length,
+      transactionSize: txnBytes.length,
     },
   });
 
-  const txnBytes = hexToUint8Array(params.txn);
-  await helper.sendInChunks(txnBytes, 'txnData', 'dataAccepted');
+  const { confirmation } = await helper.waitForResult();
+  assertOrThrowInvalidResult(confirmation);
   forceStatusUpdate(SignTxnEvent.CONFIRM);
 
+  await helper.sendInChunks(txnBytes, 'txnData', 'dataAccepted');
+
+  forceStatusUpdate(SignTxnEvent.VERIFY);
+
+  await helper.sendQuery({ signature: {} });
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.signature);
 
