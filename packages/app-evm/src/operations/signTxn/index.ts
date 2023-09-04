@@ -74,12 +74,13 @@ export const signTxn = async (
       walletId: params.walletId,
       derivationPath: params.derivationPath,
       addressFormat: params.addressFormat ?? defaultParams.addressFormat,
-      chainId: hexToUint8Array(decodedTxn.chainId.toString(16)),
+      chainId: decodedTxn.chainId.toString(),
+      transactionSize: params.txn.length,
     },
   });
 
   const txnBytes = hexToUint8Array(params.txn);
-  await helper.sendInChunks(txnBytes, 'txnData', 'txnData');
+  await helper.sendInChunks(txnBytes, 'txnData', 'dataAccepted');
   forceStatusUpdate(SignTxnEvent.CONFIRM);
 
   const result = await helper.waitForResult();

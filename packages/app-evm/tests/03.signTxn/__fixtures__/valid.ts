@@ -1,4 +1,4 @@
-import { hexToUint8Array, createFlowStatus } from '@cypherock/sdk-utils';
+import { createFlowStatus } from '@cypherock/sdk-utils';
 import { AddressFormat } from '../../../src';
 import { ISignTxnTestCase } from './types';
 import { Query } from '../../../src/proto/generated/evm/core';
@@ -35,7 +35,7 @@ const ethTransfer: ISignTxnTestCase = {
                   0,
                   0,
                 ],
-                chainId: hexToUint8Array((1).toString(16)),
+                chainId: '1',
                 addressFormat: AddressFormat.HARMONY,
               },
             },
@@ -125,7 +125,7 @@ const erc20Transfer: ISignTxnTestCase = {
                   0,
                   0,
                 ],
-                chainId: hexToUint8Array((1).toString(16)),
+                chainId: '1',
                 addressFormat: AddressFormat.DEFAULT,
               },
             },
@@ -220,7 +220,7 @@ const withLargeData: ISignTxnTestCase = {
                   0,
                   0,
                 ],
-                chainId: hexToUint8Array((1).toString(16)),
+                chainId: '1',
                 addressFormat: AddressFormat.DEFAULT,
               },
             },
