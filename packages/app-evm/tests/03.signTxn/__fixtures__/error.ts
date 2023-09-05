@@ -3,10 +3,9 @@ import {
   DeviceAppErrorType,
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
-import { hexToUint8Array } from '@cypherock/sdk-utils';
 import { ISignTxnTestCase } from './types';
-import { Query } from '../../../src/proto/generated/evm/core';
 import { AddressFormat } from '../../../src';
+import { queryToUint8Array, resultToUint8Array } from '../__helpers__';
 
 const commonParams = {
   params: {
@@ -21,30 +20,27 @@ const commonParams = {
   queries: [
     {
       name: 'Initate query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            signTxn: {
-              initiate: {
-                walletId: new Uint8Array([
-                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
-                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
-                  86, 128, 26, 3, 187, 121, 64,
-                ]),
-                derivationPath: [
-                  0x80000000 + 44,
-                  0x80000000 + 60,
-                  0x80000000,
-                  0,
-                  0,
-                ],
-                chainId: hexToUint8Array((1).toString(16)),
-                addressFormat: AddressFormat.DEFAULT,
-              },
-            },
-          }),
-        ).finish(),
-      ),
+      data: queryToUint8Array({
+        signTxn: {
+          initiate: {
+            walletId: new Uint8Array([
+              199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
+              233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
+              26, 3, 187, 121, 64,
+            ]),
+            derivationPath: [
+              0x80000000 + 44,
+              0x80000000 + 60,
+              0x80000000,
+              0,
+              0,
+            ],
+            chainId: '1',
+            addressFormat: AddressFormat.DEFAULT,
+            transactionSize: 46,
+          },
+        },
+      }),
     },
   ],
 };
@@ -55,7 +51,13 @@ const withUnknownError: ISignTxnTestCase = {
   results: [
     {
       name: 'error',
-      data: new Uint8Array([18, 4, 26, 2, 8, 1]),
+      data: resultToUint8Array({
+        signTxn: {
+          commonError: {
+            unknownError: 1,
+          },
+        },
+      }),
     },
   ],
   errorInstance: DeviceAppError,
