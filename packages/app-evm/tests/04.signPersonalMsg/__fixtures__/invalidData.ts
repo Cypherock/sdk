@@ -39,6 +39,7 @@ const commonParams = {
                   0,
                 ],
                 messageType: SignMsgType.SIGN_MSG_TYPE_PERSONAL_SIGN,
+                totalMsgSize: 41,
               },
             },
           }),
