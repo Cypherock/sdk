@@ -1,6 +1,6 @@
 {
   "name": "@cypherock/sdk-core",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -31,8 +31,8 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@cypherock/sdk-interfaces": "workspace:^0.0.12",
-    "@cypherock/sdk-utils": "workspace:^0.0.15",
+    "@cypherock/sdk-interfaces": "workspace:^0.0.13",
+    "@cypherock/sdk-utils": "workspace:^0.0.16",
     "compare-versions": "6.0.0-rc.1",
     "protobufjs": "^7.2.2",
     "uuid": "^9.0.0"
