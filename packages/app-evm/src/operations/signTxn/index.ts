@@ -86,8 +86,6 @@ export const signTxn = async (
 
   await helper.sendInChunks(txnBytes, 'txnData', 'dataAccepted');
 
-  forceStatusUpdate(SignTxnEvent.VERIFY);
-
   await helper.sendQuery({ signature: {} });
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.signature);
