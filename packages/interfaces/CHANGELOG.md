@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.13
+
+### Patch Changes
+
+- [#74](https://github.com/Cypherock/sdk/pull/74) [`8df5488`](https://github.com/Cypherock/sdk/commit/8df5488535bdbf0d4372dda30890e81085502098) Thanks [@ujjwal-cyph](https://github.com/ujjwal-cyph)! - Update proto structs & enums with relevant flow & test changes
+
 ## 0.0.12
 
 ### Patch Changes
