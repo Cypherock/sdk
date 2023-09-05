@@ -65,9 +65,9 @@ export const signMsg = async (
 
   const confirmation = await helper.waitForResult();
   assertOrThrowInvalidResult(confirmation.confirmation);
+  forceStatusUpdate(SignMsgEvent.CONFIRM);
 
   await helper.sendInChunks(params.message, 'msgData', 'dataAccepted');
-  forceStatusUpdate(SignMsgEvent.CONFIRM);
 
   await helper.sendQuery({ signature: {} });
 
