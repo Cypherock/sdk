@@ -6,6 +6,7 @@ import {
 import { ISignPersonalMsgTestCase } from './types';
 import { Query } from '../../../src/proto/generated/evm/core';
 import { SignMsgType } from '../../../src';
+import { resultToUint8Array } from '../__helpers__';
 
 const commonParams = {
   params: {
@@ -39,6 +40,7 @@ const commonParams = {
                   0,
                 ],
                 messageType: SignMsgType.SIGN_MSG_TYPE_PERSONAL_SIGN,
+                totalMsgSize: 41,
               },
             },
           }),
@@ -54,7 +56,13 @@ const withUnknownError: ISignPersonalMsgTestCase = {
   results: [
     {
       name: 'error',
-      data: new Uint8Array([26, 4, 26, 2, 8, 1]),
+      data: resultToUint8Array({
+        signMsg: {
+          commonError: {
+            unknownError: 1,
+          },
+        },
+      }),
     },
   ],
   errorInstance: DeviceAppError,

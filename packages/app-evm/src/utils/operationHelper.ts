@@ -34,7 +34,7 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
   private readonly onStatus?: OnStatus;
 
-  private static readonly CHUNK_SIZE = 5120;
+  private static readonly CHUNK_SIZE = 2048;
 
   constructor(params: {
     sdk: ISDK;
@@ -92,17 +92,6 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
     for (let i = 0; i < chunks.length; i += 1) {
       const chunk = chunks[i];
-
-      const result = await this.waitForResult();
-      assertOrThrowInvalidResult(result[resultKey]);
-
-      const { chunkAck } = result[resultKey] as {
-        chunkAck: ChunkAck;
-      };
-
-      assertOrThrowInvalidResult(chunkAck);
-      assertOrThrowInvalidResult(chunkAck.chunkIndex === i);
-
       remainingSize -= chunk.length;
 
       const chunkPayload: ChunkPayload = {
@@ -117,6 +106,16 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
           chunkPayload,
         },
       });
+
+      const result = await this.waitForResult();
+      assertOrThrowInvalidResult(result[resultKey]);
+
+      const { chunkAck } = result[resultKey] as {
+        chunkAck: ChunkAck;
+      };
+
+      assertOrThrowInvalidResult(chunkAck);
+      assertOrThrowInvalidResult(chunkAck.chunkIndex === i);
     }
   }
 }
