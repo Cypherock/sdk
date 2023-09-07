@@ -33,7 +33,9 @@ export const createSignedTransaction = (params: {
   const { inputs, outputs, signatures, derivationPath } = params;
 
   const bitcoinjs = getBitcoinJsLib();
-  const transaction = new bitcoinjs.Psbt();
+  const transaction = new bitcoinjs.Psbt({
+    network: getNetworkFromPath(derivationPath),
+  });
 
   for (const input of inputs) {
     const script = addressToScriptPubKey(input.address, derivationPath);
