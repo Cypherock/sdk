@@ -1,5 +1,22 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.25
+
+### Patch Changes
+
+- [#72](https://github.com/Cypherock/sdk/pull/72) [`9866bfc`](https://github.com/Cypherock/sdk/commit/9866bfcac08fa79460aebf56cca11263781afa12) Thanks [@amanCypherock](https://github.com/amanCypherock)! - Update signMsg, signTxn proto struct and related flow & tests
+
+## 0.0.24
+
+### Patch Changes
+
+- [#74](https://github.com/Cypherock/sdk/pull/74) [`8df5488`](https://github.com/Cypherock/sdk/commit/8df5488535bdbf0d4372dda30890e81085502098) Thanks [@ujjwal-cyph](https://github.com/ujjwal-cyph)! - Update proto structs & enums with relevant flow & test changes
+
+- Updated dependencies [[`8df5488`](https://github.com/Cypherock/sdk/commit/8df5488535bdbf0d4372dda30890e81085502098)]:
+  - @cypherock/sdk-interfaces@0.0.13
+  - @cypherock/sdk-core@0.0.20
+  - @cypherock/sdk-utils@0.0.16
+
 ## 0.0.23
 
 ### Patch Changes

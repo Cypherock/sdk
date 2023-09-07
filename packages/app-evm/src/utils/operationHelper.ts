@@ -1,7 +1,7 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 import { OnStatus } from '@cypherock/sdk-utils';
-import { ChunkRequest, ChunkResponse } from '../proto/generated/common';
+import { ChunkAck, ChunkPayload } from '../proto/generated/common';
 import { DeepPartial, Exact, Query, Result } from '../proto/generated/evm/core';
 import { assertOrThrowInvalidResult, parseCommonError } from './asserts';
 
@@ -34,7 +34,7 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
   private readonly onStatus?: OnStatus;
 
-  private static readonly CHUNK_SIZE = 5120;
+  private static readonly CHUNK_SIZE = 2048;
 
   constructor(params: {
     sdk: ISDK;
@@ -92,20 +92,9 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
     for (let i = 0; i < chunks.length; i += 1) {
       const chunk = chunks[i];
-
-      const result = await this.waitForResult();
-      assertOrThrowInvalidResult(result[resultKey]);
-
-      const { chunkRequest } = result[resultKey] as {
-        chunkRequest: ChunkRequest;
-      };
-
-      assertOrThrowInvalidResult(chunkRequest);
-      assertOrThrowInvalidResult(chunkRequest.chunkIndex === i);
-
       remainingSize -= chunk.length;
 
-      const chunkResponse: ChunkResponse = {
+      const chunkPayload: ChunkPayload = {
         chunk,
         chunkIndex: i,
         totalChunks: chunks.length,
@@ -114,9 +103,19 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
       await this.sendQuery({
         [queryKey]: {
-          chunkResponse,
+          chunkPayload,
         },
       });
+
+      const result = await this.waitForResult();
+      assertOrThrowInvalidResult(result[resultKey]);
+
+      const { chunkAck } = result[resultKey] as {
+        chunkAck: ChunkAck;
+      };
+
+      assertOrThrowInvalidResult(chunkAck);
+      assertOrThrowInvalidResult(chunkAck.chunkIndex === i);
     }
   }
 }

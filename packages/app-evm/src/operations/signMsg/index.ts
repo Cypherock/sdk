@@ -20,7 +20,7 @@ import { ISignMsgParams, ISignMsgResult, SignMsgEvent } from './types';
 
 export * from './types';
 
-const logger = createLoggerWithPrefix(rootLogger, 'SignTxn');
+const logger = createLoggerWithPrefix(rootLogger, 'SignMsg');
 
 export const signMsg = async (
   sdk: ISDK,
@@ -59,11 +59,17 @@ export const signMsg = async (
       walletId: params.walletId,
       derivationPath: params.derivationPath,
       messageType: params.messageType,
+      totalMsgSize: params.message.length,
     },
   });
 
-  await helper.sendInChunks(params.message, 'msgData', 'msgData');
+  const confirmation = await helper.waitForResult();
+  assertOrThrowInvalidResult(confirmation.confirmation);
   forceStatusUpdate(SignMsgEvent.CONFIRM);
+
+  await helper.sendInChunks(params.message, 'msgData', 'dataAccepted');
+
+  await helper.sendQuery({ signature: {} });
 
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.signature);

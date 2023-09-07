@@ -1,5 +1,26 @@
 # nodejs-test
 
+## 0.0.33
+
+### Patch Changes
+
+- Updated dependencies [[`9866bfc`](https://github.com/Cypherock/sdk/commit/9866bfcac08fa79460aebf56cca11263781afa12)]:
+  - @cypherock/sdk-app-evm@0.0.25
+
+## 0.0.32
+
+### Patch Changes
+
+- Updated dependencies [[`8df5488`](https://github.com/Cypherock/sdk/commit/8df5488535bdbf0d4372dda30890e81085502098)]:
+  - @cypherock/sdk-interfaces@0.0.13
+  - @cypherock/sdk-app-near@0.0.24
+  - @cypherock/sdk-app-evm@0.0.24
+  - @cypherock/sdk-core@0.0.20
+  - @cypherock/sdk-app-btc@0.0.28
+  - @cypherock/sdk-app-manager@0.0.24
+  - @cypherock/sdk-hw-hid@0.0.15
+  - @cypherock/sdk-hw-serialport@0.0.17
+
 ## 0.0.31
 
 ### Patch Changes
