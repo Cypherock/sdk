@@ -14,6 +14,7 @@ import {
   OperationHelper,
   logger as rootLogger,
   getCoinTypeFromPath,
+  configureAppId,
 } from '../../utils';
 import { getRawTxnHash } from '../../services/transaction';
 import {
@@ -42,6 +43,8 @@ export const signTxn = async (
 ): Promise<ISignTxnResult> => {
   assertSignTxnParams(params);
   logger.info('Started');
+
+  configureAppId(sdk, [params.derivationPath]);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,
@@ -128,8 +131,6 @@ export const signTxn = async (
     const { outputAccepted } = await helper.waitForResult();
     assertOrThrowInvalidResult(outputAccepted);
   }
-
-  forceStatusUpdate(SignTxnEvent.VERIFY);
 
   const signatures: string[] = [];
 
