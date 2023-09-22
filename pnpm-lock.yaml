@@ -34,7 +34,7 @@ importers:
         version: 3.0.3
       turbo:
         specifier: latest
-        version: 1.10.13
+        version: 1.10.12
 
   apps/browser:
     dependencies:
@@ -434,6 +434,76 @@ importers:
       near-api-js:
         specifier: ^2.1.4
         version: 2.1.4
+      rimraf:
+        specifier: ^4.1.2
+        version: 4.1.2
+      ts-jest:
+        specifier: ^29.0.5
+        version: 29.0.5(@babel/core@7.20.12)(jest@29.4.1)(typescript@4.9.5)
+      ts-proto:
+        specifier: ^1.139.0
+        version: 1.139.0
+      typescript:
+        specifier: ^4.5.2
+        version: 4.9.5
+
+  packages/app-solana:
+    dependencies:
+      '@cypherock/sdk-core':
+        specifier: workspace:^0.0.20
+        version: link:../core
+      '@cypherock/sdk-interfaces':
+        specifier: workspace:^0.0.13
+        version: link:../interfaces
+      '@cypherock/sdk-utils':
+        specifier: workspace:^0.0.16
+        version: link:../util
+      long:
+        specifier: ^5.2.1
+        version: 5.2.1
+      protobufjs:
+        specifier: ^7.2.2
+        version: 7.2.2
+    devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.6
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
+      '@jest/globals':
+        specifier: ^29.4.1
+        version: 29.4.1
+      '@stryker-mutator/core':
+        specifier: ^6.4.1
+        version: 6.4.1
+      '@stryker-mutator/jest-runner':
+        specifier: ^6.4.1
+        version: 6.4.1(@stryker-mutator/core@6.4.1)
+      '@stryker-mutator/typescript-checker':
+        specifier: ^6.4.1
+        version: 6.4.1(@stryker-mutator/core@6.4.1)(typescript@4.9.5)
+      '@types/jest':
+        specifier: ^29.4.0
+        version: 29.4.0
+      '@types/node':
+        specifier: 18.11.18
+        version: 18.11.18
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
+      eslint:
+        specifier: ^7.32.0
+        version: 7.32.0
+      jest:
+        specifier: ^29.4.1
+        version: 29.4.1(@types/node@18.11.18)(ts-node@10.9.1)
+      lint-staged:
+        specifier: ^13.2.0
+        version: 13.2.0
       rimraf:
         specifier: ^4.1.2
         version: 4.1.2
@@ -8336,64 +8406,65 @@ packages:
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
     dev: true
 
-  /turbo-darwin-64@1.10.13:
-    resolution: {integrity: sha512-vmngGfa2dlYvX7UFVncsNDMuT4X2KPyPJ2Jj+xvf5nvQnZR/3IeDEGleGVuMi/hRzdinoxwXqgk9flEmAYp0Xw==}
+  /turbo-darwin-64@1.10.12:
+    resolution: {integrity: sha512-vmDfGVPl5/aFenAbOj3eOx3ePNcWVUyZwYr7taRl0ZBbmv2TzjRiFotO4vrKCiTVnbqjQqAFQWY2ugbqCI1kOQ==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64@1.10.13:
-    resolution: {integrity: sha512-eMoJC+k7gIS4i2qL6rKmrIQGP6Wr9nN4odzzgHFngLTMimok2cGLK3qbJs5O5F/XAtEeRAmuxeRnzQwTl/iuAw==}
+  /turbo-darwin-arm64@1.10.12:
+    resolution: {integrity: sha512-3JliEESLNX2s7g54SOBqqkqJ7UhcOGkS0ywMr5SNuvF6kWVTbuUq7uBU/sVbGq8RwvK1ONlhPvJne5MUqBCTCQ==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64@1.10.13:
-    resolution: {integrity: sha512-0CyYmnKTs6kcx7+JRH3nPEqCnzWduM0hj8GP/aodhaIkLNSAGAa+RiYZz6C7IXN+xUVh5rrWTnU2f1SkIy7Gdg==}
+  /turbo-linux-64@1.10.12:
+    resolution: {integrity: sha512-siYhgeX0DidIfHSgCR95b8xPee9enKSOjCzx7EjTLmPqPaCiVebRYvbOIYdQWRqiaKh9yfhUtFmtMOMScUf1gg==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64@1.10.13:
-    resolution: {integrity: sha512-0iBKviSGQQlh2OjZgBsGjkPXoxvRIxrrLLbLObwJo3sOjIH0loGmVIimGS5E323soMfi/o+sidjk2wU1kFfD7Q==}
+  /turbo-linux-arm64@1.10.12:
+    resolution: {integrity: sha512-K/ZhvD9l4SslclaMkTiIrnfcACgos79YcAo4kwc8bnMQaKuUeRpM15sxLpZp3xDjDg8EY93vsKyjaOhdFG2UbA==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64@1.10.13:
-    resolution: {integrity: sha512-S5XySRfW2AmnTeY1IT+Jdr6Goq7mxWganVFfrmqU+qqq3Om/nr0GkcUX+KTIo9mPrN0D3p5QViBRzulwB5iuUQ==}
+  /turbo-windows-64@1.10.12:
+    resolution: {integrity: sha512-7FSgSwvktWDNOqV65l9AbZwcoueAILeE4L7JvjauNASAjjbuzXGCEq5uN8AQU3U5BOFj4TdXrVmO2dX+lLu8Zg==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64@1.10.13:
-    resolution: {integrity: sha512-nKol6+CyiExJIuoIc3exUQPIBjP9nIq5SkMJgJuxsot2hkgGrafAg/izVDRDrRduQcXj2s8LdtxJHvvnbI8hEQ==}
+  /turbo-windows-arm64@1.10.12:
+    resolution: {integrity: sha512-gCNXF52dwom1HLY9ry/cneBPOKTBHhzpqhMylcyvJP0vp9zeMQQkt6yjYv+6QdnmELC92CtKNp2FsNZo+z0pyw==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo@1.10.13:
-    resolution: {integrity: sha512-vOF5IPytgQPIsgGtT0n2uGZizR2N3kKuPIn4b5p5DdeLoI0BV7uNiydT7eSzdkPRpdXNnO8UwS658VaI4+YSzQ==}
+  /turbo@1.10.12:
+    resolution: {integrity: sha512-WM3+jTfQWnB9W208pmP4oeehZcC6JQNlydb/ZHMRrhmQa+htGhWLCzd6Q9rLe0MwZLPpSPFV2/bN5egCLyoKjQ==}
     hasBin: true
+    requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.10.13
-      turbo-darwin-arm64: 1.10.13
-      turbo-linux-64: 1.10.13
-      turbo-linux-arm64: 1.10.13
-      turbo-windows-64: 1.10.13
-      turbo-windows-arm64: 1.10.13
+      turbo-darwin-64: 1.10.12
+      turbo-darwin-arm64: 1.10.12
+      turbo-linux-64: 1.10.12
+      turbo-linux-arm64: 1.10.12
+      turbo-windows-64: 1.10.12
+      turbo-windows-arm64: 1.10.12
     dev: true
 
   /tweetnacl@1.0.3:
