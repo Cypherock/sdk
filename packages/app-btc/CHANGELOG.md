@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.29
+
+### Patch Changes
+
+- [#77](https://github.com/Cypherock/sdk/pull/77) [`e8c4c01`](https://github.com/Cypherock/sdk/commit/e8c4c015243f093994dcd2b7a8cbac5d1aa8982e) Thanks [@TejasvCypherock](https://github.com/TejasvCypherock)! - fix status, appid, and network problems
+
 ## 0.0.28
 
 ### Patch Changes
