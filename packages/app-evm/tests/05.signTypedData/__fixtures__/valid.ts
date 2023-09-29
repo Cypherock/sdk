@@ -423,7 +423,7 @@ const valid: ISignTypedDataCase[] = [
                 size: 1,
                 structName: 'bool',
                 children: [],
-                data: new BigNumber(1),
+                data: new BigNumber(1) as any,
               },
               {
                 name: 'kids',
@@ -519,7 +519,7 @@ const valid: ISignTypedDataCase[] = [
                 size: 1,
                 structName: 'bool',
                 children: [],
-                data: new BigNumber(0),
+                data: new BigNumber(0) as any,
               },
               {
                 name: 'kids',
