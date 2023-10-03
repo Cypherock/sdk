@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.26
+
+### Patch Changes
+
+- [#79](https://github.com/Cypherock/sdk/pull/79) [`4fa5f86`](https://github.com/Cypherock/sdk/commit/4fa5f869972cd9e8fa712d4be350df053282ea81) Thanks [@Suraj-Tiwari](https://github.com/Suraj-Tiwari)! - added typed data signing support for evm
+
 ## 0.0.25
 
 ### Patch Changes
