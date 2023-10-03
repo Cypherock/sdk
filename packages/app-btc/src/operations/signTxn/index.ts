@@ -44,7 +44,7 @@ export const signTxn = async (
   assertSignTxnParams(params);
   logger.info('Started');
 
-  configureAppId(sdk, [params.derivationPath]);
+  await configureAppId(sdk, [params.derivationPath]);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,

@@ -3,6 +3,7 @@ import * as rawOperations from './operations/raw';
 import * as operations from './operations/proto';
 import { PacketVersion } from './utils';
 import { RawData, StatusData } from './encoders/raw';
+import { IAppVersionResultResponse } from './encoders/proto/generated/types';
 
 export interface IDeprecatedCommunication {
   isLegacyOperationSupported(): Promise<boolean>;
@@ -93,6 +94,14 @@ export interface ISDK {
     maxTries?: number;
     timeout?: number;
   }): Promise<import('.').Status>;
+  getAppVersions(
+    onStatus?: operations.IGetAppVersionsParams['onStatus'],
+    options?: operations.IGetAppVersionsParams['options'],
+  ): Promise<IAppVersionResultResponse>;
+  checkAppCompatibility(
+    version: { from: string; to?: string },
+    options?: operations.IGetAppVersionsParams['options'],
+  ): Promise<void>;
   sendBootloaderAbort(options?: {
     firstTimeout?: number;
     timeout?: number;

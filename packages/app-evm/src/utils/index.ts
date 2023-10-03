@@ -5,3 +5,4 @@ export * from './ethers';
 export * from './address';
 export * from './appId';
 export * from './signTypeDataProcessor';
+export * from './eip712';

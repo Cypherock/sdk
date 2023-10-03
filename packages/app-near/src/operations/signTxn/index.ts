@@ -6,6 +6,7 @@ import {
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
+import { APP_VERSION } from '../../constants/appId';
 import {
   SeedGenerationStatus,
   SignTxnStatus,
@@ -34,6 +35,8 @@ export const signTxn = async (
     params.derivationPath.length > 3,
     'derivationPath should be greater than 3',
   );
+
+  await sdk.checkAppCompatibility(APP_VERSION);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,

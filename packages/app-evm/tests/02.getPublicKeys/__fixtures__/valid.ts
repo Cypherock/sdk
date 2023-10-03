@@ -38,7 +38,6 @@ const requestOneAddress: IGetPublicKeysTestCase = {
                 ],
                 chainId: (1).toString(),
                 format: AddressFormat.DEFAULT,
-                doVerify: true,
               },
             },
           }),
@@ -110,7 +109,6 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
     ],
     chainId: 1,
     format: AddressFormat.HARMONY,
-    doVerifyOnDevice: false,
   },
   queries: [
     {
@@ -150,7 +148,6 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
                 ],
                 chainId: (1).toString(),
                 format: AddressFormat.HARMONY,
-                doVerify: false,
               },
             },
           }),

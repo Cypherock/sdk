@@ -12,6 +12,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import { assert } from '@cypherock/sdk-utils';
 
+import { compareVersions } from 'compare-versions';
 import * as bootloaderOperations from './operations/bootloader';
 import * as legacyOperations from './operations/legacy';
 import * as operations from './operations/proto';
@@ -24,6 +25,8 @@ import { DeviceIdleState } from './encoders/proto/types';
 import { DeviceIdleState as RawDeviceIdleState } from './encoders/raw';
 import { logger } from './utils';
 
+import { IAppVersionResultResponse } from './encoders/proto/generated/types';
+
 export class SDK implements ISDK {
   private readonly version: string;
 
@@ -34,6 +37,8 @@ export class SDK implements ISDK {
   private appletId: number;
 
   public deprecated: DeprecatedCommunication;
+
+  private appVersionsMap: IAppVersionResultResponse | undefined;
 
   public constructor(
     connection: IDeviceConnection,
@@ -51,7 +56,10 @@ export class SDK implements ISDK {
   public static async create(
     connection: IDeviceConnection,
     appletId: number,
-    options?: { maxTries?: number; timeout?: number },
+    options?: {
+      maxTries?: number;
+      timeout?: number;
+    },
   ) {
     const sdkData = await SDK.getSDKVersion(
       connection,
@@ -286,6 +294,64 @@ export class SDK implements ISDK {
       maxTries: options?.maxTries,
       timeout: options?.timeout,
     });
+  }
+
+  public async getAppVersions(
+    onStatus?: operations.IGetAppVersionsParams['onStatus'],
+    options?: operations.IGetAppVersionsParams['options'],
+  ) {
+    await this.validateNotInBootloaderMode();
+    assert(
+      this.packetVersion,
+      new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.DEVICE_NOT_SUPPORTED,
+      ),
+    );
+
+    if (!(await this.isSupported())) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
+    if (!this.appVersionsMap) {
+      this.appVersionsMap = await operations.getAppVersions({
+        connection: this.connection,
+        options,
+        sequenceNumber: await this.getNewSequenceNumber(),
+        onStatus,
+      });
+    }
+
+    return this.appVersionsMap;
+  }
+
+  // from is inclusive and to is exclusive
+  public async checkAppCompatibility(
+    version: { from: string; to?: string },
+    options?: operations.IGetAppVersionsParams['options'],
+  ) {
+    const appVersionResult = (
+      await this.getAppVersions(undefined, options)
+    ).appVersions.find(a => a.id === this.appletId)?.version;
+
+    if (!appVersionResult) {
+      return;
+    }
+
+    const appVersion = `${appVersionResult.major}.${appVersionResult.minor}.${appVersionResult.patch}`;
+
+    let isCompatible = compareVersions(version.from, appVersion) < 1;
+
+    if (version.to)
+      isCompatible =
+        isCompatible && compareVersions(version.to, appVersion) > 0;
+
+    if (!isCompatible) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
   }
 
   // ************** Bootloader operations ****************

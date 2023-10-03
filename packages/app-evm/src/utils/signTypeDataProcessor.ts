@@ -1,10 +1,11 @@
-import { getTypeHash, TypedData as EIP712TypedData } from 'eip-712';
+import type { TypedData as EIP712TypedData } from 'eip-712';
 import BigNumber from 'bignumber.js';
 import {
   Eip712DataType,
   SignTypedDataNode,
   SignTypedDataStruct,
 } from '../proto/generated/evm/sign_msg';
+import { getEip712Lib } from './eip712';
 
 const preprocessTypeData = (dataTypes: any) => {
   const formattedTypes: any = {};
@@ -135,6 +136,7 @@ const eip712JsonToStruct = (
         dataNode(i.toString(), x, dataType, undefined),
       );
     } else if (structTypes[dataType]) {
+      const { getTypeHash } = getEip712Lib();
       const childKeys = Object.keys(dataObject);
       signedTypeDataNode.typeHash = getTypeHash(jsonData, dataType);
       signedTypeDataNode.children = childKeys.map((x: any) =>
@@ -161,4 +163,5 @@ const eip712JsonToStruct = (
 };
 
 export type { EIP712TypedData };
+
 export { eip712JsonToStruct };

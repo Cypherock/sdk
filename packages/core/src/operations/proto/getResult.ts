@@ -8,6 +8,7 @@ import { assert, hexToUint8Array } from '@cypherock/sdk-utils';
 import { PacketVersion } from '../../utils';
 import { Status, Msg, ErrorType } from '../../encoders/proto/generated/core';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
+import { AppVersionResponse } from '../../encoders/proto/generated/version';
 
 export const getResult = async ({
   connection,
@@ -16,6 +17,7 @@ export const getResult = async ({
   sequenceNumber,
   appletId,
   timeout,
+  allowCoreData,
 }: {
   connection: IDeviceConnection;
   version: PacketVersion;
@@ -23,6 +25,7 @@ export const getResult = async ({
   appletId: number;
   maxTries?: number;
   timeout?: number;
+  allowCoreData?: boolean;
 }) => {
   assert(appletId, 'Invalid appletId');
 
@@ -55,15 +58,20 @@ export const getResult = async ({
       throw new DeviceAppError(errorMap[result.error.type]);
     }
 
-    if (!result.cmd) {
-      throw new DeviceAppError(DeviceAppErrorType.INVALID_MSG_FROM_DEVICE);
-    }
+    output = new Uint8Array();
 
-    if (result.cmd.appletId !== appletId) {
-      throw new DeviceAppError(DeviceAppErrorType.INVALID_APP_ID_FROM_DEVICE);
-    }
+    if (!allowCoreData || result.cmd) {
+      if (!result.cmd) {
+        throw new DeviceAppError(DeviceAppErrorType.INVALID_MSG_FROM_DEVICE);
+      }
 
-    output = hexToUint8Array(rawData);
+      if (result.cmd.appletId !== appletId) {
+        throw new DeviceAppError(DeviceAppErrorType.INVALID_APP_ID_FROM_DEVICE);
+      }
+      output = hexToUint8Array(rawData);
+    } else if (result.appVersion?.response) {
+      output = AppVersionResponse.encode(result.appVersion.response).finish();
+    }
   }
 
   return { isStatus, result: output };
