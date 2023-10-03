@@ -28,11 +28,11 @@ const run = async () => {
 
   console.log(deviceInfo);
 
-  // await managerApp.authDevice();
+  await managerApp.authDevice();
 
-  // await managerApp.trainCard({ onWallets: async () => true });
+  await managerApp.trainCard({ onWallets: async () => true });
 
-  // await managerApp.authCard();
+  await managerApp.authCard();
 
   // await managerApp.updateFirmware({
   //   getDevices: async () => [
