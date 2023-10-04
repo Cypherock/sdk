@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.25
+
+### Patch Changes
+
+- [#81](https://github.com/Cypherock/sdk/pull/81) [`6d01ee6`](https://github.com/Cypherock/sdk/commit/6d01ee6388e324961bbce42165c90be32a85a8cd) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added app version compatibility check
+
 ## 0.0.24
 
 ### Patch Changes
