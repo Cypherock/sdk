@@ -10,6 +10,11 @@ export class ManagerApp {
 
   private static readonly APPLET_ID = 1;
 
+  private static readonly COMPATIBLE_VERSION = {
+    from: '1.0.0',
+    to: '2.0.0',
+  };
+
   private constructor(sdk: SDK) {
     this.sdk = sdk;
   }

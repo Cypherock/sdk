@@ -5,6 +5,7 @@ import {
   stringToVersion,
   uint8ArrayToHex,
 } from '@cypherock/sdk-utils';
+import { APP_VERSION } from '../../constants/appId';
 import {
   IFirmwareUpdateErrorResponse,
   FirmwareUpdateError,
@@ -81,6 +82,8 @@ export const updateFirmware = async (
 
   if (!(await sdk.isInBootloader())) {
     if (await sdk.isSupported()) {
+      await sdk.checkAppCompatibility(APP_VERSION);
+
       await helper.sendQuery({ initiate: { version } });
       const result = await helper.waitForResult();
       parseFirmwareUpdateError(result.error);

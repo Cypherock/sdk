@@ -22,6 +22,7 @@ export interface IWaitForCommandOutputParams {
   onStatus?: (status: Status) => void;
   version: PacketVersion;
   options?: { interval?: number; timeout?: number; maxTries?: number };
+  allowCoreData?: boolean;
 }
 
 export const waitForResult = async ({
@@ -31,6 +32,7 @@ export const waitForResult = async ({
   onStatus,
   options,
   version,
+  allowCoreData,
 }: IWaitForCommandOutputParams): Promise<Uint8Array> => {
   assert(connection, 'Invalid connection');
   assert(sequenceNumber, 'Invalid sequenceNumber');
@@ -53,6 +55,7 @@ export const waitForResult = async ({
       maxTries: options?.maxTries ?? 5,
       sequenceNumber,
       timeout: options?.timeout,
+      allowCoreData,
     });
 
     if (!response.isStatus) {

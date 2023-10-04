@@ -1,6 +1,6 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { assert } from '@cypherock/sdk-utils';
-import { chainToAppIdMap } from '../constants/appId';
+import { APP_VERSION, chainToAppIdMap } from '../constants/appId';
 
 const getAppIdFromDerivationPaths = (chainId: number) => {
   const appId = chainToAppIdMap[chainId];
@@ -9,7 +9,8 @@ const getAppIdFromDerivationPaths = (chainId: number) => {
   return appId;
 };
 
-export const configureAppId = (sdk: ISDK, chainId: number) => {
+export const configureAppId = async (sdk: ISDK, chainId: number) => {
   const appId = getAppIdFromDerivationPaths(chainId);
   sdk.configureAppletId(appId);
+  await sdk.checkAppCompatibility(APP_VERSION);
 };

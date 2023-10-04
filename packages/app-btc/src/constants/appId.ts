@@ -8,3 +8,8 @@ export const coinIndexToAppIdMap: Record<number, number | undefined> = {
   // Dash
   0x80000005: 6,
 };
+
+export const APP_VERSION = {
+  from: '1.0.0',
+  to: '2.0.0',
+};

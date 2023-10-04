@@ -41,7 +41,6 @@ const commonParams = {
                 ],
                 chainId: (1).toString(),
                 format: AddressFormat.DEFAULT,
-                doVerify: true,
               },
             },
           }),

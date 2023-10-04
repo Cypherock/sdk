@@ -1,6 +1,6 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { assert } from '@cypherock/sdk-utils';
-import { coinIndexToAppIdMap } from '../constants/appId';
+import { APP_VERSION, coinIndexToAppIdMap } from '../constants/appId';
 
 const getAppIdFromDerivationPaths = (derivationPaths: number[][]) => {
   const coinIndexes = derivationPaths.map(derivationPath => derivationPath[1]);
@@ -15,7 +15,11 @@ const getAppIdFromDerivationPaths = (derivationPaths: number[][]) => {
   return appId;
 };
 
-export const configureAppId = (sdk: ISDK, derivationPaths: number[][]) => {
+export const configureAppId = async (
+  sdk: ISDK,
+  derivationPaths: number[][],
+) => {
   const appId = getAppIdFromDerivationPaths(derivationPaths);
   sdk.configureAppletId(appId);
+  await sdk.checkAppCompatibility(APP_VERSION);
 };

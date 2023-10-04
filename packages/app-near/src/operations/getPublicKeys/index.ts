@@ -4,6 +4,7 @@ import {
   assert,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
+import { APP_VERSION } from '../../constants/appId';
 import {
   GetPublicKeysStatus,
   SeedGenerationStatus,
@@ -36,6 +37,8 @@ export const getPublicKeys = async (
     ),
     'derivationPaths should be greater than 3',
   );
+
+  await sdk.checkAppCompatibility(APP_VERSION);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: GetPublicKeysEvent,

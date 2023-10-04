@@ -35,7 +35,7 @@ export const signMsg = async (
     params.derivationPath.length > 3,
     'derivationPath should be greater than 3',
   );
-  configureAppId(sdk, 1);
+  await configureAppId(sdk, 1);
 
   const ethers = getEthersLib();
 

@@ -52,7 +52,7 @@ export const signTxn = async (
     throw new Error('Invalid txn hex');
   }
 
-  configureAppId(sdk, Number(decodedTxn.chainId));
+  await configureAppId(sdk, Number(decodedTxn.chainId));
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,

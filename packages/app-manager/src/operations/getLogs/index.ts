@@ -4,6 +4,7 @@ import {
   createStatusListener,
   OnStatus,
 } from '@cypherock/sdk-utils';
+import { APP_VERSION } from '../../constants/appId';
 import {
   GetLogsStatus,
   IGetLogsErrorResponse,
@@ -55,6 +56,8 @@ export const getLogs = async (
 ): Promise<string> => {
   logger.info('Started');
   const helper = new OperationHelper(sdk, 'getLogs', 'getLogs');
+
+  await sdk.checkAppCompatibility(APP_VERSION);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: GetLogsStatus,

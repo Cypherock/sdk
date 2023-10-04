@@ -3,6 +3,7 @@ import {
   createLoggerWithPrefix,
   createStatusListener,
 } from '@cypherock/sdk-utils';
+import { APP_VERSION } from '../../constants/appId';
 import { ITrainCardResult, TrainCardStatus } from '../../proto/generated/types';
 
 import {
@@ -21,6 +22,9 @@ export const trainCard = async (
   params: ITrainCardParams,
 ): Promise<ITrainCardResult> => {
   logger.info('Started');
+
+  await sdk.checkAppCompatibility(APP_VERSION);
+
   const helper = new OperationHelper(sdk, 'trainCard', 'trainCard');
 
   const { onStatus, forceStatusUpdate } = createStatusListener({

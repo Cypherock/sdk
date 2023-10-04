@@ -42,7 +42,7 @@ export const getXpubs = async (
   );
   params.derivationPaths.forEach(item => assertDerivationPath(item.path));
 
-  configureAppId(
+  await configureAppId(
     sdk,
     params.derivationPaths.map(path => path.path),
   );

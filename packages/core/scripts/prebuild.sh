@@ -9,3 +9,5 @@ if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
 else
   protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./src/encoders/proto/generated ../../submodules/common/proto/*.proto -I../../submodules/common/proto
 fi
+
+node ../../scripts/extractTypes/index.js ./src/encoders/proto/generated ./src/encoders/proto/generated/types.ts

@@ -7,6 +7,7 @@ import {
   ForceStatusUpdate,
   OnStatus,
 } from '@cypherock/sdk-utils';
+import { APP_VERSION } from '../../constants/appId';
 import { AuthCardStatus } from '../../proto/generated/types';
 import { cardAuthService } from '../../services';
 
@@ -111,6 +112,8 @@ export const authCard = async (sdk: ISDK, params?: IAuthCardParams) => {
       'Card number should be one of 1,2,3,4',
     );
   }
+
+  await sdk.checkAppCompatibility(APP_VERSION);
 
   const helper = new OperationHelper(sdk, 'authCard', 'authCard');
 

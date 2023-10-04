@@ -39,7 +39,7 @@ export const getPublicKey = async (
   );
   assertDerivationPath(params.derivationPath);
 
-  configureAppId(sdk, [params.derivationPath]);
+  await configureAppId(sdk, [params.derivationPath]);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: GetPublicKeyEvent,
