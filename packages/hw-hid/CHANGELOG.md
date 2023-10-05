@@ -1,5 +1,15 @@
 # @cypherock/sdk-hw-hid
 
+## 0.0.16
+
+### Patch Changes
+
+- [#83](https://github.com/Cypherock/sdk/pull/83) [`de494e3`](https://github.com/Cypherock/sdk/commit/de494e3012db16826dd0428085cd75b7595df4b9) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - force publish all packages
+
+- Updated dependencies [[`de494e3`](https://github.com/Cypherock/sdk/commit/de494e3012db16826dd0428085cd75b7595df4b9)]:
+  - @cypherock/sdk-interfaces@0.0.14
+  - @cypherock/sdk-utils@0.0.17
+
 ## 0.0.15
 
 ### Patch Changes
