@@ -42,13 +42,13 @@ importers:
         specifier: workspace:^
         version: link:../../packages/app-btc
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.25
+        specifier: workspace:^0.0.26
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.20
+        specifier: workspace:^0.0.21
         version: link:../../packages/core
       '@cypherock/sdk-hw-webusb':
-        specifier: workspace:^0.0.15
+        specifier: workspace:^0.0.16
         version: link:../../packages/hw-webusb
       '@next/font':
         specifier: 13.1.6
@@ -128,7 +128,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../../packages/util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -149,13 +149,13 @@ importers:
         specifier: ^2.2.3
         version: 2.2.3
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.20
+        specifier: workspace:^0.0.21
         version: link:../core
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^0.0.17
         version: link:../util
       axios:
         specifier: ^1.3.4
@@ -174,7 +174,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -228,13 +228,13 @@ importers:
   packages/app-evm:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.20
+        specifier: workspace:^0.0.21
         version: link:../core
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^0.0.17
         version: link:../util
       bignumber.js:
         specifier: ^9.1.2
@@ -250,7 +250,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -307,13 +307,13 @@ importers:
   packages/app-manager:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.20
+        specifier: workspace:^0.0.21
         version: link:../core
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^0.0.17
         version: link:../util
       axios:
         specifier: ^1.3.4
@@ -332,7 +332,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -383,13 +383,13 @@ importers:
   packages/app-near:
     dependencies:
       '@cypherock/sdk-core':
-        specifier: workspace:^0.0.20
+        specifier: workspace:^0.0.21
         version: link:../core
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^0.0.17
         version: link:../util
       long:
         specifier: ^5.2.1
@@ -402,7 +402,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -456,10 +456,10 @@ importers:
   packages/core:
     dependencies:
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.16
+        specifier: workspace:^0.0.17
         version: link:../util
       compare-versions:
         specifier: 6.0.0-rc.1
@@ -475,7 +475,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -517,7 +517,7 @@ importers:
   packages/hw-hid:
     dependencies:
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../interfaces
       '@cypherock/sdk-utils':
         specifier: workspace:^
@@ -533,7 +533,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -560,7 +560,7 @@ importers:
   packages/hw-serialport:
     dependencies:
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../interfaces
       '@cypherock/sdk-utils':
         specifier: workspace:^
@@ -576,7 +576,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -603,7 +603,7 @@ importers:
   packages/hw-webusb:
     dependencies:
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../interfaces
       '@cypherock/sdk-utils':
         specifier: workspace:^
@@ -616,7 +616,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -656,7 +656,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
@@ -689,7 +689,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@cypherock/sdk-interfaces':
-        specifier: workspace:^0.0.13
+        specifier: workspace:^0.0.14
         version: link:../interfaces
       compare-versions:
         specifier: 6.0.0-rc.1
@@ -708,7 +708,7 @@ importers:
         specifier: workspace:*
         version: link:../util-eslint-config
       '@cypherock/prettier-config':
-        specifier: workspace:^0.0.6
+        specifier: workspace:^0.0.7
         version: link:../util-prettier-config
       '@cypherock/tsconfig':
         specifier: workspace:*
