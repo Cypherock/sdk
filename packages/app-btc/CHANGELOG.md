@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.32
+
+### Patch Changes
+
+- [#85](https://github.com/Cypherock/sdk/pull/85) [`45b8786`](https://github.com/Cypherock/sdk/commit/45b8786bdd21296ba95ccd500d709811187a2a3d) Thanks [@TejasvCypherock](https://github.com/TejasvCypherock)! - supress warning for btc
+
 ## 0.0.31
 
 ### Patch Changes
