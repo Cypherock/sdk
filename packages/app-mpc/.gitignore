@@ -1,0 +1,7 @@
+.turbo
+dist
+
+# stryker temp files
+.stryker-tmp
+reports
+src/proto/generated

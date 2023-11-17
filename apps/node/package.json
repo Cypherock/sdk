@@ -24,6 +24,7 @@
     "@cypherock/sdk-app-btc": "workspace:^",
     "@cypherock/sdk-app-evm": "workspace:^",
     "@cypherock/sdk-app-manager": "workspace:^",
+    "@cypherock/sdk-app-mpc": "workspace:^",
     "@cypherock/sdk-app-near": "workspace:^",
     "@cypherock/sdk-core": "workspace:^",
     "@cypherock/sdk-hw-hid": "workspace:^",
