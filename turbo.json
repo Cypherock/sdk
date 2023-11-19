@@ -48,6 +48,11 @@
       "outputs": ["src/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
+    "@cypherock/sdk-app-mpc#prebuild": {
+      "cache": true,
+      "outputs": ["src/proto/generated/**"],
+      "inputs": ["../../submodules/common/proto/**"]
+    },
     "@cypherock/sdk-app-evm#prebuild": {
       "cache": true,
       "outputs": ["src/proto/generated/**"],

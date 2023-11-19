@@ -21,12 +21,10 @@ export const signEntityInfo = async (
   assert(params, 'Params should be defined');
   assert(params.fingerprint, 'Fingerprint should be defined');
   assert(params.entityInfo, 'Entity Info should be defined');
-  assert(params.devPrivKey, 'Dev Private Key should be defined');
   assert(
     params.fingerprint.length === 32,
     'Fingerprint should be of length 32',
   );
-  assert(params.devPrivKey.length === 32, 'Signature should be of length 64');
 
   const helper = new OperationHelper(sdk, 'signEntityInfo', 'signEntityInfo');
 
@@ -34,7 +32,6 @@ export const signEntityInfo = async (
     initiate: {
       fingerprint: params.fingerprint,
       entityInfo: params.entityInfo,
-      devPrivKey: params.devPrivKey,
     },
   });
 

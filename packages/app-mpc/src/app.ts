@@ -31,6 +31,12 @@ export class MPCApp {
     return this.sdk.isSupported();
   }
 
+  public async initApplication(params: operations.IInitApplicationParams) {
+    return this.sdk.runOperation(() =>
+      operations.initApplication(this.sdk, params),
+    );
+  }
+
   public async getRandomNonce() {
     return this.sdk.runOperation(() => operations.getRandomNonce(this.sdk));
   }
@@ -45,6 +51,16 @@ export class MPCApp {
     return this.sdk.runOperation(() =>
       operations.signEntityInfo(this.sdk, params),
     );
+  }
+
+  public async getPublicKey(params: operations.IGetPublicKeyParams) {
+    return this.sdk.runOperation(() =>
+      operations.getPublicKey(this.sdk, params),
+    );
+  }
+
+  public async exitApplication() {
+    return this.sdk.runOperation(() => operations.exitApplication(this.sdk));
   }
 
   public async destroy() {
@@ -77,5 +93,9 @@ export class MPCApp {
 
   public static encodeEntityInfo(entityInfoArg: entityInfo.EntityInfo) {
     return entityInfo.EntityInfo.encode(entityInfoArg).finish();
+  }
+
+  public static decodeEntityInfo(encodedEntityInfo: Uint8Array) {
+    return entityInfo.EntityInfo.decode(encodedEntityInfo);
   }
 }
