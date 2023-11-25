@@ -103,7 +103,7 @@ export const createSignedTransaction = (params: {
 
   transaction.finalizeAllInputs();
 
-  const hex = transaction.extractTransaction().toHex();
+  const hex = transaction.extractTransaction(true).toHex();
 
   return hex;
 };
