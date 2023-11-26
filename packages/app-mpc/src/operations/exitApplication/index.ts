@@ -8,15 +8,10 @@ import {
   OperationHelper,
   // logger as rootLogger,
 } from '../../utils';
-import { IExitApplicationResult } from './types';
-
-export * from './types';
 
 // const logger = createLoggerWithPrefix(rootLogger, 'GetPublicKey');
 
-export const exitApplication = async (
-  sdk: ISDK,
-): Promise<IExitApplicationResult> => {
+export const exitApplication = async (sdk: ISDK): Promise<void> => {
   const helper = new OperationHelper(sdk, 'exitApplication', 'exitApplication');
 
   await helper.sendQuery({
@@ -25,8 +20,4 @@ export const exitApplication = async (
 
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.result);
-
-  return {
-    exited: result.result.exited,
-  };
 };

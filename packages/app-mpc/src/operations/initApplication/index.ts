@@ -34,7 +34,6 @@ export const initApplication = async (
   assertOrThrowInvalidResult(result.result);
 
   return {
-    initiated: result.result.initiated,
     pubKey: result.result.pubKey,
   };
 };

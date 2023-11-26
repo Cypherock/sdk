@@ -370,12 +370,6 @@ const run = async () => {
   });
 
   let initAppResult = await mpcApp.initApplication({walletId: chosenWalletId});
-
-  if (!initAppResult.initiated) {
-      console.log("Application initialization failed.");
-      return;
-  }
-
   let pubKey = initAppResult.pubKey;
 
   const userChoices = [
