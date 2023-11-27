@@ -63,6 +63,10 @@ export class MPCApp {
     return this.sdk.runOperation(() => operations.exitApplication(this.sdk));
   }
 
+  public async dummy(params: operations.IDummyParams) {
+    return this.sdk.runOperation(() => operations.dummy(this.sdk, params));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }

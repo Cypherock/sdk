@@ -372,6 +372,15 @@ const run = async () => {
   let initAppResult = await mpcApp.initApplication({walletId: chosenWalletId});
   let pubKey = initAppResult.pubKey;
 
+  console.log("DUMMY OPERATION");
+  const a = "hello";
+  const dummyResult = await mpcApp.dummy({
+    onFirstResponse: (num) => {
+      console.log('First response:', num, a);
+    },
+  });
+  console.log('Dummy result:', dummyResult.condition);
+
   const userChoices = [
     {
       name: 'Join a group',
