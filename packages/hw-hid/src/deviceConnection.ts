@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import {
   IDeviceConnection,
   IDevice,
@@ -9,6 +10,8 @@ import HID from 'node-hid';
 import * as uuid from 'uuid';
 
 import { getAvailableDevices, DataListener } from './helpers';
+
+import { logger } from './logger';
 
 export default class DeviceConnection implements IDeviceConnection {
   protected connectionId: string;
@@ -34,12 +37,13 @@ export default class DeviceConnection implements IDeviceConnection {
     this.initialized = true;
     this.isPortOpen = true;
     this.dataListener = new DataListener({
+      device: this.device,
       connection: this.connection,
       onClose: this.onClose.bind(this),
+      onError: this.onError.bind(this),
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public async getConnectionType() {
     return ConnectionTypeMap.HID;
   }
@@ -95,7 +99,6 @@ export default class DeviceConnection implements IDeviceConnection {
    */
   public async destroy() {
     this.dataListener.destroy();
-    this.connection.close();
   }
 
   /**
@@ -131,5 +134,10 @@ export default class DeviceConnection implements IDeviceConnection {
 
   private onClose() {
     this.isPortOpen = false;
+  }
+
+  private onError(error: Error) {
+    logger.error('Error on device connection callback');
+    logger.error(error);
   }
 }
