@@ -1,5 +1,11 @@
 # @cypherock/sdk-hw-hid
 
+## 0.0.17
+
+### Patch Changes
+
+- [#87](https://github.com/Cypherock/sdk/pull/87) [`c246c05`](https://github.com/Cypherock/sdk/commit/c246c05e29a389b12d9021bac9271335a1f3b037) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed hid hw disconnect listener
+
 ## 0.0.16
 
 ### Patch Changes
