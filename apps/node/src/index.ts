@@ -18,306 +18,306 @@ const { subtle } = webcrypto;
 import { input, select } from '@inquirer/prompts';
 import axios from 'axios';
 
-const SERVER_URL = "http://127.0.0.1:5000";
-const DEVICE_ID_SIZE = 32;
-const PUBLIC_KEY_SIZE = 33;
-const WALLET_ID_SIZE = 32;
-const USER_TYPE_INITIATOR = "initiator";
-const USER_TYPE_PARTICIPANT = "participant";
+// const SERVER_URL = "http://127.0.0.1:5000";
+// const DEVICE_ID_SIZE = 32;
+// const PUBLIC_KEY_SIZE = 33;
+// const WALLET_ID_SIZE = 32;
+// const USER_TYPE_INITIATOR = "initiator";
+// const USER_TYPE_PARTICIPANT = "participant";
 
-async function computeSHA256(arrayBuffer: Uint8Array): Promise<Uint8Array> {
-    const hashBuffer = await subtle.digest("SHA-256", arrayBuffer);
-    return new Uint8Array(hashBuffer);
-}
+// async function computeSHA256(arrayBuffer: Uint8Array): Promise<Uint8Array> {
+//     const hashBuffer = await subtle.digest("SHA-256", arrayBuffer);
+//     return new Uint8Array(hashBuffer);
+// }
 
-async function getFingerpintIndices(list: any[], fingerprints: string[]): Promise<number[]> {
-  let hashes = [];
+// async function getFingerpintIndices(list: any[], fingerprints: string[]): Promise<number[]> {
+//   let hashes = [];
 
-  for (let i = 0; i < list.length; i++) {
-    hashes.push(Buffer.from(await computeSHA256(new Uint8Array(Buffer.from(list[i].info, 'hex')))).toString('hex'));
-  }
+//   for (let i = 0; i < list.length; i++) {
+//     hashes.push(Buffer.from(await computeSHA256(new Uint8Array(Buffer.from(list[i].info, 'hex')))).toString('hex'));
+//   }
 
-  // find the indices of the fingerprints in the hashes array
-  let indices = [];
-  for (let i = 0; i < fingerprints.length; i++) {
-    let index = hashes.indexOf(fingerprints[i]);
+//   // find the indices of the fingerprints in the hashes array
+//   let indices = [];
+//   for (let i = 0; i < fingerprints.length; i++) {
+//     let index = hashes.indexOf(fingerprints[i]);
 
-    if (index != -1) {
-      indices.push(index);
-    }
-  }
+//     if (index != -1) {
+//       indices.push(index);
+//     }
+//   }
 
-  return indices;
-}
+//   return indices;
+// }
 
-async function sortIndices(indices: number[], hashes: string[]): Promise<number[]> {
-    const combined = indices.map((index, i) => ({ index, hash: hashes[i] }));
+// async function sortIndices(indices: number[], hashes: string[]): Promise<number[]> {
+//     const combined = indices.map((index, i) => ({ index, hash: hashes[i] }));
 
-    combined.sort((a, b) => a.hash.localeCompare(b.hash));
+//     combined.sort((a, b) => a.hash.localeCompare(b.hash));
 
-    const updatedIndices = combined.map(item => item.index);
+//     const updatedIndices = combined.map(item => item.index);
 
-    return updatedIndices;
-}
+//     return updatedIndices;
+// }
 
 
-// Function to evaluate the list and the number n
-const shouldStopPolling = async (list: any[], fingerprints: string[]): Promise<boolean> => {
-    if (list.length < fingerprints.length) {
-        return false;
-    }
+// // Function to evaluate the list and the number n
+// const shouldStopPolling = async (list: any[], fingerprints: string[]): Promise<boolean> => {
+//     if (list.length < fingerprints.length) {
+//         return false;
+//     }
 
-    return (await getFingerpintIndices(list, fingerprints)).length == fingerprints.length;
-};
+//     return (await getFingerpintIndices(list, fingerprints)).length == fingerprints.length;
+// };
 
-// Function to poll the /status endpoint, now takes ifp and n as arguments
-const pollStatus = async (ifp: string, fingerprints: string[]) => {
-    try {
-        const response = await axios.get(`${SERVER_URL}/status`, {
-            params: { IFP: ifp }
-        });
+// // Function to poll the /status endpoint, now takes ifp and n as arguments
+// const pollStatus = async (ifp: string, fingerprints: string[]) => {
+//     try {
+//         const response = await axios.get(`${SERVER_URL}/status`, {
+//             params: { IFP: ifp }
+//         });
 
-        const list = response.data;
+//         const list = response.data;
 
-        if (await shouldStopPolling(list, fingerprints)) {
-        } else {
-            setTimeout(() => pollStatus(ifp, fingerprints), 2000); // Delay of 2 seconds
-        }
-    } catch (error) {
-        console.error('Error polling the /status endpoint:', error);
-        // Optionally retry or handle the error as needed
-    }
-};
+//         if (await shouldStopPolling(list, fingerprints)) {
+//         } else {
+//             setTimeout(() => pollStatus(ifp, fingerprints), 2000); // Delay of 2 seconds
+//         }
+//     } catch (error) {
+//         console.error('Error polling the /status endpoint:', error);
+//         // Optionally retry or handle the error as needed
+//     }
+// };
 
-async function verifyIFP(threshold: number, total_participants: number, mpcApp: MPCApp): Promise<string> {
-  let IFP = await input({ message: 'Enter the IFP: ' });
+// async function verifyIFP(threshold: number, total_participants: number, mpcApp: MPCApp): Promise<string> {
+//   let IFP = await input({ message: 'Enter the IFP: ' });
 
-  console.log("\nFetching initiator's details from the server...");
-  await pollStatus(IFP, [IFP]);
+//   console.log("\nFetching initiator's details from the server...");
+//   await pollStatus(IFP, [IFP]);
 
-  let response = await axios.get(`${SERVER_URL}/status`, {
-      params: { IFP: IFP }
-  });
+//   let response = await axios.get(`${SERVER_URL}/status`, {
+//       params: { IFP: IFP }
+//   });
 
-  const list = response.data;
-  console.log("Details fetched.");
+//   const list = response.data;
+//   console.log("Details fetched.");
 
-  let indices = await getFingerpintIndices(list, [IFP]);
+//   let indices = await getFingerpintIndices(list, [IFP]);
 
-  // verify Initiator's entity info
-  console.log("\nVerifying initiator's entity info...");
+//   // verify Initiator's entity info
+//   console.log("\nVerifying initiator's entity info...");
 
-  let initiatorEntityInfo = MPCApp.decodeEntityInfo(new Uint8Array(Buffer.from(list[indices[0]].info, 'hex')));
+//   let initiatorEntityInfo = MPCApp.decodeEntityInfo(new Uint8Array(Buffer.from(list[indices[0]].info, 'hex')));
 
-  if (initiatorEntityInfo.threshold != threshold || initiatorEntityInfo.totalParticipants != total_participants) {
-    console.log("Verification failed.");
-    await mpcApp.exitApplication();
-    return "";
-  }
+//   if (initiatorEntityInfo.threshold != threshold || initiatorEntityInfo.totalParticipants != total_participants) {
+//     console.log("Verification failed.");
+//     // await mpcApp.exitApplication();
+//     return "";
+//   }
 
-  let result = await mpcApp.verifyEntityInfo({
-    fingerprint: new Uint8Array(Buffer.from(IFP, 'hex')),
-    entityInfo: initiatorEntityInfo, 
-    signature: new Uint8Array(Buffer.from(list[indices[0]].sig, 'hex'))
-  });
+//   let result = await mpcApp.verifyEntityInfo({
+//     fingerprint: new Uint8Array(Buffer.from(IFP, 'hex')),
+//     entityInfo: initiatorEntityInfo, 
+//     signature: new Uint8Array(Buffer.from(list[indices[0]].sig, 'hex'))
+//   });
 
-  if (!result.verified) {
-    console.log("Verification failed.");
-    await mpcApp.exitApplication();
-    return "";
-  }
+//   if (!result.verified) {
+//     console.log("Verification failed.");
+//     // await mpcApp.exitApplication();
+//     return "";
+//   }
 
-  return IFP;
-}
+//   return IFP;
+// }
 
-async function uploadEntityInfoToServer(userType: string, entityInfoRaw: Uint8Array, 
-  SIG: Uint8Array, IFP: string, mpcApp: MPCApp): Promise<boolean> {
+// async function uploadEntityInfoToServer(userType: string, entityInfoRaw: Uint8Array, 
+//   SIG: Uint8Array, IFP: string, mpcApp: MPCApp): Promise<boolean> {
 
-  console.log("\nUploading your entity info and signature to the server...");
-  let response;
+//   console.log("\nUploading your entity info and signature to the server...");
+//   let response;
 
-  if (userType == USER_TYPE_INITIATOR) {
-    response = await axios.post(
-      `${SERVER_URL}/initiate`,
-      { EntityInfo: Buffer.from(entityInfoRaw).toString('hex'), SIG: Buffer.from(SIG).toString('hex') },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+//   if (userType == USER_TYPE_INITIATOR) {
+//     response = await axios.post(
+//       `${SERVER_URL}/initiate`,
+//       { EntityInfo: Buffer.from(entityInfoRaw).toString('hex'), SIG: Buffer.from(SIG).toString('hex') },
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       }
+//     );
 
-    if (response.status != 200) {
-      console.log('Error:', response.data);
-      await mpcApp.exitApplication();
-      return false;
-    }
-  } else {
-    response = await axios.post(
-      `${SERVER_URL}/join`,
-      { EntityInfo: Buffer.from(entityInfoRaw).toString('hex'), SIG: Buffer.from(SIG).toString('hex'), IFP: IFP },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+//     if (response.status != 200) {
+//       console.log('Error:', response.data);
+//       // await mpcApp.exitApplication();
+//       return false;
+//     }
+//   } else {
+//     response = await axios.post(
+//       `${SERVER_URL}/join`,
+//       { EntityInfo: Buffer.from(entityInfoRaw).toString('hex'), SIG: Buffer.from(SIG).toString('hex'), IFP: IFP },
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       }
+//     );
 
-    if (response.status != 200) {
-      console.log('Error:', response.data);
-      await mpcApp.exitApplication();
-      return false;
-    }
-  }
+//     if (response.status != 200) {
+//       console.log('Error:', response.data);
+//       // await mpcApp.exitApplication();
+//       return false;
+//     }
+//   }
 
-  console.log("Data uploaded successfully.");
-  return true;
-}
+//   console.log("Data uploaded successfully.");
+//   return true;
+// }
 
-async function common(mpcApp: MPCApp, managerApp: ManagerApp, 
-  chosenWalletId: Uint8Array, pubKey: Uint8Array, userType: string): Promise<boolean> {
+// async function common(mpcApp: MPCApp, managerApp: ManagerApp, 
+//   chosenWalletId: Uint8Array, pubKey: Uint8Array, userType: string): Promise<boolean> {
     
-  console.log("Fetching details from the device...");
+//   console.log("Fetching details from the device...");
 
-  const deviceInfo = await managerApp.getDeviceInfo();
-  let device_id = deviceInfo.deviceSerial;
+//   const deviceInfo = await managerApp.getDeviceInfo();
+//   let device_id = deviceInfo.deviceSerial;
 
-  const timestamp = Date.now();
-  let random_nonce = await mpcApp.getRandomNonce();
+//   const timestamp = Date.now();
+//   let random_nonce = await mpcApp.getRandomNonce();
 
-  console.log("Details fetched.\n")
+//   console.log("Details fetched.\n")
 
-  const total_participants = parseInt(await input({ message: 'Enter the total number of participants:' }));
-  const threshold = parseInt(await input({ message: 'Enter the threshold: ' }));
+//   const total_participants = parseInt(await input({ message: 'Enter the total number of participants:' }));
+//   const threshold = parseInt(await input({ message: 'Enter the threshold: ' }));
 
-  let IFP = '';
+//   let IFP = '';
 
-  if (userType == USER_TYPE_PARTICIPANT) {
-    IFP = await verifyIFP(threshold, total_participants, mpcApp);
+//   if (userType == USER_TYPE_PARTICIPANT) {
+//     IFP = await verifyIFP(threshold, total_participants, mpcApp);
 
-    if (IFP == "") {
-      return false;
-    }
-  }
+//     if (IFP == "") {
+//       return false;
+//     }
+//   }
 
-  let entity_info: IEntityInfo = MPCApp.createEntityInfo(timestamp, random_nonce.nonce, 
-      threshold, total_participants, device_id, pubKey, chosenWalletId);
+//   let entity_info: IEntityInfo = MPCApp.createEntityInfo(timestamp, random_nonce.nonce, 
+//       threshold, total_participants, device_id, pubKey, chosenWalletId);
 
-  let entity_info_raw = MPCApp.encodeEntityInfo(entity_info);
-  let FP = await computeSHA256(entity_info_raw);
+//   let entity_info_raw = MPCApp.encodeEntityInfo(entity_info);
+//   let FP = await computeSHA256(entity_info_raw);
 
-  console.log(`\nShare the below ${userType == USER_TYPE_INITIATOR ? 'IFP' : 'fingerprint'} with the group members via an alternate channel:`);
-  console.log(Buffer.from(FP).toString('hex'));
-  console.log('\n');
+//   console.log(`\nShare the below ${userType == USER_TYPE_INITIATOR ? 'IFP' : 'fingerprint'} with the group members via an alternate channel:`);
+//   console.log(Buffer.from(FP).toString('hex'));
+//   console.log('\n');
 
-  console.log("\nSigning your entity info...");
+//   console.log("\nSigning your entity info...");
 
-  let signature = await mpcApp.signEntityInfo({fingerprint: FP, entityInfo: entity_info});
-  let SIG = signature.signature;
+//   let signature = await mpcApp.signEntityInfo({fingerprint: FP, entityInfo: entity_info});
+//   let SIG = signature.signature;
     
-  console.log("Signature generated:");
+//   console.log("Signature generated:");
 
-  if (await uploadEntityInfoToServer(userType, entity_info_raw, SIG, IFP, mpcApp) == false) {
-    return false;
-  }
+//   if (await uploadEntityInfoToServer(userType, entity_info_raw, SIG, IFP, mpcApp) == false) {
+//     return false;
+//   }
 
-  let fingerprints;
+//   let fingerprints;
 
-  if (userType == USER_TYPE_INITIATOR) {
-    fingerprints = [Buffer.from(FP).toString('hex')];
-  } else {
-    fingerprints = [Buffer.from(FP).toString('hex'), IFP];
-  }
+//   if (userType == USER_TYPE_INITIATOR) {
+//     fingerprints = [Buffer.from(FP).toString('hex')];
+//   } else {
+//     fingerprints = [Buffer.from(FP).toString('hex'), IFP];
+//   }
 
-  console.log(`Enter the fingerpints of the other ${total_participants - fingerprints.length} participants:`);
+//   console.log(`Enter the fingerpints of the other ${total_participants - fingerprints.length} participants:`);
 
-  for (let i = 0; i < total_participants - fingerprints.length; i++) {
-    // take user input
-    fingerprints.push(await input({ message: `>` }));
-  }
+//   for (let i = 0; i < total_participants - fingerprints.length; i++) {
+//     // take user input
+//     fingerprints.push(await input({ message: `>` }));
+//   }
 
-  console.log("\nWaiting for other participants to join the group...");
+//   console.log("\nWaiting for other participants to join the group...");
 
-  await pollStatus(
-    (userType == USER_TYPE_INITIATOR ? Buffer.from(FP).toString('hex') : IFP), 
-    fingerprints
-  );
+//   await pollStatus(
+//     (userType == USER_TYPE_INITIATOR ? Buffer.from(FP).toString('hex') : IFP), 
+//     fingerprints
+//   );
 
-  console.log("Polling has stopped.");
+//   console.log("Polling has stopped.");
 
-  let response = await axios.get(`${SERVER_URL}/status`, {
-      params: { IFP: (userType == USER_TYPE_INITIATOR ? Buffer.from(FP).toString('hex') : IFP) },
-  });
+//   let response = await axios.get(`${SERVER_URL}/status`, {
+//       params: { IFP: (userType == USER_TYPE_INITIATOR ? Buffer.from(FP).toString('hex') : IFP) },
+//   });
 
-  let list = response.data;
-  let indices = await getFingerpintIndices(list, fingerprints);
+//   let list = response.data;
+//   let indices = await getFingerpintIndices(list, fingerprints);
 
-  if (indices.length != fingerprints.length) {
-    console.log("Some error occured.");
-    await mpcApp.exitApplication();
-    return false;
-  }
+//   if (indices.length != fingerprints.length) {
+//     console.log("Some error occured.");
+//     await mpcApp.exitApplication();
+//     return false;
+//   }
 
-  const participantEntityInfoList = [];
-  const participantSequenceHashList = [];
+//   const participantEntityInfoList = [];
+//   const participantSequenceHashList = [];
 
-  for (let i = 0; i < indices.length; ++i) {
-    let entityInfo: IEntityInfo = MPCApp.decodeEntityInfo(new Uint8Array(Buffer.from(list[indices[i]].info, 'hex')));
-    let sequenceDetails = new Uint8Array(DEVICE_ID_SIZE + PUBLIC_KEY_SIZE + WALLET_ID_SIZE);
+//   for (let i = 0; i < indices.length; ++i) {
+//     let entityInfo: IEntityInfo = MPCApp.decodeEntityInfo(new Uint8Array(Buffer.from(list[indices[i]].info, 'hex')));
+//     let sequenceDetails = new Uint8Array(DEVICE_ID_SIZE + PUBLIC_KEY_SIZE + WALLET_ID_SIZE);
 
-    sequenceDetails.set(entityInfo.deviceId, 0);
-    sequenceDetails.set(entityInfo.pubKey, DEVICE_ID_SIZE);
-    sequenceDetails.set(entityInfo.walletId, DEVICE_ID_SIZE + PUBLIC_KEY_SIZE);
+//     sequenceDetails.set(entityInfo.deviceId, 0);
+//     sequenceDetails.set(entityInfo.pubKey, DEVICE_ID_SIZE);
+//     sequenceDetails.set(entityInfo.walletId, DEVICE_ID_SIZE + PUBLIC_KEY_SIZE);
 
-    participantSequenceHashList.push(Buffer.from(await computeSHA256(sequenceDetails)).toString('hex'));
-  }
+//     participantSequenceHashList.push(Buffer.from(await computeSHA256(sequenceDetails)).toString('hex'));
+//   }
 
-  let sortedIndices = await sortIndices(indices, participantSequenceHashList);
+//   let sortedIndices = await sortIndices(indices, participantSequenceHashList);
 
-  let participant_index = 0;
+//   let participant_index = 0;
 
-  for (let i = 0; i < sortedIndices.length; ++i) {
-    // TODO: Change the verifying logic to be on CLI instead of the device.
+//   for (let i = 0; i < sortedIndices.length; ++i) {
+//     // TODO: Change the verifying logic to be on CLI instead of the device.
 
-    // Compute fingerprint of the entity info
-    let entityInfo: IEntityInfo = MPCApp.decodeEntityInfo(new Uint8Array(Buffer.from(list[sortedIndices[i]].info, 'hex')));
-    let entityInfoRaw = MPCApp.encodeEntityInfo(entityInfo);
-    let fingerprint = await computeSHA256(entityInfoRaw);
+//     // Compute fingerprint of the entity info
+//     let entityInfo: IEntityInfo = MPCApp.decodeEntityInfo(new Uint8Array(Buffer.from(list[sortedIndices[i]].info, 'hex')));
+//     let entityInfoRaw = MPCApp.encodeEntityInfo(entityInfo);
+//     let fingerprint = await computeSHA256(entityInfoRaw);
 
-    if (Buffer.from(fingerprint).toString('hex') == Buffer.from(FP).toString('hex') ||
-      (userType == USER_TYPE_PARTICIPANT && Buffer.from(fingerprint).toString('hex') == IFP)) {
+//     if (Buffer.from(fingerprint).toString('hex') == Buffer.from(FP).toString('hex') ||
+//       (userType == USER_TYPE_PARTICIPANT && Buffer.from(fingerprint).toString('hex') == IFP)) {
 
-    } else {
-      // verify entity info
-      console.log("\nVerifying entity info of participant: ", participant_index + 1);
+//     } else {
+//       // verify entity info
+//       console.log("\nVerifying entity info of participant: ", participant_index + 1);
 
-      if (entityInfo.threshold != threshold || entityInfo.totalParticipants != total_participants) {
-        console.log("Verification failed.");
-        await mpcApp.exitApplication();
-        return false;
-      }
+//       if (entityInfo.threshold != threshold || entityInfo.totalParticipants != total_participants) {
+//         console.log("Verification failed.");
+//         await mpcApp.exitApplication();
+//         return false;
+//       }
 
-      let result = await mpcApp.verifyEntityInfo({
-        fingerprint: fingerprint, 
-        entityInfo: entityInfo, 
-        signature: new Uint8Array(Buffer.from(list[sortedIndices[i]].sig, 'hex'))
-      });
+//       let result = await mpcApp.verifyEntityInfo({
+//         fingerprint: fingerprint, 
+//         entityInfo: entityInfo, 
+//         signature: new Uint8Array(Buffer.from(list[sortedIndices[i]].sig, 'hex'))
+//       });
 
-      if (!result.verified) {
-        console.log("Verification failed.");
-        await mpcApp.exitApplication();
-        return false;
-      }
+//       if (!result.verified) {
+//         console.log("Verification failed.");
+//         await mpcApp.exitApplication();
+//         return false;
+//       }
 
-      participant_index += 1;
-    }
+//       participant_index += 1;
+//     }
 
-    participantEntityInfoList.push(entityInfo);
-  }
+//     participantEntityInfoList.push(entityInfo);
+//   }
 
-  console.log(participantEntityInfoList);
-  return true;
-}
+//   console.log(participantEntityInfoList);
+//   return true;
+// }
 
 const run = async () => {
   setBitcoinJSLib(bitcoinJsLib);
@@ -351,7 +351,7 @@ const run = async () => {
   const mpcApp = await MPCApp.create(connection);
   const managerApp = await ManagerApp.create(connection);
 
-  await mpcApp.exitApplication();
+  // await mpcApp.exitApplication();
   console.log("MPC TSS Application started");  
   
   console.log("Fetching all the wallets present in the device...");
@@ -369,8 +369,12 @@ const run = async () => {
     choices: walletChoices,
   });
 
-  let initAppResult = await mpcApp.initApplication({walletId: chosenWalletId});
-  let pubKey = initAppResult.pubKey;
+  // let initAppResult = await mpcApp.initApplication({walletId: chosenWalletId});
+  // let result = await mpcApp.getPublicKey({walletId: chosenWalletId});
+  // let pubKey = result.pubKey;
+
+  // console.log("Public key fetched.\n");
+  // console.log("Public key: ", Buffer.from(pubKey).toString('hex'));
 
   console.log("DUMMY OPERATION");
   const a = "hello";
@@ -397,12 +401,12 @@ const run = async () => {
     choices: userChoices,
   });
 
-  if (await common(mpcApp, managerApp, chosenWalletId, pubKey, userType) == false) {
-    await mpcApp.exitApplication();
-    return;
-  }
+  // if (await common(mpcApp, managerApp, chosenWalletId, pubKey, userType) == false) {
+  //   await mpcApp.exitApplication();
+  //   return;
+  // }
 
-  await mpcApp.exitApplication();
+  // await mpcApp.exitApplication();
 };
 
 run();

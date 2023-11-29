@@ -31,36 +31,10 @@ export class MPCApp {
     return this.sdk.isSupported();
   }
 
-  public async initApplication(params: operations.IInitApplicationParams) {
-    return this.sdk.runOperation(() =>
-      operations.initApplication(this.sdk, params),
-    );
-  }
-
-  public async getRandomNonce() {
-    return this.sdk.runOperation(() => operations.getRandomNonce(this.sdk));
-  }
-
-  public async verifyEntityInfo(params: operations.IVerifyEntityInfoParams) {
-    return this.sdk.runOperation(() =>
-      operations.verifyEntityInfo(this.sdk, params),
-    );
-  }
-
-  public async signEntityInfo(params: operations.ISignEntityInfoParams) {
-    return this.sdk.runOperation(() =>
-      operations.signEntityInfo(this.sdk, params),
-    );
-  }
-
   public async getPublicKey(params: operations.IGetPublicKeyParams) {
     return this.sdk.runOperation(() =>
       operations.getPublicKey(this.sdk, params),
     );
-  }
-
-  public async exitApplication() {
-    return this.sdk.runOperation(() => operations.exitApplication(this.sdk));
   }
 
   public async dummy(params: operations.IDummyParams) {
@@ -75,25 +49,25 @@ export class MPCApp {
     await this.sdk.sendAbort();
   }
 
-  public static createEntityInfo(
-    timestamp: number,
-    randomNonce: Uint8Array,
-    threshold: number,
-    totalParticipants: number,
-    deviceId: Uint8Array,
-    pubKey: Uint8Array,
-    walletId: Uint8Array,
-  ) {
-    return entityInfo.EntityInfo.create({
-      timestamp,
-      randomNonce,
-      threshold,
-      totalParticipants,
-      deviceId,
-      pubKey,
-      walletId,
-    });
-  }
+  // public static createEntityInfo(
+  //   timestamp: number,
+  //   randomNonce: Uint8Array,
+  //   threshold: number,
+  //   totalParticipants: number,
+  //   deviceId: Uint8Array,
+  //   pubKey: Uint8Array,
+  //   walletId: Uint8Array,
+  // ) {
+  //   return entityInfo.EntityInfo.create({
+  //     timestamp,
+  //     randomNonce,
+  //     threshold,
+  //     totalParticipants,
+  //     deviceId,
+  //     pubKey,
+  //     walletId,
+  //   });
+  // }
 
   public static encodeEntityInfo(entityInfoArg: entityInfo.EntityInfo) {
     return entityInfo.EntityInfo.encode(entityInfoArg).finish();
