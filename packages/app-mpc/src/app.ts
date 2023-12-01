@@ -41,6 +41,10 @@ export class MPCApp {
     return this.sdk.runOperation(() => operations.dummy(this.sdk, params));
   }
 
+  public async groupSetup(params: operations.IGroupSetupParams) {
+    return this.sdk.runOperation(() => operations.groupSetup(this.sdk, params));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }
@@ -49,25 +53,28 @@ export class MPCApp {
     await this.sdk.sendAbort();
   }
 
-  // public static createEntityInfo(
-  //   timestamp: number,
-  //   randomNonce: Uint8Array,
-  //   threshold: number,
-  //   totalParticipants: number,
-  //   deviceId: Uint8Array,
-  //   pubKey: Uint8Array,
-  //   walletId: Uint8Array,
-  // ) {
-  //   return entityInfo.EntityInfo.create({
-  //     timestamp,
-  //     randomNonce,
-  //     threshold,
-  //     totalParticipants,
-  //     deviceId,
-  //     pubKey,
-  //     walletId,
-  //   });
-  // }
+  public static createEntityInfo(
+    timestamp: number,
+    randomNonce: Uint8Array,
+    threshold: number,
+    totalParticipants: number,
+    deviceId: Uint8Array,
+    pubKey: Uint8Array,
+    walletId: Uint8Array,
+  ) {
+    const participantDeviceInfo = entityInfo.ParticipantDeviceInfo.create({
+      deviceId,
+      pubKey,
+      walletId,
+    });
+    return entityInfo.EntityInfo.create({
+      timestamp,
+      randomNonce,
+      threshold,
+      totalParticipants,
+      deviceInfo: participantDeviceInfo,
+    });
+  }
 
   public static encodeEntityInfo(entityInfoArg: entityInfo.EntityInfo) {
     return entityInfo.EntityInfo.encode(entityInfoArg).finish();

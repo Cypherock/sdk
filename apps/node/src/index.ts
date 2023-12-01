@@ -7,7 +7,7 @@ import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as bitcoinJsLib from 'bitcoinjs-lib';
 import * as nearApiJs from 'near-api-js';
 import { setBitcoinJSLib, BtcApp } from '@cypherock/sdk-app-btc';
-import { MPCApp, IEntityInfo } from '@cypherock/sdk-app-mpc';
+import { MPCApp, IEntityInfo, IGroupInfo, IParticipantDeviceInfo } from '@cypherock/sdk-app-mpc';
 import { setEthersLib } from '@cypherock/sdk-app-evm';
 import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { ethers } from 'ethers';
@@ -17,18 +17,19 @@ const { subtle } = webcrypto;
 
 import { input, select } from '@inquirer/prompts';
 import axios from 'axios';
+import { GroupInfo } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/entity_info';
 
-// const SERVER_URL = "http://127.0.0.1:5000";
-// const DEVICE_ID_SIZE = 32;
-// const PUBLIC_KEY_SIZE = 33;
-// const WALLET_ID_SIZE = 32;
-// const USER_TYPE_INITIATOR = "initiator";
-// const USER_TYPE_PARTICIPANT = "participant";
+const SERVER_URL = "http://127.0.0.1:5000";
+const DEVICE_ID_SIZE = 32;
+const PUBLIC_KEY_SIZE = 33;
+const WALLET_ID_SIZE = 32;
+const USER_CHOICE_CREATE_GROUP = "create";
+const USER_CHOICE_CHECK_GROUPS = "check";
 
-// async function computeSHA256(arrayBuffer: Uint8Array): Promise<Uint8Array> {
-//     const hashBuffer = await subtle.digest("SHA-256", arrayBuffer);
-//     return new Uint8Array(hashBuffer);
-// }
+async function computeSHA256(arrayBuffer: Uint8Array): Promise<Uint8Array> {
+    const hashBuffer = await subtle.digest("SHA-256", arrayBuffer);
+    return new Uint8Array(hashBuffer);
+}
 
 // async function getFingerpintIndices(list: any[], fingerprints: string[]): Promise<number[]> {
 //   let hashes = [];
@@ -319,6 +320,35 @@ import axios from 'axios';
 //   return true;
 // }
 
+async function getGroupInfo(entityInfoList: IEntityInfo[], fingerprints: string[],
+  threshold: number, totalParticipants: number): Promise<IGroupInfo> {
+
+  let indexes = [];
+
+  let participants: IParticipantDeviceInfo[] = [];
+
+  for (let i = 0; i < totalParticipants; i++) {
+    indexes.push(i);
+  }
+
+  // sort the indexes array based on the fingerprints array
+  indexes.sort((a, b) => fingerprints[a].localeCompare(fingerprints[b]));
+
+  for (let i = 0; i < indexes.length; i++) {
+    participants.push({
+      deviceId: entityInfoList[indexes[i]].deviceInfo?.deviceId ?? new Uint8Array(),
+      pubKey: entityInfoList[indexes[i]].deviceInfo?.pubKey ?? new Uint8Array(),
+      walletId: entityInfoList[indexes[i]].deviceInfo?.walletId ?? new Uint8Array(),
+    });
+  }
+
+  return {
+    participants: participants,
+    threshold: threshold,
+    totalParticipants: totalParticipants,
+  };
+}
+
 const run = async () => {
   setBitcoinJSLib(bitcoinJsLib);
   setEthersLib(ethers);
@@ -369,44 +399,169 @@ const run = async () => {
     choices: walletChoices,
   });
 
-  // let initAppResult = await mpcApp.initApplication({walletId: chosenWalletId});
-  // let result = await mpcApp.getPublicKey({walletId: chosenWalletId});
-  // let pubKey = result.pubKey;
-
-  // console.log("Public key fetched.\n");
-  // console.log("Public key: ", Buffer.from(pubKey).toString('hex'));
-
-  console.log("DUMMY OPERATION");
-  const a = "hello";
-  const dummyResult = await mpcApp.dummy({
-    onFirstResponse: (num) => {
-      console.log('First response:', num, a);
-    },
-  });
-  console.log('Dummy result:', dummyResult.condition);
+  let result = await mpcApp.getPublicKey({walletId: chosenWalletId});
+  let pubKey = result.pubKey;
 
   const userChoices = [
     {
-      name: 'Join a group',
-      value: 'participant',
+      name: 'Create a group',
+      value: USER_CHOICE_CREATE_GROUP,
     },
     {
-      name: 'Create a group',
-      value: 'initiator',
+      name: 'Check existing groups',
+      value: USER_CHOICE_CHECK_GROUPS,
     }
   ]
 
-  const userType = await select({
+  const userChoice = await select({
     message: 'Choose an option:',
     choices: userChoices,
   });
 
-  // if (await common(mpcApp, managerApp, chosenWalletId, pubKey, userType) == false) {
-  //   await mpcApp.exitApplication();
-  //   return;
-  // }
+  if (userChoice === USER_CHOICE_CREATE_GROUP) {
+    const total_participants = parseInt(await input({ message: 'Enter the total number of participants:' }));
+    const threshold = parseInt(await input({ message: 'Enter the threshold: ' }));
+    let entityInfoList: IEntityInfo[] = [];
+    let fingerprints: string[] = [];
 
-  // await mpcApp.exitApplication();
+    const onEntityInfo = async (entityInfo: IEntityInfo) => {
+      // console.log(entityInfo);
+      // compute fingerprint of the entity info
+      const entityInfoRaw = MPCApp.encodeEntityInfo(entityInfo);
+      const fingerprint = await computeSHA256(entityInfoRaw);
+
+      // upload entity info to the server
+      const response = await axios.post(
+        `${SERVER_URL}/entityInfo`,
+        { entityInfo: Buffer.from(entityInfoRaw).toString('hex'), fingerprint: Buffer.from(fingerprint).toString('hex') },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.status != 200) {
+        console.log('Error:', response.data);
+        return [{fingerprint: new Uint8Array(), entityInfo: MPCApp.createEntityInfo(0, new Uint8Array(), 0, 0, new Uint8Array(), new Uint8Array(), new Uint8Array())}];
+      }
+
+      console.log(`\nShare the below fingerprint with the group members via an alternate channel:`);
+      console.log(Buffer.from(fingerprint).toString('hex'));
+      console.log('\n');
+
+      console.log(`Enter the fingerpints of the other ${total_participants - 1} participants:`);
+
+      for (let i = 0; i < total_participants - fingerprints.length; i++) {
+        // take user input
+        fingerprints.push(await input({ message: `>` }));
+      }
+
+      console.log("\nWaiting for other participants to join the group...");
+
+      // for each fingerprint, make a get request to /entityInfo endpoint
+      for (let i = 0; i < fingerprints.length; i++) {
+        let response = await axios.get(`${SERVER_URL}/entityInfo`, {
+          params: { fingerprint: fingerprints[i] }
+        });
+
+        if (response.status != 200) {
+          console.log('Error:', response.data);
+          return [{fingerprint: new Uint8Array(), entityInfo: MPCApp.createEntityInfo(0, new Uint8Array(), 0, 0, new Uint8Array(), new Uint8Array(), new Uint8Array())}];
+        }
+
+        entityInfoList.push(MPCApp.decodeEntityInfo(new Uint8Array(Buffer.from(response.data, 'hex'))));
+      }
+
+      let participants = [];
+
+      for (let i = 0; i < entityInfoList.length; i++) {
+        participants.push({
+          fingerprint: new Uint8Array(Buffer.from(fingerprints[i], 'hex')),
+          entityInfo: entityInfoList[i]
+        });
+      }
+
+      fingerprints.push(Buffer.from(fingerprint).toString('hex'));
+      entityInfoList.push(entityInfo);
+
+      return participants;
+    }
+
+    const result = await mpcApp.groupSetup({
+      walletId: chosenWalletId,
+      threshold: threshold,
+      totalParticipants: total_participants,
+      onEntityInfo: onEntityInfo,
+    });
+
+    console.log("Group setup completed.");
+    console.log("Group ID: ", Buffer.from(result.groupId).toString('hex'));
+    console.log("Signature: ", Buffer.from(result.signature).toString('hex'));
+
+    let groupInfo: IGroupInfo = await getGroupInfo(entityInfoList, fingerprints, threshold, total_participants);
+    let groupInfoRaw = GroupInfo.encode(groupInfo).finish();
+
+    console.log("\nUploading group info to the server...")
+
+    const response = await axios.post(
+      `${SERVER_URL}/groupInfo`,
+      { groupInfo: Buffer.from(groupInfoRaw).toString('hex'),
+        groupID: Buffer.from(result.groupId).toString('hex'),
+        signature: Buffer.from(result.signature).toString('hex'),
+        pubKey: Buffer.from(pubKey).toString('hex') 
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.status != 200) {
+      console.log('Error:', response.data);
+      return;
+    }
+
+    console.log("Group info uploaded successfully.");
+
+  } else if (userChoice === USER_CHOICE_CHECK_GROUPS) {
+    // send a get request to /groupID endpoint and pass pubKey, result will be a list of groupIDs
+    const response = await axios.get(`${SERVER_URL}/groupID`, {
+      params: { pubKey: Buffer.from(pubKey).toString('hex') }
+    });
+
+    if (response.status != 200) {
+      console.log('Error:', response.data);
+      return;
+    }
+
+    // check type of response.data to be an array of strings
+    if (!Array.isArray(response.data)) {
+      console.log("Error: Invalid response from the server.");
+      return;
+    }
+
+    const groupIDs: string[] = response.data;
+
+    if (groupIDs.length == 0) {
+      console.log("No groups found.");
+      return;
+    }
+
+    // ask the user to choose a groupID
+    const groupIDChoices = groupIDs.map((groupID, index) => ({
+      name: `${index + 1}. ${groupID}`,
+      value: groupID,
+    }));
+
+    const chosenGroupID = await select({
+      message: 'Select one of your groups?',
+      choices: groupIDChoices,
+    }); 
+
+    await mpcApp.dummy({});
+  }
 };
 
 run();
