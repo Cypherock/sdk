@@ -1,12 +1,13 @@
-import HID from 'node-hid';
+import * as HID from 'node-hid';
 import * as uuid from 'uuid';
 import { usb } from 'usb';
 import { IDevice, PoolData } from '@cypherock/sdk-interfaces';
 import { getAvailableDevices } from './connection';
+import { logger } from '../logger';
 
 // eslint-disable-next-line
 export class DataListener {
-  private readonly connection: HID.HID;
+  private readonly connection: HID.HIDAsync;
 
   private readonly device: IDevice;
 
@@ -20,8 +21,12 @@ export class DataListener {
 
   private readonly onSomeDeviceDisconnectBinded: (device: usb.Device) => void;
 
+  private readTimeoutId: NodeJS.Timeout | undefined;
+
+  private readPromise: Promise<void> | undefined;
+
   constructor(params: {
-    connection: HID.HID;
+    connection: HID.HIDAsync;
     device: IDevice;
     onClose?: () => void;
     onError?: (err: Error) => void;
@@ -37,9 +42,15 @@ export class DataListener {
     this.startListening();
   }
 
-  public destroy() {
+  public async destroy() {
+    if (this.readPromise) {
+      await this.readPromise;
+    }
+
     this.stopListening();
-    this.connection.close();
+    if (this.onCloseCallback) {
+      this.onCloseCallback();
+    }
   }
 
   public isListening() {
@@ -54,13 +65,21 @@ export class DataListener {
     return [...this.pool];
   }
 
+  private clearReadInterval() {
+    if (this.readTimeoutId) clearTimeout(this.readTimeoutId);
+  }
+
+  private setReadInterval() {
+    this.readTimeoutId = setTimeout(this.onRead.bind(this), 0);
+  }
+
   /**
    * Starts listening to all the events
    */
   private startListening() {
     this.listening = true;
 
-    this.connection.addListener('data', this.onData.bind(this));
+    this.setReadInterval();
     this.connection.addListener('close', this.onClose.bind(this));
     this.connection.addListener('error', this.onError.bind(this));
 
@@ -71,7 +90,8 @@ export class DataListener {
    * Stop listening to all the events
    */
   private stopListening() {
-    this.connection.removeListener('data', this.onData.bind(this));
+    this.clearReadInterval();
+
     this.connection.removeListener('close', this.onClose.bind(this));
     this.connection.removeListener('error', this.onError.bind(this));
     this.connection.removeAllListeners();
@@ -80,11 +100,36 @@ export class DataListener {
     this.listening = false;
   }
 
+  private async onRead() {
+    if (!this.listening) {
+      this.clearReadInterval();
+      return;
+    }
+
+    let resolvePromise: (() => void) | undefined;
+
+    this.readPromise = new Promise(resolve => {
+      resolvePromise = resolve;
+    });
+
+    try {
+      const data = await this.connection.read(300);
+      this.onData(data as any);
+    } catch (error) {
+      logger.error('Error while reading data from device');
+      logger.error(error);
+    } finally {
+      if (resolvePromise) resolvePromise();
+      this.setReadInterval();
+    }
+  }
+
   private async onData(data: Buffer) {
     this.pool.push({ id: uuid.v4(), data: Uint8Array.from(data) });
   }
 
   private async onClose() {
+    this.stopListening();
     if (this.onCloseCallback) {
       this.onCloseCallback();
     }
@@ -110,8 +155,8 @@ export class DataListener {
     );
 
     if (!isDeviceConnected) {
+      await this.destroy();
       this.onClose();
-      this.destroy();
     }
   }
 }
