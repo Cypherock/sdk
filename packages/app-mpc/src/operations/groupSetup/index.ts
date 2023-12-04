@@ -36,8 +36,9 @@ export const groupSetup = async (
 
   if (!participantDetails) {
     return {
-      groupId: new Uint8Array(),
+      groupKeyInfo: { groupPubKey: new Uint8Array(), groupShare: undefined },
       signature: new Uint8Array(),
+      completed: false,
     };
   }
 
@@ -52,8 +53,9 @@ export const groupSetup = async (
 
   if (!verifyParticipantInfoList.verified) {
     return {
-      groupId: new Uint8Array(),
+      groupKeyInfo: { groupPubKey: new Uint8Array(), groupShare: undefined },
       signature: new Uint8Array(),
+      completed: false,
     };
   }
 
@@ -65,8 +67,56 @@ export const groupSetup = async (
   assertOrThrowInvalidResult(getGroupId?.groupId);
   assertOrThrowInvalidResult(getGroupId?.signature);
 
+  await params.onGroupID?.(getGroupId.groupId, getGroupId.signature);
+
+  await helper.sendQuery({
+    getShareData: {},
+  });
+
+  const { getShareData } = await helper.waitForResult();
+  assertOrThrowInvalidResult(getShareData?.signedShareData);
+
+  const signedShareDataList = await params.onShareData?.(
+    getShareData.signedShareData,
+  );
+  if (!signedShareDataList) {
+    return {
+      groupKeyInfo: { groupPubKey: new Uint8Array(), groupShare: undefined },
+      signature: new Uint8Array(),
+      completed: false,
+    };
+  }
+
+  await helper.sendQuery({
+    getIndividualPublicKey: { shareDataList: signedShareDataList },
+  });
+
+  const { getIndividualPublicKey } = await helper.waitForResult();
+  assertOrThrowInvalidResult(getIndividualPublicKey?.signedPubKey);
+
+  const signedPubKeyList = await params.onIndividualPublicKey?.(
+    getIndividualPublicKey.signedPubKey,
+  );
+
+  if (!signedPubKeyList) {
+    return {
+      groupKeyInfo: { groupPubKey: new Uint8Array(), groupShare: undefined },
+      signature: new Uint8Array(),
+      completed: false,
+    };
+  }
+
+  await helper.sendQuery({
+    getGroupPublicKey: { signedPubKeyList },
+  });
+
+  const { getGroupPublicKey } = await helper.waitForResult();
+  assertOrThrowInvalidResult(getGroupPublicKey?.groupKey);
+  assertOrThrowInvalidResult(getGroupPublicKey?.signature);
+
   return {
-    groupId: getGroupId.groupId,
-    signature: getGroupId.signature,
+    groupKeyInfo: getGroupPublicKey.groupKey,
+    signature: getGroupPublicKey.signature,
+    completed: true,
   };
 };

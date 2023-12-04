@@ -2,7 +2,7 @@ import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { SDK } from '@cypherock/sdk-core';
 
 import * as operations from './operations';
-import * as entityInfo from './proto/generated/mpc_poc/entity_info';
+import * as common from './proto/generated/mpc_poc/common';
 
 export class MPCApp {
   private readonly sdk: SDK;
@@ -62,12 +62,12 @@ export class MPCApp {
     pubKey: Uint8Array,
     walletId: Uint8Array,
   ) {
-    const participantDeviceInfo = entityInfo.ParticipantDeviceInfo.create({
+    const participantDeviceInfo = common.ParticipantDeviceInfo.create({
       deviceId,
       pubKey,
       walletId,
     });
-    return entityInfo.EntityInfo.create({
+    return common.EntityInfo.create({
       timestamp,
       randomNonce,
       threshold,
@@ -76,11 +76,11 @@ export class MPCApp {
     });
   }
 
-  public static encodeEntityInfo(entityInfoArg: entityInfo.EntityInfo) {
-    return entityInfo.EntityInfo.encode(entityInfoArg).finish();
+  public static encodeEntityInfo(entityInfoArg: common.EntityInfo) {
+    return common.EntityInfo.encode(entityInfoArg).finish();
   }
 
   public static decodeEntityInfo(encodedEntityInfo: Uint8Array) {
-    return entityInfo.EntityInfo.decode(encodedEntityInfo);
+    return common.EntityInfo.decode(encodedEntityInfo);
   }
 }
