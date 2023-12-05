@@ -31,6 +31,10 @@ export class SolanaApp {
     );
   }
 
+  public async signTxn(params: operations.ISignTxnParams) {
+    return this.sdk.runOperation(() => operations.signTxn(this.sdk, params));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }
