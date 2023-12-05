@@ -25,6 +25,7 @@
     "@cypherock/sdk-app-evm": "workspace:^",
     "@cypherock/sdk-app-manager": "workspace:^",
     "@cypherock/sdk-app-near": "workspace:^",
+    "@cypherock/sdk-app-solana": "workspace:^",
     "@cypherock/sdk-core": "workspace:^",
     "@cypherock/sdk-hw-hid": "workspace:^",
     "@cypherock/sdk-hw-serialport": "workspace:^",
