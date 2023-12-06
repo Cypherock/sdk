@@ -1,5 +1,11 @@
 # @cypherock/sdk-hw-hid
 
+## 0.0.18
+
+### Patch Changes
+
+- [#89](https://github.com/Cypherock/sdk/pull/89) [`a2a3780`](https://github.com/Cypherock/sdk/commit/a2a37809ebae794ce3e51388a6ce7352ff7981ec) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fix linux app crashing
+
 ## 0.0.17
 
 ### Patch Changes

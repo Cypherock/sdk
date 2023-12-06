@@ -1,5 +1,12 @@
 # nodejs-test
 
+## 0.0.41
+
+### Patch Changes
+
+- Updated dependencies [[`a2a3780`](https://github.com/Cypherock/sdk/commit/a2a37809ebae794ce3e51388a6ce7352ff7981ec)]:
+  - @cypherock/sdk-hw-hid@0.0.18
+
 ## 0.0.40
 
 ### Patch Changes
