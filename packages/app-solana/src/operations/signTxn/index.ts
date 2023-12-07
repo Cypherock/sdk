@@ -18,6 +18,7 @@ import {
   logger as rootLogger,
   getSolanaWeb3,
   base58Encode,
+  base58Decode,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
 
@@ -76,10 +77,16 @@ export const signTxn = async (
   )();
 
   await helper.sendQuery({
+    verify: {},
+  });
+  const verifyResult = await helper.waitForResult();
+  assertOrThrowInvalidResult(verifyResult.verify);
+
+  const blockHashBuffer = base58Decode(latestBlockHash);
+  console.log({ latestBlockHash, blockHashHex: blockHashBuffer });
+  await helper.sendQuery({
     signature: {
-      blockhash: hexToUint8Array(
-        Buffer.from(latestBlockHash, 'base64').toString('hex'),
-      ),
+      blockhash: blockHashBuffer,
     },
   });
   const result = await helper.waitForResult();
@@ -90,6 +97,7 @@ export const signTxn = async (
   const signature = uint8ArrayToHex(result.signature.signature);
 
   let serializedTxn: string | undefined;
+  let serializedTxnHex: string | undefined;
 
   if (params.serializeTxn) {
     const solanaWeb3 = getSolanaWeb3();
@@ -105,11 +113,14 @@ export const signTxn = async (
       transaction.feePayer,
       Buffer.from(signature, 'hex'),
     );
-    serializedTxn = base58Encode(transaction.serialize());
+    const serializedTxnBuffer = transaction.serialize();
+    serializedTxnHex = uint8ArrayToHex(serializedTxnBuffer);
+    serializedTxn = base58Encode(serializedTxnBuffer);
   }
 
   return {
     signature,
     serializedTxn,
+    serializedTxnHex,
   };
 };

@@ -21,4 +21,5 @@ export interface ISignTxnParams {
 export interface ISignTxnResult {
   signature: string;
   serializedTxn?: string;
+  serializedTxnHex?: string;
 }
