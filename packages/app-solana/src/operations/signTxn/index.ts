@@ -83,7 +83,6 @@ export const signTxn = async (
   assertOrThrowInvalidResult(verifyResult.verify);
 
   const blockHashBuffer = base58Decode(latestBlockHash);
-  console.log({ latestBlockHash, blockHashHex: blockHashBuffer });
   await helper.sendQuery({
     signature: {
       blockhash: blockHashBuffer,
