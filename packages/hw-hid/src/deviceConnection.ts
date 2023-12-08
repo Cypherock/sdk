@@ -10,7 +10,6 @@ import HID from 'node-hid';
 import * as uuid from 'uuid';
 
 import { getAvailableDevices, DataListener } from './helpers';
-
 import { logger } from './logger';
 
 export default class DeviceConnection implements IDeviceConnection {
@@ -18,7 +17,7 @@ export default class DeviceConnection implements IDeviceConnection {
 
   protected sequenceNumber: number;
 
-  protected connection: HID.HID;
+  protected connection: HID.HIDAsync;
 
   protected initialized: boolean;
 
@@ -28,14 +27,14 @@ export default class DeviceConnection implements IDeviceConnection {
 
   private readonly device: IDevice;
 
-  constructor(device: IDevice) {
+  constructor(device: IDevice, connection: HID.HIDAsync) {
     this.device = { ...device };
     this.connectionId = uuid.v4();
     this.sequenceNumber = 0;
 
-    this.connection = new HID.HID(this.device.path);
     this.initialized = true;
     this.isPortOpen = true;
+    this.connection = connection;
     this.dataListener = new DataListener({
       device: this.device,
       connection: this.connection,
@@ -49,7 +48,8 @@ export default class DeviceConnection implements IDeviceConnection {
   }
 
   public static async connect(device: IDevice) {
-    return new DeviceConnection(device);
+    const connection = await HID.HIDAsync.open(device.path);
+    return new DeviceConnection(device, connection);
   }
 
   public static async list() {
@@ -62,7 +62,8 @@ export default class DeviceConnection implements IDeviceConnection {
     if (devices.length <= 0)
       throw new DeviceConnectionError(DeviceConnectionErrorType.NOT_CONNECTED);
 
-    return new DeviceConnection(devices[0]);
+    const connection = await HID.HIDAsync.open(devices[0].path);
+    return new DeviceConnection(devices[0], connection);
   }
 
   public static async getAvailableConnection() {
@@ -98,7 +99,15 @@ export default class DeviceConnection implements IDeviceConnection {
    * Destroyes the connection and stop listening to the data.
    */
   public async destroy() {
-    this.dataListener.destroy();
+    if (!this.isPortOpen) return;
+
+    await this.dataListener.destroy();
+    try {
+      await this.connection.close();
+    } catch (error) {
+      logger.warn('Error while closing device connection');
+      logger.warn(error);
+    }
   }
 
   /**
@@ -121,7 +130,12 @@ export default class DeviceConnection implements IDeviceConnection {
    * Writes a given data string (in hex) to the device.
    */
   public async send(data: Uint8Array) {
-    this.connection.write(Buffer.from([0x00, ...data]));
+    const dataToWrite = [
+      0x00,
+      ...data,
+      ...new Array(64 - data.length).fill(0x00),
+    ];
+    await this.connection.write(Buffer.from(dataToWrite));
   }
 
   public async receive() {
