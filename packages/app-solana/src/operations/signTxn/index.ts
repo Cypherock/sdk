@@ -72,17 +72,17 @@ export const signTxn = async (
 
   await helper.sendInChunks(txnBytes, 'txnData', 'dataAccepted');
 
-  const latestBlockHash = await (
-    params.getLatestBlockHash ?? getLatestBlockHash
-  )();
-
   await helper.sendQuery({
     verify: {},
   });
   const verifyResult = await helper.waitForResult();
   assertOrThrowInvalidResult(verifyResult.verify);
 
+  const latestBlockHash = await (
+    params.getLatestBlockHash ?? getLatestBlockHash
+  )();
   const blockHashBuffer = base58Decode(latestBlockHash);
+
   await helper.sendQuery({
     signature: {
       blockhash: blockHashBuffer,
