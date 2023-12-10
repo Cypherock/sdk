@@ -17,7 +17,7 @@ const { subtle } = webcrypto;
 
 import { input, select } from '@inquirer/prompts';
 import axios from 'axios';
-import { GroupInfo, ShareData } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/common';
+import { GroupInfo, GroupKeyInfo, ShareData } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/common';
 import { SignedShareData } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/common';
 import { SignedPublicKey } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/group_setup';
 
@@ -28,14 +28,33 @@ const WALLET_ID_SIZE = 32;
 const USER_CHOICE_CREATE_GROUP = "create";
 const USER_CHOICE_CHECK_GROUPS = "check";
 
+const USER_ACTION_GENERATE_RECEIVE_ADDRESS = "generateReceiveAddress";
+const USER_ACTION_VIEW_GROUP_PUBLIC_KEY = "viewGroupPublicKey";
+
 async function computeSHA256(arrayBuffer: Uint8Array): Promise<Uint8Array> {
     const hashBuffer = await subtle.digest("SHA-256", arrayBuffer);
     return new Uint8Array(hashBuffer);
 }
 
+async function getDerivationPath() {
+    // Prompt the user for a comma-separated list of numbers
+    const response = await input({
+        message: 'Enter the derivation path (as numbers separated by commas):'
+    });
+
+    // Extract numbers from the input string and parse them into an array of numbers
+    const numbers = response.split(',').map(n => parseFloat(n.trim()));
+
+    // Handle the case where some entries are not valid numbers
+    const validNumbers = numbers.filter(n => !isNaN(n));
+
+    console.log('Derivation path:', validNumbers);
+    return validNumbers;
+}
+
 async function fetchShareData(groupID: Uint8Array, pubKey: Uint8Array): Promise<SignedShareData> {
     try {
-        const response = await axios.get(`${SERVER_URL}/shareData`, {
+         const response = await axios.get(`${SERVER_URL}/shareData`, {
             params: { groupID: Buffer.from(groupID).toString('hex'),
                       pubKey: Buffer.from(pubKey).toString('hex') }
         });
@@ -45,7 +64,7 @@ async function fetchShareData(groupID: Uint8Array, pubKey: Uint8Array): Promise<
         }
     } catch (error: any) {
         if (error.response && error.response.status === 404) {
-            console.log(`Polling for everyone's share data...`);
+            console.log(`...`);
             await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
             return fetchShareData(groupID, pubKey); // Retry
         } else {
@@ -68,7 +87,7 @@ async function fetchIndividualPublicKey(groupID: Uint8Array, pubKey: Uint8Array)
       }
   } catch (error: any) {
       if (error.response && error.response.status === 404) {
-          console.log(`Polling for everyone's individual public key...`);
+          console.log(`...`);
           await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
           return fetchIndividualPublicKey(groupID, pubKey); // Retry
       } else {
@@ -106,6 +125,60 @@ async function getGroupInfo(entityInfoList: IEntityInfo[], fingerprints: string[
     threshold: threshold,
     totalParticipants: totalParticipants,
   };
+}
+
+async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp) {
+  // get group info from the server
+  let response = await axios.get(`${SERVER_URL}/groupInfo`, {
+    params: { groupID: Buffer.from(groupID).toString('hex'),
+              pubKey: Buffer.from(pubKey).toString('hex') }
+  });
+
+  if (response.status != 200) {
+    console.log('Error:', response.data);
+    return;
+  }
+
+  const groupInfo: IGroupInfo = GroupInfo.decode(new Uint8Array(Buffer.from(response.data['groupInfo'], 'hex')));
+  const groupInfoSignature = new Uint8Array(Buffer.from(response.data['signature'], 'hex'));
+
+  // get my share of the group secret polynomial from the server
+  response = await axios.get(`${SERVER_URL}/share`, {
+    params: { groupID: Buffer.from(groupID).toString('hex'),
+              pubKey: Buffer.from(pubKey).toString('hex') }
+  });
+
+  if (response.status != 200) {
+    console.log('Error:', response.data);
+    return;
+  }
+
+  const share = GroupKeyInfo.decode(new Uint8Array(Buffer.from(response.data['share'], 'hex')));
+
+  const userChoices = [
+    {
+      name: 'Generate receive address',
+      value: USER_ACTION_GENERATE_RECEIVE_ADDRESS,
+    },
+    {
+      name: 'View Group Public Key',
+      value: USER_ACTION_VIEW_GROUP_PUBLIC_KEY,
+    }
+  ]
+
+  const userChoice = await select({
+    message: 'Choose an option:',
+    choices: userChoices,
+  });
+
+  if (userChoice === USER_ACTION_GENERATE_RECEIVE_ADDRESS) {
+    // ask user to enter the derivation path
+    const derivationPath = await getDerivationPath();
+
+  }
+  else if (userChoice === USER_ACTION_VIEW_GROUP_PUBLIC_KEY) {
+    console.log("Group public key: ", Buffer.from(share.groupPubKey).toString('hex'));
+  }
 }
 
 const run = async () => {
@@ -177,9 +250,14 @@ const run = async () => {
     choices: userChoices,
   });
 
+  console.log('\n');
+
   if (userChoice === USER_CHOICE_CREATE_GROUP) {
     const total_participants = parseInt(await input({ message: 'Enter the total number of participants:' }));
     const threshold = parseInt(await input({ message: 'Enter the threshold: ' }));
+
+    console.log("Check device's screen.");
+
     let entityInfoList: IEntityInfo[] = [];
     let fingerprints: string[] = [];
 
@@ -213,10 +291,13 @@ const run = async () => {
 
       console.log(`Enter the fingerpints of the other ${total_participants - 1} participants:`);
 
+
       for (let i = 0; i < total_participants - fingerprints.length; i++) {
         // take user input
         fingerprints.push(await input({ message: `>` }));
       }
+
+      console.log("\nMatch the fingerprints you entered on the device's screen\n");
 
       console.log("\nWaiting for other participants to join the group...");
 
@@ -253,8 +334,8 @@ const run = async () => {
       return participants;
     }
 
-    let globalGroupID: Uint8Array;
-    let groupInfoSignature: Uint8Array;
+    let globalGroupID: Uint8Array = new Uint8Array();
+    let groupInfoSignature: Uint8Array = new Uint8Array();
 
     const onGroupID = async (groupID: Uint8Array, signature: Uint8Array) => {
       console.log("Group setup completed.");
@@ -294,7 +375,9 @@ const run = async () => {
     const onShareData = async (shareData: SignedShareData) => {
       const shareDataRaw = SignedShareData.encode(shareData).finish();
 
-      console.log("\nUploading share data to the server...")
+      console.log("\nDKG process started...")
+
+      console.log('\nUploading your encrypted ShareData to the server...')
       const response = await axios.post(
         `${SERVER_URL}/shareData`,
         { 
@@ -314,9 +397,9 @@ const run = async () => {
         return [];
       }
 
-      console.log("Share data uploaded successfully.");
+      console.log("Broadcast successful.");
 
-      console.log("Waiting for other participants to upload their share data...");
+      console.log("Waiting for the other participants to upload their ShareData...");
 
       const shareDataList = await Promise.all(participantsPublicKeys.map(pubKey => fetchShareData(globalGroupID, pubKey)));
 
@@ -324,10 +407,10 @@ const run = async () => {
     }
 
     const onIndividualPublicKey = async (individualPublicKey: SignedPublicKey) => {
-      console.log("My individual public key: ", individualPublicKey);
       const individualPublicKeyRaw = SignedPublicKey.encode(individualPublicKey).finish();
 
-      console.log("\nUploading individual public key to the server...")
+      console.log("\nUploading your Qi to the server...")
+
       const response = await axios.post(
         `${SERVER_URL}/individualPublicKey`,
         { 
@@ -347,11 +430,10 @@ const run = async () => {
         return [];
       }
 
-      console.log("Individual public key uploaded successfully.");
-      console.log("Waiting for other participants to upload their individual public keys...");
+      console.log("Qi uploaded successfully.");
+      console.log("Waiting for the other participants to upload their Qi...");
 
       let individualPublicKeyList = await Promise.all(participantsPublicKeys.map(pubKey => fetchIndividualPublicKey(globalGroupID, pubKey)));
-      console.log(individualPublicKeyList);
 
       return individualPublicKeyList;
     }
@@ -366,7 +448,31 @@ const run = async () => {
       onIndividualPublicKey: onIndividualPublicKey,
     });
 
-    console.log(result);
+    console.log("\nDKG process completed successfully.");
+    console.log("\nUploading your encrypted share of the group secret polynomial to the server...")
+
+    const response = await axios.post(
+      `${SERVER_URL}/share`,
+      { 
+        groupID: Buffer.from(globalGroupID).toString('hex'),
+        share: Buffer.from(GroupKeyInfo.encode(result.groupKeyInfo).finish()).toString('hex'),
+        pubKey: Buffer.from(pubKey).toString('hex'), 
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.status != 200) {
+      console.log('Error:', response.data);
+      return;
+    }
+
+    console.log("Share uploaded successfully.");
+
+    await common(globalGroupID, pubKey, mpcApp);
 
   } else if (userChoice === USER_CHOICE_CHECK_GROUPS) {
     // send a get request to /groupID endpoint and pass pubKey, result will be a list of groupIDs
@@ -403,7 +509,7 @@ const run = async () => {
       choices: groupIDChoices,
     }); 
 
-    await mpcApp.dummy({});
+    await common(new Uint8Array(Buffer.from(chosenGroupID, 'hex')), pubKey, mpcApp);
   }
 };
 
