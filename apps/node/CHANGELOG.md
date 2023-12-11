@@ -1,5 +1,14 @@
 # nodejs-test
 
+## 0.0.42
+
+### Patch Changes
+
+- [#92](https://github.com/Cypherock/sdk/pull/92) [`1f5af9f`](https://github.com/Cypherock/sdk/commit/1f5af9f27cf3fd0f296ac1d1de7ad4c04192bf7c) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - added solana sign txn
+
+- Updated dependencies [[`1f5af9f`](https://github.com/Cypherock/sdk/commit/1f5af9f27cf3fd0f296ac1d1de7ad4c04192bf7c)]:
+  - @cypherock/sdk-app-solana@0.0.2
+
 ## 0.0.41
 
 ### Patch Changes
