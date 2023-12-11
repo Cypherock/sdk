@@ -58,6 +58,11 @@
       "outputs": ["src/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
+    "@cypherock/sdk-app-solana#prebuild": {
+      "cache": true,
+      "outputs": ["src/proto/generated/**"],
+      "inputs": ["../../submodules/common/proto/**"]
+    },
     "@cypherock/sdk-interfaces#prebuild": {
       "cache": true,
       "outputs": ["src/proto/generated/**"],

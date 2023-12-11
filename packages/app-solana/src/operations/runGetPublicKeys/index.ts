@@ -1,7 +1,7 @@
 import {
   OperationHelper,
   assertOrThrowInvalidResult,
-  generateAddressFromPublicKey,
+  base58Encode,
 } from '../../utils';
 import { IGetPublicKeysParams, GetPublicKeysEvent } from './types';
 
@@ -38,6 +38,6 @@ export const runGetPublicKeysOnDevice = async (
   forceStatusUpdate(GetPublicKeysEvent.VERIFY);
 
   return {
-    publicKeys: publicKeys.map(e => generateAddressFromPublicKey(e)),
+    publicKeys: publicKeys.map(e => base58Encode(e)),
   };
 };
