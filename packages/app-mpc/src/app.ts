@@ -45,6 +45,12 @@ export class MPCApp {
     return this.sdk.runOperation(() => operations.groupSetup(this.sdk, params));
   }
 
+  public async getChildKey(params: operations.IGetChildKeyParams) {
+    return this.sdk.runOperation(() =>
+      operations.getChildKey(this.sdk, params),
+    );
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }

@@ -36,18 +36,27 @@ async function computeSHA256(arrayBuffer: Uint8Array): Promise<Uint8Array> {
     return new Uint8Array(hashBuffer);
 }
 
+function convertBip44PathToNumbers(path: string): number[] {
+  const HARDENED_OFFSET = 2 ** 31;
+
+  const components = path.split('/').slice(1);
+
+  return components.map(component => {
+    const isHardened = component.endsWith("'");
+
+    const number = parseInt(component.replace("'", ""), 10);
+
+    return isHardened ? number + HARDENED_OFFSET : number;
+  });
+}
+
 async function getDerivationPath() {
     // Prompt the user for a comma-separated list of numbers
     const response = await input({
-        message: 'Enter the derivation path (as numbers separated by commas):'
+        message: "Enter the derivation path (e.g: m/44'/0'/0'/0/0):"
     });
 
-    // Extract numbers from the input string and parse them into an array of numbers
-    const numbers = response.split(',').map(n => parseFloat(n.trim()));
-
-    // Handle the case where some entries are not valid numbers
-    const validNumbers = numbers.filter(n => !isNaN(n));
-
+    const validNumbers = convertBip44PathToNumbers(response);
     console.log('Derivation path:', validNumbers);
     return validNumbers;
 }
@@ -127,7 +136,7 @@ async function getGroupInfo(entityInfoList: IEntityInfo[], fingerprints: string[
   };
 }
 
-async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp) {
+async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp, walletId: Uint8Array) {
   // get group info from the server
   let response = await axios.get(`${SERVER_URL}/groupInfo`, {
     params: { groupID: Buffer.from(groupID).toString('hex'),
@@ -143,7 +152,7 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp) {
   const groupInfoSignature = new Uint8Array(Buffer.from(response.data['signature'], 'hex'));
 
   // get my share of the group secret polynomial from the server
-  response = await axios.get(`${SERVER_URL}/share`, {
+  response = await axios.get(`${SERVER_URL}/groupKeyInfo`, {
     params: { groupID: Buffer.from(groupID).toString('hex'),
               pubKey: Buffer.from(pubKey).toString('hex') }
   });
@@ -153,7 +162,8 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp) {
     return;
   }
 
-  const share = GroupKeyInfo.decode(new Uint8Array(Buffer.from(response.data['share'], 'hex')));
+  const groupKeyInfo = GroupKeyInfo.decode(new Uint8Array(Buffer.from(response.data['groupKeyInfo'], 'hex')));
+  const groupKeyInfoSignature = Buffer.from(response.data['signature'], 'hex');
 
   const userChoices = [
     {
@@ -166,18 +176,30 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp) {
     }
   ]
 
-  const userChoice = await select({
-    message: 'Choose an option:',
-    choices: userChoices,
-  });
+  while (true)
+  {
+    console.log("\n");
+    const userChoice = await select({
+      message: 'Choose an option:',
+      choices: userChoices,
+    });
 
-  if (userChoice === USER_ACTION_GENERATE_RECEIVE_ADDRESS) {
-    // ask user to enter the derivation path
-    const derivationPath = await getDerivationPath();
+    if (userChoice === USER_ACTION_GENERATE_RECEIVE_ADDRESS) {
+      // ask user to enter the derivation path
+      const derivationPath = await getDerivationPath();
+    
+      try {
+        const result = await mpcApp.getChildKey({walletId: walletId, groupKeyInfo: groupKeyInfo, signature: groupKeyInfoSignature, path: derivationPath});
 
-  }
-  else if (userChoice === USER_ACTION_VIEW_GROUP_PUBLIC_KEY) {
-    console.log("Group public key: ", Buffer.from(share.groupPubKey).toString('hex'));
+        console.log("Receive address: ", Buffer.from(result.pubKey).toString('hex'));
+      }
+      catch (error: any) {
+        console.log("Some error occured.");
+      }
+    }
+    else if (userChoice === USER_ACTION_VIEW_GROUP_PUBLIC_KEY) {
+      console.log("Group public key: ", Buffer.from(groupKeyInfo.groupPubKey).toString('hex'));
+    }
   }
 }
 
@@ -448,15 +470,21 @@ const run = async () => {
       onIndividualPublicKey: onIndividualPublicKey,
     });
 
+    if (!result.completed) {
+      console.log("Error setting up the group.");
+      return;
+    } 
+
     console.log("\nDKG process completed successfully.");
     console.log("\nUploading your encrypted share of the group secret polynomial to the server...")
 
     const response = await axios.post(
-      `${SERVER_URL}/share`,
+      `${SERVER_URL}/groupKeyInfo`,
       { 
         groupID: Buffer.from(globalGroupID).toString('hex'),
-        share: Buffer.from(GroupKeyInfo.encode(result.groupKeyInfo).finish()).toString('hex'),
+        groupKeyInfo: Buffer.from(GroupKeyInfo.encode(result.groupKeyInfo).finish()).toString('hex'),
         pubKey: Buffer.from(pubKey).toString('hex'), 
+        signature: Buffer.from(result.signature).toString('hex'),
       },
       {
         headers: {
@@ -472,7 +500,7 @@ const run = async () => {
 
     console.log("Share uploaded successfully.");
 
-    await common(globalGroupID, pubKey, mpcApp);
+    await common(globalGroupID, pubKey, mpcApp, chosenWalletId);
 
   } else if (userChoice === USER_CHOICE_CHECK_GROUPS) {
     // send a get request to /groupID endpoint and pass pubKey, result will be a list of groupIDs
@@ -509,7 +537,7 @@ const run = async () => {
       choices: groupIDChoices,
     }); 
 
-    await common(new Uint8Array(Buffer.from(chosenGroupID, 'hex')), pubKey, mpcApp);
+    await common(new Uint8Array(Buffer.from(chosenGroupID, 'hex')), pubKey, mpcApp, chosenWalletId);
   }
 };
 
