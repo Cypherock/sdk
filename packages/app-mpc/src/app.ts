@@ -51,6 +51,12 @@ export class MPCApp {
     );
   }
 
+  public async signMessage(params: operations.ISignMessageParams) {
+    return this.sdk.runOperation(() =>
+      operations.signMessage(this.sdk, params),
+    );
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }
