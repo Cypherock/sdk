@@ -18,8 +18,8 @@ const { subtle } = webcrypto;
 import { input, select } from '@inquirer/prompts';
 import axios from 'axios';
 import { GroupInfo, GroupKeyInfo, ShareData } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/common';
-import { SignedShareData } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/common';
-import { SignedPublicKey } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/group_setup';
+import { SignedShareData, SignedPublicKey } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/common';
+import { IGroupKeyInfo } from '@cypherock/sdk-app-mpc';
 
 const SERVER_URL = "http://127.0.0.1:5000";
 const DEVICE_ID_SIZE = 32;
@@ -112,6 +112,82 @@ async function fetchIndividualPublicKey(groupID: Uint8Array, pubKey: Uint8Array)
   return SignedPublicKey.create({});
 }
 
+async function fetchParties(groupID: Uint8Array, msgHash: string, threshold: number): Promise<string[]> {
+  try {
+      const response = await axios.get(`${SERVER_URL}/sign/parties`, {
+          params: { groupID: Buffer.from(groupID).toString('hex'),
+                    msgHash: msgHash }
+      });
+
+      if (response.status === 200 && Array.isArray(response.data) && response.data.length == threshold) {
+          return response.data;
+      }
+      else {
+        throw new Error("Invalid response from the server.");
+      }
+  } catch (error: any) {
+      if ((error.response && error.response.status === 404) || error.message === "Invalid response from the server.") {
+          console.log(`...`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
+          return fetchParties(groupID, msgHash, threshold); // Retry
+      } else {
+          console.error(`Error fetching data for ${msgHash}: `, error);
+      }
+  }
+
+  return [];
+}
+
+// function to fetch shareDataList given groupID, pubKey and msgHash
+async function fetchShareDataList(groupID: Uint8Array, pubKey: Uint8Array, msgHash: string): Promise<SignedShareData[]> {
+  try {
+      const response = await axios.get(`${SERVER_URL}/sign/shareDataList`, {
+          params: { groupID: Buffer.from(groupID).toString('hex'),
+                    pubKey: Buffer.from(pubKey).toString('hex'),
+                    msgHash: msgHash }
+      });
+
+      if (response.status === 200) {
+          return response.data.map((item: string) => SignedShareData.decode(new Uint8Array(Buffer.from(item, 'hex'))));
+      }
+  } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+          console.log(`...`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
+          return fetchShareDataList(groupID, pubKey, msgHash); // Retry
+      } else {
+          console.error(`Error fetching data for ${msgHash}: `, error);
+      }
+  }
+
+  return [];
+}
+
+// function to fetch QIList given groupID, pubKey and msgHash
+async function fetchQIList(groupID: Uint8Array, pubKey: Uint8Array, msgHash: string): Promise<SignedPublicKey[]> {
+  try {
+      const response = await axios.get(`${SERVER_URL}/sign/QIList`, {
+          params: { groupID: Buffer.from(groupID).toString('hex'),
+                    pubKey: Buffer.from(pubKey).toString('hex'),
+                    msgHash: msgHash }
+      });
+
+      if (response.status === 200) {
+          return response.data.map((item: string) => SignedPublicKey.decode(new Uint8Array(Buffer.from(item, 'hex'))));
+      }
+  } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+          console.log(`...`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
+          return fetchQIList(groupID, pubKey, msgHash); // Retry
+      } else {
+          console.error(`Error fetching data for ${msgHash}: `, error);
+      }
+  }
+
+  return [];
+}
+
 async function getGroupInfo(entityInfoList: IEntityInfo[], fingerprints: string[],
   threshold: number, totalParticipants: number): Promise<IGroupInfo> {
 
@@ -141,14 +217,49 @@ async function getGroupInfo(entityInfoList: IEntityInfo[], fingerprints: string[
   };
 }
 
-async function signMessage(message: string, msgHash: string, mpcApp: MPCApp, walletId: Uint8Array, groupID: Uint8Array, pubKey: Uint8Array) {
+function pubKeyToIndex(groupInfo: IGroupInfo, pubKey: string): number {
+  for (let i = 0; i < groupInfo.participants.length; i++) {
+    if (Buffer.from(groupInfo.participants[i].pubKey).toString('hex') === pubKey) {
+      return i+1;
+    }
+  }
+
+  return -1;
+}
+
+async function invertMatrix(matrix: any[][]): Promise<any[][]> {
+  let newMatrix = [];
+
+  for (let i = 0; i < matrix.length; ++i) {
+    let temp = [];
+    for (let j = 0; j < matrix[i].length; ++j) {
+      temp.push(matrix[j][i]);
+    }
+    newMatrix.push(temp);
+  }
+
+  return newMatrix;
+}
+
+async function signMessage(message: string, 
+                           msgHash: string, 
+                           mpcApp: MPCApp, 
+                           walletId: Uint8Array, 
+                           groupID: Uint8Array, 
+                           pubKey: Uint8Array,
+                           groupInfo: IGroupInfo,
+                           groupInfoSignature: Uint8Array,
+                           groupKeyInfo: IGroupKeyInfo,
+                           groupKeyInfoSignature: Uint8Array) {
+
   console.log('\nMessage to be signed: ', message);
+  let parties: string[];
 
   const onMessageApproval = async () => {
     // make a post request to /approveMessage endpoint with the groupID and msgHash and pubKey
     const response = await axios.post(
       `${SERVER_URL}/approveMessage`,
-      { groupID: Buffer.from(groupID).toString('hex'), msgHash: msgHash, pubKey: pubKey },
+      { groupID: Buffer.from(groupID).toString('hex'), msgHash: msgHash, pubKey: Buffer.from(pubKey).toString('hex') },
       {
         headers: {
           'Content-Type': 'application/json',
@@ -157,11 +268,150 @@ async function signMessage(message: string, msgHash: string, mpcApp: MPCApp, wal
     );
   }
 
+  const getGroupInfo = async () => {
+    // print both signatures in hex
+    console.log("Group info signature: ", Buffer.from(groupInfoSignature).toString('hex'));
+    console.log("Group key info signature: ", Buffer.from(groupKeyInfoSignature).toString('hex'));
+
+    return {
+      groupInfo: groupInfo,
+      groupInfoSignature: groupInfoSignature,
+      groupKeyInfo: groupKeyInfo,
+      groupKeyInfoSignature: groupKeyInfoSignature,
+    };
+  }
+
+  const getSequenceIndices = async () => {
+    parties = await fetchParties(groupID, msgHash, groupInfo.threshold);
+    let indexes = parties.map(pubKey => pubKeyToIndex(groupInfo, pubKey));
+
+    if (indexes.some(index => index === -1)) {
+        throw new Error("Invalid public key found in the sequence.");
+    }
+
+    console.log(indexes);
+    return indexes;
+  }
+
+  const onShareDataList = async (shareDataList: SignedShareData[]) => {
+    let shareDataListRaw: string[] = shareDataList.map(item => Buffer.from(SignedShareData.encode(item).finish()).toString('hex'));
+
+    const response = await axios.post(
+      `${SERVER_URL}/sign/shareDataList`,
+      { groupID: Buffer.from(groupID).toString('hex'), msgHash: msgHash, pubKey: Buffer.from(pubKey).toString('hex'), shareDataList: shareDataListRaw },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.status != 200) {
+      console.log('Error:', response.data);
+      return [];
+    }
+
+
+    let filteredParties = parties.filter(x => x !== Buffer.from(pubKey).toString('hex'));
+
+    let shareDataLists: SignedShareData[][] = await Promise.all(filteredParties.map(pubKey => fetchShareDataList(groupID, new Uint8Array(Buffer.from(pubKey, 'hex')), msgHash)));
+    let transposedMatrix: SignedShareData[][] = [];
+
+    // Determine the number of columns in the original matrix
+    let numColumns = shareDataLists.length > 0 ? shareDataLists[0].length : 0;
+
+    // Iterate over each column in the original matrix
+    for (let col = 0; col < numColumns; col++) {
+        let newRow: SignedShareData[] = [];
+        
+        // Iterate over each row in the original matrix
+        for (let row = 0; row < shareDataLists.length; row++) {
+            newRow.push(shareDataLists[row][col]);
+        }
+
+        transposedMatrix.push(newRow);
+    }
+    
+    console.log("Share data lists: ");
+    console.log(transposedMatrix);
+
+    return transposedMatrix;
+  }
+
+  const onSignedPubKeyList = async (signedPublicKeyList: SignedPublicKey[]) => {
+    let signedPublicKeyListRaw: string[] = signedPublicKeyList.map(item => Buffer.from(SignedPublicKey.encode(item).finish()).toString('hex'));
+
+    const response = await axios.post(
+      `${SERVER_URL}/sign/QIList`,
+      { groupID: Buffer.from(groupID).toString('hex'), msgHash: msgHash, pubKey: Buffer.from(pubKey).toString('hex'), QIList: signedPublicKeyListRaw },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.status != 200) {
+      console.log('Error:', response.data);
+      return [];
+    }
+
+    let filteredParties = parties.filter(x => x !== Buffer.from(pubKey).toString('hex'));
+    let QILists: SignedPublicKey[][] = await Promise.all(filteredParties.map(pubKey => fetchQIList(groupID, new Uint8Array(Buffer.from(pubKey, 'hex')), msgHash)));
+
+    let transposedMatrix: SignedPublicKey[][] = [];
+
+    // Determine the number of columns in the original matrix
+    let numColumns = QILists.length > 0 ? QILists[0].length : 0;
+
+    // Iterate over each column in the original matrix
+    for (let col = 0; col < numColumns; col++) {
+        let newRow: SignedPublicKey[] = [];
+        
+        // Iterate over each row in the original matrix
+        for (let row = 0; row < QILists.length; row++) {
+            newRow.push(QILists[row][col]);
+        }
+
+        transposedMatrix.push(newRow);
+    }
+
+    console.log("QI lists: ");
+    console.log(transposedMatrix);
+
+    return transposedMatrix;
+  }
+
+  const onGroupKeyList = async (signedGroupKeyInfoList: {groupKeyInfo: IGroupKeyInfo, signature: Uint8Array}[]) => {
+    let signedGroupKeyInfoListRaw: string[] = signedGroupKeyInfoList.map(item => Buffer.from(GroupKeyInfo.encode(item.groupKeyInfo).finish()).toString('hex'));
+    let signatures: string[] = signedGroupKeyInfoList.map(item => Buffer.from(item.signature).toString('hex'));
+
+    const response = await axios.post(
+      `${SERVER_URL}/sign/keyInfoList`,
+      { groupID: Buffer.from(groupID).toString('hex'), msgHash: msgHash, pubKey: Buffer.from(pubKey).toString('hex'), keyInfoList: signedGroupKeyInfoListRaw, signatureList: signatures },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.status != 200) {
+      console.log('Error:', response.data);
+      return;
+    }
+  }
+
   let result = await mpcApp.signMessage({
     walletId: walletId, 
     groupID: groupID, 
     msg: new Uint8Array(Buffer.from(message, 'hex')),
     onMessageApproval: onMessageApproval,
+    getGroupInfo: getGroupInfo,
+    getSequenceIndices: getSequenceIndices,
+    onShareDataList: onShareDataList,
+    onSignedPubKeyList: onSignedPubKeyList,
+    onGroupKeyList: onGroupKeyList,
   });
 }
 
@@ -192,7 +442,7 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp, w
   }
 
   const groupKeyInfo = GroupKeyInfo.decode(new Uint8Array(Buffer.from(response.data['groupKeyInfo'], 'hex')));
-  const groupKeyInfoSignature = Buffer.from(response.data['signature'], 'hex');
+  const groupKeyInfoSignature = new Uint8Array(Buffer.from(response.data['signature'], 'hex'));
 
   const userChoices = [
     {
@@ -300,7 +550,7 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp, w
             return;
           }
 
-          await signMessage(response2.data, chosenMsg, mpcApp, walletId, groupID, pubKey);
+          await signMessage(response2.data, chosenMsg, mpcApp, walletId, groupID, pubKey, groupInfo, groupInfoSignature, groupKeyInfo, groupKeyInfoSignature);
           break;          
         }
         else if (signingChoice === SIGN_ACTION_CREATE_NEW_MESSAGE) {
@@ -327,7 +577,7 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp, w
 
           const msgHash = response.data['msgHash'];
 
-          await signMessage(message, msgHash, mpcApp, walletId, groupID, pubKey);
+          await signMessage(message, msgHash, mpcApp, walletId, groupID, pubKey, groupInfo, groupInfoSignature, groupKeyInfo, groupKeyInfoSignature);
           break;
         }
         else if (signingChoice === SIGN_ACTION_GO_BACK) {
