@@ -1,8 +1,8 @@
 import {
   GroupKeyInfo,
   SignedShareData,
+  SignedPublicKey,
 } from '../../proto/generated/mpc_poc/common';
-import { SignedPublicKey } from '../../proto/generated/mpc_poc/group_setup';
 import { IEntityInfo } from '../../types';
 
 export type PublicKeyHandler = (pubKey: Uint8Array) => void;

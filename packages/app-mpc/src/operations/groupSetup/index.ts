@@ -79,6 +79,7 @@ export const groupSetup = async (
   const signedShareDataList = await params.onShareData?.(
     getShareData.signedShareData,
   );
+
   if (!signedShareDataList) {
     return {
       groupKeyInfo: { groupPubKey: new Uint8Array(), groupShare: undefined },
