@@ -67,7 +67,9 @@ export const signMessage = async (
   });
 
   const { postSequenceIndices } = await helper.waitForResult();
-  assertOrThrowInvalidResult(postSequenceIndices?.success);
+  assertOrThrowInvalidResult(postSequenceIndices?.myIndex);
+
+  const { myIndex } = postSequenceIndices;
 
   let polynomialCount = 0;
   const shareDataList: SignedShareData[] = [];
@@ -128,6 +130,9 @@ export const signMessage = async (
       groupKeyInfo: getGroupKey.groupKey,
       signature: getGroupKey.signature,
     });
+
+    console.log('Group key: ', i);
+    console.log(getGroupKey.groupKey.groupPubKey);
   }
 
   await params.onGroupKeyList(groupKeyInfoList);
@@ -137,8 +142,140 @@ export const signMessage = async (
   });
 
   const { startMta } = await helper.waitForResult();
-  console.log(startMta?.receiverTimes);
-  console.log(startMta?.senderTimes);
+  assertOrThrowInvalidResult(startMta?.senderTimes);
+  assertOrThrowInvalidResult(startMta?.receiverTimes);
+
+  const { senderTimes } = startMta;
+  const { receiverTimes } = startMta;
+
+  const rcvPkInfoList: {
+    to: number;
+    from: number;
+    length: number;
+    data: string[];
+    signature: string;
+  }[] = [];
+
+  for (let i = 0; i < receiverTimes; i += 1) {
+    await helper.sendQuery({
+      mtaRcvGetPkInitiate: {},
+    });
+
+    const { mtaRcvGetPkInitiate } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaRcvGetPkInitiate?.to);
+    assertOrThrowInvalidResult(mtaRcvGetPkInitiate?.length);
+
+    const pkInfo: {
+      to: number;
+      from: number;
+      length: number;
+      data: string[];
+      signature: string;
+    } = {
+      to: mtaRcvGetPkInitiate.to,
+      from: myIndex,
+      length: mtaRcvGetPkInitiate.length,
+      data: [],
+      signature: '',
+    };
+
+    for (let j = 0; j < mtaRcvGetPkInitiate.length; j += 1) {
+      await helper.sendQuery({
+        mtaRcvGetPk: {},
+      });
+
+      const { mtaRcvGetPk } = await helper.waitForResult();
+      assertOrThrowInvalidResult(mtaRcvGetPk?.publicKey);
+
+      pkInfo.data.push(Buffer.from(mtaRcvGetPk.publicKey).toString('hex'));
+    }
+
+    await helper.sendQuery({
+      mtaRcvGetPkSig: {},
+    });
+
+    const { mtaRcvGetPkSig } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaRcvGetPkSig?.signature);
+
+    pkInfo.signature = Buffer.from(mtaRcvGetPkSig.signature).toString('hex');
+
+    rcvPkInfoList.push(pkInfo);
+  }
+
+  await params.onRcvPkInfoList(rcvPkInfoList);
+
+  const getRcvPkInfoList = await params.getRcvPkInfoList(myIndex);
+  assertOrThrowInvalidResult(getRcvPkInfoList.length === senderTimes);
+
+  getRcvPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
+
+  const sndPkInfoList: {
+    to: number;
+    from: number;
+    length: number;
+    data: string[];
+    signature: string;
+  }[] = [];
+
+  for (let i = 0; i < senderTimes; i += 1) {
+    await helper.sendQuery({
+      mtaSndGetPkInitiate: {},
+    });
+
+    const { mtaSndGetPkInitiate } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaSndGetPkInitiate?.to);
+    assertOrThrowInvalidResult(mtaSndGetPkInitiate?.length);
+    assertOrThrowInvalidResult(
+      mtaSndGetPkInitiate.to === getRcvPkInfoList[i].from,
+    );
+
+    const pkInfo: {
+      to: number;
+      from: number;
+      length: number;
+      data: string[];
+      signature: string;
+    } = {
+      to: mtaSndGetPkInitiate.to,
+      from: myIndex,
+      length: mtaSndGetPkInitiate.length,
+      data: [],
+      signature: '',
+    };
+
+    for (let j = 0; j < mtaSndGetPkInitiate.length; j += 1) {
+      await helper.sendQuery({
+        mtaSndGetPk: {
+          publicKey: Buffer.from(getRcvPkInfoList[i].data[j], 'hex'),
+        },
+      });
+
+      const { mtaSndGetPk } = await helper.waitForResult();
+      assertOrThrowInvalidResult(mtaSndGetPk?.publicKey);
+
+      pkInfo.data.push(Buffer.from(mtaSndGetPk.publicKey).toString('hex'));
+    }
+
+    await helper.sendQuery({
+      mtaSndGetPkSig: {
+        signature: Buffer.from(getRcvPkInfoList[i].signature, 'hex'),
+      },
+    });
+
+    const { mtaSndGetPkSig } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaSndGetPkSig?.signature);
+
+    pkInfo.signature = Buffer.from(mtaSndGetPkSig.signature).toString('hex');
+
+    sndPkInfoList.push(pkInfo);
+  }
+
+  await params.onSndPkInfoList(sndPkInfoList);
+
+  const getSndPkInfoList = await params.getSndPkInfoList(myIndex);
+  assertOrThrowInvalidResult(getSndPkInfoList.length === receiverTimes);
+
+  getSndPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
 
   return {
     success: true,

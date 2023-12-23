@@ -26,6 +26,42 @@ export type SignedGroupKeyInfo = {
 export type GroupKeyListHandler = (
   signedGroupKeyInfoList: SignedGroupKeyInfo[],
 ) => Promise<void>;
+export type RcvPkInfoListHandler = (
+  rcvPkInfoList: {
+    to: number;
+    from: number;
+    length: number;
+    data: string[];
+    signature: string;
+  }[],
+) => Promise<void>;
+export type GetRcvPkInfoListHandler = (myIndex: number) => Promise<
+  {
+    to: number;
+    from: number;
+    length: number;
+    data: string[];
+    signature: string;
+  }[]
+>;
+export type SndPkInfoListHandler = (
+  sndPkInfoList: {
+    to: number;
+    from: number;
+    length: number;
+    data: string[];
+    signature: string;
+  }[],
+) => Promise<void>;
+export type GetSndPkInfoListHandler = (myIndex: number) => Promise<
+  {
+    to: number;
+    from: number;
+    length: number;
+    data: string[];
+    signature: string;
+  }[]
+>;
 
 export interface ISignMessageParams {
   walletId: Uint8Array;
@@ -37,6 +73,10 @@ export interface ISignMessageParams {
   onShareDataList: ShareDataListHandler;
   onSignedPubKeyList: SignedPubKeyListHandler;
   onGroupKeyList: GroupKeyListHandler;
+  onRcvPkInfoList: RcvPkInfoListHandler;
+  getRcvPkInfoList: GetRcvPkInfoListHandler;
+  onSndPkInfoList: SndPkInfoListHandler;
+  getSndPkInfoList: GetSndPkInfoListHandler;
 }
 
 export interface ISignMessageResult {
