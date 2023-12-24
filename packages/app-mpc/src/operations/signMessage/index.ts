@@ -459,7 +459,7 @@ export const signMessage = async (
 
   await params.onSignedAuthenticatorData({
     from: myIndex,
-    signedAuthenticatorData: Buffer.from(
+    data: Buffer.from(
       SignedAuthenticatorData.encode(
         sigGetAuthenticator.signedAuthenticatorData,
       ).finish(),
@@ -468,7 +468,7 @@ export const signMessage = async (
 
   let getSignedAuthenticatorDataList: {
     from: number;
-    signedAuthenticatorData: string;
+    data: string;
   }[] = await params.getSignedAuthenticatorDataList();
 
   // remove the item from the list where 'from' is myIndex
@@ -484,7 +484,7 @@ export const signMessage = async (
   getSignedAuthenticatorDataList.forEach(item => {
     signedAuthenticatorDataList.push(
       SignedAuthenticatorData.decode(
-        new Uint8Array(Buffer.from(item.signedAuthenticatorData, 'hex')),
+        new Uint8Array(Buffer.from(item.data, 'hex')),
       ),
     );
   });
@@ -506,14 +506,14 @@ export const signMessage = async (
 
   await params.onSignedKaShare({
     from: myIndex,
-    signedKaShare: Buffer.from(
+    data: Buffer.from(
       SignedKAShare.encode(sigGetKaShare.signedKaShare).finish(),
     ).toString('hex'),
   });
 
   let getSignedKaShareList: {
     from: number;
-    signedKaShare: string;
+    data: string;
   }[] = await params.getSignedKaShareList();
 
   // remove the item from the list where 'from' is myIndex
@@ -528,9 +528,7 @@ export const signMessage = async (
   const signedKaShareList: SignedKAShare[] = [];
   getSignedKaShareList.forEach(item => {
     signedKaShareList.push(
-      SignedKAShare.decode(
-        new Uint8Array(Buffer.from(item.signedKaShare, 'hex')),
-      ),
+      SignedKAShare.decode(new Uint8Array(Buffer.from(item.data, 'hex'))),
     );
   });
 
@@ -551,14 +549,14 @@ export const signMessage = async (
 
   await params.onSignedSigShare({
     from: myIndex,
-    signedSigShare: Buffer.from(
+    data: Buffer.from(
       SignedSigShare.encode(getSigShare.signedSigShare).finish(),
     ).toString('hex'),
   });
 
   let getSignedSigShareList: {
     from: number;
-    signedSigShare: string;
+    data: string;
   }[] = await params.getSignedSigShareList();
 
   // remove the item from the list where 'from' is myIndex
@@ -574,9 +572,7 @@ export const signMessage = async (
 
   getSignedSigShareList.forEach(item => {
     signedSigShareList.push(
-      SignedSigShare.decode(
-        new Uint8Array(Buffer.from(item.signedSigShare, 'hex')),
-      ),
+      SignedSigShare.decode(new Uint8Array(Buffer.from(item.data, 'hex'))),
     );
   });
 

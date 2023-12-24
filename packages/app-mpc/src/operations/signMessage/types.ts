@@ -13,6 +13,11 @@ export type MtaData = {
   signature: string;
 };
 
+export type SigCalcData = {
+  from: number;
+  data: string;
+};
+
 export type ApproveMessageHandler = () => Promise<void>;
 export type GetGroupInfoHandler = () => Promise<{
   groupInfo: GroupInfo;
@@ -54,36 +59,16 @@ export type GetSndMascotListHandler = (
   myIndex: number,
   length: number,
 ) => Promise<MtaData[]>;
-export type SignedAuthenticatorDataHandler = (data: {
-  from: number;
-  signedAuthenticatorData: string;
-}) => Promise<void>;
+export type SignedAuthenticatorDataHandler = (
+  data: SigCalcData,
+) => Promise<void>;
 export type GetSignedAuthenticatorDataListHandler = () => Promise<
-  {
-    from: number;
-    signedAuthenticatorData: string;
-  }[]
+  SigCalcData[]
 >;
-export type SignedKaShareHandler = (data: {
-  from: number;
-  signedKaShare: string;
-}) => Promise<void>;
-export type GetSignedKaShareListHandler = () => Promise<
-  {
-    from: number;
-    signedKaShare: string;
-  }[]
->;
-export type SignedSigShareHandler = (data: {
-  from: number;
-  signedSigShare: string;
-}) => Promise<void>;
-export type GetSignedSigShareListHandler = () => Promise<
-  {
-    from: number;
-    signedSigShare: string;
-  }[]
->;
+export type SignedKaShareHandler = (data: SigCalcData) => Promise<void>;
+export type GetSignedKaShareListHandler = () => Promise<SigCalcData[]>;
+export type SignedSigShareHandler = (data: SigCalcData) => Promise<void>;
+export type GetSignedSigShareListHandler = () => Promise<SigCalcData[]>;
 
 export interface ISignMessageParams {
   walletId: Uint8Array;
