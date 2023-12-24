@@ -5,6 +5,14 @@ import {
   SignedShareData,
 } from '../../proto/generated/mpc_poc/common';
 
+export type MtaData = {
+  to: number;
+  from: number;
+  length: number;
+  data: { first: string; second: string }[];
+  signature: string;
+};
+
 export type ApproveMessageHandler = () => Promise<void>;
 export type GetGroupInfoHandler = () => Promise<{
   groupInfo: GroupInfo;
@@ -26,90 +34,26 @@ export type SignedGroupKeyInfo = {
 export type GroupKeyListHandler = (
   signedGroupKeyInfoList: SignedGroupKeyInfo[],
 ) => Promise<void>;
-export type RcvPkInfoListHandler = (
-  rcvPkInfoList: {
-    to: number;
-    from: number;
-    length: number;
-    data: string[];
-    signature: string;
-  }[],
-) => Promise<void>;
+export type RcvPkInfoListHandler = (rcvPkInfoList: MtaData[]) => Promise<void>;
 export type GetRcvPkInfoListHandler = (
   myIndex: number,
   length: number,
-) => Promise<
-  {
-    to: number;
-    from: number;
-    length: number;
-    data: string[];
-    signature: string;
-  }[]
->;
-export type SndPkInfoListHandler = (
-  sndPkInfoList: {
-    to: number;
-    from: number;
-    length: number;
-    data: string[];
-    signature: string;
-  }[],
-) => Promise<void>;
+) => Promise<MtaData[]>;
+export type SndPkInfoListHandler = (sndPkInfoList: MtaData[]) => Promise<void>;
 export type GetSndPkInfoListHandler = (
   myIndex: number,
   length: number,
-) => Promise<
-  {
-    to: number;
-    from: number;
-    length: number;
-    data: string[];
-    signature: string;
-  }[]
->;
-export type RcvEncMsgListHandler = (
-  rcvEncMsgList: {
-    to: number;
-    from: number;
-    length: number;
-    data: { e0: string; e1: string }[];
-    signature: string;
-  }[],
-) => Promise<void>;
+) => Promise<MtaData[]>;
+export type RcvEncMsgListHandler = (rcvEncMsgList: MtaData[]) => Promise<void>;
 export type GetRcvEncMsgListHandler = (
   myIndex: number,
   length: number,
-) => Promise<
-  {
-    to: number;
-    from: number;
-    length: number;
-    data: { e0: string; e1: string }[];
-    signature: string;
-  }[]
->;
-export type SndMascotListHandler = (
-  sndMascotList: {
-    to: number;
-    from: number;
-    length: number;
-    data: { e0: string; e1: string }[];
-    signature: string;
-  }[],
-) => Promise<void>;
+) => Promise<MtaData[]>;
+export type SndMascotListHandler = (sndMascotList: MtaData[]) => Promise<void>;
 export type GetSndMascotListHandler = (
   myIndex: number,
   length: number,
-) => Promise<
-  {
-    to: number;
-    from: number;
-    length: number;
-    data: { e0: string; e1: string }[];
-    signature: string;
-  }[]
->;
+) => Promise<MtaData[]>;
 export type SignedAuthenticatorDataHandler = (data: {
   from: number;
   signedAuthenticatorData: string;

@@ -3,6 +3,7 @@ import { assertOrThrowInvalidResult, OperationHelper } from '../../utils';
 import {
   ISignMessageParams,
   ISignMessageResult,
+  MtaData,
   SignedGroupKeyInfo,
 } from './types';
 import {
@@ -153,13 +154,7 @@ export const signMessage = async (
   const { senderTimes } = startMta;
   const { receiverTimes } = startMta;
 
-  const rcvPkInfoList: {
-    to: number;
-    from: number;
-    length: number;
-    data: string[];
-    signature: string;
-  }[] = [];
+  const rcvPkInfoList: MtaData[] = [];
 
   for (let i = 0; i < receiverTimes; i += 1) {
     await helper.sendQuery({
@@ -170,13 +165,7 @@ export const signMessage = async (
     assertOrThrowInvalidResult(mtaRcvGetPkInitiate?.to);
     assertOrThrowInvalidResult(mtaRcvGetPkInitiate?.length);
 
-    const pkInfo: {
-      to: number;
-      from: number;
-      length: number;
-      data: string[];
-      signature: string;
-    } = {
+    const pkInfo: MtaData = {
       to: mtaRcvGetPkInitiate.to,
       from: myIndex,
       length: mtaRcvGetPkInitiate.length,
@@ -192,7 +181,10 @@ export const signMessage = async (
       const { mtaRcvGetPk } = await helper.waitForResult();
       assertOrThrowInvalidResult(mtaRcvGetPk?.publicKey);
 
-      pkInfo.data.push(Buffer.from(mtaRcvGetPk.publicKey).toString('hex'));
+      pkInfo.data.push({
+        first: Buffer.from(mtaRcvGetPk.publicKey).toString('hex'),
+        second: '',
+      });
     }
 
     await helper.sendQuery({
@@ -214,13 +206,7 @@ export const signMessage = async (
 
   getRcvPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
 
-  const sndPkInfoList: {
-    to: number;
-    from: number;
-    length: number;
-    data: string[];
-    signature: string;
-  }[] = [];
+  const sndPkInfoList: MtaData[] = [];
 
   for (let i = 0; i < senderTimes; i += 1) {
     await helper.sendQuery({
@@ -234,13 +220,7 @@ export const signMessage = async (
       mtaSndGetPkInitiate.to === getRcvPkInfoList[i].from,
     );
 
-    const pkInfo: {
-      to: number;
-      from: number;
-      length: number;
-      data: string[];
-      signature: string;
-    } = {
+    const pkInfo: MtaData = {
       to: mtaSndGetPkInitiate.to,
       from: myIndex,
       length: mtaSndGetPkInitiate.length,
@@ -251,14 +231,17 @@ export const signMessage = async (
     for (let j = 0; j < mtaSndGetPkInitiate.length; j += 1) {
       await helper.sendQuery({
         mtaSndGetPk: {
-          publicKey: Buffer.from(getRcvPkInfoList[i].data[j], 'hex'),
+          publicKey: Buffer.from(getRcvPkInfoList[i].data[j].first, 'hex'),
         },
       });
 
       const { mtaSndGetPk } = await helper.waitForResult();
       assertOrThrowInvalidResult(mtaSndGetPk?.publicKey);
 
-      pkInfo.data.push(Buffer.from(mtaSndGetPk.publicKey).toString('hex'));
+      pkInfo.data.push({
+        first: Buffer.from(mtaSndGetPk.publicKey).toString('hex'),
+        second: '',
+      });
     }
 
     await helper.sendQuery({
@@ -285,13 +268,7 @@ export const signMessage = async (
 
   getSndPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
 
-  const rcvEncMsgList: {
-    to: number;
-    from: number;
-    length: number;
-    data: { e0: string; e1: string }[];
-    signature: string;
-  }[] = [];
+  const rcvEncMsgList: MtaData[] = [];
 
   for (let i = 0; i < receiverTimes; i += 1) {
     await helper.sendQuery({
@@ -305,13 +282,7 @@ export const signMessage = async (
       mtaRcvGetEncInitiate.to === getSndPkInfoList[i].from,
     );
 
-    const encInfo: {
-      to: number;
-      from: number;
-      length: number;
-      data: { e0: string; e1: string }[];
-      signature: string;
-    } = {
+    const encInfo: MtaData = {
       to: mtaRcvGetEncInitiate.to,
       from: myIndex,
       length: mtaRcvGetEncInitiate.length,
@@ -322,7 +293,7 @@ export const signMessage = async (
     for (let j = 0; j < mtaRcvGetEncInitiate.length; j += 1) {
       await helper.sendQuery({
         mtaRcvGetEnc: {
-          publicKey: Buffer.from(getSndPkInfoList[i].data[j], 'hex'),
+          publicKey: Buffer.from(getSndPkInfoList[i].data[j].first, 'hex'),
         },
       });
 
@@ -331,8 +302,8 @@ export const signMessage = async (
       assertOrThrowInvalidResult(mtaRcvGetEnc?.encM1);
 
       encInfo.data.push({
-        e0: Buffer.from(mtaRcvGetEnc.encM0).toString('hex'),
-        e1: Buffer.from(mtaRcvGetEnc.encM1).toString('hex'),
+        first: Buffer.from(mtaRcvGetEnc.encM0).toString('hex'),
+        second: Buffer.from(mtaRcvGetEnc.encM1).toString('hex'),
       });
     }
 
@@ -372,8 +343,8 @@ export const signMessage = async (
     for (let j = 0; j < mtaSndPostEncInitiate.length; j += 1) {
       await helper.sendQuery({
         mtaSndPostEnc: {
-          encM0: Buffer.from(getRcvEncMsgList[i].data[j].e0, 'hex'),
-          encM1: Buffer.from(getRcvEncMsgList[i].data[j].e1, 'hex'),
+          encM0: Buffer.from(getRcvEncMsgList[i].data[j].first, 'hex'),
+          encM1: Buffer.from(getRcvEncMsgList[i].data[j].second, 'hex'),
         },
       });
 
@@ -389,13 +360,7 @@ export const signMessage = async (
     await helper.waitForResult();
   }
 
-  const sndMASCOTList: {
-    to: number;
-    from: number;
-    length: number;
-    data: { e0: string; e1: string }[];
-    signature: string;
-  }[] = [];
+  const sndMASCOTList: MtaData[] = [];
 
   for (let i = 0; i < senderTimes; i += 1) {
     await helper.sendQuery({
@@ -406,13 +371,7 @@ export const signMessage = async (
     assertOrThrowInvalidResult(mtaSndGetMascotInitiate?.to);
     assertOrThrowInvalidResult(mtaSndGetMascotInitiate?.length);
 
-    const mascotInfo: {
-      to: number;
-      from: number;
-      length: number;
-      data: { e0: string; e1: string }[];
-      signature: string;
-    } = {
+    const mascotInfo: MtaData = {
       to: mtaSndGetMascotInitiate.to,
       from: myIndex,
       length: mtaSndGetMascotInitiate.length,
@@ -430,8 +389,8 @@ export const signMessage = async (
       assertOrThrowInvalidResult(mtaSndGetMascot?.encM1);
 
       mascotInfo.data.push({
-        e0: Buffer.from(mtaSndGetMascot.encM0).toString('hex'),
-        e1: Buffer.from(mtaSndGetMascot.encM1).toString('hex'),
+        first: Buffer.from(mtaSndGetMascot.encM0).toString('hex'),
+        second: Buffer.from(mtaSndGetMascot.encM1).toString('hex'),
       });
     }
 
@@ -474,8 +433,8 @@ export const signMessage = async (
     for (let j = 0; j < mtaRcvPostMascotInitiate.length; j += 1) {
       await helper.sendQuery({
         mtaRcvPostMascot: {
-          encM0: Buffer.from(getSndMASCOTList[i].data[j].e0, 'hex'),
-          encM1: Buffer.from(getSndMASCOTList[i].data[j].e1, 'hex'),
+          encM0: Buffer.from(getSndMASCOTList[i].data[j].first, 'hex'),
+          encM1: Buffer.from(getSndMASCOTList[i].data[j].second, 'hex'),
         },
       });
 
