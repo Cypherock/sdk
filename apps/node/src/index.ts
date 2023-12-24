@@ -20,6 +20,8 @@ import axios from 'axios';
 import { GroupInfo, GroupKeyInfo, ShareData } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/common';
 import { SignedShareData, SignedPublicKey } from '@cypherock/sdk-app-mpc/dist/proto/generated/mpc_poc/common';
 import { IGroupKeyInfo } from '@cypherock/sdk-app-mpc';
+import { MtaData } from '@cypherock/sdk-app-mpc/dist/operations';
+import { SigCalcData } from '@cypherock/sdk-app-mpc/dist/operations';
 
 const SERVER_URL = "http://127.0.0.1:5000";
 const DEVICE_ID_SIZE = 32;
@@ -188,6 +190,59 @@ async function fetchQIList(groupID: Uint8Array, pubKey: Uint8Array, msgHash: str
   return [];
 }
 
+// function to fetch mtaData given groupID, msgHash, mtaDataType, to and length
+async function fetchMtaData(groupID: Uint8Array, msgHash: string, mtaDataType: string, to: number, length: number): Promise<MtaData[]> {
+  try {
+      const response = await axios.get(`${SERVER_URL}/sign/mtaData`, {
+          params: { groupID: Buffer.from(groupID).toString('hex'),
+                    msgHash: msgHash,
+                    mtaDataType: mtaDataType,
+                    to: to,
+                    length: length }
+      });
+
+      if (response.status === 200) {
+          return response.data;
+      }
+  } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+          console.log(`...`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
+          return fetchMtaData(groupID, msgHash, mtaDataType, to, length); // Retry
+      } else {
+          console.error(`Error fetching data for ${msgHash}: `, error);
+      }
+  }
+
+  return [];
+}
+
+// function to fetch sigData give groupID, msgHash, sigDataType, and length
+async function fetchSigData(groupID: Uint8Array, msgHash: string, sigDataType: string, length: number): Promise<SigCalcData[]> {
+  try {
+      const response = await axios.get(`${SERVER_URL}/sign/sigData`, {
+          params: { groupID: Buffer.from(groupID).toString('hex'),
+                    msgHash: msgHash,
+                    sigDataType: sigDataType,
+                    length: length }
+      });
+
+      if (response.status === 200) {
+          return response.data;
+      }
+  } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+          console.log(`...`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
+          return fetchSigData(groupID, msgHash, sigDataType, length); // Retry
+      } else {
+          console.error(`Error fetching data for ${msgHash}: `, error);
+      }
+  }
+
+  return [];
+}
+
 async function getGroupInfo(entityInfoList: IEntityInfo[], fingerprints: string[],
   threshold: number, totalParticipants: number): Promise<IGroupInfo> {
 
@@ -239,6 +294,62 @@ async function invertMatrix(matrix: any[][]): Promise<any[][]> {
   }
 
   return newMatrix;
+}
+
+async function getMtaUploadHandler(groupID: Uint8Array, msgHash: string, mtaDataType: string) {
+  const handler = async (
+    mtaData: MtaData[],
+  ) => {
+    const response = await axios.post(
+      `${SERVER_URL}/sign/mtaData`,
+      { 
+        groupID: Buffer.from(groupID).toString('hex'), 
+        msgHash: msgHash, 
+        mtaDataList: mtaData,
+        mtaDataType: mtaDataType
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.status != 200) {
+      console.log('Error:', response.data);
+      return;
+    }
+  };
+
+  return handler;
+}
+
+async function getSigUploadHandler(groupID: Uint8Array, msgHash: string, sigDataType: string) {
+  const handler = async (
+    sigData: SigCalcData,
+  ) => {
+    const response = await axios.post(
+      `${SERVER_URL}/sign/sigData`,
+      { 
+        groupID: Buffer.from(groupID).toString('hex'), 
+        msgHash: msgHash, 
+        sigData: sigData,
+        sigDataType: sigDataType,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.status != 200) {
+      console.log('Error:', response.data);
+      return;
+    }
+  };
+
+  return handler;
 }
 
 async function signMessage(message: string, 
@@ -402,6 +513,7 @@ async function signMessage(message: string,
     }
   }
 
+
   let result = await mpcApp.signMessage({
     walletId: walletId, 
     groupID: groupID, 
@@ -412,7 +524,37 @@ async function signMessage(message: string,
     onShareDataList: onShareDataList,
     onSignedPubKeyList: onSignedPubKeyList,
     onGroupKeyList: onGroupKeyList,
+    onRcvPkInfoList: await getMtaUploadHandler(groupID, msgHash, 'rcvPkInfoListStore'),
+    getRcvPkInfoList: async (myIndex: number, length: number) => {
+      return await fetchMtaData(groupID, msgHash, 'rcvPkInfoListStore', myIndex, length);
+    },
+    onSndPkInfoList: await getMtaUploadHandler(groupID, msgHash, 'sndPkInfoListStore'),
+    getSndPkInfoList: async (myIndex: number, length: number) => {
+      return await fetchMtaData(groupID, msgHash, 'sndPkInfoListStore', myIndex, length);
+    },
+    onRcvEncMsgList: await getMtaUploadHandler(groupID, msgHash, 'rcvEncMsgListStore'),
+    getRcvEncMsgList: async (myIndex: number, length: number) => {
+      return await fetchMtaData(groupID, msgHash, 'rcvEncMsgListStore', myIndex, length);
+    },
+    onSndMascotList: await getMtaUploadHandler(groupID, msgHash, 'sndMascotListStore'),
+    getSndMascotList: async (myIndex: number, length: number) => {
+      return await fetchMtaData(groupID, msgHash, 'sndMascotListStore', myIndex, length);
+    },
+    onSignedAuthenticatorData: await getSigUploadHandler(groupID, msgHash, 'authenticatorDataStore'),
+    getSignedAuthenticatorDataList: async () => {
+      return await fetchSigData(groupID, msgHash, 'authenticatorDataStore', groupInfo.threshold);
+    },
+    onSignedKaShare: await getSigUploadHandler(groupID, msgHash, 'kaShareStore'),
+    getSignedKaShareList: async () => {
+      return await fetchSigData(groupID, msgHash, 'kaShareStore', groupInfo.threshold);
+    },
+    onSignedSigShare: await getSigUploadHandler(groupID, msgHash, 'sigShareStore'),
+    getSignedSigShareList: async () => {
+      return await fetchSigData(groupID, msgHash, 'sigShareStore', groupInfo.threshold);
+    },
   });
+
+  console.log("Signature: ", Buffer.from(result.signature).toString('hex'));
 }
 
 async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp, walletId: Uint8Array) {
