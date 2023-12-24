@@ -40,7 +40,10 @@ export type RcvPkInfoListHandler = (
     signature: string;
   }[],
 ) => Promise<void>;
-export type GetRcvPkInfoListHandler = (myIndex: number) => Promise<
+export type GetRcvPkInfoListHandler = (
+  myIndex: number,
+  length: number,
+) => Promise<
   {
     to: number;
     from: number;
@@ -58,7 +61,10 @@ export type SndPkInfoListHandler = (
     signature: string;
   }[],
 ) => Promise<void>;
-export type GetSndPkInfoListHandler = (myIndex: number) => Promise<
+export type GetSndPkInfoListHandler = (
+  myIndex: number,
+  length: number,
+) => Promise<
   {
     to: number;
     from: number;
@@ -76,7 +82,10 @@ export type RcvEncMsgListHandler = (
     signature: string;
   }[],
 ) => Promise<void>;
-export type GetRcvEncMsgListHandler = (myIndex: number) => Promise<
+export type GetRcvEncMsgListHandler = (
+  myIndex: number,
+  length: number,
+) => Promise<
   {
     to: number;
     from: number;
@@ -94,7 +103,10 @@ export type SndMascotListHandler = (
     signature: string;
   }[],
 ) => Promise<void>;
-export type GetSndMascotListHandler = (myIndex: number) => Promise<
+export type GetSndMascotListHandler = (
+  myIndex: number,
+  length: number,
+) => Promise<
   {
     to: number;
     from: number;

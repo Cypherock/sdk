@@ -209,7 +209,7 @@ export const signMessage = async (
 
   await params.onRcvPkInfoList(rcvPkInfoList);
 
-  const getRcvPkInfoList = await params.getRcvPkInfoList(myIndex);
+  const getRcvPkInfoList = await params.getRcvPkInfoList(myIndex, senderTimes);
   assertOrThrowInvalidResult(getRcvPkInfoList.length === senderTimes);
 
   getRcvPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
@@ -277,7 +277,10 @@ export const signMessage = async (
 
   await params.onSndPkInfoList(sndPkInfoList);
 
-  const getSndPkInfoList = await params.getSndPkInfoList(myIndex);
+  const getSndPkInfoList = await params.getSndPkInfoList(
+    myIndex,
+    receiverTimes,
+  );
   assertOrThrowInvalidResult(getSndPkInfoList.length === receiverTimes);
 
   getSndPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
@@ -349,7 +352,7 @@ export const signMessage = async (
 
   await params.onRcvEncMsgList(rcvEncMsgList);
 
-  const getRcvEncMsgList = await params.getRcvEncMsgList(myIndex);
+  const getRcvEncMsgList = await params.getRcvEncMsgList(myIndex, senderTimes);
   assertOrThrowInvalidResult(getSndPkInfoList.length === senderTimes);
 
   getSndPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
@@ -448,7 +451,10 @@ export const signMessage = async (
 
   await params.onSndMascotList(sndMASCOTList);
 
-  const getSndMASCOTList = await params.getSndMascotList(myIndex);
+  const getSndMASCOTList = await params.getSndMascotList(
+    myIndex,
+    receiverTimes,
+  );
   assertOrThrowInvalidResult(getSndMASCOTList.length === receiverTimes);
 
   getSndMASCOTList.sort((a, b) => (a.from > b.from ? 1 : -1));
