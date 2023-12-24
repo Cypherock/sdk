@@ -1,9 +1,14 @@
 import {
   GroupInfo,
   GroupKeyInfo,
+  SignedAuthenticatorData,
   SignedPublicKey,
   SignedShareData,
 } from '../../proto/generated/mpc_poc/common';
+import {
+  SignedKAShare,
+  SignedSigShare,
+} from '../../proto/generated/mpc_poc/sign_message';
 
 export type ApproveMessageHandler = () => Promise<void>;
 export type GetGroupInfoHandler = () => Promise<{
@@ -80,6 +85,54 @@ export type GetRcvEncMsgListHandler = (myIndex: number) => Promise<
     signature: string;
   }[]
 >;
+export type SndMascotListHandler = (
+  sndMascotList: {
+    to: number;
+    from: number;
+    length: number;
+    data: { e0: string; e1: string }[];
+    signature: string;
+  }[],
+) => Promise<void>;
+export type GetSndMascotListHandler = (myIndex: number) => Promise<
+  {
+    to: number;
+    from: number;
+    length: number;
+    data: { e0: string; e1: string }[];
+    signature: string;
+  }[]
+>;
+export type SignedAuthenticatorDataHandler = (data: {
+  from: number;
+  signedAuthenticatorData: SignedAuthenticatorData;
+}) => Promise<void>;
+export type GetSignedAuthenticatorDataListHandler = () => Promise<
+  {
+    from: number;
+    signedAuthenticatorData: SignedAuthenticatorData;
+  }[]
+>;
+export type SignedKaShareHandler = (data: {
+  from: number;
+  signedKaShare: SignedKAShare;
+}) => Promise<void>;
+export type GetSignedKaShareListHandler = () => Promise<
+  {
+    from: number;
+    signedKaShare: SignedKAShare;
+  }[]
+>;
+export type SignedSigShareHandler = (data: {
+  from: number;
+  signedSigShare: SignedSigShare;
+}) => Promise<void>;
+export type GetSignedSigShareListHandler = () => Promise<
+  {
+    from: number;
+    signedSigShare: SignedSigShare;
+  }[]
+>;
 
 export interface ISignMessageParams {
   walletId: Uint8Array;
@@ -97,8 +150,16 @@ export interface ISignMessageParams {
   getSndPkInfoList: GetSndPkInfoListHandler;
   onRcvEncMsgList: RcvEncMsgListHandler;
   getRcvEncMsgList: GetRcvEncMsgListHandler;
+  onSndMascotList: SndMascotListHandler;
+  getSndMascotList: GetSndMascotListHandler;
+  onSignedAuthenticatorData: SignedAuthenticatorDataHandler;
+  getSignedAuthenticatorDataList: GetSignedAuthenticatorDataListHandler;
+  onSignedKaShare: SignedKaShareHandler;
+  getSignedKaShareList: GetSignedKaShareListHandler;
+  onSignedSigShare: SignedSigShareHandler;
+  getSignedSigShareList: GetSignedSigShareListHandler;
 }
 
 export interface ISignMessageResult {
-  success: boolean;
+  signature: Uint8Array;
 }

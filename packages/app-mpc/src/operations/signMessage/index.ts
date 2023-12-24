@@ -8,9 +8,14 @@ import {
 import {
   GroupInfo,
   GroupKeyInfo,
+  SignedAuthenticatorData,
   SignedPublicKey,
   SignedShareData,
 } from '../../proto/generated/mpc_poc/common';
+import {
+  SignedKAShare,
+  SignedSigShare,
+} from '../../proto/generated/mpc_poc/sign_message';
 
 export * from './types';
 
@@ -381,7 +386,216 @@ export const signMessage = async (
     await helper.waitForResult();
   }
 
+  const sndMASCOTList: {
+    to: number;
+    from: number;
+    length: number;
+    data: { e0: string; e1: string }[];
+    signature: string;
+  }[] = [];
+
+  for (let i = 0; i < senderTimes; i += 1) {
+    await helper.sendQuery({
+      mtaSndGetMascotInitiate: {},
+    });
+
+    const { mtaSndGetMascotInitiate } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaSndGetMascotInitiate?.to);
+    assertOrThrowInvalidResult(mtaSndGetMascotInitiate?.length);
+
+    const mascotInfo: {
+      to: number;
+      from: number;
+      length: number;
+      data: { e0: string; e1: string }[];
+      signature: string;
+    } = {
+      to: mtaSndGetMascotInitiate.to,
+      from: myIndex,
+      length: mtaSndGetMascotInitiate.length,
+      data: [],
+      signature: '',
+    };
+
+    for (let j = 0; j < mtaSndGetMascotInitiate.length; j += 1) {
+      await helper.sendQuery({
+        mtaSndGetMascot: {},
+      });
+
+      const { mtaSndGetMascot } = await helper.waitForResult();
+      assertOrThrowInvalidResult(mtaSndGetMascot?.encM0);
+      assertOrThrowInvalidResult(mtaSndGetMascot?.encM1);
+
+      mascotInfo.data.push({
+        e0: Buffer.from(mtaSndGetMascot.encM0).toString('hex'),
+        e1: Buffer.from(mtaSndGetMascot.encM1).toString('hex'),
+      });
+    }
+
+    await helper.sendQuery({
+      mtaSndGetMascotSig: {},
+    });
+
+    const { mtaSndGetMascotSig } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaSndGetMascotSig?.signature);
+
+    mascotInfo.signature = Buffer.from(mtaSndGetMascotSig.signature).toString(
+      'hex',
+    );
+
+    sndMASCOTList.push(mascotInfo);
+  }
+
+  await params.onSndMascotList(sndMASCOTList);
+
+  const getSndMASCOTList = await params.getSndMascotList(myIndex);
+  assertOrThrowInvalidResult(getSndMASCOTList.length === receiverTimes);
+
+  getSndMASCOTList.sort((a, b) => (a.from > b.from ? 1 : -1));
+
+  for (let i = 0; i < receiverTimes; i += 1) {
+    await helper.sendQuery({
+      mtaRcvPostMascotInitiate: {},
+    });
+
+    const { mtaRcvPostMascotInitiate } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaRcvPostMascotInitiate?.to);
+    assertOrThrowInvalidResult(mtaRcvPostMascotInitiate?.length);
+    assertOrThrowInvalidResult(
+      mtaRcvPostMascotInitiate.to === getSndMASCOTList[i].from,
+    );
+
+    for (let j = 0; j < mtaRcvPostMascotInitiate.length; j += 1) {
+      await helper.sendQuery({
+        mtaRcvPostMascot: {
+          encM0: Buffer.from(getSndMASCOTList[i].data[j].e0, 'hex'),
+          encM1: Buffer.from(getSndMASCOTList[i].data[j].e1, 'hex'),
+        },
+      });
+
+      await helper.waitForResult();
+    }
+
+    await helper.sendQuery({
+      mtaRcvPostMascotSig: {
+        signature: Buffer.from(getSndMASCOTList[i].signature, 'hex'),
+      },
+    });
+
+    await helper.waitForResult();
+  }
+
+  await helper.sendQuery({
+    sigGetAuthenticator: {},
+  });
+
+  const { sigGetAuthenticator } = await helper.waitForResult();
+  assertOrThrowInvalidResult(sigGetAuthenticator?.signedAuthenticatorData);
+
+  await params.onSignedAuthenticatorData({
+    from: myIndex,
+    signedAuthenticatorData: sigGetAuthenticator.signedAuthenticatorData,
+  });
+
+  let getSignedAuthenticatorDataList: {
+    from: number;
+    signedAuthenticatorData: SignedAuthenticatorData;
+  }[] = await params.getSignedAuthenticatorDataList();
+
+  // remove the item from the list where 'from' is myIndex
+  getSignedAuthenticatorDataList = getSignedAuthenticatorDataList.filter(
+    item => item.from !== myIndex,
+  );
+
+  // get the list of SignedAuthenticatorData[] rom getSignedAuthenticatorDataList
+  const signedAuthenticatorDataList: SignedAuthenticatorData[] = [];
+  getSignedAuthenticatorDataList.forEach(item => {
+    signedAuthenticatorDataList.push(item.signedAuthenticatorData);
+  });
+
+  await helper.sendQuery({
+    sigComputeAuthenticator: {
+      signedAuthenticatorDataList,
+    },
+  });
+
+  await helper.waitForResult();
+
+  await helper.sendQuery({
+    sigGetKaShare: {},
+  });
+
+  const { sigGetKaShare } = await helper.waitForResult();
+  assertOrThrowInvalidResult(sigGetKaShare?.signedKaShare);
+
+  await params.onSignedKaShare({
+    from: myIndex,
+    signedKaShare: sigGetKaShare.signedKaShare,
+  });
+
+  let getSignedKaShareList: {
+    from: number;
+    signedKaShare: SignedKAShare;
+  }[] = await params.getSignedKaShareList();
+
+  // remove the item from the list where 'from' is myIndex
+  getSignedKaShareList = getSignedKaShareList.filter(
+    item => item.from !== myIndex,
+  );
+
+  // get the list of SignedKAShare[] rom getSignedKaShareList
+  const signedKaShareList: SignedKAShare[] = [];
+  getSignedKaShareList.forEach(item => {
+    signedKaShareList.push(item.signedKaShare);
+  });
+
+  await helper.sendQuery({
+    sigComputeKa: {
+      signedKaShareList,
+    },
+  });
+
+  await helper.waitForResult();
+
+  await helper.sendQuery({
+    getSigShare: {},
+  });
+
+  const { getSigShare } = await helper.waitForResult();
+  assertOrThrowInvalidResult(getSigShare?.signedSigShare);
+
+  await params.onSignedSigShare({
+    from: myIndex,
+    signedSigShare: getSigShare.signedSigShare,
+  });
+
+  let getSignedSigShareList: {
+    from: number;
+    signedSigShare: SignedSigShare;
+  }[] = await params.getSignedSigShareList();
+
+  // remove the item from the list where 'from' is myIndex
+  getSignedSigShareList = getSignedSigShareList.filter(
+    item => item.from !== myIndex,
+  );
+
+  // get the list of SignedShareData[] rom getSignedSigShareList
+  const signedSigShareList: SignedSigShare[] = [];
+
+  getSignedSigShareList.forEach(item => {
+    signedSigShareList.push(item.signedSigShare);
+  });
+
+  await helper.sendQuery({
+    computeSig: {
+      signedSigShareList,
+    },
+  });
+
+  const { computeSig } = await helper.waitForResult();
+  assertOrThrowInvalidResult(computeSig?.signature);
+
   return {
-    success: true,
+    signature: computeSig.signature,
   };
 };
