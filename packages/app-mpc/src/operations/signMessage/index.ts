@@ -517,6 +517,9 @@ export const signMessage = async (
     item => item.from !== myIndex,
   );
 
+  // sort getSignedAuthenticatorDataList by 'from' field
+  getSignedAuthenticatorDataList.sort((a, b) => (a.from > b.from ? 1 : -1));
+
   // get the list of SignedAuthenticatorData[] rom getSignedAuthenticatorDataList
   const signedAuthenticatorDataList: SignedAuthenticatorData[] = [];
   getSignedAuthenticatorDataList.forEach(item => {
@@ -559,6 +562,9 @@ export const signMessage = async (
     item => item.from !== myIndex,
   );
 
+  // sort getSignedKaShareList by 'from' field
+  getSignedKaShareList.sort((a, b) => (a.from > b.from ? 1 : -1));
+
   // get the list of SignedKAShare[] rom getSignedKaShareList
   const signedKaShareList: SignedKAShare[] = [];
   getSignedKaShareList.forEach(item => {
@@ -600,6 +606,9 @@ export const signMessage = async (
   getSignedSigShareList = getSignedSigShareList.filter(
     item => item.from !== myIndex,
   );
+
+  // sort getSignedSigShareList by 'from' field
+  getSignedSigShareList.sort((a, b) => (a.from > b.from ? 1 : -1));
 
   // get the list of SignedShareData[] rom getSignedSigShareList
   const signedSigShareList: SignedSigShare[] = [];
