@@ -62,6 +62,24 @@ export type GetSndPkInfoListHandler = (myIndex: number) => Promise<
     signature: string;
   }[]
 >;
+export type RcvEncMsgListHandler = (
+  rcvEncMsgList: {
+    to: number;
+    from: number;
+    length: number;
+    data: { e0: string; e1: string }[];
+    signature: string;
+  }[],
+) => Promise<void>;
+export type GetRcvEncMsgListHandler = (myIndex: number) => Promise<
+  {
+    to: number;
+    from: number;
+    length: number;
+    data: { e0: string; e1: string }[];
+    signature: string;
+  }[]
+>;
 
 export interface ISignMessageParams {
   walletId: Uint8Array;
@@ -77,6 +95,8 @@ export interface ISignMessageParams {
   getRcvPkInfoList: GetRcvPkInfoListHandler;
   onSndPkInfoList: SndPkInfoListHandler;
   getSndPkInfoList: GetSndPkInfoListHandler;
+  onRcvEncMsgList: RcvEncMsgListHandler;
+  getRcvEncMsgList: GetRcvEncMsgListHandler;
 }
 
 export interface ISignMessageResult {

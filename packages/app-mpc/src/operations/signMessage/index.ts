@@ -277,6 +277,110 @@ export const signMessage = async (
 
   getSndPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
 
+  const rcvEncMsgList: {
+    to: number;
+    from: number;
+    length: number;
+    data: { e0: string; e1: string }[];
+    signature: string;
+  }[] = [];
+
+  for (let i = 0; i < receiverTimes; i += 1) {
+    await helper.sendQuery({
+      mtaRcvGetEncInitiate: {},
+    });
+
+    const { mtaRcvGetEncInitiate } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaRcvGetEncInitiate?.to);
+    assertOrThrowInvalidResult(mtaRcvGetEncInitiate?.length);
+    assertOrThrowInvalidResult(
+      mtaRcvGetEncInitiate.to === getSndPkInfoList[i].from,
+    );
+
+    const encInfo: {
+      to: number;
+      from: number;
+      length: number;
+      data: { e0: string; e1: string }[];
+      signature: string;
+    } = {
+      to: mtaRcvGetEncInitiate.to,
+      from: myIndex,
+      length: mtaRcvGetEncInitiate.length,
+      data: [],
+      signature: '',
+    };
+
+    for (let j = 0; j < mtaRcvGetEncInitiate.length; j += 1) {
+      await helper.sendQuery({
+        mtaRcvGetEnc: {
+          publicKey: Buffer.from(getSndPkInfoList[i].data[j], 'hex'),
+        },
+      });
+
+      const { mtaRcvGetEnc } = await helper.waitForResult();
+      assertOrThrowInvalidResult(mtaRcvGetEnc?.encM0);
+      assertOrThrowInvalidResult(mtaRcvGetEnc?.encM1);
+
+      encInfo.data.push({
+        e0: Buffer.from(mtaRcvGetEnc.encM0).toString('hex'),
+        e1: Buffer.from(mtaRcvGetEnc.encM1).toString('hex'),
+      });
+    }
+
+    await helper.sendQuery({
+      mtaRcvGetEncSig: {
+        signature: Buffer.from(getSndPkInfoList[i].signature, 'hex'),
+      },
+    });
+
+    const { mtaRcvGetEncSig } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaRcvGetEncSig?.signature);
+
+    encInfo.signature = Buffer.from(mtaRcvGetEncSig.signature).toString('hex');
+
+    rcvEncMsgList.push(encInfo);
+  }
+
+  await params.onRcvEncMsgList(rcvEncMsgList);
+
+  const getRcvEncMsgList = await params.getRcvEncMsgList(myIndex);
+  assertOrThrowInvalidResult(getSndPkInfoList.length === senderTimes);
+
+  getSndPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
+
+  for (let i = 0; i < senderTimes; i += 1) {
+    await helper.sendQuery({
+      mtaSndPostEncInitiate: {},
+    });
+
+    const { mtaSndPostEncInitiate } = await helper.waitForResult();
+    assertOrThrowInvalidResult(mtaSndPostEncInitiate?.to);
+    assertOrThrowInvalidResult(mtaSndPostEncInitiate?.length);
+    assertOrThrowInvalidResult(
+      mtaSndPostEncInitiate.to === getRcvEncMsgList[i].from,
+    );
+
+    for (let j = 0; j < mtaSndPostEncInitiate.length; j += 1) {
+      await helper.sendQuery({
+        mtaSndPostEnc: {
+          encM0: Buffer.from(getRcvEncMsgList[i].data[j].e0, 'hex'),
+          encM1: Buffer.from(getRcvEncMsgList[i].data[j].e1, 'hex'),
+        },
+      });
+
+      await helper.waitForResult();
+    }
+
+    await helper.sendQuery({
+      mtaSndPostEncSig: {
+        signature: Buffer.from(getRcvEncMsgList[i].signature, 'hex'),
+      },
+    });
+
+    await helper.waitForResult();
+  }
+
   return {
     success: true,
   };
