@@ -353,9 +353,9 @@ export const signMessage = async (
   await params.onRcvEncMsgList(rcvEncMsgList);
 
   const getRcvEncMsgList = await params.getRcvEncMsgList(myIndex, senderTimes);
-  assertOrThrowInvalidResult(getSndPkInfoList.length === senderTimes);
+  assertOrThrowInvalidResult(getRcvEncMsgList.length === senderTimes);
 
-  getSndPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
+  getRcvEncMsgList.sort((a, b) => (a.from > b.from ? 1 : -1));
 
   for (let i = 0; i < senderTimes; i += 1) {
     await helper.sendQuery({
