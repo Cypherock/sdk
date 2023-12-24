@@ -500,12 +500,16 @@ export const signMessage = async (
 
   await params.onSignedAuthenticatorData({
     from: myIndex,
-    signedAuthenticatorData: sigGetAuthenticator.signedAuthenticatorData,
+    signedAuthenticatorData: Buffer.from(
+      SignedAuthenticatorData.encode(
+        sigGetAuthenticator.signedAuthenticatorData,
+      ).finish(),
+    ).toString('hex'),
   });
 
   let getSignedAuthenticatorDataList: {
     from: number;
-    signedAuthenticatorData: SignedAuthenticatorData;
+    signedAuthenticatorData: string;
   }[] = await params.getSignedAuthenticatorDataList();
 
   // remove the item from the list where 'from' is myIndex
@@ -516,7 +520,11 @@ export const signMessage = async (
   // get the list of SignedAuthenticatorData[] rom getSignedAuthenticatorDataList
   const signedAuthenticatorDataList: SignedAuthenticatorData[] = [];
   getSignedAuthenticatorDataList.forEach(item => {
-    signedAuthenticatorDataList.push(item.signedAuthenticatorData);
+    signedAuthenticatorDataList.push(
+      SignedAuthenticatorData.decode(
+        new Uint8Array(Buffer.from(item.signedAuthenticatorData, 'hex')),
+      ),
+    );
   });
 
   await helper.sendQuery({
@@ -536,12 +544,14 @@ export const signMessage = async (
 
   await params.onSignedKaShare({
     from: myIndex,
-    signedKaShare: sigGetKaShare.signedKaShare,
+    signedKaShare: Buffer.from(
+      SignedKAShare.encode(sigGetKaShare.signedKaShare).finish(),
+    ).toString('hex'),
   });
 
   let getSignedKaShareList: {
     from: number;
-    signedKaShare: SignedKAShare;
+    signedKaShare: string;
   }[] = await params.getSignedKaShareList();
 
   // remove the item from the list where 'from' is myIndex
@@ -552,7 +562,11 @@ export const signMessage = async (
   // get the list of SignedKAShare[] rom getSignedKaShareList
   const signedKaShareList: SignedKAShare[] = [];
   getSignedKaShareList.forEach(item => {
-    signedKaShareList.push(item.signedKaShare);
+    signedKaShareList.push(
+      SignedKAShare.decode(
+        new Uint8Array(Buffer.from(item.signedKaShare, 'hex')),
+      ),
+    );
   });
 
   await helper.sendQuery({
@@ -572,12 +586,14 @@ export const signMessage = async (
 
   await params.onSignedSigShare({
     from: myIndex,
-    signedSigShare: getSigShare.signedSigShare,
+    signedSigShare: Buffer.from(
+      SignedSigShare.encode(getSigShare.signedSigShare).finish(),
+    ).toString('hex'),
   });
 
   let getSignedSigShareList: {
     from: number;
-    signedSigShare: SignedSigShare;
+    signedSigShare: string;
   }[] = await params.getSignedSigShareList();
 
   // remove the item from the list where 'from' is myIndex
@@ -589,7 +605,11 @@ export const signMessage = async (
   const signedSigShareList: SignedSigShare[] = [];
 
   getSignedSigShareList.forEach(item => {
-    signedSigShareList.push(item.signedSigShare);
+    signedSigShareList.push(
+      SignedSigShare.decode(
+        new Uint8Array(Buffer.from(item.signedSigShare, 'hex')),
+      ),
+    );
   });
 
   await helper.sendQuery({

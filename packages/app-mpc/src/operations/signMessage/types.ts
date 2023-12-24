@@ -1,14 +1,9 @@
 import {
   GroupInfo,
   GroupKeyInfo,
-  SignedAuthenticatorData,
   SignedPublicKey,
   SignedShareData,
 } from '../../proto/generated/mpc_poc/common';
-import {
-  SignedKAShare,
-  SignedSigShare,
-} from '../../proto/generated/mpc_poc/sign_message';
 
 export type ApproveMessageHandler = () => Promise<void>;
 export type GetGroupInfoHandler = () => Promise<{
@@ -117,32 +112,32 @@ export type GetSndMascotListHandler = (
 >;
 export type SignedAuthenticatorDataHandler = (data: {
   from: number;
-  signedAuthenticatorData: SignedAuthenticatorData;
+  signedAuthenticatorData: string;
 }) => Promise<void>;
 export type GetSignedAuthenticatorDataListHandler = () => Promise<
   {
     from: number;
-    signedAuthenticatorData: SignedAuthenticatorData;
+    signedAuthenticatorData: string;
   }[]
 >;
 export type SignedKaShareHandler = (data: {
   from: number;
-  signedKaShare: SignedKAShare;
+  signedKaShare: string;
 }) => Promise<void>;
 export type GetSignedKaShareListHandler = () => Promise<
   {
     from: number;
-    signedKaShare: SignedKAShare;
+    signedKaShare: string;
   }[]
 >;
 export type SignedSigShareHandler = (data: {
   from: number;
-  signedSigShare: SignedSigShare;
+  signedSigShare: string;
 }) => Promise<void>;
 export type GetSignedSigShareListHandler = () => Promise<
   {
     from: number;
-    signedSigShare: SignedSigShare;
+    signedSigShare: string;
   }[]
 >;
 
