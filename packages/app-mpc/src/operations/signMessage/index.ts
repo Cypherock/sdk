@@ -215,7 +215,7 @@ export const signMessage = async (
   const getRcvPkInfoList = await params.getRcvPkInfoList(myIndex, senderTimes);
   assertOrThrowInvalidResult(getRcvPkInfoList.length === senderTimes);
 
-  getRcvPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
+  getRcvPkInfoList.sort((a, b) => (a.from < b.from ? 1 : -1));
 
   const sndPkInfoList: MtaData[] = [];
 
@@ -278,7 +278,7 @@ export const signMessage = async (
   );
   assertOrThrowInvalidResult(getSndPkInfoList.length === receiverTimes);
 
-  getSndPkInfoList.sort((a, b) => (a.from > b.from ? 1 : -1));
+  getSndPkInfoList.sort((a, b) => (a.from < b.from ? 1 : -1));
 
   const rcvEncMsgList: MtaData[] = [];
 
@@ -341,7 +341,7 @@ export const signMessage = async (
   const getRcvEncMsgList = await params.getRcvEncMsgList(myIndex, senderTimes);
   assertOrThrowInvalidResult(getRcvEncMsgList.length === senderTimes);
 
-  getRcvEncMsgList.sort((a, b) => (a.from > b.from ? 1 : -1));
+  getRcvEncMsgList.sort((a, b) => (a.from < b.from ? 1 : -1));
 
   for (let i = 0; i < senderTimes; i += 1) {
     await helper.sendQuery({
@@ -355,6 +355,8 @@ export const signMessage = async (
       mtaSndPostEncInitiate.to === getRcvEncMsgList[i].from,
     );
 
+    console.log('c before loop ', mtaSndPostEncInitiate.length);
+
     for (let j = 0; j < mtaSndPostEncInitiate.length; j += 1) {
       console.log('c doing it inside', j);
       await helper.sendQuery({
@@ -364,8 +366,12 @@ export const signMessage = async (
         },
       });
 
+      console.log('sent');
+
       await helper.waitForResult();
     }
+
+    console.log('c after loop ', mtaSndPostEncInitiate.length);
 
     await helper.sendQuery({
       mtaSndPostEncSig: {
@@ -433,7 +439,7 @@ export const signMessage = async (
   );
   assertOrThrowInvalidResult(getSndMASCOTList.length === receiverTimes);
 
-  getSndMASCOTList.sort((a, b) => (a.from > b.from ? 1 : -1));
+  getSndMASCOTList.sort((a, b) => (a.from < b.from ? 1 : -1));
 
   for (let i = 0; i < receiverTimes; i += 1) {
     await helper.sendQuery({
@@ -495,7 +501,7 @@ export const signMessage = async (
   );
 
   // sort getSignedAuthenticatorDataList by 'from' field
-  getSignedAuthenticatorDataList.sort((a, b) => (a.from > b.from ? 1 : -1));
+  getSignedAuthenticatorDataList.sort((a, b) => (a.from < b.from ? 1 : -1));
 
   // get the list of SignedAuthenticatorData[] rom getSignedAuthenticatorDataList
   const signedAuthenticatorDataList: SignedAuthenticatorData[] = [];
@@ -540,7 +546,7 @@ export const signMessage = async (
   );
 
   // sort getSignedKaShareList by 'from' field
-  getSignedKaShareList.sort((a, b) => (a.from > b.from ? 1 : -1));
+  getSignedKaShareList.sort((a, b) => (a.from < b.from ? 1 : -1));
 
   // get the list of SignedKAShare[] rom getSignedKaShareList
   const signedKaShareList: SignedKAShare[] = [];
@@ -583,7 +589,7 @@ export const signMessage = async (
   );
 
   // sort getSignedSigShareList by 'from' field
-  getSignedSigShareList.sort((a, b) => (a.from > b.from ? 1 : -1));
+  getSignedSigShareList.sort((a, b) => (a.from < b.from ? 1 : -1));
 
   // get the list of SignedShareData[] rom getSignedSigShareList
   const signedSigShareList: SignedSigShare[] = [];
