@@ -143,6 +143,8 @@ export const signMessage = async (
 
   await params.onGroupKeyList(groupKeyInfoList);
 
+  console.log('starting mta');
+
   await helper.sendQuery({
     startMta: {},
   });
@@ -151,12 +153,18 @@ export const signMessage = async (
   assertOrThrowInvalidResult(startMta?.senderTimes);
   assertOrThrowInvalidResult(startMta?.receiverTimes);
 
+  console.log('mta started');
+
   const { senderTimes } = startMta;
   const { receiverTimes } = startMta;
+
+  console.log(senderTimes);
+  console.log(receiverTimes);
 
   const rcvPkInfoList: MtaData[] = [];
 
   for (let i = 0; i < receiverTimes; i += 1) {
+    console.log('doing it');
     await helper.sendQuery({
       mtaRcvGetPkInitiate: {},
     });
@@ -174,6 +182,7 @@ export const signMessage = async (
     };
 
     for (let j = 0; j < mtaRcvGetPkInitiate.length; j += 1) {
+      console.log('f doing it inside', j);
       await helper.sendQuery({
         mtaRcvGetPk: {},
       });
@@ -198,6 +207,8 @@ export const signMessage = async (
 
     rcvPkInfoList.push(pkInfo);
   }
+
+  console.log(rcvPkInfoList);
 
   await params.onRcvPkInfoList(rcvPkInfoList);
 
@@ -229,6 +240,7 @@ export const signMessage = async (
     };
 
     for (let j = 0; j < mtaSndGetPkInitiate.length; j += 1) {
+      console.log('e doing it inside', j);
       await helper.sendQuery({
         mtaSndGetPk: {
           publicKey: Buffer.from(getRcvPkInfoList[i].data[j].first, 'hex'),
@@ -290,7 +302,10 @@ export const signMessage = async (
       signature: '',
     };
 
+    console.log('d length: ', mtaRcvGetEncInitiate.length);
+
     for (let j = 0; j < mtaRcvGetEncInitiate.length; j += 1) {
+      console.log('d doing it inside', j);
       await helper.sendQuery({
         mtaRcvGetEnc: {
           publicKey: Buffer.from(getSndPkInfoList[i].data[j].first, 'hex'),
@@ -341,6 +356,7 @@ export const signMessage = async (
     );
 
     for (let j = 0; j < mtaSndPostEncInitiate.length; j += 1) {
+      console.log('c doing it inside', j);
       await helper.sendQuery({
         mtaSndPostEnc: {
           encM0: Buffer.from(getRcvEncMsgList[i].data[j].first, 'hex'),
@@ -380,6 +396,7 @@ export const signMessage = async (
     };
 
     for (let j = 0; j < mtaSndGetMascotInitiate.length; j += 1) {
+      console.log('b doing it inside', j);
       await helper.sendQuery({
         mtaSndGetMascot: {},
       });
@@ -431,6 +448,7 @@ export const signMessage = async (
     );
 
     for (let j = 0; j < mtaRcvPostMascotInitiate.length; j += 1) {
+      console.log('a doing it inside', j);
       await helper.sendQuery({
         mtaRcvPostMascot: {
           encM0: Buffer.from(getSndMASCOTList[i].data[j].first, 'hex'),

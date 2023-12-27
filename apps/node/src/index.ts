@@ -762,6 +762,9 @@ const run = async () => {
   const mpcApp = await MPCApp.create(connection);
   const managerApp = await ManagerApp.create(connection);
 
+  // const logs = await managerApp.getLogs();
+  // console.log(logs);
+
   // await mpcApp.exitApplication();
   console.log("MPC TSS Application started");  
   
