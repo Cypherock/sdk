@@ -1,5 +1,8 @@
 process.env.LOG_LEVEL="error"
 
+import { promises as fs } from 'fs';
+
+
 import DeviceConnection from '@cypherock/sdk-hw-hid';
 import DeviceConnectionSerialport from '@cypherock/sdk-hw-serialport';
 import { ManagerApp } from '@cypherock/sdk-app-manager';
@@ -206,7 +209,7 @@ async function fetchMtaData(groupID: Uint8Array, msgHash: string, mtaDataType: s
       }
   } catch (error: any) {
       if (error.response && error.response.status === 404) {
-          console.log(`...`);
+          // console.log(`...`);
           await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
           return fetchMtaData(groupID, msgHash, mtaDataType, to, length); // Retry
       } else {
@@ -232,7 +235,7 @@ async function fetchSigData(groupID: Uint8Array, msgHash: string, sigDataType: s
       }
   } catch (error: any) {
       if (error.response && error.response.status === 404) {
-          console.log(`...`);
+          // console.log(`...`);
           await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
           return fetchSigData(groupID, msgHash, sigDataType, length); // Retry
       } else {
@@ -363,7 +366,7 @@ async function signMessage(message: string,
                            groupKeyInfo: IGroupKeyInfo,
                            groupKeyInfoSignature: Uint8Array) {
 
-  console.log('\nMessage to be signed: ', message);
+  console.log("\nCheck device's screen.");
   let parties: string[];
 
   const onMessageApproval = async () => {
@@ -381,8 +384,8 @@ async function signMessage(message: string,
 
   const getGroupInfo = async () => {
     // print both signatures in hex
-    console.log("Group info signature: ", Buffer.from(groupInfoSignature).toString('hex'));
-    console.log("Group key info signature: ", Buffer.from(groupKeyInfoSignature).toString('hex'));
+    // console.log("Group info signature: ", Buffer.from(groupInfoSignature).toString('hex'));
+    // console.log("Group key info signature: ", Buffer.from(groupKeyInfoSignature).toString('hex'));
 
     return {
       groupInfo: groupInfo,
@@ -400,7 +403,7 @@ async function signMessage(message: string,
         throw new Error("Invalid public key found in the sequence.");
     }
 
-    console.log(indexes);
+    // console.log(indexes);
     return indexes;
   }
 
@@ -443,8 +446,8 @@ async function signMessage(message: string,
         transposedMatrix.push(newRow);
     }
     
-    console.log("Share data lists: ");
-    console.log(transposedMatrix);
+    // console.log("Share data lists: ");
+    // console.log(transposedMatrix);
 
     return transposedMatrix;
   }
@@ -487,8 +490,8 @@ async function signMessage(message: string,
         transposedMatrix.push(newRow);
     }
 
-    console.log("QI lists: ");
-    console.log(transposedMatrix);
+    // console.log("QI lists: ");
+    // console.log(transposedMatrix);
 
     return transposedMatrix;
   }
@@ -676,11 +679,16 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp, w
             name: `${index + 1}. ${item['msgHash']} - Users online: (${item['parties']}/${groupInfo.threshold})`,
             value: item['msgHash'],
           }));
+          msgHashChoices.push({name: `${messageHashes.length + 1}. Go back.`, value: 'GO_BACK'})
 
           const chosenMsg = await select({
             message: 'Select the message to sign?',
             choices: msgHashChoices,
           }); 
+
+          if (chosenMsg == "GO_BACK") {
+            continue;
+          }
 
           // get message from message hash
           const response2 = await axios.get(`${SERVER_URL}/messageHash`, {
@@ -690,6 +698,16 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp, w
           if (response2.status != 200 || response2.data === '') {
             console.log('Error: Invalid response from the server.');
             return;
+          }
+
+          console.log("\nMessage to be signed: ", response2.data);
+          console.log("\n");
+          const message = await input({
+              message: "Continue with the above message (y/n):"
+          });
+
+          if (message != 'y' && message != 'Y') {
+            continue;
           }
 
           await signMessage(response2.data, chosenMsg, mpcApp, walletId, groupID, pubKey, groupInfo, groupInfoSignature, groupKeyInfo, groupKeyInfoSignature);
@@ -762,8 +780,24 @@ const run = async () => {
   const mpcApp = await MPCApp.create(connection);
   const managerApp = await ManagerApp.create(connection);
 
-  // const logs = await managerApp.getLogs();
-  // console.log(logs);
+  try {
+    const logs = await managerApp.getLogs();
+
+    // Convert the logs object to a string
+    const logsString = JSON.stringify(logs, null, 2);
+   // Generate a random integer, for example between 0 and 9999
+     const randomNumber = Math.floor(Math.random() * 10000);
+
+     // Append the random number to the file name
+     const fileName = `logs_${randomNumber}.txt`;
+
+     // Write to a file
+     await fs.writeFile(fileName, logsString);
+
+     console.log(`Logs saved to ${fileName}`);
+   } catch (error) {
+     console.error('Error saving logs:', error);
+   }
 
   // await mpcApp.exitApplication();
   console.log("MPC TSS Application started");  
