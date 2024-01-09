@@ -285,20 +285,6 @@ function pubKeyToIndex(groupInfo: IGroupInfo, pubKey: string): number {
   return -1;
 }
 
-async function invertMatrix(matrix: any[][]): Promise<any[][]> {
-  let newMatrix = [];
-
-  for (let i = 0; i < matrix.length; ++i) {
-    let temp = [];
-    for (let j = 0; j < matrix[i].length; ++j) {
-      temp.push(matrix[j][i]);
-    }
-    newMatrix.push(temp);
-  }
-
-  return newMatrix;
-}
-
 async function getMtaUploadHandler(groupID: Uint8Array, msgHash: string, mtaDataType: string) {
   const handler = async (
     mtaData: MtaData[],
@@ -700,10 +686,10 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp, w
             return;
           }
 
-          console.log("\nMessage to be signed: ", response2.data);
+          console.log("\nSHA2 hash of the message to be signed: ", response2.data);
           console.log("\n");
           const message = await input({
-              message: "Continue with the above message (y/n):"
+              message: "Continue with the above message hash (y/n):"
           });
 
           if (message != 'y' && message != 'Y') {
@@ -716,7 +702,7 @@ async function common(groupID: Uint8Array, pubKey: Uint8Array, mpcApp: MPCApp, w
         else if (signingChoice === SIGN_ACTION_CREATE_NEW_MESSAGE) {
           // ask user to enter the message in hex
           const message = await input({
-              message: "Enter the message in hex:"
+              message: "Enter the SHA2 hash of the message in hex:"
           });
 
           // upload the message on the server
@@ -780,24 +766,24 @@ const run = async () => {
   const mpcApp = await MPCApp.create(connection);
   const managerApp = await ManagerApp.create(connection);
 
-  try {
-    const logs = await managerApp.getLogs();
+  // try {
+  //   const logs = await managerApp.getLogs();
 
-    // Convert the logs object to a string
-    const logsString = JSON.stringify(logs, null, 2);
-   // Generate a random integer, for example between 0 and 9999
-     const randomNumber = Math.floor(Math.random() * 10000);
+  //   // Convert the logs object to a string
+  //   const logsString = JSON.stringify(logs, null, 2);
+  //  // Generate a random integer, for example between 0 and 9999
+  //    const randomNumber = Math.floor(Math.random() * 10000);
 
-     // Append the random number to the file name
-     const fileName = `logs_${randomNumber}.txt`;
+  //    // Append the random number to the file name
+  //    const fileName = `logs_${randomNumber}.txt`;
 
-     // Write to a file
-     await fs.writeFile(fileName, logsString);
+  //    // Write to a file
+  //    await fs.writeFile(fileName, logsString);
 
-     console.log(`Logs saved to ${fileName}`);
-   } catch (error) {
-     console.error('Error saving logs:', error);
-   }
+  //    console.log(`Logs saved to ${fileName}`);
+  //  } catch (error) {
+  //    console.error('Error saving logs.');
+  //  }
 
   // await mpcApp.exitApplication();
   console.log("MPC TSS Application started");  
@@ -925,7 +911,7 @@ const run = async () => {
       const onGroupID = async (groupID: Uint8Array, signature: Uint8Array) => {
         console.log("Group setup completed.");
         console.log("Group ID: ", Buffer.from(groupID).toString('hex'));
-        console.log("Signature: ", Buffer.from(signature).toString('hex'));
+        // console.log("Signature: ", Buffer.from(signature).toString('hex'));
 
         let groupInfo: IGroupInfo = await getGroupInfo(entityInfoList, fingerprints, threshold, total_participants);
         let groupInfoRaw = GroupInfo.encode(groupInfo).finish();
@@ -962,7 +948,7 @@ const run = async () => {
 
         console.log("\nDKG process started...")
 
-        console.log('\nUploading your encrypted ShareData to the server...')
+        // console.log('\nUploading your encrypted ShareData to the server...')
         const response = await axios.post(
           `${SERVER_URL}/shareData`,
           { 
@@ -982,9 +968,9 @@ const run = async () => {
           return [];
         }
 
-        console.log("Broadcast successful.");
+        // console.log("Broadcast successful.");
 
-        console.log("Waiting for the other participants to upload their ShareData...");
+        // console.log("Waiting for the other participants to upload their ShareData...");
 
         const shareDataList = await Promise.all(participantsPublicKeys.map(pubKey => fetchShareData(globalGroupID, pubKey)));
 
@@ -994,7 +980,7 @@ const run = async () => {
       const onIndividualPublicKey = async (individualPublicKey: SignedPublicKey) => {
         const individualPublicKeyRaw = SignedPublicKey.encode(individualPublicKey).finish();
 
-        console.log("\nUploading your Qi to the server...")
+        // console.log("\nUploading your Qi to the server...")
 
         const response = await axios.post(
           `${SERVER_URL}/individualPublicKey`,
@@ -1015,8 +1001,8 @@ const run = async () => {
           return [];
         }
 
-        console.log("Qi uploaded successfully.");
-        console.log("Waiting for the other participants to upload their Qi...");
+        // console.log("Qi uploaded successfully.");
+        // console.log("Waiting for the other participants to upload their Qi...");
 
         let individualPublicKeyList = await Promise.all(participantsPublicKeys.map(pubKey => fetchIndividualPublicKey(globalGroupID, pubKey)));
 
@@ -1039,7 +1025,7 @@ const run = async () => {
       } 
 
       console.log("\nDKG process completed successfully.");
-      console.log("\nUploading your encrypted share of the group secret polynomial to the server...")
+      console.log("\nUploading device info to the server...")
 
       const response = await axios.post(
         `${SERVER_URL}/groupKeyInfo`,
@@ -1061,7 +1047,7 @@ const run = async () => {
         return;
       }
 
-      console.log("Share uploaded successfully.");
+      console.log("Upload finished successfully.");
 
       await common(globalGroupID, pubKey, mpcApp, chosenWalletId);
       return;
