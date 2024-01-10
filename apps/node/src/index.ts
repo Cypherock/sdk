@@ -863,7 +863,7 @@ const run = async () => {
         console.log(`Enter the fingerpints of the other ${total_participants - 1} participants:`);
 
 
-        for (let i = 0; i < total_participants - fingerprints.length; i++) {
+        for (let i = 0; i < total_participants - 1; i++) {
           // take user input
           fingerprints.push(await input({ message: `>` }));
         }
@@ -948,7 +948,7 @@ const run = async () => {
 
         console.log("\nDKG process started...")
 
-        // console.log('\nUploading your encrypted ShareData to the server...')
+        console.log('\nUploading your encrypted ShareData to the server...')
         const response = await axios.post(
           `${SERVER_URL}/shareData`,
           { 
@@ -968,9 +968,9 @@ const run = async () => {
           return [];
         }
 
-        // console.log("Broadcast successful.");
+        console.log("Broadcast successful.");
 
-        // console.log("Waiting for the other participants to upload their ShareData...");
+        console.log("Waiting for the other participants to upload their ShareData...");
 
         const shareDataList = await Promise.all(participantsPublicKeys.map(pubKey => fetchShareData(globalGroupID, pubKey)));
 
@@ -980,7 +980,7 @@ const run = async () => {
       const onIndividualPublicKey = async (individualPublicKey: SignedPublicKey) => {
         const individualPublicKeyRaw = SignedPublicKey.encode(individualPublicKey).finish();
 
-        // console.log("\nUploading your Qi to the server...")
+        console.log("\nUploading your Qi to the server...")
 
         const response = await axios.post(
           `${SERVER_URL}/individualPublicKey`,
@@ -1001,8 +1001,8 @@ const run = async () => {
           return [];
         }
 
-        // console.log("Qi uploaded successfully.");
-        // console.log("Waiting for the other participants to upload their Qi...");
+        console.log("Qi uploaded successfully.");
+        console.log("Waiting for the other participants to upload their Qi...");
 
         let individualPublicKeyList = await Promise.all(participantsPublicKeys.map(pubKey => fetchIndividualPublicKey(globalGroupID, pubKey)));
 
