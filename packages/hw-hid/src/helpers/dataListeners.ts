@@ -113,7 +113,7 @@ export class DataListener {
     });
 
     try {
-      const data = await this.connection.read(300);
+      const data = await this.connection.read(20);
       this.onData(data as any);
     } catch (error) {
       logger.error('Error while reading data from device');
