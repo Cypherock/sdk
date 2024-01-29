@@ -39,7 +39,8 @@ export class DataListener {
 
     this.listening = false;
     this.pool = [];
-    this.startListening();
+
+    this.addAllListeners();
   }
 
   public async destroy() {
@@ -48,6 +49,8 @@ export class DataListener {
     }
 
     this.stopListening();
+    this.removeAllListeners();
+
     if (this.onCloseCallback) {
       this.onCloseCallback();
     }
@@ -76,28 +79,32 @@ export class DataListener {
   /**
    * Starts listening to all the events
    */
-  private startListening() {
+  public startListening() {
     this.listening = true;
-
     this.setReadInterval();
+  }
+
+  /**
+   * Stop listening to all the events
+   */
+  public stopListening() {
+    this.clearReadInterval();
+    this.listening = false;
+  }
+
+  private addAllListeners() {
     this.connection.addListener('close', this.onClose.bind(this));
     this.connection.addListener('error', this.onError.bind(this));
 
     usb.on('detach', this.onSomeDeviceDisconnectBinded);
   }
 
-  /**
-   * Stop listening to all the events
-   */
-  private stopListening() {
-    this.clearReadInterval();
-
+  private removeAllListeners() {
     this.connection.removeListener('close', this.onClose.bind(this));
     this.connection.removeListener('error', this.onError.bind(this));
     this.connection.removeAllListeners();
 
     usb.removeListener('detach', this.onSomeDeviceDisconnectBinded);
-    this.listening = false;
   }
 
   private async onRead() {
@@ -130,6 +137,7 @@ export class DataListener {
 
   private async onClose() {
     this.stopListening();
+    this.removeAllListeners();
     if (this.onCloseCallback) {
       this.onCloseCallback();
     }
