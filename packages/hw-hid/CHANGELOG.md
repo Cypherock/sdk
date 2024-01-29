@@ -1,5 +1,11 @@
 # @cypherock/sdk-hw-hid
 
+## 0.0.19
+
+### Patch Changes
+
+- [#96](https://github.com/Cypherock/sdk/pull/96) [`03388ae`](https://github.com/Cypherock/sdk/commit/03388ae87e1a1e47129912db8fd515e34a325b79) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed slow hid communication
+
 ## 0.0.18
 
 ### Patch Changes
