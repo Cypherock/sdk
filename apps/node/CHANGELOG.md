@@ -1,5 +1,18 @@
 # nodejs-test
 
+## 0.0.44
+
+### Patch Changes
+
+- Updated dependencies [[`85779aa`](https://github.com/Cypherock/sdk/commit/85779aaaf30704e29bb2803c145d78441998ab46)]:
+  - @cypherock/sdk-hw-hid@0.0.20
+  - @cypherock/sdk-core@0.0.22
+  - @cypherock/sdk-app-btc@0.0.33
+  - @cypherock/sdk-app-evm@0.0.29
+  - @cypherock/sdk-app-manager@0.0.27
+  - @cypherock/sdk-app-near@0.0.27
+  - @cypherock/sdk-app-solana@0.0.3
+
 ## 0.0.43
 
 ### Patch Changes
