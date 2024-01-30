@@ -130,30 +130,37 @@ const writePacket = (
       }
     }
 
-    connection.send(packet).catch((err: Error) => {
+    connection.send(packet).catch(async (err: Error) => {
       cleanUp();
+
+      if (!(await connection.isConnected())) {
+        reject(
+          new DeviceConnectionError(
+            DeviceConnectionErrorType.CONNECTION_CLOSED,
+          ),
+        );
+        return;
+      }
+
       reject(err);
     });
 
-    timeout = setTimeout(
-      async () => {
-        cleanUp();
-        if (!(await connection.isConnected())) {
-          reject(
-            new DeviceConnectionError(
-              DeviceConnectionErrorType.CONNECTION_CLOSED,
-            ),
-          );
-        } else {
-          reject(
-            new DeviceCommunicationError(
-              DeviceCommunicationErrorType.WRITE_TIMEOUT,
-            ),
-          );
-        }
-      },
-      options?.timeout ?? 2000,
-    );
+    timeout = setTimeout(async () => {
+      cleanUp();
+      if (!(await connection.isConnected())) {
+        reject(
+          new DeviceConnectionError(
+            DeviceConnectionErrorType.CONNECTION_CLOSED,
+          ),
+        );
+      } else {
+        reject(
+          new DeviceCommunicationError(
+            DeviceCommunicationErrorType.WRITE_TIMEOUT,
+          ),
+        );
+      }
+    }, options?.timeout ?? 2000);
 
     recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
   });
@@ -217,25 +224,22 @@ const checkIfInReceivingMode = async (
       }
     }
 
-    timeout = setTimeout(
-      async () => {
-        cleanUp();
-        if (!(await connection.isConnected())) {
-          reject(
-            new DeviceConnectionError(
-              DeviceConnectionErrorType.CONNECTION_CLOSED,
-            ),
-          );
-        } else {
-          reject(
-            new DeviceBootloaderError(
-              DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE,
-            ),
-          );
-        }
-      },
-      options?.timeout ?? 2000,
-    );
+    timeout = setTimeout(async () => {
+      cleanUp();
+      if (!(await connection.isConnected())) {
+        reject(
+          new DeviceConnectionError(
+            DeviceConnectionErrorType.CONNECTION_CLOSED,
+          ),
+        );
+      } else {
+        reject(
+          new DeviceBootloaderError(
+            DeviceBootloaderErrorType.NOT_IN_RECEIVING_MODE,
+          ),
+        );
+      }
+    }, options?.timeout ?? 2000);
 
     recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
   });
