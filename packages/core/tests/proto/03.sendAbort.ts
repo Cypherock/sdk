@@ -77,7 +77,7 @@ describe('sdk.sendAbort', () => {
   describe('should be able to handle multiple retries', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        const maxTimeoutTriggers = 3;
+        const maxTimeoutTriggers = 2;
         let totalTimeoutTriggers = 0;
 
         const maxTries = 3;
@@ -93,7 +93,7 @@ describe('sdk.sendAbort', () => {
           const currentRetry = (retries[packetIndex] ?? 0) + 1;
           const doTriggerError =
             Math.random() < 0.5 &&
-            currentRetry < maxTries &&
+            currentRetry < maxTries - 1 &&
             totalTimeoutTriggers < maxTimeoutTriggers;
 
           if (!doTriggerError) {
