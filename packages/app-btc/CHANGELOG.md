@@ -1,5 +1,12 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.33
+
+### Patch Changes
+
+- Updated dependencies [[`85779aa`](https://github.com/Cypherock/sdk/commit/85779aaaf30704e29bb2803c145d78441998ab46)]:
+  - @cypherock/sdk-core@0.0.22
+
 ## 0.0.32
 
 ### Patch Changes
