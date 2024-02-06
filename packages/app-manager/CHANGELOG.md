@@ -1,5 +1,12 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.28
+
+### Patch Changes
+
+- Updated dependencies [[`2ce5edf`](https://github.com/Cypherock/sdk/commit/2ce5edf38e466bc29687b47ef9b65dd84a699ca3)]:
+  - @cypherock/sdk-core@0.0.23
+
 ## 0.0.27
 
 ### Patch Changes
