@@ -1,5 +1,11 @@
 # @cypherock/sdk-core
 
+## 0.0.23
+
+### Patch Changes
+
+- [#100](https://github.com/Cypherock/sdk/pull/100) [`2ce5edf`](https://github.com/Cypherock/sdk/commit/2ce5edf38e466bc29687b47ef9b65dd84a699ca3) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed memory leaks and abort handling
+
 ## 0.0.22
 
 ### Patch Changes

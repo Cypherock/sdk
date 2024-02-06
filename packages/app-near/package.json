@@ -1,6 +1,6 @@
 {
   "name": "@cypherock/sdk-app-near",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -36,7 +36,7 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@cypherock/sdk-core": "workspace:^0.0.22",
+    "@cypherock/sdk-core": "workspace:^0.0.23",
     "@cypherock/sdk-interfaces": "workspace:^0.0.14",
     "@cypherock/sdk-utils": "workspace:^0.0.17",
     "long": "^5.2.1",
