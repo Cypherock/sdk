@@ -1,3 +1,4 @@
+import { updateLogger as updateLoggerCore } from '@cypherock/sdk-core';
 import { ILogger, LogCreator } from '@cypherock/sdk-interfaces';
 import {
   createDefaultConsoleLogger,
@@ -11,6 +12,7 @@ export const logger: ILogger = {
 };
 
 export const updateLogger = (createLogger: LogCreator) => {
+  updateLoggerCore(createLogger);
   updateLoggerObject({
     currentLogger: logger,
     newLogger: createLogger(loggerServiceName),

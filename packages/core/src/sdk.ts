@@ -85,7 +85,7 @@ export class SDK implements ISDK {
     return operations.sendAbort({
       connection,
       sequenceNumber:
-        options?.sequenceNumber ?? (await connection.getSequenceNumber()),
+        options?.sequenceNumber ?? (await connection.getNewSequenceNumber()),
       version: PacketVersionMap.v3,
       maxTries: options?.maxTries,
       timeout: options?.timeout,
@@ -289,7 +289,7 @@ export class SDK implements ISDK {
     return operations.sendAbort({
       connection: this.connection,
       sequenceNumber:
-        options?.sequenceNumber ?? (await this.getSequenceNumber()),
+        options?.sequenceNumber ?? (await this.getNewSequenceNumber()),
       version: this.packetVersion,
       maxTries: options?.maxTries,
       timeout: options?.timeout,
@@ -393,7 +393,12 @@ export class SDK implements ISDK {
       await this.ensureIfUSBIdle();
 
       const status = await this.getStatus();
-      if (status.deviceIdleState !== DeviceIdleState.DEVICE_IDLE_STATE_IDLE) {
+      if (
+        [
+          DeviceIdleState.DEVICE_IDLE_STATE_USB,
+          DeviceIdleState.DEVICE_IDLE_STATE_DEVICE,
+        ].includes(status.deviceIdleState)
+      ) {
         if (status.abortDisabled) {
           throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
         }
@@ -402,7 +407,11 @@ export class SDK implements ISDK {
       }
     } else if (await this.deprecated.isRawOperationSupported()) {
       const status = await this.deprecated.getCommandStatus();
-      if (status.deviceIdleState !== RawDeviceIdleState.IDLE) {
+      if (
+        [RawDeviceIdleState.DEVICE, RawDeviceIdleState.DEVICE].includes(
+          status.deviceIdleState,
+        )
+      ) {
         if (status.abortDisabled) {
           throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
         }

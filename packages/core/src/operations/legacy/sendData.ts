@@ -42,10 +42,12 @@ export const writePacket = (
         );
       }
 
+      let isCompleted = false;
       let timeout: NodeJS.Timeout | undefined;
       let recheckTimeout: NodeJS.Timeout | undefined;
 
       const cleanUp = () => {
+        isCompleted = true;
         if (timeout) {
           clearTimeout(timeout);
         }
@@ -54,9 +56,25 @@ export const writePacket = (
         }
       };
 
-      const recheckAck = async () => {
+      const setRecheckTimeout = () => {
+        if (isCompleted) return;
+
+        if (recheckTimeout) {
+          clearTimeout(recheckTimeout);
+        }
+
+        recheckTimeout = setTimeout(
+          // eslint-disable-next-line no-use-before-define
+          recheckAck,
+          usableConfig.constants.RECHECK_TIME,
+        );
+      };
+
+      // eslint-disable-next-line no-inner-declarations
+      async function recheckAck() {
         try {
           if (!(await connection.isConnected())) {
+            cleanUp();
             reject(
               new DeviceConnectionError(
                 DeviceConnectionErrorType.CONNECTION_CLOSED,
@@ -64,6 +82,8 @@ export const writePacket = (
             );
             return;
           }
+
+          if (isCompleted) return;
 
           const pool = await connection.peek();
 
@@ -98,10 +118,7 @@ export const writePacket = (
             }
           }
 
-          recheckTimeout = setTimeout(
-            recheckAck,
-            usableConfig.constants.RECHECK_TIME,
-          );
+          setRecheckTimeout();
         } catch (error) {
           cleanUp();
           reject(
@@ -110,15 +127,12 @@ export const writePacket = (
             ),
           );
         }
-      };
+      }
 
       connection
         .send(packet)
         .then(() => {
-          recheckTimeout = setTimeout(
-            recheckAck,
-            usableConfig.constants.RECHECK_TIME,
-          );
+          setRecheckTimeout();
         })
         .catch(() => {
           cleanUp();

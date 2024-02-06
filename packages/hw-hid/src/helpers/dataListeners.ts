@@ -132,7 +132,9 @@ export class DataListener {
   }
 
   private async onData(data: Buffer) {
-    this.pool.push({ id: uuid.v4(), data: Uint8Array.from(data) });
+    if (data && data.length > 0) {
+      this.pool.push({ id: uuid.v4(), data: Uint8Array.from(data) });
+    }
   }
 
   private async onClose() {

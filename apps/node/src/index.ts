@@ -1,6 +1,9 @@
-import DeviceConnection from '@cypherock/sdk-hw-hid';
+import DeviceConnection, {
+  updateLogger as updateLoggerHid,
+} from '@cypherock/sdk-hw-hid';
 import DeviceConnectionSerialport from '@cypherock/sdk-hw-serialport';
-import { ManagerApp } from '@cypherock/sdk-app-manager';
+import { ManagerApp, updateLogger } from '@cypherock/sdk-app-manager';
+import { updateLogger as updateLoggerCore } from '@cypherock/sdk-core';
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as bitcoinJsLib from 'bitcoinjs-lib';
 import * as nearApiJs from 'near-api-js';
@@ -10,8 +13,13 @@ import { setEthersLib } from '@cypherock/sdk-app-evm';
 import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
 import { ethers } from 'ethers';
+import { createServiceLogger } from './logger';
 
 const run = async () => {
+  updateLogger(createServiceLogger);
+  updateLoggerCore(createServiceLogger);
+  updateLoggerHid(createServiceLogger);
+
   setBitcoinJSLib(bitcoinJsLib);
   setEthersLib(ethers);
   setNearApiJs(nearApiJs);
