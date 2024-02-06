@@ -24,12 +24,14 @@ export const waitForIdle = async ({
   new Promise(async (resolve, reject) => {
     try {
       logger.debug('Waiting for device to be idle');
+      let isCompleted = false;
 
       const usableConfig = config.v3;
       let timeoutId: NodeJS.Timeout | undefined;
       let recheckTimeoutId: NodeJS.Timeout | undefined;
 
       const cleanUp = () => {
+        isCompleted = true;
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
@@ -38,7 +40,22 @@ export const waitForIdle = async ({
         }
       };
 
-      const recheckIfIdle = async () => {
+      const setRecheckTimeout = () => {
+        if (isCompleted) return;
+
+        if (recheckTimeoutId) {
+          clearTimeout(recheckTimeoutId);
+        }
+
+        recheckTimeoutId = setTimeout(
+          // eslint-disable-next-line no-use-before-define
+          recheckIfIdle,
+          usableConfig.constants.IDLE_RECHECK_TIME,
+        );
+      };
+
+      // eslint-disable-next-line no-inner-declarations
+      async function recheckIfIdle() {
         try {
           if (!(await connection.isConnected())) {
             cleanUp();
@@ -49,6 +66,8 @@ export const waitForIdle = async ({
             );
             return;
           }
+
+          if (isCompleted) return;
 
           const status = await getStatus({
             connection,
@@ -64,11 +83,7 @@ export const waitForIdle = async ({
             return;
           }
 
-          clearTimeout(recheckTimeoutId);
-          recheckTimeoutId = setTimeout(
-            recheckIfIdle,
-            usableConfig.constants.RECHECK_TIME,
-          );
+          setRecheckTimeout();
         } catch (error: any) {
           if (Object.values(DeviceConnectionErrorType).includes(error?.code)) {
             cleanUp();
@@ -78,13 +93,9 @@ export const waitForIdle = async ({
 
           logger.error('Error while rechecking if idle');
           logger.error(error);
-          clearTimeout(recheckTimeoutId);
-          recheckTimeoutId = setTimeout(
-            recheckIfIdle,
-            usableConfig.constants.RECHECK_TIME,
-          );
+          setRecheckTimeout();
         }
-      };
+      }
 
       timeoutId = setTimeout(async () => {
         cleanUp();
@@ -102,10 +113,7 @@ export const waitForIdle = async ({
         }
       }, timeout ?? usableConfig.constants.IDLE_TIMEOUT);
 
-      recheckTimeoutId = setTimeout(
-        recheckIfIdle,
-        usableConfig.constants.IDLE_RECHECK_TIME,
-      );
+      setRecheckTimeout();
     } catch (error: any) {
       reject(error);
     }

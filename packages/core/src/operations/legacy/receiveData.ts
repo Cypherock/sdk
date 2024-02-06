@@ -56,8 +56,10 @@ export const receiveData = (
 
         let timeoutIdentifier: NodeJS.Timeout | null = null;
         let recheckTimeout: NodeJS.Timeout | null = null;
+        let isCompleted = false;
 
         const cleanUp = () => {
+          isCompleted = true;
           if (timeoutIdentifier) {
             clearTimeout(timeoutIdentifier);
           }
@@ -92,7 +94,22 @@ export const receiveData = (
           return false;
         };
 
-        const recheckPacket = async () => {
+        const setRecheckTimeout = () => {
+          if (isCompleted) return;
+
+          if (recheckTimeout) {
+            clearTimeout(recheckTimeout);
+          }
+
+          recheckTimeout = setTimeout(
+            // eslint-disable-next-line no-use-before-define
+            recheckPacket,
+            config.v1.constants.RECHECK_TIME,
+          );
+        };
+
+        // eslint-disable-next-line no-inner-declarations
+        async function recheckPacket() {
           try {
             if (!(await connection.isConnected())) {
               reject(
@@ -103,12 +120,11 @@ export const receiveData = (
               return;
             }
 
+            if (isCompleted) return;
+
             const data = await connection.receive();
             if (!data) {
-              recheckTimeout = setTimeout(
-                recheckPacket,
-                config.v1.constants.RECHECK_TIME,
-              );
+              setRecheckTimeout();
               return;
             }
 
@@ -121,10 +137,7 @@ export const receiveData = (
             }
 
             if (!isDone) {
-              recheckTimeout = setTimeout(
-                recheckPacket,
-                config.v1.constants.RECHECK_TIME,
-              );
+              setRecheckTimeout();
             }
           } catch (error) {
             cleanUp();
@@ -134,12 +147,9 @@ export const receiveData = (
               ),
             );
           }
-        };
+        }
 
-        recheckTimeout = setTimeout(
-          recheckPacket,
-          config.v1.constants.RECHECK_TIME,
-        );
+        setRecheckTimeout();
       } catch (error) {
         reject(error);
       }

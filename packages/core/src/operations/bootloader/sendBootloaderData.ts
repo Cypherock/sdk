@@ -69,8 +69,10 @@ const writePacket = (
      */
     let timeout: NodeJS.Timeout | undefined;
     let recheckTimeout: NodeJS.Timeout | undefined;
+    let isCompleted = false;
 
     function cleanUp() {
+      isCompleted = true;
       if (timeout) {
         clearTimeout(timeout);
       }
@@ -78,6 +80,20 @@ const writePacket = (
         clearTimeout(recheckTimeout);
       }
     }
+
+    const setRecheckTimeout = () => {
+      if (isCompleted) return;
+
+      if (recheckTimeout) {
+        clearTimeout(recheckTimeout);
+      }
+
+      recheckTimeout = setTimeout(
+        // eslint-disable-next-line no-use-before-define
+        recheckPacket,
+        RECHECK_TIME,
+      );
+    };
 
     async function recheckPacket() {
       try {
@@ -91,9 +107,11 @@ const writePacket = (
           return;
         }
 
+        if (isCompleted) return;
+
         const rawPacket = await connection.receive();
         if (!rawPacket) {
-          recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
+          setRecheckTimeout();
           return;
         }
 
@@ -114,7 +132,7 @@ const writePacket = (
           return;
         }
 
-        recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
+        setRecheckTimeout();
       } catch (error: any) {
         if (Object.values(DeviceConnectionErrorType).includes(error?.code)) {
           cleanUp();
@@ -126,7 +144,7 @@ const writePacket = (
           'Error while rechecking packet on `writePacket`, bootloader',
         );
         logger.warn(error);
-        recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
+        setRecheckTimeout();
       }
     }
 
@@ -162,7 +180,7 @@ const writePacket = (
       }
     }, options?.timeout ?? 2000);
 
-    recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
+    setRecheckTimeout();
   });
 
 const checkIfInReceivingMode = async (
@@ -175,8 +193,10 @@ const checkIfInReceivingMode = async (
      */
     let timeout: NodeJS.Timeout | undefined;
     let recheckTimeout: NodeJS.Timeout | undefined;
+    let isCompleted = false;
 
     function cleanUp() {
+      isCompleted = true;
       if (timeout) {
         clearTimeout(timeout);
       }
@@ -184,6 +204,20 @@ const checkIfInReceivingMode = async (
         clearTimeout(recheckTimeout);
       }
     }
+
+    const setRecheckTimeout = () => {
+      if (isCompleted) return;
+
+      if (recheckTimeout) {
+        clearTimeout(recheckTimeout);
+      }
+
+      recheckTimeout = setTimeout(
+        // eslint-disable-next-line no-use-before-define
+        recheckPacket,
+        RECHECK_TIME,
+      );
+    };
 
     async function recheckPacket() {
       try {
@@ -196,9 +230,11 @@ const checkIfInReceivingMode = async (
           );
           return;
         }
+        if (isCompleted) return;
+
         const rawPacket = await connection.receive();
         if (!rawPacket) {
-          recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
+          setRecheckTimeout();
           return;
         }
 
@@ -210,7 +246,7 @@ const checkIfInReceivingMode = async (
           return;
         }
 
-        recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
+        setRecheckTimeout();
       } catch (error: any) {
         if (Object.values(DeviceConnectionErrorType).includes(error?.code)) {
           cleanUp();
@@ -220,7 +256,7 @@ const checkIfInReceivingMode = async (
 
         logger.warn('Error while rechecking packet on `sendBootloaderData`');
         logger.warn(error);
-        recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
+        setRecheckTimeout();
       }
     }
 
@@ -241,7 +277,7 @@ const checkIfInReceivingMode = async (
       }
     }, options?.timeout ?? 2000);
 
-    recheckTimeout = setTimeout(recheckPacket, RECHECK_TIME);
+    setRecheckTimeout();
   });
 
 export const sendBootloaderData = async (

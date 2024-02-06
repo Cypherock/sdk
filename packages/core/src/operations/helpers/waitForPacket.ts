@@ -58,6 +58,7 @@ export const waitForPacket = ({
   const usableConfig = config.v3;
 
   let isCancelled = false;
+  let isCompleted = false;
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   let onCancel = () => {};
 
@@ -80,6 +81,7 @@ export const waitForPacket = ({
 
       // eslint-disable-next-line no-inner-declarations
       function cleanUp() {
+        isCompleted = true;
         if (timeout) {
           clearTimeout(timeout);
         }
@@ -87,6 +89,20 @@ export const waitForPacket = ({
           clearTimeout(recheckTimeout);
         }
       }
+
+      const setRecheckTimeout = () => {
+        if (isCompleted) return;
+
+        if (recheckTimeout) {
+          clearTimeout(recheckTimeout);
+        }
+
+        recheckTimeout = setTimeout(
+          // eslint-disable-next-line no-use-before-define
+          recheckPacket,
+          usableConfig.constants.RECHECK_TIME,
+        );
+      };
 
       // eslint-disable-next-line no-inner-declarations
       async function recheckPacket() {
@@ -101,13 +117,11 @@ export const waitForPacket = ({
             return;
           }
 
+          if (isCompleted) return;
+
           const rawPacket = await connection.receive();
           if (!rawPacket) {
-            clearTimeout(recheckTimeout);
-            recheckTimeout = setTimeout(
-              recheckPacket,
-              usableConfig.constants.RECHECK_TIME,
-            );
+            setRecheckTimeout();
             return;
           }
 
@@ -185,11 +199,7 @@ export const waitForPacket = ({
 
             resolve(receivedPacket);
           } else {
-            clearTimeout(recheckTimeout);
-            recheckTimeout = setTimeout(
-              recheckPacket,
-              usableConfig.constants.RECHECK_TIME,
-            );
+            setRecheckTimeout();
           }
         } catch (error: any) {
           if (Object.values(DeviceConnectionErrorType).includes(error?.code)) {
@@ -200,11 +210,7 @@ export const waitForPacket = ({
 
           logger.error('Error while rechecking packet on `waitForPacket`');
           logger.error(error);
-          clearTimeout(recheckTimeout);
-          recheckTimeout = setTimeout(
-            recheckPacket,
-            usableConfig.constants.RECHECK_TIME,
-          );
+          setRecheckTimeout();
         }
       }
 
@@ -226,10 +232,7 @@ export const waitForPacket = ({
         }
       }, ackTimeout ?? usableConfig.constants.ACK_TIME);
 
-      recheckTimeout = setTimeout(
-        recheckPacket,
-        usableConfig.constants.RECHECK_TIME,
-      );
+      setRecheckTimeout();
 
       onCancel = () => {
         isCancelled = true;
