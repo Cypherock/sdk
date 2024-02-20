@@ -10,7 +10,12 @@ import {
   SeedGenerationStatus,
 } from '../../proto/generated/types';
 import { runGetPublicKeysOnDevice } from '../runGetPublicKeys';
-import { OperationHelper, logger as rootLogger, getStarknetApiJs } from '../../utils';
+import {
+  OperationHelper,
+  logger as rootLogger,
+  getStarknetApiJs,
+  getAddressFromPublicKey,
+} from '../../utils';
 import { GetPublicKeysEvent } from '../types';
 import {
   IGetUserVerifiedPublicKeyParams,
@@ -60,9 +65,11 @@ export const getUserVerifiedPublicKey = async (
     forceStatusUpdate,
   );
   const starkAPI = getStarknetApiJs();
-  const starkPubKey = starkAPI.ec.starkCurve.getStarkKey(result.publicKeys[0].slice(0,64));
+  const starkPubKey = starkAPI.ec.starkCurve.getStarkKey(
+    result.publicKeys[0].slice(0, 64),
+  );
 
   return {
-    publicKey: starkPubKey
+    publicKey: getAddressFromPublicKey(starkPubKey),
   };
 };
