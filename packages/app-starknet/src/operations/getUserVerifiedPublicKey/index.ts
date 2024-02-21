@@ -14,7 +14,6 @@ import {
   OperationHelper,
   logger as rootLogger,
   getStarknetApiJs,
-  getAddressFromPublicKey,
 } from '../../utils';
 import { GetPublicKeysEvent } from '../types';
 import {
@@ -70,6 +69,6 @@ export const getUserVerifiedPublicKey = async (
   );
 
   return {
-    publicKey: getAddressFromPublicKey(starkPubKey),
+    publicKey: starkPubKey,
   };
 };
