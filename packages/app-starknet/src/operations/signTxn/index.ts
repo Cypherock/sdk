@@ -86,10 +86,9 @@ export const signTxn = async (
   const key = uint8ArrayToHex(result.signature.signature);
   const starknet = getStarknetApiJs();
   const signature = starknet.ec.starkCurve.sign(params.txn, key.slice(0, 64));
-  console.log({signature});
 
   return {
     signature: signature.toCompactHex(),
-    serializedTxn: '',
+    serializedTxn: signature.toCompactHex(),
   };
 };

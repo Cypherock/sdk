@@ -11,7 +11,6 @@ import {
 } from '../../proto/generated/types';
 import {
   OperationHelper,
-  getAddressFromPublicKey,
   getStarknetApiJs,
   logger as rootLogger,
 } from '../../utils';
@@ -72,7 +71,7 @@ export const getPublicKeys = async (
     const starkPubKey = starkAPI.ec.starkCurve.getStarkKey(
       publicKeys.publicKeys[key].slice(0, 64),
     );
-    publicKeyList.push(getAddressFromPublicKey(starkPubKey));
+    publicKeyList.push(starkPubKey);
   }
   return { publicKeys: publicKeyList };
 };
