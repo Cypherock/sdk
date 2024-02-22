@@ -34,11 +34,23 @@ const getEnvVariable = (key: string, defaultValue?: string): string => {
   throw new Error(`ENVIREMENT VARIABLE '${key}' NOT SPECIFIED.`);
 };
 
+// *************************** User-defined variables*******************************//
+
 const provider = new starknetApiJs.RpcProvider({ nodeUrl: `https://starknet-goerli.infura.io/v3/${getEnvVariable('INFURA_STARKNET_API_KEY', '')}` });
+
 const contractAXclassHash = "0x01a736d6ed154502257f02b1ccdf4d9d1089f80811cd6acad48e6b6a9d1f2003";
-const ethContractAddress = '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7';
+
+const ethContractAddress  = '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7';
 const strkContractAddress = '0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d';
-const index = 0;
+
+const wallet_index = 3; // Select Stark Wallet
+
+const index = 1; // Stark Account Index
+const recipientAddress = '0x0063de007721dDD7CCCA23Dd9345b70F77Af7B2FCcED9E3df1f390D0f1c61E9D'; // Stark Account Address
+const amount =  starknetApiJs.cairo.uint256(5 * (10**8)); // Amount in Cairo format 
+const amountStr =  '0x1dcd6500';
+
+// *********************************************************************************//
 
 const contracts: {eth: starknetApiJs.Contract | null, strk: starknetApiJs.Contract | null} = {eth: null, strk: null};
 
@@ -72,7 +84,7 @@ async function fetchBalances(accountAXAddress: string) {
 async function fetchAccount(connection: IDeviceConnection) {
   const managerApp = await ManagerApp.create(connection);
 
-  const wallet = (await managerApp.getWallets()).walletList[0];
+  const wallet = (await managerApp.getWallets()).walletList[wallet_index];
   // TODO: Give choice to user for wallet name & account number
 
   const starkApp = await StarknetApp.create(connection);
@@ -129,7 +141,7 @@ async function deployAddress(connection: IDeviceConnection, wallet: IWalletItem)
 }
 
 // ================ Starknet App -- Account deploy if not already ========== //
-async function transfer(connection: IDeviceConnection, wallet: IWalletItem, recipientAddress: string, amount: starknetApiJs.Uint256) {
+async function transfer(connection: IDeviceConnection, wallet: IWalletItem) {
   const starkApp = await StarknetApp.create(connection);
   const starkKeyPubAX = (await starkApp.getPublicKeys({
     walletId: wallet.id,
@@ -144,9 +156,23 @@ async function transfer(connection: IDeviceConnection, wallet: IWalletItem, reci
   const maxFee = 0x8110e6d36a8;
   const nonce = await provider.getNonceForAddress(accountAXAddress);
 
+  const callData = [
+    txnVersion,
+    strkContractAddress,
+    starknetApiJs.hash.getSelectorFromName('transfer'),
+    '0x3',
+    recipientAddress,
+    amountStr,
+    '0x0'
+  ];
+
   const transferTxnHash = starknetApiJs.hash.calculateTransactionHash(
-    strkContractAddress, txnVersion, constructorAXCallData, maxFee,
-    starknetApiJs.constants.StarknetChainId.SN_GOERLI, nonce
+    accountAXAddress, 
+    txnVersion, 
+    callData, 
+    maxFee,
+    starknetApiJs.constants.StarknetChainId.SN_GOERLI, 
+    nonce
   );
 
   const sig = await starkApp.signTxn({
@@ -157,12 +183,9 @@ async function transfer(connection: IDeviceConnection, wallet: IWalletItem, reci
   const signature = [`0x${sig.signature.slice(0, 64)}`, `0x${sig.signature.slice(64, 128)}`];
 
   const txn = await provider.invokeFunction({
-    contractAddress: strkContractAddress,
+    contractAddress: accountAXAddress,
     entrypoint: 'transfer',
-    calldata: {
-      recipient: recipientAddress,
-      amount: amount
-    },
+    calldata: callData,
     signature: signature
   }, {
     nonce: nonce,
@@ -195,9 +218,9 @@ const run = async () => {
   const {accountAXAddress, wallet} = await fetchAccount(connection);
   console.log(await fetchBalances(accountAXAddress));
   console.log(await deployAddress(connection, wallet));
-  // console.log(await fetchBalances(accountAXAddress));
-  // console.log(await transfer(connection, wallet, '0x0063de007721dDD7CCCA23Dd9345b70F77Af7B2FCcED9E3df1f390D0f1c61E9D', starknetApiJs.cairo.uint256(5 * (10**8)))); // Account 3
-  // console.log(await fetchBalances(accountAXAddress));
+  console.log(await fetchBalances(accountAXAddress));
+  console.log(await transfer(connection, wallet));
+  console.log(await fetchBalances(accountAXAddress));
 
   connection.destroy();
 };
