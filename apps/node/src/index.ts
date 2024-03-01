@@ -117,8 +117,14 @@ async function deployAddress(connection: IDeviceConnection, wallet: IWalletItem)
   const txnVersion = 1;
   const maxFee = 0x8110e6d36a8;
   const deployAccountTxnHash = starknetApiJs.hash.calculateDeployAccountTransactionHash(
-    accountAXAddress, contractAXclassHash, constructorAXCallData, starkKeyPubAX,
-    txnVersion, maxFee, starknetApiJs.constants.StarknetChainId.SN_GOERLI, 0);
+    accountAXAddress, 
+    contractAXclassHash, 
+    constructorAXCallData, 
+    starkKeyPubAX,
+    txnVersion, 
+    maxFee, 
+    starknetApiJs.constants.StarknetChainId.SN_GOERLI, 
+    0);
   const sig = await starkApp.signTxn({
     derivationPath: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, index],
     txn: deployAccountTxnHash,
@@ -140,7 +146,7 @@ async function deployAddress(connection: IDeviceConnection, wallet: IWalletItem)
   return txn;
 }
 
-// ================ Starknet App -- Account deploy if not already ========== //
+// ================ Starknet App -- Fund Transfer ========== //
 async function transfer(connection: IDeviceConnection, wallet: IWalletItem) {
   const starkApp = await StarknetApp.create(connection);
   const starkKeyPubAX = (await starkApp.getPublicKeys({
