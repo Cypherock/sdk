@@ -10,7 +10,6 @@ import {
   ForceStatusUpdate,
   OnStatus,
 } from '@cypherock/sdk-utils';
-import { APP_VERSION } from '../../constants/appId';
 import { AuthDeviceStatus } from '../../proto/generated/types';
 import { deviceAuthService } from '../../services';
 
@@ -108,8 +107,6 @@ export const authDevice = async (
 
   try {
     logger.info('Started');
-
-    await sdk.checkAppCompatibility(APP_VERSION);
 
     const info = await getDeviceInfo(sdk);
     assertOrThrowInvalidResult(info.firmwareVersion);
