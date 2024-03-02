@@ -5,6 +5,13 @@ import {
 } from '@cypherock/sdk-interfaces';
 import * as uuid from 'uuid';
 
+async function gracefullyResetDevice(connection: USBDevice) {
+  try {
+    await connection.reset();
+  } catch (err) {
+    console.warn(err);
+  }
+}
 // eslint-disable-next-line
 export class DataListener {
   private readonly connection: USBDevice;
@@ -50,6 +57,7 @@ export class DataListener {
         DeviceConnectionErrorType.FAILED_TO_CONNECT,
       );
     }
+    gracefullyResetDevice(connection);
 
     const { interfaces } = connection.configuration;
     interfaces.forEach(element => {
@@ -69,7 +77,6 @@ export class DataListener {
     });
 
     await connection.claimInterface(interfaceNumber);
-    await connection.selectAlternateInterface(interfaceNumber, 0);
 
     await connection.controlTransferOut({
       requestType: 'class',
