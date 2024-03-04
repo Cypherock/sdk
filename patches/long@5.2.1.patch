@@ -1,0 +1,12 @@
+diff --git a/umd/index.js b/umd/index.js
+index 03c5988f4bdbd3670771ef19cbacac52ecdc30d8..c3650db6ac672d017be299b0711c29b1007ce127 100644
+--- a/umd/index.js
++++ b/umd/index.js
+@@ -1427,6 +1427,4 @@ var Long = (function(exports) {
+   var _default = Long;
+   exports.default = _default;
+   return "default" in exports ? exports.default : exports;
+-})({});
+-if (typeof define === 'function' && define.amd) define([], function() { return Long; });
+-else if (typeof module === 'object' && typeof exports==='object') module.exports = Long;
++})(this);

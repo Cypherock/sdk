@@ -1,0 +1,27 @@
+diff --git a/bignumber.js b/bignumber.js
+index 007f064002673b80c8475e191efc610e84e82a71..81fefefe343f9145c46d6d17e2f70a276177753d 100644
+--- a/bignumber.js
++++ b/bignumber.js
+@@ -2903,20 +2903,6 @@
+   BigNumber = clone();
+   BigNumber['default'] = BigNumber.BigNumber = BigNumber;
+ 
+-  // AMD.
+-  if (typeof define == 'function' && define.amd) {
+-    define(function () { return BigNumber; });
+-
+-  // Node.js and other environments that support module.exports.
+-  } else if (typeof module != 'undefined' && module.exports) {
+-    module.exports = BigNumber;
+-
+-  // Browser.
+-  } else {
+-    if (!globalObject) {
+-      globalObject = typeof self != 'undefined' && self ? self : window;
+-    }
+-
+-    globalObject.BigNumber = BigNumber;
+-  }
++  Object.defineProperty(globalObject, "__esModule", { value: true });
++  globalObject.BigNumber = BigNumber;
+ })(this);
