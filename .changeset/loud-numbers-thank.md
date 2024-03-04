@@ -3,4 +3,4 @@
 "@cypherock/sdk-app-manager": patch
 ---
 
-Throw error for USB operations when wallet is busy with device operations
+Throw error in Cysync intitiated USB operations when vault is busy with device operations
