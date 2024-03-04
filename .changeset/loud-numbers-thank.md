@@ -1,6 +1,6 @@
 ---
-"@cypherock/sdk-core": major
-"@cypherock/sdk-app-manager": minor
+"@cypherock/sdk-core": patch
+"@cypherock/sdk-app-manager": patch
 ---
 
-device state bypass fixed
+Throw error for USB operations when wallet is busy with device operations
