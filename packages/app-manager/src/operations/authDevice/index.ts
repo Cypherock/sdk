@@ -107,8 +107,10 @@ export const authDevice = async (
 
   try {
     logger.info('Started');
-
+    
+    // NOTE: Here we are relying on the `checkAppCompatibility` being called inside `getDeviceInfo`
     const info = await getDeviceInfo(sdk);
+    
     assertOrThrowInvalidResult(info.firmwareVersion);
 
     const firmwareVersion = `${info.firmwareVersion.major}.${info.firmwareVersion.minor}.${info.firmwareVersion.patch}`;
