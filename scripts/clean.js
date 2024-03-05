@@ -18,6 +18,7 @@ const packages = {
   'packages/hw-webusb': [...commonTSFolders],
   'packages/interfaces': [...commonTSFolders, 'src/proto/generated'],
   'packages/util': [...commonTSFolders],
+  'packages/web-evm-connector': [...commonTSFolders],
 };
 
 const rl = readline.createInterface({

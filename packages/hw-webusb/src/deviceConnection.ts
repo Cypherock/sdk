@@ -5,7 +5,7 @@ import {
 } from '@cypherock/sdk-interfaces';
 import * as uuid from 'uuid';
 
-import { createPort, DataListener } from './helpers';
+import { requestDevice, DataListener, getAvailableDevices } from './helpers';
 
 export default class DeviceConnection implements IDeviceConnection {
   protected deviceState: DeviceState;
@@ -43,9 +43,27 @@ export default class DeviceConnection implements IDeviceConnection {
     return new DeviceConnection(connection, dataListener);
   }
 
+  public static async list() {
+    return getAvailableDevices();
+  }
+
+  public static async requestDevice() {
+    return requestDevice();
+  }
+
   public static async create() {
-    const connection = await createPort();
-    return DeviceConnection.connect(connection);
+    const devices = await getAvailableDevices();
+
+    if (devices.length > 0) {
+      return DeviceConnection.connect(devices[0]);
+    }
+
+    const device = await requestDevice();
+    return DeviceConnection.connect(device);
+  }
+
+  public getDevice() {
+    return this.connection;
   }
 
   public async getDeviceState() {

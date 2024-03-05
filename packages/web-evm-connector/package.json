@@ -1,0 +1,38 @@
+{
+  "name": "@cypherock/sdk-web-evm-connector",
+  "version": "0.0.0",
+  "private": false,
+  "source": "src/index.ts",
+  "module": "dist/index.js",
+  "types": "dist/types.d.ts",
+  "scripts": {
+    "build:types": "dts-bundle-generator --config type.config.json",
+    "build": "pnpm clean && node ./scripts/build.js && pnpm build:types",
+    "clean": "rimraf dist",
+    "start": "node ./scripts/serve.js",
+    "analyze": "node ./scripts/analyze.js"
+  },
+  "devDependencies": {
+    "@cypherock/sdk-app-evm": "workspace:^",
+    "@cypherock/sdk-app-manager": "workspace:^",
+    "@cypherock/sdk-core": "workspace:^",
+    "@cypherock/sdk-hw-webusb": "workspace:^",
+    "@cypherock/sdk-interfaces": "workspace:^",
+    "@cypherock/sdk-utils": "workspace:^",
+    "@types/w3c-web-usb": "^1.0.6",
+    "cross-env": "^7.0.3",
+    "dts-bundle-generator": "^9.3.1",
+    "eip-712": "^1.0.0",
+    "esbuild": "^0.20.1",
+    "esbuild-plugin-tsc": "^0.4.0",
+    "ethers": "^6.7.0",
+    "rimraf": "^4.1.2",
+    "typescript": "4.9.5"
+  },
+  "files": [
+    "dist",
+    ".gitignore",
+    "README.md",
+    "package.json"
+  ]
+}
