@@ -71,7 +71,10 @@ export const waitForResult = async ({
 
     const status = response.result as Status;
 
-    if (status.currentCmdSeq !== sequenceNumber) {
+    if (
+      status.deviceIdleState === DeviceIdleState.DEVICE_IDLE_STATE_DEVICE ||
+      status.currentCmdSeq !== sequenceNumber
+    ) {
       throw new DeviceAppError(DeviceAppErrorType.EXECUTING_OTHER_COMMAND);
     }
 

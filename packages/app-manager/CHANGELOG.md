@@ -1,5 +1,28 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.29
+
+### Patch Changes
+
+- [#102](https://github.com/Cypherock/sdk/pull/102) [`6349660`](https://github.com/Cypherock/sdk/commit/6349660545d2c6ac45d20a33ce50b34893f7c6e4) Thanks [@ParnikaGupta9](https://github.com/ParnikaGupta9)! - Throw error in Cysync intitiated USB operations when vault is busy with device operations
+
+- Updated dependencies [[`6349660`](https://github.com/Cypherock/sdk/commit/6349660545d2c6ac45d20a33ce50b34893f7c6e4)]:
+  - @cypherock/sdk-core@0.0.24
+
+## 0.0.28
+
+### Patch Changes
+
+- Updated dependencies [[`2ce5edf`](https://github.com/Cypherock/sdk/commit/2ce5edf38e466bc29687b47ef9b65dd84a699ca3)]:
+  - @cypherock/sdk-core@0.0.23
+
+## 0.0.27
+
+### Patch Changes
+
+- Updated dependencies [[`85779aa`](https://github.com/Cypherock/sdk/commit/85779aaaf30704e29bb2803c145d78441998ab46)]:
+  - @cypherock/sdk-core@0.0.22
+
 ## 0.0.26
 
 ### Patch Changes

@@ -115,7 +115,7 @@ export default class DeviceConnection implements IDeviceConnection {
    */
   // eslint-disable-next-line
   public async beforeOperation() {
-    // Do nothing
+    this.dataListener.startListening();
   }
 
   /**
@@ -123,7 +123,7 @@ export default class DeviceConnection implements IDeviceConnection {
    */
   // eslint-disable-next-line
   public async afterOperation() {
-    // Do nothing
+    this.dataListener.stopListening();
   }
 
   /**

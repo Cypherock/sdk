@@ -1,5 +1,23 @@
 # @cypherock/sdk-core
 
+## 0.0.24
+
+### Patch Changes
+
+- [#102](https://github.com/Cypherock/sdk/pull/102) [`6349660`](https://github.com/Cypherock/sdk/commit/6349660545d2c6ac45d20a33ce50b34893f7c6e4) Thanks [@ParnikaGupta9](https://github.com/ParnikaGupta9)! - Throw error in Cysync intitiated USB operations when vault is busy with device operations
+
+## 0.0.23
+
+### Patch Changes
+
+- [#100](https://github.com/Cypherock/sdk/pull/100) [`2ce5edf`](https://github.com/Cypherock/sdk/commit/2ce5edf38e466bc29687b47ef9b65dd84a699ca3) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed memory leaks and abort handling
+
+## 0.0.22
+
+### Patch Changes
+
+- [#98](https://github.com/Cypherock/sdk/pull/98) [`85779aa`](https://github.com/Cypherock/sdk/commit/85779aaaf30704e29bb2803c145d78441998ab46) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - hid listens to device only between operation
+
 ## 0.0.21
 
 ### Patch Changes

@@ -62,7 +62,16 @@ jobs:
         run: pnpm lint:check
 
       - name: Run perttier checks
+        id: prettier
         run: pnpm pretty:check
+        continue-on-error: true
+
+      - name: Why did prettier fail?
+        if: steps.prettier.outcome != 'success'
+        run: |
+          pnpm pretty
+          git diff
+          exit 1
 
       - name: Run tests
         run: pnpm test

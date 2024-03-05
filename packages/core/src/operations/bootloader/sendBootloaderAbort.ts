@@ -26,8 +26,10 @@ const writePacket = (
      */
     let timeout: NodeJS.Timeout | undefined;
     let recheckTimeout: NodeJS.Timeout | undefined;
+    let isCompleted = false;
 
     function cleanUp() {
+      isCompleted = true;
       if (timeout) {
         clearTimeout(timeout);
       }
@@ -35,6 +37,20 @@ const writePacket = (
         clearTimeout(recheckTimeout);
       }
     }
+
+    const setRecheckTimeout = () => {
+      if (isCompleted) return;
+
+      if (recheckTimeout) {
+        clearTimeout(recheckTimeout);
+      }
+
+      recheckTimeout = setTimeout(
+        // eslint-disable-next-line no-use-before-define
+        recheckPacket,
+        config.v1.constants.RECHECK_TIME,
+      );
+    };
 
     async function recheckPacket() {
       try {
@@ -47,12 +63,12 @@ const writePacket = (
           );
           return;
         }
+
+        if (isCompleted) return;
+
         const rawPacket = await connection.receive();
         if (!rawPacket) {
-          recheckTimeout = setTimeout(
-            recheckPacket,
-            config.v1.constants.RECHECK_TIME,
-          );
+          setRecheckTimeout();
           return;
         }
         const ePacketData = uint8ArrayToHex(rawPacket);
@@ -63,15 +79,9 @@ const writePacket = (
           return;
         }
 
-        recheckTimeout = setTimeout(
-          recheckPacket,
-          config.v1.constants.RECHECK_TIME,
-        );
+        setRecheckTimeout();
       } catch (error) {
-        recheckTimeout = setTimeout(
-          recheckPacket,
-          config.v1.constants.RECHECK_TIME,
-        );
+        setRecheckTimeout();
       }
     }
 
@@ -80,22 +90,16 @@ const writePacket = (
       reject(err);
     });
 
-    timeout = setTimeout(
-      () => {
-        cleanUp();
-        reject(
-          new DeviceCommunicationError(
-            DeviceCommunicationErrorType.WRITE_TIMEOUT,
-          ),
-        );
-      },
-      options?.timeout ?? 2000,
-    );
+    timeout = setTimeout(() => {
+      cleanUp();
+      reject(
+        new DeviceCommunicationError(
+          DeviceCommunicationErrorType.WRITE_TIMEOUT,
+        ),
+      );
+    }, options?.timeout ?? 2000);
 
-    recheckTimeout = setTimeout(
-      recheckPacket,
-      config.v1.constants.RECHECK_TIME,
-    );
+    setRecheckTimeout();
   });
 
 export const sendBootloaderAbort = async (

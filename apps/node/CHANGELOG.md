@@ -1,5 +1,52 @@
 # nodejs-test
 
+## 0.0.46
+
+### Patch Changes
+
+- Updated dependencies [[`6349660`](https://github.com/Cypherock/sdk/commit/6349660545d2c6ac45d20a33ce50b34893f7c6e4)]:
+  - @cypherock/sdk-core@0.0.24
+  - @cypherock/sdk-app-manager@0.0.29
+  - @cypherock/sdk-app-btc@0.0.35
+  - @cypherock/sdk-app-evm@0.0.31
+  - @cypherock/sdk-app-near@0.0.29
+  - @cypherock/sdk-app-solana@0.0.5
+
+## 0.0.45
+
+### Patch Changes
+
+- [#100](https://github.com/Cypherock/sdk/pull/100) [`2ce5edf`](https://github.com/Cypherock/sdk/commit/2ce5edf38e466bc29687b47ef9b65dd84a699ca3) Thanks [@irshadCypherock](https://github.com/irshadCypherock)! - fixed memory leaks and abort handling
+
+- Updated dependencies [[`2ce5edf`](https://github.com/Cypherock/sdk/commit/2ce5edf38e466bc29687b47ef9b65dd84a699ca3)]:
+  - @cypherock/sdk-app-solana@0.0.4
+  - @cypherock/sdk-app-near@0.0.28
+  - @cypherock/sdk-app-btc@0.0.34
+  - @cypherock/sdk-app-evm@0.0.30
+  - @cypherock/sdk-hw-hid@0.0.21
+  - @cypherock/sdk-core@0.0.23
+  - @cypherock/sdk-app-manager@0.0.28
+
+## 0.0.44
+
+### Patch Changes
+
+- Updated dependencies [[`85779aa`](https://github.com/Cypherock/sdk/commit/85779aaaf30704e29bb2803c145d78441998ab46)]:
+  - @cypherock/sdk-hw-hid@0.0.20
+  - @cypherock/sdk-core@0.0.22
+  - @cypherock/sdk-app-btc@0.0.33
+  - @cypherock/sdk-app-evm@0.0.29
+  - @cypherock/sdk-app-manager@0.0.27
+  - @cypherock/sdk-app-near@0.0.27
+  - @cypherock/sdk-app-solana@0.0.3
+
+## 0.0.43
+
+### Patch Changes
+
+- Updated dependencies [[`03388ae`](https://github.com/Cypherock/sdk/commit/03388ae87e1a1e47129912db8fd515e34a325b79)]:
+  - @cypherock/sdk-hw-hid@0.0.19
+
 ## 0.0.42
 
 ### Patch Changes
