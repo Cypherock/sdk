@@ -1,6 +1,6 @@
 {
   "name": "browser-test",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "private": true,
   "scripts": {
     "dev:browser": "next dev",
@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@cypherock/sdk-app-btc": "workspace:^",
-    "@cypherock/sdk-app-manager": "workspace:^0.0.28",
-    "@cypherock/sdk-core": "workspace:^0.0.23",
+    "@cypherock/sdk-app-manager": "workspace:^0.0.29",
+    "@cypherock/sdk-core": "workspace:^0.0.24",
     "@cypherock/sdk-hw-webusb": "workspace:^0.0.16",
     "@next/font": "13.1.6",
     "@types/node": "18.11.18",

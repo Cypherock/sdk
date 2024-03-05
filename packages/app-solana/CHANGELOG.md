@@ -1,5 +1,12 @@
 # @cypherock/sdk-app-solana
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`6349660`](https://github.com/Cypherock/sdk/commit/6349660545d2c6ac45d20a33ce50b34893f7c6e4)]:
+  - @cypherock/sdk-core@0.0.24
+
 ## 0.0.4
 
 ### Patch Changes
