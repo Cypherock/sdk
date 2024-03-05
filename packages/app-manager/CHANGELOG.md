@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.30
+
+### Patch Changes
+
+- [#95](https://github.com/Cypherock/sdk/pull/95) [`01b1203`](https://github.com/Cypherock/sdk/commit/01b12035c1393d60fe2968e41b397d896eea86ad) Thanks [@ujjwal-cyph](https://github.com/ujjwal-cyph)! - add wallet selector operation
+
 ## 0.0.29
 
 ### Patch Changes
