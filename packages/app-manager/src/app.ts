@@ -52,6 +52,10 @@ export class ManagerApp {
     return this.sdk.runOperation(() => operations.getLogs(this.sdk, onEvent));
   }
 
+  public async selectWallet() {
+    return this.sdk.runOperation(() => operations.selectWallet(this.sdk));
+  }
+
   public async trainJoystick(onEvent?: operations.TrainJoystickEventHandler) {
     return this.sdk.runOperation(() =>
       operations.trainJoystick(this.sdk, onEvent),
