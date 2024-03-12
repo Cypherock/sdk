@@ -1,0 +1,22 @@
+site_name: Cypherock SDK Documentation
+repo_url: https://github.com/Cypherock/sdk/
+repo_name: 'Github'
+
+nav:
+  - Introduction: 'index.md'
+  - Get Started: 'get-started.md'
+  - Packages: '*include ./packages/*/mkdocs.yml'
+
+plugins:
+  - monorepo
+  - search:
+      indexing: 'full'
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - javascript
+    - typescript
+  collapse_navigation: true
