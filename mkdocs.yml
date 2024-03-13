@@ -1,10 +1,13 @@
 site_name: Cypherock SDK Documentation
+site_url: https://docs-sdk.cypherock.com
+
 repo_url: https://github.com/Cypherock/sdk/
 repo_name: 'Github'
 
 nav:
   - Introduction: 'index.md'
   - Get Started: 'get-started.md'
+  - Logging: 'logging.md'
   - Packages: '*include ./packages/*/mkdocs.yml'
 
 plugins:
