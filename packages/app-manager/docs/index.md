@@ -1,4 +1,4 @@
-# ManagerApp
+# Manager App
 
 Package name: `@cypherock/sdk-app-manager`
 

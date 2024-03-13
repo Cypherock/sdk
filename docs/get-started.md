@@ -72,7 +72,7 @@ device. We will use the [EVM App](../cypherock-sdk-app-evm) to do that.
 const evmApp = await EVMApp.create(connection);
 
 const { addresses } = evmApp.getPublicKeys({
-        walletId: selectedWallet.walletId,
+        walletId: selectedWallet.id,
         derivationPaths: [
           {
             // m/44'/60'/0'/0/0
