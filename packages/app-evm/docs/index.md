@@ -17,6 +17,8 @@ EVM coin family.
 
 ## 2. Usage
 
+Install packages: `npm i @cypherock/sdk-app-evm @cypherock/sdk-hw-webusb ethers eip-712`
+
 ```ts
 // NOTE: you can also use `@cypherock/sdk-hw-hid` dependending on the environment
 import { DeviceConnection } from '@cypherock/sdk-hw-webusb';

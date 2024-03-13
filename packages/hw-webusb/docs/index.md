@@ -9,8 +9,10 @@ Supported Platform includes `Browser`
 
 ## 1. Usage
 
+Install packages: `npm i @cypherock/sdk-hw-webusb`
+
 ```ts
-import DeviceConnection from '@cypherock/sdk-hw-webusb';
+import { DeviceConnection } from '@cypherock/sdk-hw-webusb';
 
 const connection = await DeviceConnection.create();
 ```

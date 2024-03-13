@@ -29,11 +29,13 @@ You can use the below table to select between WebUSB and HID.
 All HW Connect packages export a `create` function which can be used to create
 a connection instance of the connected Cypherock X1 hardware wallet.
 
+Install package: `npm i @cypherock/sdk-hw-hid`
+
 Example:
 ```ts
 // Import device connection
 // NOTE: You can use @cypherock/sdk-hw-webusb for WebUSB 
-import DeviceConnection from "@cypherock/sdk-hw-hid";
+import { DeviceConnection } from "@cypherock/sdk-hw-hid";
 
 // Creates a device connection. Throws error if no device connetion is found
 const connection = await DeviceConnection.create();
@@ -51,7 +53,11 @@ the wallet you want to use.
 Using [@cypherock/sdk-app-manager](../cypherock-sdk-app-manager) we fetch a list
 of all the wallets available on the device.
 
+Install package: `npm i @cypherock/sdk-app-manager`
+
 ```ts
+import { ManagerApp } from "@cypherock/sdk-app-manager";
+
 // Create manager app instance
 const managerApp = await ManagerApp.create(connection);
 
@@ -67,7 +73,11 @@ const selectedWallet = await askUserToSelectAWallet(allWallets);
 For this example we will assume we want to get a list a ETH addresses from the
 device. We will use the [EVM App](../cypherock-sdk-app-evm) to do that.
 
+Install package: `npm i @cypherock/sdk-app-evm`
+
 ```ts
+import { EvmApp } from "@cypherock/sdk-app-evm";
+
 // Create evm app instance
 const evmApp = await EVMApp.create(connection);
 

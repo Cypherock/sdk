@@ -8,6 +8,7 @@ nav:
   - Introduction: 'index.md'
   - Get Started: 'get-started.md'
   - Logging: 'logging.md'
+  - Packages List: 'packages.md'
   - Packages: '*include ./packages/*/mkdocs.yml'
 
 plugins:

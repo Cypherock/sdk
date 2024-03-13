@@ -9,8 +9,10 @@ Supported Platform includes `NodeJS`, `Electron`
 
 ## 1. Usage
 
+Install packages: `npm i @cypherock/sdk-hw-hid`
+
 ```ts
-import DeviceConnection from '@cypherock/sdk-hw-hid';
+import { DeviceConnection } from '@cypherock/sdk-hw-hid';
 
 const connection = await DeviceConnection.create();
 ```

@@ -6,10 +6,12 @@ This package allows you to invoke all the device dependent operations.
 
 ## 1. Usage
 
+Install packages: `npm i @cypherock/sdk-app-manager @cypherock/sdk-hw-webusb`
+
 ```ts
 // NOTE: you can also use `@cypherock/sdk-hw-hid` dependending on the environment
-import DeviceConnection from '@cypherock/sdk-hw-webusb';
-import ManagerApp from '@cypherock/sdk-app-manager';
+import { DeviceConnection } from '@cypherock/sdk-hw-webusb';
+import { ManagerApp } from '@cypherock/sdk-app-manager';
 
 const connection = await DeviceConnection.create();
 const managerApp = await ManagerApp.create(connection);
