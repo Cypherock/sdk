@@ -104,3 +104,7 @@ Destroys the connection instance.
 ```ts
 await connection.destroy();
 ```
+
+## 4. Methods you won't need in most cases
+
+Documentation pending
