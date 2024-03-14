@@ -27,6 +27,7 @@ Before you get started, please make sure you have the following setup -
   - For Windows, follow an additional step -
     - Install Visual C++ 2017 Build Environment: [Visual Studio Build Tools][3] (using "Visual C++ build tools" workload) or [Visual Studio Community][4] (using the "Desktop development with C++" workload).
   - For more details, please refer to the [node-gyp documentation][5].
+- pip3 install -r requirements.txt
 
 ## Understanding the directory structure
 

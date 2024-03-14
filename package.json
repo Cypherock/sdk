@@ -23,7 +23,9 @@
     "clean": "node scripts/clean.js && bash ./scripts/clean.sh",
     "clean:force": "node scripts/clean.js -f && bash ./scripts/clean.sh",
     "ci:publish": "pnpm publish -r --access public --no-git-checks --filter \"@cypherock/sdk-*\"",
-    "ci:version": "pnpm changeset version && pnpm i --no-frozen-lockfile"
+    "ci:version": "pnpm changeset version && pnpm i --no-frozen-lockfile",
+    "doc:serve": "mkdocs serve",
+    "doc:build": "mkdocs build"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
