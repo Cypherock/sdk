@@ -1,4 +1,4 @@
-import type bittensorWeb3 from '@bittensor/web3.js';
+import type bittensorWeb3 from '@substrate/txwrapper-polkadot';
 
 export type bittensorWeb3LibType = typeof bittensorWeb3;
 
@@ -11,6 +11,8 @@ export const getBittensorWeb3 = () => {
   return bittensorWeb3LibInstance;
 };
 
-export const setBittensorWeb3 = (bittensorWeb3Library: bittensorWeb3LibType) => {
+export const setBittensorWeb3 = (
+  bittensorWeb3Library: bittensorWeb3LibType,
+) => {
   bittensorWeb3LibInstance = bittensorWeb3Library;
 };

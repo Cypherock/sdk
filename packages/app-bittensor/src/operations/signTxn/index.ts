@@ -16,8 +16,8 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
-  getBittensorWeb3,
-  base58Encode,
+  // getBittensorWeb3,
+  // base58Encode,
   base58Decode,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
@@ -94,27 +94,28 @@ export const signTxn = async (
   forceStatusUpdate(SignTxnEvent.PIN_CARD);
 
   const signature = uint8ArrayToHex(result.signature.signature);
+  console.log(`\nSignature from device: ${signature}`);
 
   let serializedTxn: string | undefined;
   let serializedTxnHex: string | undefined;
 
   if (params.serializeTxn) {
-    const bittensorWeb3 = getBittensorWeb3();
-    const transaction = bittensorWeb3.Transaction.populate(
-      bittensorWeb3.Message.from(Buffer.from(params.txn, 'hex')),
-    );
-    if (latestBlockHash) transaction.recentBlockhash = latestBlockHash;
-    assert(
-      transaction.feePayer,
-      new Error('Cannot decode feePayer in bittensor txn'),
-    );
-    transaction.addSignature(
-      transaction.feePayer,
-      Buffer.from(signature, 'hex'),
-    );
-    const serializedTxnBuffer = transaction.serialize();
-    serializedTxnHex = uint8ArrayToHex(serializedTxnBuffer);
-    serializedTxn = base58Encode(serializedTxnBuffer);
+    // const bittensorWeb3 = getBittensorWeb3();
+    // const transaction = bittensorWeb3.Transaction.populate(
+    //   bittensorWeb3.Message.from(Buffer.from(params.txn, 'hex')),
+    // );
+    // if (latestBlockHash) transaction.recentBlockhash = latestBlockHash;
+    // assert(
+    //   transaction.feePayer,
+    //   new Error('Cannot decode feePayer in bittensor txn'),
+    // );
+    // transaction.addSignature(
+    //   transaction.feePayer,
+    //   Buffer.from(signature, 'hex'),
+    // );
+    // const serializedTxnBuffer = transaction.serialize();
+    // serializedTxnHex = uint8ArrayToHex(serializedTxnBuffer);
+    // serializedTxn = base58Encode(serializedTxnBuffer);
   }
 
   return {

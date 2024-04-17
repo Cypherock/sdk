@@ -1,6 +1,6 @@
 import { MockDeviceConnection } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
-import * as bittensorWeb3 from '@bittensor/web3.js';
+import * as bittensorWeb3 from '@substrate/txwrapper-polkadot';
 
 import { clearMocks, expectMockCalls, setupMocks } from './__helpers__';
 import fixtures from './__fixtures__';

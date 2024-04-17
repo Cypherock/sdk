@@ -3,6 +3,6 @@
     "outDir": "dist"
   },
   "extends": "@cypherock/tsconfig/base.json",
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "../../packages/app-bittensor/src/utils/util.ts"],
   "exclude": ["node_modules"]
 }

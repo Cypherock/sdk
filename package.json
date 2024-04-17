@@ -29,17 +29,17 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
-    "@changesets/cli": "^2.26.1",
-    "@commitlint/cli": "^17.4.4",
-    "@commitlint/config-conventional": "^17.4.4",
-    "@cypherock/eslint-config": "workspace:*",
-    "@cypherock/prettier-config": "workspace:*",
-    "husky": "^8.0.0",
-    "prettier": "^3.2.4",
+    "@changesets/cli": "^2.27.1",
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@cypherock/eslint-config": "workspace:0.0.8",
+    "@cypherock/prettier-config": "workspace:0.0.7",
+    "husky": "^8.0.3",
+    "prettier": "^3.2.5",
     "turbo": "latest"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@7.18.1"
+  "packageManager": "pnpm@7.18.1+sha256.0206fea9bca3e359ed32cd7b489a02d6f9eb5892c88b875f46150517f723613b"
 }
