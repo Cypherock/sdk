@@ -11,7 +11,7 @@ import * as solanaWeb3 from '@solana/web3.js';
 import { setBitcoinJSLib } from '@cypherock/sdk-app-btc';
 import { setEthersLib } from '@cypherock/sdk-app-evm';
 import { setNearApiJs } from '@cypherock/sdk-app-near';
-import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
+import { SolanaApp, setSolanaWeb3 } from '@cypherock/sdk-app-solana';
 import { ethers } from 'ethers';
 import { BittensorApp } from '@cypherock/sdk-app-bittensor';
 
@@ -131,8 +131,8 @@ const run = async () => {
 
   const wallet = (await managerApp.getWallets()).walletList[0];
   
-  const bittensorApp = await BittensorApp.create(connection);
-
+  // const bittensorApp = await BittensorApp.create(connection);
+  const solanaApp = await SolanaApp.create(connection);
 
   await cryptoWaitReady();
 
@@ -151,14 +151,20 @@ const run = async () => {
     metadataRpc,
   });
 
-  const bittensorPubKey = (await bittensorApp.getPublicKeys({
-    walletId: wallet.id,
-    derivationPaths: [{ path: [0, 0, 0, 0, 0] }]
-  })).publicKeys[0];
+  // Device
+  // const bittensorPubKey = (await bittensorApp.getPublicKeys({
+  //   walletId: wallet.id,
+  //   derivationPaths: [{ path: [0, 0, 0, 0, 0] }]
+  // })).publicKeys[0];
 
-  const addressBit = deriveAddress(bittensorPubKey, PolkadotSS58Format.substrate);
+  // console.log(`\nPublic Key device: ${bittensorPubKey}`);
+  // const addressBit = deriveAddress(bittensorPubKey, PolkadotSS58Format.substrate);
 
-  console.log(`\nPublic Key device: ${bittensorPubKey}`);
+  const keyring = new Keyring();
+	const pair = keyring.addFromUri('sample split bamboo west visual approve brain fox arch impact relief smile', { name: 'mnemonic' }, 'ed25519');
+  const publicKey = Buffer.from(pair.publicKey).toString('hex');
+	console.log(`\nPublic Key cal: ${publicKey}`);
+  const addressBit = deriveAddress(pair.publicKey, PolkadotSS58Format.substrate);
 
   const unsigned = methods.balances.transferKeepAlive(
     {
@@ -213,10 +219,20 @@ const run = async () => {
     }\n  Amount: ${payloadInfo.method.args.value}`,
   );
 
-  const resultSig = await bittensorApp.signTxn({
-    derivationPath: [0, 0, 0, 0, 0],
-    txn: signingPayload,
-    walletId: wallet.id,
+  // const resultSig = await bittensorApp.signTxn({
+  //   derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000, 1, 0],
+  //   txn: signingPayload,
+  //   walletId: wallet.id,
+  // });
+
+  const resultSig = await solanaApp.signTxn({
+    derivationPath: [0x80000000 + 44, 0x80000000 + 501, 0x80000000],
+    txn: '010001031be0085a98d799ea6facc190a95b5be7a7f2d95cff4826969b477f4dca875c08ae0bd6e8b5b56d580baefb64f6f52260ee8f9983b7f8fd61f526a30d6f5ff52900000000000000000000000000000000000000000000000000000000000000006540dea139d4c66db55b927a9e2c5f584f23bb35048e937fddae551af08fbc9c01020200010c0200000080841e0000000000',
+    walletId: new Uint8Array([
+      199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103, 233, 62,
+      110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
+      64,
+    ]),
   });
 
   // Serialize a signed transaction.
@@ -226,26 +242,22 @@ const run = async () => {
 	});
 	console.log(`\nTransaction to Submit: ${tx}`);
 
-	// Derive the tx hash of a signed transaction offline.
-	const expectedTxHash = construct.txHash(tx);
-	console.log(`\nExpected Tx Hash: ${expectedTxHash}`);
+	// // Derive the tx hash of a signed transaction offline and through rpc
+	// const expectedTxHash = construct.txHash(tx);
+	// console.log(`\nExpected Tx Hash: ${expectedTxHash}`);
+	// const actualTxHash = await rpcToLocalNode('author_submitExtrinsic', [tx]);
+	// console.log(`Actual Tx Hash: ${actualTxHash}`);
 
-	// Send the tx to the node. Again, since `txwrapper` is offline-only, this
-	// operation should be handled externally. Here, we just send a JSONRPC
-	// request directly to the node.
-	const actualTxHash = await rpcToLocalNode('author_submitExtrinsic', [tx]);
-	console.log(`Actual Tx Hash: ${actualTxHash}`);
-
-	// Decode a signed payload.
-	const txInfo = decode(tx, {
-		metadataRpc,
-		registry,
-	});
-	console.log(
-		`\nDecoded Transaction\n  To: ${
-			(txInfo.method.args.dest as { id: string }).id
-		}\n  Amount: ${txInfo.method.args.value}\n`,
-	);
+	// // Decode a signed payload.
+	// const txInfo = decode(tx, {
+	// 	metadataRpc,
+	// 	registry,
+	// });
+	// console.log(
+	// 	`\nDecoded Transaction\n  To: ${
+	// 		(txInfo.method.args.dest as { id: string }).id
+	// 	}\n  Amount: ${txInfo.method.args.value}\n`,
+	// );
 
   
   console.log(deviceInfo);

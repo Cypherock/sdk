@@ -6,7 +6,7 @@ import * as operations from './operations';
 export class BittensorApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 10;
+  private static readonly APPLET_ID = 19;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;
