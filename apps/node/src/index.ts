@@ -11,7 +11,7 @@ import * as solanaWeb3 from '@solana/web3.js';
 import { setBitcoinJSLib } from '@cypherock/sdk-app-btc';
 import { setEthersLib } from '@cypherock/sdk-app-evm';
 import { setNearApiJs } from '@cypherock/sdk-app-near';
-import { SolanaApp, setSolanaWeb3 } from '@cypherock/sdk-app-solana';
+import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
 import { ethers } from 'ethers';
 import { BittensorApp } from '@cypherock/sdk-app-bittensor';
 
@@ -128,11 +128,29 @@ const run = async () => {
   const managerApp = await ManagerApp.create(connection);
 
   const deviceInfo = await managerApp.getDeviceInfo();
+  console.log(deviceInfo);
 
   const wallet = (await managerApp.getWallets()).walletList[0];
+  console.log("wallet ID: ", wallet.id);
+
   
-  // const bittensorApp = await BittensorApp.create(connection);
-  const solanaApp = await SolanaApp.create(connection);
+  const bittensorApp = await BittensorApp.create(connection);
+
+  // TXN INFO (in ed25519 scheme)
+  // --- Source --------
+  // seed phrase: spread sword village control response joke phrase share merit miss door canoe setup surge remind tiger increase sphere busy hand scrap diesel hair bomb
+  // secret key: 0xf2e4cada34659c4f10221565421ecc5cc565e98b0cc1e57849cf5c30547f67bb
+  // public key: 0x15771a0a9a77d1a4523190c911d3e1f75dfb6aee172baf3bbe576561897e5216
+  // Addr (42) : 5CYrF4rWMEfb2PWZKLxXxiH4aB8vLPwsigUahG6AszvgbBbj                  <substrate/westend/bittensor>
+  // --- Destination ---
+  // seed phrase: sample split bamboo west visual approve brain fox arch impact relief smile
+  // secret key: 0x9fa1ab1d37025d8c3cd596ecbf50435572eeaeb1785a0c9ed2b22afa4c378d6a
+  // public key: 0x10b22ebe89b321370bee8d39d5c5d411daf1e8fc91c9d1534044590f1f966ebc
+  // Addr (42) : 5CSbZ7wG456oty4WoiX6a1J88VUbrCXLhrKVJ9q95BsYH4TZ
+  // Addr (0)  : 1NthTCKurNHLW52mMa6iA8Gz7UFYW5UnM3yTSpVdGu4Th7h
+
+  const dest = '5CSbZ7wG456oty4WoiX6a1J88VUbrCXLhrKVJ9q95BsYH4TZ';
+  const amount = 100; // WND
 
   await cryptoWaitReady();
 
@@ -145,34 +163,40 @@ const run = async () => {
   );
 
   const registry = getRegistry({
-    chainName: 'Bittensor',
+    chainName: 'Westend',
     specName,
     specVersion,
     metadataRpc,
   });
 
-  // Device
-  // const bittensorPubKey = (await bittensorApp.getPublicKeys({
-  //   walletId: wallet.id,
-  //   derivationPaths: [{ path: [0, 0, 0, 0, 0] }]
-  // })).publicKeys[0];
+  // Public key from device
+  const bittensorPubKey = (await bittensorApp.getPublicKeys({
+    walletId: wallet.id,
+    derivationPaths: [{path: [0x80000000 + 44, 0x80000000 + 354, 0x80000000, 0x80000000]}],
+  })).publicKeys[0];
+  console.log(`\nPublic Key expected: ${bittensorPubKey}`);
+  
+  const bittensorAddressBit = deriveAddress(`0x${bittensorPubKey}`, PolkadotSS58Format.westend);
+  console.log(`\nAddress device: ${bittensorAddressBit}`);
 
-  // console.log(`\nPublic Key device: ${bittensorPubKey}`);
-  // const addressBit = deriveAddress(bittensorPubKey, PolkadotSS58Format.substrate);
-
+  // Pubkey Verify - done on device
   const keyring = new Keyring();
-	const pair = keyring.addFromUri('sample split bamboo west visual approve brain fox arch impact relief smile', { name: 'mnemonic' }, 'ed25519');
+  // // const pair = keyring.addFromUri('sample split bamboo west visual approve brain fox arch impact relief smile', { name: 'mnemonic' }, 'ed25519');
+  const pair = keyring.addFromUri('spread sword village control response joke phrase share merit miss door canoe setup surge remind tiger increase sphere busy hand scrap diesel hair bomb', { name: 'mnemonic' }, 'ed25519');
   const publicKey = Buffer.from(pair.publicKey).toString('hex');
-	console.log(`\nPublic Key cal: ${publicKey}`);
+  console.log(`\nPublic Key expected: ${publicKey}`);
   const addressBit = deriveAddress(pair.publicKey, PolkadotSS58Format.substrate);
+  console.log(`\nAddress expected: ${addressBit}`);
 
+
+  // Construct unsigned payload
   const unsigned = methods.balances.transferKeepAlive(
     {
-      value: '10000000000',
-      dest: { id: '5CkbuLTrGiAiPubc8qK5dC5WbG1hDGXRSt1arFE5Zimu71R1' }, // Bob
+      value: amount,
+      dest: { id: dest },
     },
     {
-      address: addressBit,
+      address: bittensorAddressBit,
       blockHash,
       blockNumber: (registry
         .createType('BlockNumber', block.header.number) as any)
@@ -200,9 +224,10 @@ const run = async () => {
   });
   console.log(
     `\nDecoded Transaction\n  To: ${
-      (decodedUnsigned.address)
+      (decodedUnsigned.method.args.dest)
     }\n  Amount: ${decodedUnsigned.method.args.value}`,
   );
+
 
   // Construct the signing payload from an unsigned transaction.
   const signingPayload = construct.signingPayload(unsigned, { registry });
@@ -219,48 +244,58 @@ const run = async () => {
     }\n  Amount: ${payloadInfo.method.args.value}`,
   );
 
-  // const resultSig = await bittensorApp.signTxn({
-  //   derivationPath: [0x80000000 + 44, 0x80000000, 0x80000000, 1, 0],
-  //   txn: signingPayload,
-  //   walletId: wallet.id,
-  // });
 
-  const resultSig = await solanaApp.signTxn({
-    derivationPath: [0x80000000 + 44, 0x80000000 + 501, 0x80000000],
-    txn: '010001031be0085a98d799ea6facc190a95b5be7a7f2d95cff4826969b477f4dca875c08ae0bd6e8b5b56d580baefb64f6f52260ee8f9983b7f8fd61f526a30d6f5ff52900000000000000000000000000000000000000000000000000000000000000006540dea139d4c66db55b927a9e2c5f584f23bb35048e937fddae551af08fbc9c01020200010c0200000080841e0000000000',
-    walletId: new Uint8Array([
-      199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103, 233, 62,
-      110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
-      64,
-    ]),
+  // Signature from device
+  const resultSig = await bittensorApp.signTxn({
+    derivationPath: [0x80000000 + 44, 0x80000000 + 354, 0x80000000, 0x80000000],
+    txn: signingPayload,
+    walletId: wallet.id,
   });
+  console.log(`\nSignature actual: 0x00${resultSig.signature}`);
 
+  // Signature verify
+	const signature = signWith(pair, signingPayload, {
+		metadataRpc,
+		registry,
+	});
+	console.log(`\nSignature expected: ${signature}`);
+
+  console.log(`\nDestination address: ${dest}`);
+  console.log(`\nAmount: ${amount}`);
+
+  
   // Serialize a signed transaction.
-	const tx = construct.signedTx(unsigned, `0x${resultSig.signature}`, {
+	const tx = construct.signedTx(unsigned, `0x00${resultSig.signature}`, {
 		metadataRpc,
 		registry,
 	});
 	console.log(`\nTransaction to Submit: ${tx}`);
 
-	// // Derive the tx hash of a signed transaction offline and through rpc
-	// const expectedTxHash = construct.txHash(tx);
-	// console.log(`\nExpected Tx Hash: ${expectedTxHash}`);
-	// const actualTxHash = await rpcToLocalNode('author_submitExtrinsic', [tx]);
-	// console.log(`Actual Tx Hash: ${actualTxHash}`);
+  // Expected Serialize a signed transaction.
+	const tx1 = construct.signedTx(unsigned, signature, {
+		metadataRpc,
+		registry,
+	});
+	console.log(`\nTransaction to Expected Submit: ${tx1}`);
 
-	// // Decode a signed payload.
-	// const txInfo = decode(tx, {
-	// 	metadataRpc,
-	// 	registry,
-	// });
-	// console.log(
-	// 	`\nDecoded Transaction\n  To: ${
-	// 		(txInfo.method.args.dest as { id: string }).id
-	// 	}\n  Amount: ${txInfo.method.args.value}\n`,
-	// );
+	// Derive the tx hash of a signed transaction offline and through rpc
+	const expectedTxHash = construct.txHash(tx);
+	console.log(`\nTx Hash expected: ${expectedTxHash}`);
+	const actualTxHash = await rpcToLocalNode('author_submitExtrinsic', [tx1]);
+	console.log(`Tx Hash actual: ${actualTxHash}`);
+  const actualTxHashdevice = await rpcToLocalNode('author_submitExtrinsic', [tx]);
+	console.log(`Tx Hash actual device: ${actualTxHashdevice}`);
 
-  
-  console.log(deviceInfo);
+	// Decode a signed payload.
+	const txInfo = decode(tx, {
+		metadataRpc,
+		registry,
+	});
+	console.log(
+		`\nDecoded Transaction\n  To: ${
+			(txInfo.method.args.dest as { id: string }).id
+		}\n  Amount: ${txInfo.method.args.value}\n`,
+	);
 
   await managerApp.authDevice();
 

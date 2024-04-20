@@ -1,8 +1,5 @@
-import {
-  OperationHelper,
-  assertOrThrowInvalidResult,
-  base58Encode,
-} from '../../utils';
+import { uint8ArrayToHex } from '@cypherock/sdk-utils';
+import { OperationHelper, assertOrThrowInvalidResult } from '../../utils';
 import { IGetPublicKeysParams, GetPublicKeysEvent } from './types';
 
 export * from './types';
@@ -27,6 +24,8 @@ export const runGetPublicKeysOnDevice = async (
     const result = await helper.waitForResult();
     assertOrThrowInvalidResult(result.result);
     publicKeys = [...publicKeys, ...result.result.publicKeys];
+    console.log({ publicKeys });
+    console.log(publicKeys[0]);
     forceStatusUpdate(GetPublicKeysEvent.PIN_CARD);
     if (hasMore()) {
       await helper.sendQuery({
@@ -38,6 +37,6 @@ export const runGetPublicKeysOnDevice = async (
   forceStatusUpdate(GetPublicKeysEvent.VERIFY);
 
   return {
-    publicKeys: publicKeys.map(e => base58Encode(e)),
+    publicKeys: publicKeys.map(e => uint8ArrayToHex(e)),
   };
 };

@@ -11,14 +11,14 @@ import {
   SeedGenerationStatus,
   SignTxnStatus,
 } from '../../proto/generated/types';
-import { getLatestBlockHash } from '../../services/transaction';
+// import { getLatestBlockHash } from '../../services/transaction';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
   // getBittensorWeb3,
   // base58Encode,
-  base58Decode,
+  // base58Decode,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
 
@@ -78,14 +78,9 @@ export const signTxn = async (
   const verifyResult = await helper.waitForResult();
   assertOrThrowInvalidResult(verifyResult.verify);
 
-  const latestBlockHash = await (
-    params.getLatestBlockHash ?? getLatestBlockHash
-  )();
-  const blockHashBuffer = base58Decode(latestBlockHash);
-
   await helper.sendQuery({
     signature: {
-      blockhash: blockHashBuffer,
+      blockhash: new Uint8Array(),
     },
   });
   const result = await helper.waitForResult();
@@ -94,7 +89,6 @@ export const signTxn = async (
   forceStatusUpdate(SignTxnEvent.PIN_CARD);
 
   const signature = uint8ArrayToHex(result.signature.signature);
-  console.log(`\nSignature from device: ${signature}`);
 
   let serializedTxn: string | undefined;
   let serializedTxnHex: string | undefined;
