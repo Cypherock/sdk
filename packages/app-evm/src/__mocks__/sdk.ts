@@ -29,6 +29,11 @@ export const destroy = jest.fn<ISDK['destroy']>();
 export const getDeviceState = jest.fn<ISDK['getDeviceState']>(
   async () => DeviceState.MAIN,
 );
+export const getAppVersion = jest.fn<ISDK['getAppVersion']>(async () => ({
+  major: 1,
+  minor: 1,
+  patch: 0,
+}));
 
 export const create = jest.fn(async () =>
   Promise.resolve({
@@ -44,6 +49,7 @@ export const create = jest.fn(async () =>
     runOperation,
     destroy,
     getDeviceState,
+    getAppVersion,
   }),
 );
 

@@ -19,3 +19,5 @@ export const APP_VERSION = {
   from: '1.0.0',
   to: '2.0.0',
 };
+
+export const APP_SUPPORT_EIP1559 = '1.1.0';

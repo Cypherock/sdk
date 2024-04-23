@@ -6,7 +6,12 @@ import {
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
+import { compareVersions } from 'compare-versions';
 import type { Transaction } from 'ethers';
+import {
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
+} from '@cypherock/sdk-interfaces';
 import {
   AddressFormat,
   SeedGenerationStatus,
@@ -18,8 +23,10 @@ import {
   logger as rootLogger,
   getEthersLib,
   configureAppId,
+  getAppIdFromDerivationPaths,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
+import { APP_SUPPORT_EIP1559 } from '../../constants/appId';
 
 export * from './types';
 
@@ -53,6 +60,24 @@ export const signTxn = async (
   }
 
   await configureAppId(sdk, Number(decodedTxn.chainId));
+
+  const version = await sdk.getAppVersion(
+    getAppIdFromDerivationPaths(Number(decodedTxn.chainId)),
+  );
+  if (
+    version &&
+    compareVersions(
+      `${version.major}.${version.minor}.${version.patch}`,
+      APP_SUPPORT_EIP1559,
+    ) === -1
+  ) {
+    // evm apps support eip2930/eip1559 transactions version 1.1.0 onwards
+    if (!decodedTxn.isLegacy()) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+  }
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,

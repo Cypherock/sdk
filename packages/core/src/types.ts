@@ -3,7 +3,10 @@ import * as rawOperations from './operations/raw';
 import * as operations from './operations/proto';
 import { PacketVersion } from './utils';
 import { RawData, StatusData } from './encoders/raw';
-import { IAppVersionResultResponse } from './encoders/proto/generated/types';
+import {
+  IAppVersionResultResponse,
+  IVersion,
+} from './encoders/proto/generated/types';
 
 export interface IDeprecatedCommunication {
   isLegacyOperationSupported(): Promise<boolean>;
@@ -98,6 +101,7 @@ export interface ISDK {
     onStatus?: operations.IGetAppVersionsParams['onStatus'],
     options?: operations.IGetAppVersionsParams['options'],
   ): Promise<IAppVersionResultResponse>;
+  getAppVersion(appId: number): Promise<IVersion | undefined>;
   checkAppCompatibility(
     version: { from: string; to?: string },
     options?: operations.IGetAppVersionsParams['options'],

@@ -326,6 +326,11 @@ export class SDK implements ISDK {
     return this.appVersionsMap;
   }
 
+  public async getAppVersion(appId: number) {
+    await this.getAppVersions();
+    return this.appVersionsMap?.appVersions.find(a => a.id === appId)?.version;
+  }
+
   // from is inclusive and to is exclusive
   public async checkAppCompatibility(
     version: { from: string; to?: string },
