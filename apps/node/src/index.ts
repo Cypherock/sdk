@@ -14,7 +14,6 @@ import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
 import { ethers } from 'ethers';
 import { BittensorApp } from '@cypherock/sdk-app-bittensor';
-import { createServiceLogger } from './logger';
 
 import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
 import {
@@ -30,6 +29,7 @@ import {
 import { KeyringPair } from '@polkadot/keyring/types';
 import { 
   EXTRINSIC_VERSION } from '@polkadot/types/extrinsic/v4/Extrinsic';
+import { createServiceLogger } from './logger';
 
 function signWith(
 	pair: KeyringPair,
@@ -94,7 +94,7 @@ const run = async () => {
   const api = await ApiPromise.create({ provider: wsProvider });
 
   const dest = '5CSbZ7wG456oty4WoiX6a1J88VUbrCXLhrKVJ9q95BsYH4TZ';
-  const amount = 1; // WND
+  const amount = 100; // WND
 
   // To verify
   const verify = false;
@@ -111,9 +111,9 @@ const run = async () => {
 
   const registry = getRegistry({
     chainName: chain.toString(),
-    specName: specName,
-    specVersion: specVersion,
-    metadataRpc: metadataRpc
+    specName,
+    specVersion,
+    metadataRpc
   });
   registry.setMetadata(createMetadata(registry, metadataRpc));
 
@@ -132,11 +132,11 @@ const run = async () => {
 	console.log(`\nAddress expected: ${addressBit}`);
 
   // Get nonce
-  const nonce:number = await api.call.accountNonceApi.accountNonce(addressBit);
+  const nonce:number = await api.call.accountNonceApi.accountNonce(bittensorAddressBit);
 	console.log({nonce});
 
   // Pubkey Verify - done on device
-  if (verify === true){
+  if (verify){
     const publicKey = Buffer.from(pair.publicKey).toString('hex');
     console.log(`\nPublic Key expected: ${publicKey}`);
     addressBit = deriveAddress(pair.publicKey, PolkadotSS58Format.substrate);
@@ -177,18 +177,19 @@ const run = async () => {
     txn: `0x${signingPayload.substring(4)}`,
     walletId: wallet.id,
   });
-  console.log(`\nSignature actual: 0x00${resultSig.signature}`);
-  console.log(`\nDestination address: ${dest}`);
-  console.log(`\nAmount: ${amount}`);
+  console.log(`\nSignature received from device: 0x00${resultSig.signature}`);
 
-  if (verify === true){
+  console.log(`\nDestination address: ${dest}`);
+  console.log(`\nAmount: ${amount} WND`);
+
+  if (verify){
     // Signature verify
     const signature = signWith(pair, signingPayload, {
       metadataRpc,
       registry,
     });
     console.log(`\nSignature expected: ${signature}`);
-  
+  }
 
   // Serialize a signed transaction.
 	const tx = construct.signedTx(unsigned, `0x00${resultSig.signature}`, {
@@ -198,11 +199,12 @@ const run = async () => {
 	console.log(`\nTransaction to Submit: ${tx}`);
 
 	// Derive the tx hash of a signed transaction offline and through rpc
-	const expectedTxHash = construct.txHash(tx);
-	console.log(`\nTx Hash expected: ${expectedTxHash}`);
+  if (verify){
+    const expectedTxHash = construct.txHash(tx);
+    console.log(`\nTx Hash expected: ${expectedTxHash}`);
+  }
 	const actualTxHashdevice = await api.rpc.author.submitExtrinsic(tx);
-	console.log(`Tx Hash actual device: ${actualTxHashdevice}`);
-}
+	console.log(`Tx Hash: ${actualTxHashdevice}`);
 
   // await managerApp.authDevice();
 
