@@ -14,7 +14,9 @@ import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
 import { ethers } from 'ethers';
 import { BittensorApp } from '@cypherock/sdk-app-bittensor';
-
+// import fs from "fs";
+// import { hexToUint8Array } from '@cypherock/sdk-utils';
+import { createServiceLogger } from './logger';
 import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
 import {
 	construct,
@@ -29,7 +31,7 @@ import {
 import { KeyringPair } from '@polkadot/keyring/types';
 import { 
   EXTRINSIC_VERSION } from '@polkadot/types/extrinsic/v4/Extrinsic';
-import { createServiceLogger } from './logger';
+
 
 function signWith(
 	pair: KeyringPair,
@@ -221,8 +223,15 @@ const run = async () => {
   //     d.type === 'hid'
   //       ? DeviceConnection.connect(d)
   //       : DeviceConnectionSerialport.connect(d),
-  //   allowPrerelease: true,
+  //   // allowPrerelease: true,
+  //   firmware: hexToUint8Array(fs.readFileSync("/home/parnika/Downloads/cypherock-firmware-0.6.0.bin", {encoding: "hex"})),
+  //   version: {
+  //     major: 0,
+  //     minor: 6,
+  //     patch: 0
+  //   }
   // });
+  // APU_CYPHEROCK=https://dev-api.cypherock.com pnpm start:node
 
 }
 
