@@ -20,4 +20,16 @@ export const APP_VERSION = {
   to: '2.0.0',
 };
 
-export const APP_SUPPORT_EIP1559 = '1.1.0';
+export interface IFeatureSupport {
+  name: string;
+  fromVersion: string;
+}
+
+export type SupportedFeature = 'EIP_1559';
+
+export const AppFeatures: Record<SupportedFeature, IFeatureSupport> = {
+  EIP_1559: {
+    name: 'EIP1559',
+    fromVersion: '1.1.0',
+  },
+};

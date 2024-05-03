@@ -14,8 +14,8 @@ export abstract class DeviceError extends Error {
   }
 
   public setPrototype(cls: any) {
-    if ((<any>Object).setPrototypeOf) {
-      (<any>Object).setPrototypeOf(this, cls.prototype);
+    if ((Object as any).setPrototypeOf) {
+      (Object as any).setPrototypeOf(this, cls.prototype);
     } else {
       // eslint-disable-next-line
       (<any>this).__proto__ = cls.prototype;

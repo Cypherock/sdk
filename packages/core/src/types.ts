@@ -51,7 +51,10 @@ export interface IDeprecatedCommunication {
     timeout?: number,
   ): Promise<StatusData>;
 }
-
+export interface IFeatureSupport {
+  name: string;
+  fromVersion: string;
+}
 export interface ISDK {
   deprecated: IDeprecatedCommunication;
   getConnection(): IDeviceConnection;
@@ -106,6 +109,7 @@ export interface ISDK {
     version: { from: string; to?: string },
     options?: operations.IGetAppVersionsParams['options'],
   ): Promise<void>;
+  checkFeatureSupportCompatibility(feature: IFeatureSupport[]): Promise<void>;
   sendBootloaderAbort(options?: {
     firstTimeout?: number;
     timeout?: number;

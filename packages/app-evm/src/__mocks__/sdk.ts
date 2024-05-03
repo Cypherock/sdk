@@ -11,6 +11,8 @@ export const sendQuery = jest.fn<ISDK['sendQuery']>();
 
 export const configureAppletId = jest.fn<ISDK['configureAppletId']>();
 export const checkAppCompatibility = jest.fn<ISDK['checkAppCompatibility']>();
+export const checkFeatureSupportCompatibility =
+  jest.fn<ISDK['checkFeatureSupportCompatibility']>();
 
 export const waitForResult = jest.fn<ISDK['waitForResult']>();
 export const getSequenceNumber = jest.fn<ISDK['getSequenceNumber']>(
@@ -29,11 +31,6 @@ export const destroy = jest.fn<ISDK['destroy']>();
 export const getDeviceState = jest.fn<ISDK['getDeviceState']>(
   async () => DeviceState.MAIN,
 );
-export const getAppVersion = jest.fn<ISDK['getAppVersion']>(async () => ({
-  major: 1,
-  minor: 1,
-  patch: 0,
-}));
 
 export const create = jest.fn(async () =>
   Promise.resolve({
@@ -49,7 +46,7 @@ export const create = jest.fn(async () =>
     runOperation,
     destroy,
     getDeviceState,
-    getAppVersion,
+    checkFeatureSupportCompatibility,
   }),
 );
 
