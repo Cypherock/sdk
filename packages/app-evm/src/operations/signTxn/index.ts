@@ -6,6 +6,10 @@ import {
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
+import {
+  DeviceCompatibilityError,
+  DeviceCompatibilityErrorType,
+} from '@cypherock/sdk-interfaces';
 import type { Transaction } from 'ethers';
 import {
   AddressFormat,
@@ -56,8 +60,20 @@ export const signTxn = async (
   await configureAppId(sdk, Number(decodedTxn.chainId));
 
   // evm apps support eip2930/eip1559 transactions version 1.1.0 onwards
-  if (decodedTxn.type === 1 || decodedTxn.type === 2) {
+  if (decodedTxn.type === null) {
+    logger.warn(`Transaction version is ${decodedTxn.type}.`);
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
+  } else if (decodedTxn.type === 1 || decodedTxn.type === 2) {
     await sdk.checkFeatureSupportCompatibility([AppFeatures.EIP_1559]);
+  } else if (decodedTxn.type > 2) {
+    logger.warn(
+      `Transaction version ${decodedTxn.type} is not supported currently.`,
+    );
+    throw new DeviceCompatibilityError(
+      DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+    );
   }
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
