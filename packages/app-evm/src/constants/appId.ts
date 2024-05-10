@@ -1,3 +1,5 @@
+import { IFeatureSupport } from '@cypherock/sdk-core';
+
 export const chainToAppIdMap: Record<number, number | undefined> = {
   // ETH
   1: 0x07,
@@ -18,4 +20,13 @@ export const chainToAppIdMap: Record<number, number | undefined> = {
 export const APP_VERSION = {
   from: '1.0.0',
   to: '2.0.0',
+};
+
+export type SupportedFeature = 'EIP_1559';
+
+export const AppFeatures: Record<SupportedFeature, IFeatureSupport> = {
+  EIP_1559: {
+    name: 'EIP1559',
+    fromVersion: '1.1.0',
+  },
 };

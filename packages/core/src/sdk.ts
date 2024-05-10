@@ -19,7 +19,7 @@ import * as operations from './operations/proto';
 import { getPacketVersionFromSDK, formatSDKVersion } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 import { FeatureName, isFeatureEnabled } from './utils/featureMap';
-import { ISDK } from './types';
+import { IFeatureSupport, ISDK } from './types';
 import DeprecatedCommunication from './deprecated';
 import { DeviceIdleState } from './encoders/proto/types';
 import { DeviceIdleState as RawDeviceIdleState } from './encoders/raw';
@@ -324,6 +324,33 @@ export class SDK implements ISDK {
     }
 
     return this.appVersionsMap;
+  }
+
+  public async getAppVersion(appId: number) {
+    await this.getAppVersions();
+    return this.appVersionsMap?.appVersions.find(a => a.id === appId)?.version;
+  }
+
+  public async checkFeatureSupportCompatibility(features: IFeatureSupport[]) {
+    const appVersionResult = await this.getAppVersion(this.appletId);
+
+    if (!appVersionResult) {
+      return;
+    }
+
+    const appVersion = `${appVersionResult.major}.${appVersionResult.minor}.${appVersionResult.patch}`;
+
+    for (const feature of features) {
+      const isCompatible = compareVersions(feature.fromVersion, appVersion) < 1;
+      if (!isCompatible) {
+        logger.warn(
+          `Feature ${feature.name} is supported only from >${feature.fromVersion}, your current app version is ${appVersion}`,
+        );
+        throw new DeviceCompatibilityError(
+          DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+        );
+      }
+    }
   }
 
   // from is inclusive and to is exclusive
