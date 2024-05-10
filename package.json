@@ -41,5 +41,5 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@8.6.0+sha256.1e9c17c34c2eebaba02e78b619e296db08d302c296e58c2f51b0cd4e3e5bcda2"
+  "packageManager": "pnpm@8.6.0"
 }

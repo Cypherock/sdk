@@ -7,7 +7,6 @@ import {
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
 import type { Transaction } from 'ethers';
-import {} from '@cypherock/sdk-interfaces';
 import {
   AddressFormat,
   SeedGenerationStatus,
@@ -57,7 +56,7 @@ export const signTxn = async (
   await configureAppId(sdk, Number(decodedTxn.chainId));
 
   // evm apps support eip2930/eip1559 transactions version 1.1.0 onwards
-  if (!decodedTxn.isLegacy()) {
+  if (decodedTxn.type === 1 || decodedTxn.type === 2) {
     await sdk.checkFeatureSupportCompatibility([AppFeatures.EIP_1559]);
   }
 

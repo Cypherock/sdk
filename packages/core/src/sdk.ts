@@ -344,7 +344,7 @@ export class SDK implements ISDK {
       const isCompatible = compareVersions(feature.fromVersion, appVersion) < 1;
       if (!isCompatible) {
         logger.warn(
-          `Feature ${feature.name} is supported only in >${feature.fromVersion}, your current app version is ${appVersion}`,
+          `Feature ${feature.name} is supported only from >${feature.fromVersion}, your current app version is ${appVersion}`,
         );
         throw new DeviceCompatibilityError(
           DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
