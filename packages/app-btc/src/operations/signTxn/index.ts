@@ -15,6 +15,7 @@ import {
   logger as rootLogger,
   getCoinTypeFromPath,
   configureAppId,
+  AppFeatures,
 } from '../../utils';
 import { getRawTxnHash } from '../../services/transaction';
 import {
@@ -23,6 +24,7 @@ import {
 } from '../../utils/transaction';
 import { assertSignTxnParams } from './helpers';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
+import { SignTxnInput } from '../../proto/generated/btc/sign_txn';
 
 export * from './types';
 
@@ -45,6 +47,7 @@ export const signTxn = async (
   logger.info('Started');
 
   await configureAppId(sdk, [params.derivationPath]);
+  await sdk.checkFeatureSupportCompatibility([AppFeatures.INPUT_IN_CHUNKS]);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,
@@ -99,22 +102,21 @@ export const signTxn = async (
         coinType: getCoinTypeFromPath(params.derivationPath),
       }));
     inputs[i].prevTxn = prevTxn;
-    await helper.sendQuery({
-      input: {
-        prevTxn: hexToUint8Array(prevTxn),
-        prevTxnHash: hexToUint8Array(prevTxnHash),
-        prevOutputIndex: input.prevIndex,
-        scriptPubKey: hexToUint8Array(
-          addressToScriptPubKey(input.address, params.derivationPath),
-        ),
-        value: input.value,
-        sequence: input.sequence ?? signTxnDefaultParams.input.sequence,
-        changeIndex: input.changeIndex,
-        addressIndex: input.addressIndex,
-      },
-    });
-    const { inputAccepted } = await helper.waitForResult();
-    assertOrThrowInvalidResult(inputAccepted);
+
+    const encodedInput = SignTxnInput.encode({
+      prevTxn: hexToUint8Array(prevTxn),
+      prevTxnHash: hexToUint8Array(prevTxnHash),
+      prevOutputIndex: input.prevIndex,
+      scriptPubKey: hexToUint8Array(
+        addressToScriptPubKey(input.address, params.derivationPath),
+      ),
+      value: input.value,
+      sequence: input.sequence ?? signTxnDefaultParams.input.sequence,
+      changeIndex: input.changeIndex,
+      addressIndex: input.addressIndex,
+    }).finish();
+
+    await helper.sendInChunks(encodedInput, 'input', 'inputAccepted');
   }
 
   for (const output of params.txn.outputs) {

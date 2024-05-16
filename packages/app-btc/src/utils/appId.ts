@@ -1,4 +1,4 @@
-import { ISDK } from '@cypherock/sdk-core';
+import { ISDK, IFeatureSupport } from '@cypherock/sdk-core';
 import { assert } from '@cypherock/sdk-utils';
 import { APP_VERSION, coinIndexToAppIdMap } from '../constants/appId';
 
@@ -22,4 +22,13 @@ export const configureAppId = async (
   const appId = getAppIdFromDerivationPaths(derivationPaths);
   sdk.configureAppletId(appId);
   await sdk.checkAppCompatibility(APP_VERSION);
+};
+
+export type SupportedFeature = 'INPUT_IN_CHUNKS';
+
+export const AppFeatures: Record<SupportedFeature, IFeatureSupport> = {
+  INPUT_IN_CHUNKS: {
+    name: 'INPUT_IN_CHUNKS',
+    fromVersion: '1.1.0',
+  },
 };
