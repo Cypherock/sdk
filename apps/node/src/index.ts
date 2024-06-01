@@ -32,6 +32,8 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { 
   EXTRINSIC_VERSION } from '@polkadot/types/extrinsic/v4/Extrinsic';
 
+// Send testnet to the Address/Account https://faucet.polkadot.io/westend
+// Check transaction hash on https://westend.subscan.io/extrinsic/
 
 function signWith(
 	pair: KeyringPair,
@@ -79,12 +81,12 @@ const run = async () => {
   const bittensorApp = await BittensorApp.create(connection);
 
   // TXN INFO (in ed25519 scheme)
-  // --- Source --------
+  // --- Source (Example)--------
   // seed phrase: spread sword village control response joke phrase share merit miss door canoe setup surge remind tiger increase sphere busy hand scrap diesel hair bomb
   // secret key: 0xf2e4cada34659c4f10221565421ecc5cc565e98b0cc1e57849cf5c30547f67bb
   // public key: 0x15771a0a9a77d1a4523190c911d3e1f75dfb6aee172baf3bbe576561897e5216
   // Addr (42) : 5CYrF4rWMEfb2PWZKLxXxiH4aB8vLPwsigUahG6AszvgbBbj                  <substrate/westend/bittensor>
-  // --- Destination ---
+  // --- Destination (Can be verified on Device)---
   // seed phrase: sample split bamboo west visual approve brain fox arch impact relief smile
   // secret key: 0x9fa1ab1d37025d8c3cd596ecbf50435572eeaeb1785a0c9ed2b22afa4c378d6a
   // public key: 0x10b22ebe89b321370bee8d39d5c5d411daf1e8fc91c9d1534044590f1f966ebc
@@ -96,12 +98,14 @@ const run = async () => {
   const api = await ApiPromise.create({ provider: wsProvider });
 
   const dest = '5CSbZ7wG456oty4WoiX6a1J88VUbrCXLhrKVJ9q95BsYH4TZ';
-  const amount = 100; // WND
+  const amount = 123456789; // WND
 
-  // To verify
+  // To verify (Change mnemonic)
   const verify = false;
+  const mnemonic = 'spread sword village control response joke phrase share merit miss door canoe setup surge remind tiger increase sphere busy hand scrap diesel hair bomb'
+
   const keyring = new Keyring();
-  const pair = keyring.addFromUri('spread sword village control response joke phrase share merit miss door canoe setup surge remind tiger increase sphere busy hand scrap diesel hair bomb', { name: 'mnemonic' }, 'ed25519');
+  const pair = keyring.addFromUri(mnemonic, { name: 'mnemonic' }, 'ed25519');
 
   // Get meta data
   const blockNumber:number = convertToJson(await api.rpc.chain.getBlock()).block.header.number;
@@ -180,9 +184,9 @@ const run = async () => {
     walletId: wallet.id,
   });
   console.log(`\nSignature received from device: 0x00${resultSig.signature}`);
-
+  console.log(`\nSource Address (from device): ${bittensorAddressBit}`);
   console.log(`\nDestination address: ${dest}`);
-  console.log(`\nAmount: ${amount} WND`);
+  console.log(`\nAmount: ${amount} TAO`);
 
   if (verify){
     // Signature verify
