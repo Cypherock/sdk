@@ -1,5 +1,16 @@
 # @cypherock/sdk-app-btc
 
+## 0.0.36
+
+### Patch Changes
+
+- [#109](https://github.com/Cypherock/sdk/pull/109) [`1ded7f9e94b952822a7ce27384c6e1a3d898d98e`](https://github.com/Cypherock/sdk/commit/1ded7f9e94b952822a7ce27384c6e1a3d898d98e) Thanks [@irshadjsr21](https://github.com/irshadjsr21)! - send btc input txn in chunks
+
+- Updated dependencies [[`7502430aa998d215490baaab24ff4b901481e964`](https://github.com/Cypherock/sdk/commit/7502430aa998d215490baaab24ff4b901481e964)]:
+  - @cypherock/sdk-interfaces@0.0.15
+  - @cypherock/sdk-core@0.0.25
+  - @cypherock/sdk-utils@0.0.18
+
 ## 0.0.35
 
 ### Patch Changes

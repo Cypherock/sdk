@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.15
+
+### Patch Changes
+
+- [#108](https://github.com/Cypherock/sdk/pull/108) [`7502430aa998d215490baaab24ff4b901481e964`](https://github.com/Cypherock/sdk/commit/7502430aa998d215490baaab24ff4b901481e964) Thanks [@ujjwal-cyph](https://github.com/ujjwal-cyph)! - Added feature support compatibility w.r.t app versioning
+
 ## 0.0.14
 
 ### Patch Changes
