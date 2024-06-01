@@ -11,6 +11,8 @@ export const sendQuery = jest.fn<ISDK['sendQuery']>();
 
 export const configureAppletId = jest.fn<ISDK['configureAppletId']>();
 export const checkAppCompatibility = jest.fn<ISDK['checkAppCompatibility']>();
+export const checkFeatureSupportCompatibility =
+  jest.fn<ISDK['checkFeatureSupportCompatibility']>();
 
 export const waitForResult = jest.fn<ISDK['waitForResult']>();
 export const getSequenceNumber = jest.fn<ISDK['getSequenceNumber']>(
@@ -34,6 +36,7 @@ export const create = jest.fn(async () =>
   Promise.resolve({
     configureAppletId,
     checkAppCompatibility,
+    checkFeatureSupportCompatibility,
     sendAbort,
     getResult,
     getStatus,

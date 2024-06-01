@@ -5,6 +5,156 @@ const valid: ISignTypedDataCase[] = [
   {
     data: {
       types: {
+        EIP712Domain: [],
+      },
+      primaryType: 'EIP712Domain',
+      message: {},
+      domain: {},
+    },
+    results: {
+      domain: {
+        name: 'domain',
+        type: 7,
+        size: 0,
+        structName: 'EIP712Domain',
+        children: [],
+        typeHash: Uint8Array.from([
+          32, 188, 195, 248, 16, 94, 234, 71, 208, 103, 56, 110, 66, 230, 2, 70,
+          232, 147, 147, 205, 97, 197, 18, 237, 209, 232, 118, 136, 137, 15,
+          185, 20,
+        ]),
+      },
+      message: {
+        name: 'message',
+        type: 7,
+        size: 0,
+        structName: 'EIP712Domain',
+        children: [],
+        typeHash: Uint8Array.from([
+          32, 188, 195, 248, 16, 94, 234, 71, 208, 103, 56, 110, 66, 230, 2, 70,
+          232, 147, 147, 205, 97, 197, 18, 237, 209, 232, 118, 136, 137, 15,
+          185, 20,
+        ]),
+      },
+    },
+  },
+  {
+    data: {
+      types: {
+        EIP712Domain: [
+          {
+            name: 'name',
+            type: 'string',
+          },
+          {
+            name: 'version',
+            type: 'string',
+          },
+          {
+            name: 'chainId',
+            type: 'uint256',
+          },
+          {
+            name: 'verifyingContract',
+            type: 'address',
+          },
+          {
+            name: 'salt',
+            type: 'bytes32',
+          },
+        ],
+      },
+      primaryType: 'EIP712Domain',
+      message: {},
+      domain: {
+        name: 'Trezor',
+        version: 'Test v0.0.0',
+        chainId: 1,
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+        salt: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+      },
+    },
+    results: {
+      domain: {
+        name: 'domain',
+        type: 7,
+        size: 5,
+        structName: 'EIP712Domain',
+        children: [
+          {
+            name: 'name',
+            type: 3,
+            size: 6,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([84, 114, 101, 122, 111, 114]),
+          },
+          {
+            name: 'version',
+            type: 3,
+            size: 11,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([84, 101, 115, 116, 32, 118, 48, 46, 48, 46, 48]),
+          },
+          {
+            name: 'chainId',
+            type: 0,
+            size: 32,
+            structName: 'uint256',
+            children: [],
+            data: Buffer.from([
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            ]),
+          },
+          {
+            name: 'verifyingContract',
+            type: 5,
+            size: 20,
+            structName: 'address',
+            children: [],
+            data: Buffer.from([
+              204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204,
+              204, 204, 204, 204, 204, 204, 204,
+            ]),
+          },
+          {
+            name: 'salt',
+            type: 2,
+            size: 32,
+            structName: 'bytes32',
+            children: [],
+            data: Buffer.from([
+              1, 35, 69, 103, 137, 171, 205, 239, 1, 35, 69, 103, 137, 171, 205,
+              239, 1, 35, 69, 103, 137, 171, 205, 239, 1, 35, 69, 103, 137, 171,
+              205, 239,
+            ]),
+          },
+        ],
+        typeHash: Uint8Array.from([
+          216, 124, 214, 239, 121, 212, 226, 185, 94, 21, 206, 138, 191, 115,
+          45, 181, 30, 199, 113, 241, 202, 46, 220, 207, 34, 164, 108, 114, 154,
+          197, 100, 114,
+        ]),
+      },
+      message: {
+        name: 'message',
+        type: 7,
+        size: 0,
+        structName: 'EIP712Domain',
+        children: [],
+        typeHash: Uint8Array.from([
+          216, 124, 214, 239, 121, 212, 226, 185, 94, 21, 206, 138, 191, 115,
+          45, 181, 30, 199, 113, 241, 202, 46, 220, 207, 34, 164, 108, 114, 154,
+          197, 100, 114,
+        ]),
+      },
+    },
+  },
+  {
+    data: {
+      types: {
         EIP712Domain: [
           {
             name: 'name',
