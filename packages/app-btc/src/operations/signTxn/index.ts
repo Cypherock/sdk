@@ -15,6 +15,7 @@ import {
   logger as rootLogger,
   getCoinTypeFromPath,
   configureAppId,
+  AppFeatures,
 } from '../../utils';
 import { getRawTxnHash } from '../../services/transaction';
 import {
@@ -45,6 +46,7 @@ export const signTxn = async (
   logger.info('Started');
 
   await configureAppId(sdk, [params.derivationPath]);
+  await sdk.checkFeatureSupportCompatibility([AppFeatures.INPUT_IN_CHUNKS]);
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,
@@ -99,9 +101,9 @@ export const signTxn = async (
         coinType: getCoinTypeFromPath(params.derivationPath),
       }));
     inputs[i].prevTxn = prevTxn;
+
     await helper.sendQuery({
       input: {
-        prevTxn: hexToUint8Array(prevTxn),
         prevTxnHash: hexToUint8Array(prevTxnHash),
         prevOutputIndex: input.prevIndex,
         scriptPubKey: hexToUint8Array(
@@ -115,6 +117,12 @@ export const signTxn = async (
     });
     const { inputAccepted } = await helper.waitForResult();
     assertOrThrowInvalidResult(inputAccepted);
+
+    await helper.sendInChunks(
+      hexToUint8Array(prevTxn),
+      'prevTxnChunk',
+      'prevTxnChunkAccepted',
+    );
   }
 
   for (const output of params.txn.outputs) {
