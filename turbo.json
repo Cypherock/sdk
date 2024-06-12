@@ -63,6 +63,11 @@
       "outputs": ["src/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]
     },
+    "@cypherock/sdk-app-tron#prebuild": {
+      "cache": true,
+      "outputs": ["src/proto/generated/**"],
+      "inputs": ["../../submodules/common/proto/**"]
+    },
     "@cypherock/sdk-interfaces#prebuild": {
       "cache": true,
       "outputs": ["src/proto/generated/**"],

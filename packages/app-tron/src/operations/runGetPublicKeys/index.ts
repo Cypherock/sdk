@@ -1,7 +1,8 @@
+import { uint8ArrayToHex } from '@cypherock/sdk-utils';
 import {
   OperationHelper,
   assertOrThrowInvalidResult,
-  base58Encode,
+  getAddressFromPublicKey,
 } from '../../utils';
 import { IGetPublicKeysParams, GetPublicKeysEvent } from './types';
 
@@ -38,6 +39,7 @@ export const runGetPublicKeysOnDevice = async (
   forceStatusUpdate(GetPublicKeysEvent.VERIFY);
 
   return {
-    publicKeys: publicKeys.map(e => base58Encode(e)),
+    publicKeys: publicKeys.map(e => uint8ArrayToHex(e)),
+    addresses: publicKeys.map(e => getAddressFromPublicKey(e)),
   };
 };

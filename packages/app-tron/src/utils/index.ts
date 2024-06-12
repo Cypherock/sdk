@@ -2,4 +2,4 @@ export * from './operationHelper';
 export * from './asserts';
 export * from './logger';
 export * from './crypto';
-export * from './http';
+export * from './address';
