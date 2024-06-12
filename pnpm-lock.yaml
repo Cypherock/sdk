@@ -570,6 +570,9 @@ importers:
       bs58check:
         specifier: 3.0.1
         version: 3.0.1
+      ethers:
+        specifier: ^6.7.0
+        version: 6.7.0
       long:
         specifier: ^5.2.1
         version: 5.2.1
@@ -610,9 +613,6 @@ importers:
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
-      ethers:
-        specifier: ^6.7.0
-        version: 6.7.0
       jest:
         specifier: ^29.4.1
         version: 29.4.1(@types/node@18.11.18)(ts-node@10.9.1)
