@@ -32,10 +32,10 @@ export const getPublicKeys = async (
   );
   assert(
     params.derivationPaths.reduce(
-      (acc, path) => acc && path.path.length > 1,
+      (acc, path) => acc && path.path.length > 2,
       true,
     ),
-    'derivationPaths should be greater than 1',
+    'derivationPaths should be greater than 2',
   );
 
   await sdk.checkAppCompatibility(APP_VERSION);
