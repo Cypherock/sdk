@@ -8,17 +8,29 @@ export enum SignTxnEvent {
 
 export type SignTxnEventHandler = (event: SignTxnEvent) => void;
 
+export interface IUnsignedTransaction {
+  visible?: boolean;
+  txID: string;
+  // eslint-disable-next-line camelcase
+  raw_data: any;
+  // eslint-disable-next-line camelcase
+  raw_data_hex: string;
+}
+
+export interface ISignedTransaction extends IUnsignedTransaction {
+  signature: string[];
+}
+
 export interface ISignTxnParams {
   onEvent?: SignTxnEventHandler;
 
   walletId: Uint8Array;
   derivationPath: number[];
-  txn: string;
+  txn: IUnsignedTransaction;
   serializeTxn?: boolean;
 }
 
 export interface ISignTxnResult {
   signature: string;
-  serializedTxn?: string;
-  serializedTxnHex?: string;
+  signedTransaction?: ISignedTransaction;
 }
