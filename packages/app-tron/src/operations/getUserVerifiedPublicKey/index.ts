@@ -29,8 +29,8 @@ export const getUserVerifiedPublicKey = async (
   assert(params.walletId, 'walletId should be defined');
   assert(params.derivationPath, 'derivationPath should be defined');
   assert(
-    params.derivationPath.length > 1,
-    'derivationPath should be greater than 1',
+    params.derivationPath.length > 2,
+    'derivationPath should be greater than 2',
   );
 
   await sdk.checkAppCompatibility(APP_VERSION);
