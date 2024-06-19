@@ -16,7 +16,12 @@ import {
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
-import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
+import {
+  ISignedTransaction,
+  ISignTxnParams,
+  ISignTxnResult,
+  SignTxnEvent,
+} from './types';
 
 export * from './types';
 
@@ -29,6 +34,15 @@ export const signTxn = async (
   assert(params, 'Params should be defined');
   assert(params.walletId, 'walletId should be defined');
   assert(params.txn, 'txn should be defined');
+  assert(typeof params.txn === 'object', 'txn should be an object');
+  assert(
+    typeof params.txn.raw_data === 'object',
+    'txn.raw_data should be an object',
+  );
+  assert(
+    typeof params.txn.raw_data_hex === 'string',
+    'txn.raw_data_hex should be a string',
+  );
   assert(params.derivationPath, 'derivationPath should be defined');
   assert(
     params.derivationPath.length > 2,
@@ -52,7 +66,7 @@ export const signTxn = async (
     onStatus,
   });
 
-  const txnBytes = hexToUint8Array(params.txn);
+  const txnBytes = hexToUint8Array(params.txn.raw_data_hex);
 
   await helper.sendQuery({
     initiate: {
@@ -78,12 +92,17 @@ export const signTxn = async (
 
   const signature = uint8ArrayToHex(result.signature.signature);
 
-  let serializedTxn: string | undefined;
-  let serializedTxnHex: string | undefined;
+  let signedTransaction: ISignedTransaction | undefined;
+
+  if (params.serializeTxn) {
+    signedTransaction = {
+      ...params.txn,
+      signature: [signature],
+    };
+  }
 
   return {
     signature,
-    serializedTxn,
-    serializedTxnHex,
+    signedTransaction,
   };
 };
