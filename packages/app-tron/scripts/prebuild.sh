@@ -13,7 +13,4 @@ else
   protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./src/proto/generated ../../submodules/common/proto/tron/*.proto ../../submodules/common/proto/common.proto -I../../submodules/common/proto --ts_proto_opt=forceLong=string --ts_proto_opt=esModuleInterop=true
 fi
 
-rm ./src/proto/generated/tron/contract.ts 
-rm ./src/proto/generated/tron/tron.ts
-
 node ../../scripts/extractTypes/index.js ./src/proto/generated ./src/proto/generated/types.ts
