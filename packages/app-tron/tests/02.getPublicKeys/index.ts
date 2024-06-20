@@ -4,7 +4,10 @@ import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 import { clearMocks, expectMockCalls, setupMocks } from './__helpers__';
 import fixtures from './__fixtures__';
 
-import { TronApp } from '../../src/index';
+import { setTronWeb, TronApp } from '../../src';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const TronWeb = require('tronweb');
 
 describe('tronApp.getPublicKeys', () => {
   let connection: MockDeviceConnection;
@@ -13,6 +16,7 @@ describe('tronApp.getPublicKeys', () => {
   beforeEach(async () => {
     clearMocks();
 
+    setTronWeb(new TronWeb({ fullHost: 'https://api.trongrid.io' }));
     connection = await MockDeviceConnection.create();
     tronApp = await TronApp.create(connection);
   });

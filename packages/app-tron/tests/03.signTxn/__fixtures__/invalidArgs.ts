@@ -14,7 +14,30 @@ const validParams = {
     64,
   ]),
   derivationPath: [0x80000000 + 44, 0x80000000 + 195, 0x80000000, 0, 0],
-  txn: '0a027e4222084fec2812035213f34098a5ce9081325a68080112640a2d747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e73666572436f6e747261637412330a1541f91fe3897cb65ba46ca0b88763fe5d0735e897f9121541d0f413cc7632d9a86599b5ccf8da0a162fa19f1d18defde43670b89aee8a8132',
+  txn: {
+    txID: 'ae9595f76c538df617834f2a82e474ffd80ec67b378b7758856ff3730737d2ba',
+    raw_data: {
+      contract: [
+        {
+          parameter: {
+            value: {
+              amount: 5,
+              owner_address: '41e4a7664b2dbcb2fdcc7f1e40bc17549b438aaef3',
+              to_address: '41281ad562a89aa2f777ea0c688ceda306e5ec9874',
+            },
+            type_url: 'type.googleapis.com/protocol.TransferContract',
+          },
+          type: 'TransferContract',
+        },
+      ],
+      ref_block_bytes: '6545',
+      ref_block_hash: '9c1b7e8ed8f70f73',
+      expiration: 1718876028000,
+      timestamp: 1718875970281,
+    },
+    raw_data_hex:
+      '0a02654522089c1b7e8ed8f70f7340e0f8faa783325a65080112610a2d747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e73666572436f6e747261637412300a1541e4a7664b2dbcb2fdcc7f1e40bc17549b438aaef3121541281ad562a89aa2f777ea0c688ceda306e5ec9874180570e9b5f7a78332',
+  },
 };
 
 const invalidArgs: ISignTxnTestCase[] = [
@@ -47,6 +70,22 @@ const invalidArgs: ISignTxnTestCase[] = [
     name: 'No txn',
     ...commonParams,
     params: { ...validParams, txn: undefined } as any,
+  },
+  {
+    name: 'No txn raw data',
+    ...commonParams,
+    params: {
+      ...validParams,
+      txn: { ...validParams.txn, raw_data: undefined },
+    } as any,
+  },
+  {
+    name: 'No txn raw data hex',
+    ...commonParams,
+    params: {
+      ...validParams,
+      txn: { ...validParams.txn, raw_data_hex: undefined },
+    } as any,
   },
   {
     name: 'Empty derivation path',
