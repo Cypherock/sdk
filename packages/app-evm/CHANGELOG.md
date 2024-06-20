@@ -1,5 +1,18 @@
 # @cypherock/sdk-app-evm
 
+## 0.0.32
+
+### Patch Changes
+
+- [#108](https://github.com/Cypherock/sdk/pull/108) [`7502430aa998d215490baaab24ff4b901481e964`](https://github.com/Cypherock/sdk/commit/7502430aa998d215490baaab24ff4b901481e964) Thanks [@ujjwal-cyph](https://github.com/ujjwal-cyph)! - Added feature support compatibility w.r.t app versioning
+
+- [#107](https://github.com/Cypherock/sdk/pull/107) [`3bfcec6cec0c8d7c7c21f5d1fad341c806006369`](https://github.com/Cypherock/sdk/commit/3bfcec6cec0c8d7c7c21f5d1fad341c806006369) Thanks [@ParnikaGupta9](https://github.com/ParnikaGupta9)! - Added unit-tests for typedata messeages in evm
+
+- Updated dependencies [[`7502430aa998d215490baaab24ff4b901481e964`](https://github.com/Cypherock/sdk/commit/7502430aa998d215490baaab24ff4b901481e964)]:
+  - @cypherock/sdk-interfaces@0.0.15
+  - @cypherock/sdk-core@0.0.25
+  - @cypherock/sdk-utils@0.0.18
+
 ## 0.0.31
 
 ### Patch Changes
