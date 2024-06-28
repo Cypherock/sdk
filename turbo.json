@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["turbo.json"],
-  "pipeline": {
+  "tasks": {
     "prebuild": {
       "cache": true,
       "inputs": ["scripts/prebuild.sh"]
@@ -59,6 +59,11 @@
       "inputs": ["../../submodules/common/proto/**"]
     },
     "@cypherock/sdk-app-solana#prebuild": {
+      "cache": true,
+      "outputs": ["src/proto/generated/**"],
+      "inputs": ["../../submodules/common/proto/**"]
+    },
+    "@cypherock/sdk-app-bittensor#prebuild": {
       "cache": true,
       "outputs": ["src/proto/generated/**"],
       "inputs": ["../../submodules/common/proto/**"]

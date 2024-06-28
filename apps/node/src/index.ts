@@ -75,7 +75,7 @@ const run = async () => {
   const deviceInfo = await managerApp.getDeviceInfo();
   console.log(deviceInfo);
 
-  const wallet = (await managerApp.getWallets()).walletList[0];
+  const wallet = (await managerApp.getWallets()).walletList[1];
   console.log("wallet ID: ", wallet.id);
 
   const bittensorApp = await BittensorApp.create(connection);
@@ -94,8 +94,15 @@ const run = async () => {
   // Addr (0)  : 1NthTCKurNHLW52mMa6iA8Gz7UFYW5UnM3yTSpVdGu4Th7h
 
   // Establish websocket connection
-  const wsProvider = new WsProvider('wss://westend-rpc.polkadot.io');
+  const {cryptoWaitReady} = await import('@polkadot/util-crypto')
+  await cryptoWaitReady()
+  console.log('Polkadot crypto is ready')
+  
+  const wsProvider = new WsProvider('wss://test.finney.opentensor.ai:443');
+
   const api = await ApiPromise.create({ provider: wsProvider });
+
+  await api.isReady;
 
   const dest = '5CSbZ7wG456oty4WoiX6a1J88VUbrCXLhrKVJ9q95BsYH4TZ';
   const amount = 123456789; // WND
