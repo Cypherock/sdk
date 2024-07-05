@@ -2,7 +2,7 @@ import DeviceConnection, {
   updateLogger as updateLoggerHid,
 } from '@cypherock/sdk-hw-hid';
 import DeviceConnectionSerialport from '@cypherock/sdk-hw-serialport';
-import { ManagerApp, updateLogger } from '@cypherock/sdk-app-manager';
+import { updateLogger } from '@cypherock/sdk-app-manager';
 import { updateLogger as updateLoggerCore } from '@cypherock/sdk-core';
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as bitcoinJsLib from 'bitcoinjs-lib';
@@ -12,8 +12,10 @@ import { setBitcoinJSLib } from '@cypherock/sdk-app-btc';
 import { setEthersLib } from '@cypherock/sdk-app-evm';
 import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
+import { InheritanceApp } from '@cypherock/sdk-app-inheritance'
 import { ethers } from 'ethers';
 import { createServiceLogger } from './logger';
+// import { SDK } from '@cypherock/sdk-core';
 
 const run = async () => {
   updateLogger(createServiceLogger);
@@ -33,17 +35,17 @@ const run = async () => {
     connection = await DeviceConnectionSerialport.create();
   }
 
-  const managerApp = await ManagerApp.create(connection);
+  const iApp = await InheritanceApp.create(connection);
 
-  const deviceInfo = await managerApp.getDeviceInfo();
+  const challengeresponse = await iApp.getWalletSign();
 
-  console.log(deviceInfo);
+  console.log(challengeresponse);
 
-  await managerApp.authDevice();
+  // await managerApp.authDevice();
 
-  await managerApp.trainCard({ onWallets: async () => true });
+  // await managerApp.trainCard({ onWallets: async () => true });
 
-  await managerApp.authCard();
+  // await managerApp.authCard();
 
   // await managerApp.updateFirmware({
   //   getDevices: async () => [
