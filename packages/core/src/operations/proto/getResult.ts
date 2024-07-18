@@ -8,7 +8,6 @@ import { assert, hexToUint8Array } from '@cypherock/sdk-utils';
 import { PacketVersion } from '../../utils';
 import { Status, Msg, ErrorType } from '../../encoders/proto/generated/core';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
-import { AppVersionResponse } from '../../encoders/proto/generated/version';
 
 export const getResult = async ({
   connection,
@@ -69,8 +68,8 @@ export const getResult = async ({
         throw new DeviceAppError(DeviceAppErrorType.INVALID_APP_ID_FROM_DEVICE);
       }
       output = hexToUint8Array(rawData);
-    } else if (result.appVersion?.response) {
-      output = AppVersionResponse.encode(result.appVersion.response).finish();
+    } else {
+      output = hexToUint8Array(protobufData);
     }
   }
 

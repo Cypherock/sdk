@@ -8,6 +8,7 @@
   "exclude": [
     "node_modules",
     "src/coverage",
+    "src/__mocks__",
     "src/**/__fixtures__/*.ts",
     "src/**/__tests__/*.ts"
   ]
