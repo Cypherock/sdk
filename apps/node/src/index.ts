@@ -2,7 +2,7 @@ import DeviceConnection, {
   updateLogger as updateLoggerHid,
 } from '@cypherock/sdk-hw-hid';
 import DeviceConnectionSerialport from '@cypherock/sdk-hw-serialport';
-import { updateLogger } from '@cypherock/sdk-app-manager';
+import { ManagerApp, updateLogger } from '@cypherock/sdk-app-manager';
 import { updateLogger as updateLoggerCore } from '@cypherock/sdk-core';
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as bitcoinJsLib from 'bitcoinjs-lib';
@@ -13,6 +13,7 @@ import { setEthersLib } from '@cypherock/sdk-app-evm';
 import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
 import { InheritanceApp } from '@cypherock/sdk-app-inheritance'
+ import { IWalletSignParams } from '@cypherock/sdk-app-inheritance/src/operations'
 import { ethers } from 'ethers';
 import { createServiceLogger } from './logger';
 // import { SDK } from '@cypherock/sdk-core';
@@ -36,8 +37,16 @@ const run = async () => {
   }
 
   const iApp = await InheritanceApp.create(connection);
+  const mApp = await ManagerApp.create(connection);
 
-  const challengeresponse = await iApp.getWalletSign();
+  const wallets = await mApp.getWallets();
+  const  params : IWalletSignParams = {
+    challenge: wallets.walletList[0].id,
+    walletId: wallets.walletList[0].id,
+    isPublickey: true
+  }
+
+  const challengeresponse = await iApp.getWalletSign(params);
 
   console.log(challengeresponse);
 

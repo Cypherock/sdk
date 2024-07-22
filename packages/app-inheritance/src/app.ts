@@ -2,8 +2,6 @@ import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { SDK } from '@cypherock/sdk-core';
 import * as operations from './operations';
 
-// import * as operations from './operations';
-
 export class InheritanceApp {
   private readonly sdk: SDK;
 
@@ -18,8 +16,10 @@ export class InheritanceApp {
     return new InheritanceApp(sdk);
   }
 
-  public async getWalletSign() {
-    return this.sdk.runOperation(() => operations.getWalletSign(this.sdk));
+  public async getWalletSign(params: operations.IWalletSignParams) {
+    return this.sdk.runOperation(() =>
+      operations.getWalletSign(this.sdk, params),
+    );
   }
 
   public async destroy() {
