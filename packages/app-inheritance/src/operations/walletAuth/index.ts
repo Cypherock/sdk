@@ -7,11 +7,15 @@ import {
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
+import { IWalletSignParams } from './types';
+
+export * from './types';
 
 const logger = createLoggerWithPrefix(rootLogger, 'walletAuthRequest');
 
 export const getWalletAuth = async (
   sdk: ISDK,
+  params: IWalletSignParams,
 ): Promise<IWalletAuthResultResponse> => {
   logger.info('Started');
 
@@ -22,21 +26,9 @@ export const getWalletAuth = async (
     queryKey: 'walletAuth',
     resultKey: 'walletAuth',
   });
-  // TODO: add vars to parameters
+
   await helper.sendQuery({
-    initiate: {
-      challenge: new Uint8Array([
-        144, 213, 122, 213, 228, 193, 104, 222, 201, 19, 75, 27, 117, 55, 36,
-        46, 163, 239, 183, 51, 61, 251, 171, 30, 87, 72, 90, 53, 41, 121, 48,
-        132,
-      ]),
-      walletId: new Uint8Array([
-        144, 213, 122, 213, 228, 193, 104, 222, 201, 19, 75, 27, 117, 55, 36,
-        46, 87, 72, 90, 53, 41, 121, 48, 132, 163, 239, 183, 51, 61, 251, 171,
-        30,
-      ]),
-      isPublickey: false,
-    },
+    initiate: params,
   });
 
   const result = await helper.waitForResult();

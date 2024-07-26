@@ -22,14 +22,14 @@ export const getRecovery = async (sdk: ISDK): Promise<IPlainData> => {
   });
   // TODO: add vars to parameters
   await helper.sendQuery({
-    encryptedDataPacket: {
+    encryptedData: {
       packet: new Uint8Array([65, 65]),
     },
   });
 
-  var result: any;
+  let result: any;
 
-  for (var i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i += 1) {
     result.plainData[i] = await helper.waitForResult();
     logger.verbose('RecoveryResponse', result.plainData[i]);
     console.log(JSON.stringify(result.plainData[i]));

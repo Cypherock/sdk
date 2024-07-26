@@ -16,9 +16,9 @@ export class InheritanceApp {
     return new InheritanceApp(sdk);
   }
 
-  public async getWalletSign(params: operations.IWalletSignParams) {
+  public async getWalletAuth(params: operations.IWalletSignParams) {
     return this.sdk.runOperation(() =>
-      operations.getWalletSign(this.sdk, params),
+      operations.getWalletAuth(this.sdk, params),
     );
   }
 

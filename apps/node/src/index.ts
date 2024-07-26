@@ -42,7 +42,7 @@ const run = async () => {
   const wallets = await mApp.getWallets();
   const  params : IWalletSignParams = {
     challenge: wallets.walletList[0].id,
-    walletId: wallets.walletList[0].i,
+    walletId: wallets.walletList[0].id,
     // new Uint8Array([
     //        154, 108, 179,  79, 204, 240, 165, 236,
     //        246, 144,  78, 203, 251,  52,  85, 159,
@@ -52,7 +52,7 @@ const run = async () => {
     isPublickey: true
   }
 
-  const challengeresponse = await iApp.getWalletSign(params);
+  const challengeresponse = await iApp.getWalletAuth(params);
 
   console.log(challengeresponse);
 

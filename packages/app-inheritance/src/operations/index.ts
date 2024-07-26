@@ -1,1 +1,1 @@
-export * from './walletSign';
+export * from './walletAuth';
