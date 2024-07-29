@@ -12,8 +12,11 @@ import { setBitcoinJSLib } from '@cypherock/sdk-app-btc';
 import { setEthersLib } from '@cypherock/sdk-app-evm';
 import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
+import { InheritanceApp } from '@cypherock/sdk-app-inheritance'
+ import { IWalletSignParams } from '@cypherock/sdk-app-inheritance/src/operations'
 import { ethers } from 'ethers';
 import { createServiceLogger } from './logger';
+// import { SDK } from '@cypherock/sdk-core';
 
 const run = async () => {
   updateLogger(createServiceLogger);
@@ -33,17 +36,35 @@ const run = async () => {
     connection = await DeviceConnectionSerialport.create();
   }
 
-  const managerApp = await ManagerApp.create(connection);
+  const iApp = await InheritanceApp.create(connection);
+  const mApp = await ManagerApp.create(connection);
+  const wallets = await mApp.getWallets();
+  const  params : IWalletSignParams = {
+    challenge: wallets.walletList[0].id,
+    walletId: wallets.walletList[0].id,
+    // new Uint8Array([
+    //        154, 108, 179,  79, 204, 240, 165, 236,
+    //        246, 144,  78, 203, 251,  52,  85, 159,
+    //        156,  50,  40,  48,  60, 252, 219, 179,
+    //         32, 238,   7, 150,   0, 119,   7, 206
+    //      ]),
+    isPublickey: true
+  }
+  console.log(wallets.walletList[0].id);
 
-  const deviceInfo = await managerApp.getDeviceInfo();
 
-  console.log(deviceInfo);
+  // const challengeresponse = await iApp.getWalletAuth(params);
 
-  await managerApp.authDevice();
+  // console.log(challengeresponse);
 
-  await managerApp.trainCard({ onWallets: async () => true });
+  const setup_result = await iApp.getSetup();
+  console.log(setup_result);
 
-  await managerApp.authCard();
+  // await managerApp.authDevice();
+
+  // await managerApp.trainCard({ onWallets: async () => true });
+
+  // await managerApp.authCard();
 
   // await managerApp.updateFirmware({
   //   getDevices: async () => [
