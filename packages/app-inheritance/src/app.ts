@@ -22,6 +22,10 @@ export class InheritanceApp {
     );
   }
 
+  public async getSetup() {
+    return this.sdk.runOperation(() => operations.getSetup(this.sdk));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }

@@ -27,34 +27,16 @@ export const getSetup = async (sdk: ISDK): Promise<IEncryptedData> => {
   await helper.sendQuery({
     plainData: [
       {
-        message: hexToUint8Array('Shortest'),
-        isPrivate: false,
-      },
-      {
         message: hexToUint8Array(
-          'This is a slightly longer message to test the 50 characters length requirement.',
-        ),
-        isPrivate: false,
-      },
-      {
-        message: hexToUint8Array(
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        ),
-        isPrivate: false,
-      },
-      {
-        message: hexToUint8Array(
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        ),
-        isPrivate: false,
-      },
-      {
-        message: hexToUint8Array(
-          "Embarking on a journey to write a 900-character piece necessitates precision and clarity, ensuring each word contributes to the overall message. Begin by defining the central theme or purpose, whether it's to inform, persuade, or entertain. Structure is crucial: start with an engaging introduction to hook the reader, followed by the main content divided into concise paragraphs, and conclude with a memorable closing statement. Use active voice and vary sentence lengths to maintain reader interest. Edit ruthlessly to eliminate redundant words and ensure each sentence flows seamlessly into the next. Pay attention to grammar and punctuation, as these details enhance readability and professionalism. Finally, read the piece aloud to catch any awkward phrasing or overlooked errors, ensuring the final draft is polished and impactful. This approach not only adheres to the character limit of msgs.",
+          'e7b9f8e2d4735a78c2d5f4b6a5d8e9a4f3c6b5a4d3f9c8b7e6a4b3c2d1e0f7a65',
         ),
         isPrivate: false,
       },
     ],
+    walletId: new Uint8Array([
+      144, 213, 122, 213, 228, 193, 104, 222, 201, 19, 75, 27, 117, 55, 36, 46,
+      87, 72, 90, 53, 41, 121, 48, 132, 163, 239, 183, 51, 61, 251, 171, 30,
+    ]),
   });
 
   const result = await helper.waitForResult();

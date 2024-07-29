@@ -38,7 +38,6 @@ const run = async () => {
 
   const iApp = await InheritanceApp.create(connection);
   const mApp = await ManagerApp.create(connection);
-
   const wallets = await mApp.getWallets();
   const  params : IWalletSignParams = {
     challenge: wallets.walletList[0].id,
@@ -51,10 +50,15 @@ const run = async () => {
     //      ]),
     isPublickey: true
   }
+  console.log(wallets.walletList[0].id);
 
-  const challengeresponse = await iApp.getWalletAuth(params);
 
-  console.log(challengeresponse);
+  // const challengeresponse = await iApp.getWalletAuth(params);
+
+  // console.log(challengeresponse);
+
+  const setup_result = await iApp.getSetup();
+  console.log(setup_result);
 
   // await managerApp.authDevice();
 
