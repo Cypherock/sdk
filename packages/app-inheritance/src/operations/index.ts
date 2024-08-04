@@ -1,2 +1,1 @@
-export * from './walletAuth';
-export * from './setup';
+export * from './authWallet';

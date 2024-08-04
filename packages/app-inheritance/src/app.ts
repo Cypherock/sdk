@@ -16,14 +16,8 @@ export class InheritanceApp {
     return new InheritanceApp(sdk);
   }
 
-  public async getWalletAuth(params: operations.IWalletSignParams) {
-    return this.sdk.runOperation(() =>
-      operations.getWalletAuth(this.sdk, params),
-    );
-  }
-
-  public async getSetup() {
-    return this.sdk.runOperation(() => operations.getSetup(this.sdk));
+  public async authWallet(params: operations.IAuthWalletParams) {
+    return this.sdk.runOperation(() => operations.authWallet(this.sdk, params));
   }
 
   public async destroy() {

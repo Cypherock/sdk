@@ -1,1 +1,1 @@
-export * from './walletAuth/types';
+export * from './authWallet/types';
