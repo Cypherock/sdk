@@ -4,16 +4,17 @@ import {
   IDeviceConnection,
 } from '@cypherock/sdk-interfaces';
 import { assert, uint8ArrayToHex } from '@cypherock/sdk-utils';
-import { Msg, Status } from '../../encoders/proto/generated/core';
-import { IAppVersionResultResponse } from '../../encoders/proto/generated/types';
-import { AppVersionResponse } from '../../encoders/proto/generated/version';
+import { Msg } from '../encoders/proto/generated/core';
+import { IAppVersionResultResponse } from '../encoders/proto/generated/types';
+import { AppVersionResponse } from '../encoders/proto/generated/version';
+import { Status } from '../encoders/types';
+import { sendCommand } from '../operations/helpers';
+import { waitForResult } from '../operations/proto';
 import {
   assertOrThrowInvalidResult,
   PacketVersionMap,
   parseCommonError,
-} from '../../utils';
-import { sendCommand } from '../helpers';
-import { waitForResult } from './waitForResult';
+} from '../utils';
 
 export interface IGetAppVersionsParams {
   connection: IDeviceConnection;
@@ -60,12 +61,16 @@ export const getAppVersions = async ({
     options,
   });
 
-  let response: AppVersionResponse;
+  let msg: Msg;
   try {
-    response = AppVersionResponse.decode(result);
+    msg = Msg.decode(result);
   } catch (error) {
     throw new DeviceAppError(DeviceAppErrorType.INVALID_MSG_FROM_DEVICE);
   }
+
+  const response: AppVersionResponse | undefined = msg.appVersion?.response;
+
+  assertOrThrowInvalidResult(response);
 
   if (response.commonError) {
     parseCommonError(response.commonError);

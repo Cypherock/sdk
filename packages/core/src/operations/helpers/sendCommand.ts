@@ -12,6 +12,16 @@ import { encodePacket } from '../../encoders/packet';
 import { writeCommand } from './writeCommand';
 import canRetry from './canRetry';
 
+export interface ISendCommandParams {
+  connection: IDeviceConnection;
+  rawData?: string;
+  protoData?: string;
+  version: PacketVersion;
+  sequenceNumber: number;
+  maxTries?: number;
+  timeout?: number;
+}
+
 export const sendCommand = async ({
   connection,
   rawData,
@@ -20,15 +30,7 @@ export const sendCommand = async ({
   maxTries = 5,
   sequenceNumber,
   timeout,
-}: {
-  connection: IDeviceConnection;
-  rawData?: string;
-  protoData?: string;
-  version: PacketVersion;
-  sequenceNumber: number;
-  maxTries?: number;
-  timeout?: number;
-}): Promise<void> => {
+}: ISendCommandParams): Promise<void> => {
   assert(connection, 'Invalid connection');
   assert(rawData ?? protoData, 'Raw data or proto data is required');
   assert(version, 'Invalid version');
