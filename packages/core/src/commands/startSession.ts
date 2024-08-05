@@ -109,6 +109,7 @@ export const startSession = async (
           serverInitiateResponse.serverRandomPublic ?? '',
         ),
         signature: hexToUint8Array(serverInitiateResponse.signature ?? ''),
+        deviceId: hexToUint8Array(serverInitiateResponse.deviceId ?? ''),
       },
     },
   });

@@ -11,4 +11,5 @@ export interface IInitiateServerSessionResult {
   sessionAge?: number;
   signature?: string;
   sessionId?: string;
+  deviceId?: string;
 }
