@@ -18,7 +18,7 @@ import { ethers } from 'ethers';
 import { createServiceLogger } from './logger';
 import dotEnv from 'dotenv-flow';
 
-dotEnv.config();
+// dotEnv.config();
 const getEnvVariable = (key: string, defaultValue?: string): string => {
   let value: string | undefined;
 
@@ -36,19 +36,31 @@ const getEnvVariable = (key: string, defaultValue?: string): string => {
 
 // *************************** User-defined variables*******************************//
 
-const provider = new starknetApiJs.RpcProvider({ nodeUrl: `https://starknet-goerli.infura.io/v3/${getEnvVariable('INFURA_STARKNET_API_KEY', '')}` });
+// Select RPC provider
+// const provider = new starknetApiJs.RpcProvider({ nodeUrl: `https://starknet-sepolia.infura.io/v3/${getEnvVariable('INFURA_STARKNET_API_KEY', '')}` });
+const provider = new starknetApiJs.RpcProvider({ nodeUrl: "https://starknet-sepolia.infura.io/v3/9643040ea0d04fd0ac5a38cb5f025b02" });
+const chainId = starknetApiJs.constants.StarknetChainId.SN_SEPOLIA;
 
-const contractAXclassHash = "0x01a736d6ed154502257f02b1ccdf4d9d1089f80811cd6acad48e6b6a9d1f2003";
+// Select Stark Wallet
+const wallet_index = 2;
 
-const ethContractAddress  = '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7';
-const strkContractAddress = '0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d';
-
-const wallet_index = 3; // Select Stark Wallet
-
-const index = 1; // Stark Account Index
-const recipientAddress = '0x0063de007721dDD7CCCA23Dd9345b70F77Af7B2FCcED9E3df1f390D0f1c61E9D'; // Stark Account Address
+// Stark Sepolia Account Index (Account to be deployed) 
+// Note: Account once deployed will not be deployed again and will error, therefore change index
+const sourceAddressIindex = 0; 
+const recipientAddress = '0x07E008CA5F7759b67494921a6D9721c7D913BE60955Ae2E33f30295583939fd2'; // Stark Sepolia Account Address of index 1
 const amount =  starknetApiJs.cairo.uint256(5 * (10**8)); // Amount in Cairo format 
 const amountStr =  '0x1dcd6500';
+const unit = "strk"; // or "eth"
+
+// Select ETH/STRK and Contract Info
+const contractAXclassHash = "0x01a736d6ed154502257f02b1ccdf4d9d1089f80811cd6acad48e6b6a9d1f2003";
+const strkContractAddress = '0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d';
+const ethContractAddress  = '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7';
+
+let contractAddress = ethContractAddress;
+if (unit == "strk"){
+  contractAddress = strkContractAddress;
+}
 
 // *********************************************************************************//
 
@@ -90,7 +102,7 @@ async function fetchAccount(connection: IDeviceConnection) {
   const starkApp = await StarknetApp.create(connection);
   const starkKeyPubAX = (await starkApp.getPublicKeys({
     walletId: wallet.id,
-    derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, index] }]
+    derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex] }]
   })).publicKeys[0];
 
   const constructorAXCallData = starknetApiJs.CallData.compile([starkKeyPubAX,0]);
@@ -107,7 +119,7 @@ async function deployAddress(connection: IDeviceConnection, wallet: IWalletItem)
   const starkApp = await StarknetApp.create(connection);
   const starkKeyPubAX = (await starkApp.getPublicKeys({
     walletId: wallet.id,
-    derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, index] }]
+    derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex] }]
   })).publicKeys[0];
 
   const constructorAXCallData = starknetApiJs.CallData.compile([starkKeyPubAX,0]);
@@ -117,16 +129,25 @@ async function deployAddress(connection: IDeviceConnection, wallet: IWalletItem)
   const txnVersion = 1;
   const maxFee = 0x8110e6d36a8;
   const deployAccountTxnHash = starknetApiJs.hash.calculateDeployAccountTransactionHash(
-    accountAXAddress, 
-    contractAXclassHash, 
-    constructorAXCallData, 
-    starkKeyPubAX,
-    txnVersion, 
-    maxFee, 
-    starknetApiJs.constants.StarknetChainId.SN_GOERLI, 
-    0);
+    {
+      contractAddress: contractAddress,
+      classHash: contractAXclassHash,
+      compiledConstructorCalldata: constructorAXCallData,
+      salt: 0,
+      version: "0x3",
+      chainId: chainId,
+      nonce: 0,
+      nonceDataAvailabilityMode: 0,
+      feeDataAvailabilityMode: 0,
+      resourceBounds: {
+        l1_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" },
+        l2_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" }
+      },
+      tip: 0,
+      paymasterData: [],
+  });
   const sig = await starkApp.signTxn({
-    derivationPath: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, index],
+    derivationPath: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex],
     txn: deployAccountTxnHash,
     walletId: wallet.id,
   });
@@ -151,7 +172,7 @@ async function transfer(connection: IDeviceConnection, wallet: IWalletItem) {
   const starkApp = await StarknetApp.create(connection);
   const starkKeyPubAX = (await starkApp.getPublicKeys({
     walletId: wallet.id,
-    derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, index] }]
+    derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex] }]
   })).publicKeys[0];
 
   const constructorAXCallData = starknetApiJs.CallData.compile([starkKeyPubAX,0]);
@@ -161,10 +182,8 @@ async function transfer(connection: IDeviceConnection, wallet: IWalletItem) {
   const txnVersion = 1;
   const maxFee = 0x8110e6d36a8;
   const nonce = await provider.getNonceForAddress(accountAXAddress);
-
   const callData = [
-    txnVersion,
-    strkContractAddress,
+    contractAddress,
     starknetApiJs.hash.getSelectorFromName('transfer'),
     '0x3',
     recipientAddress,
@@ -172,17 +191,25 @@ async function transfer(connection: IDeviceConnection, wallet: IWalletItem) {
     '0x0'
   ];
 
-  const transferTxnHash = starknetApiJs.hash.calculateTransactionHash(
-    accountAXAddress, 
-    txnVersion, 
-    callData, 
-    maxFee,
-    starknetApiJs.constants.StarknetChainId.SN_GOERLI, 
-    nonce
-  );
+  const transferTxnHash = starknetApiJs.hash.calculateInvokeTransactionHash({
+    senderAddress: accountAXAddress,
+    version: "0x3",
+    compiledCalldata: callData,
+    chainId: chainId,
+    nonce: nonce,
+    accountDeploymentData: [],
+    nonceDataAvailabilityMode: 0,
+    feeDataAvailabilityMode: 0,
+    resourceBounds: {
+      l1_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" },
+      l2_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" }
+    },
+    tip: 0,
+    paymasterData: [],
+  });
 
   const sig = await starkApp.signTxn({
-    derivationPath: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, index],
+    derivationPath: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex],
     txn: transferTxnHash,
     walletId: wallet.id,
   });
