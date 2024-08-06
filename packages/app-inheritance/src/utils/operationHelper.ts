@@ -7,7 +7,7 @@ import {
   Query,
   Result,
 } from '../proto/generated/inheritance/core';
-import { assertOrThrowInvalidResult } from './asserts';
+import { assertOrThrowInvalidResult, parseCommonError } from './asserts';
 
 export function decodeResult(data: Uint8Array) {
   let result: Result;
@@ -63,7 +63,9 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
     );
 
     const resultData = result[this.resultKey] as Result[R];
+    parseCommonError(result.commonError);
     assertOrThrowInvalidResult(resultData);
+    parseCommonError((result[this.resultKey] as any).commonError);
 
     return resultData;
   }

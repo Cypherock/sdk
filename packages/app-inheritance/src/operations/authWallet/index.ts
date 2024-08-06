@@ -22,6 +22,10 @@ export const authWallet = async (
   sdk: ISDK,
   params: IAuthWalletParams,
 ): Promise<IWalletAuthResultResponse> => {
+  assert(params, 'Params should be defined');
+  assert(params.walletId, 'walletId should be defined');
+  assert(params.challenge, 'challenge should be defined');
+  assert(params.isPublickey, 'isPublickey should be defined');
   assert(
     params.walletId.length === WALLET_ID_LENGTH,
     `Wallet Id should be exactly ${WALLET_ID_LENGTH} bytes`,
