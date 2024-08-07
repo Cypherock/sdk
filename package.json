@@ -36,7 +36,7 @@
     "@cypherock/prettier-config": "workspace:*",
     "husky": "^8.0.0",
     "prettier": "^3.2.4",
-    "turbo": "latest"
+    "turbo": "^1.13.4"
   },
   "engines": {
     "node": ">=18.0.0"

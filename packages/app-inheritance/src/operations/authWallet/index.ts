@@ -11,7 +11,7 @@ import {
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
-import { IAuthWalletParams, WALLET_ID_LENGTH } from './types';
+import { IAuthWalletParams, WALLET_ID_LENGTH, WalletAuthEvent } from './types';
 import { WalletAuthStatus } from '../../proto/generated/inheritance/wallet_auth';
 
 export * from './types';
@@ -33,17 +33,19 @@ export const authWallet = async (
 
   await sdk.checkAppCompatibility(APP_VERSION);
 
+  logger.info('Started', { ...params, onEvent: undefined });
+  const { forceStatusUpdate, onStatus } = createStatusListener({
+    enums: WalletAuthEvent,
+    operationEnums: WalletAuthStatus,
+    onEvent: params.onEvent,
+    logger,
+  });
+
   const helper = new OperationHelper({
     sdk,
     queryKey: 'walletAuth',
     resultKey: 'walletAuth',
-  });
-
-  logger.info('Started', { ...params, onEvent: undefined });
-  const { forceStatusUpdate } = createStatusListener({
-    enums: WalletAuthStatus,
-    onEvent: params.onEvent,
-    logger,
+    onStatus,
   });
 
   await helper.sendQuery({
@@ -51,11 +53,11 @@ export const authWallet = async (
   });
 
   const result = await helper.waitForResult();
-  logger.verbose('walletAuthResponse', result);
+  logger.verbose('WalletAuthResponse', result);
 
   assertOrThrowInvalidResult(result.result);
 
-  forceStatusUpdate(WalletAuthStatus.WALLET_AUTH_STATUS_CARD_TAPPED);
+  forceStatusUpdate(WalletAuthEvent.CARD_TAP);
 
   logger.info('Completed');
   return result.result;
