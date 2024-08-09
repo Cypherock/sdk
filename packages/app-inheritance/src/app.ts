@@ -1,5 +1,6 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { SDK } from '@cypherock/sdk-core';
+import * as operations from './operations';
 
 export class InheritanceApp {
   private readonly sdk: SDK;
@@ -13,6 +14,12 @@ export class InheritanceApp {
   public static async create(connection: IDeviceConnection) {
     const sdk = await SDK.create(connection, InheritanceApp.APPLET_ID);
     return new InheritanceApp(sdk);
+  }
+
+  public async encryptMessages(params: operations.IEncryptMessagesParams) {
+    return this.sdk.runOperation(() =>
+      operations.encryptMessages(this.sdk, params),
+    );
   }
 
   public async destroy() {
