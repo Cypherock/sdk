@@ -22,6 +22,12 @@ export class InheritanceApp {
     );
   }
 
+  public async decryptMessages(params: operations.IDecryptMessagesParams) {
+    return this.sdk.runOperation(() =>
+      operations.decryptMessages(this.sdk, params),
+    );
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }
