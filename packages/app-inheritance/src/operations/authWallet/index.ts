@@ -25,7 +25,10 @@ export const authWallet = async (
   assert(params, 'Params should be defined');
   assert(params.walletId, 'walletId should be defined');
   assert(params.challenge, 'challenge should be defined');
-  assert(params.isPublickey, 'isPublickey should be defined');
+  assert(
+    typeof params.isPublicKey === 'boolean',
+    'isPublicKey should be defined',
+  );
   assert(
     params.walletId.length === WALLET_ID_LENGTH,
     `Wallet Id should be exactly ${WALLET_ID_LENGTH} bytes`,
@@ -49,7 +52,11 @@ export const authWallet = async (
   });
 
   await helper.sendQuery({
-    initiate: params,
+    initiate: {
+      challenge: params.challenge,
+      walletId: params.walletId,
+      isPublickey: params.isPublicKey,
+    },
   });
 
   const result = await helper.waitForResult();

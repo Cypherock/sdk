@@ -17,7 +17,7 @@ const commonParams = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    isPublickey: true,
+    isPublicKey: true,
   },
   queries: [
     {

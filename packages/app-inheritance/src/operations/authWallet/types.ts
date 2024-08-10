@@ -9,6 +9,6 @@ export const WALLET_ID_LENGTH = 32;
 export interface IAuthWalletParams {
   challenge: Uint8Array;
   walletId: Uint8Array;
-  isPublickey: boolean;
+  isPublicKey: boolean;
   onEvent?: AuthWalletEventHandler;
 }
