@@ -27,10 +27,6 @@ export const encryptMessageWithPin = async (
     params.walletId.length === WALLET_ID_LENGTH,
     `Wallet Id should be exactly ${WALLET_ID_LENGTH} bytes`,
   );
-  assert(
-    params.messages.length > 0,
-    'At least one message required to encrypt',
-  );
   params.messages.forEach(message =>
     assert(message.value, 'Every message should have a valid value'),
   );
