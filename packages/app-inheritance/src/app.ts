@@ -32,6 +32,10 @@ export class InheritanceApp {
     );
   }
 
+  public async authWallet(params: operations.IAuthWalletParams) {
+    return this.sdk.runOperation(() => operations.authWallet(this.sdk, params));
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }
