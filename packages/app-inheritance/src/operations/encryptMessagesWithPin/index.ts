@@ -1,5 +1,6 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { assert, createLoggerWithPrefix } from '@cypherock/sdk-utils';
+import { WALLET_ID_LENGTH } from '../../constants';
 import { APP_VERSION } from '../../constants/appId';
 import {
   assertOrThrowInvalidResult,
@@ -7,19 +8,18 @@ import {
   logger as rootLogger,
 } from '../../utils';
 import {
-  IEncryptMessagesParams,
-  IEncryptMessagesResult,
-  WALLET_ID_LENGTH,
+  IEncryptMessagesWithPinParams,
+  IEncryptMessagesWithPinResult,
 } from './types';
 
 export * from './types';
 
 const logger = createLoggerWithPrefix(rootLogger, 'encryptMessages');
 
-export const encryptMessages = async (
+export const encryptMessageWithPin = async (
   sdk: ISDK,
-  params: IEncryptMessagesParams,
-): Promise<IEncryptMessagesResult> => {
+  params: IEncryptMessagesWithPinParams,
+): Promise<IEncryptMessagesWithPinResult> => {
   assert(params, 'Params should be defined');
   assert(params.walletId, 'walletId should be defined');
   assert(params.messages, 'messages should be defined');

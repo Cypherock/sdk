@@ -1,4 +1,4 @@
-import { IDecryptMessagesParams } from '../../../src';
+import { IDecryptMessagesWithPinParams } from '../../../src';
 import { IDecryptMessagesTestCase } from './types';
 
 const commonParams = {
@@ -8,7 +8,7 @@ const commonParams = {
   errorMessage: /AssertionError/,
 };
 
-const validParams: IDecryptMessagesParams = {
+const validParams: IDecryptMessagesWithPinParams = {
   encryptedData: new Uint8Array([0]),
 };
 

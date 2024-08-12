@@ -1,8 +1,11 @@
-import { IDecryptMessagesParams, IDecryptMessagesResult } from '../../../src';
+import {
+  IDecryptMessagesWithPinParams,
+  IDecryptMessagesWithPinResult,
+} from '../../../src';
 
 export interface IDecryptMessagesTestCase {
   name: string;
-  params: IDecryptMessagesParams;
+  params: IDecryptMessagesWithPinParams;
   queries: {
     name: string;
     data: Uint8Array;
@@ -12,7 +15,7 @@ export interface IDecryptMessagesTestCase {
     data: Uint8Array;
     statuses?: { flowStatus: number; expectEventCalls?: number[] }[];
   }[];
-  output?: IDecryptMessagesResult;
+  output?: IDecryptMessagesWithPinResult;
   errorInstance?: any;
   [key: string]: any;
 }

@@ -6,7 +6,7 @@ import fixtures from './__fixtures__';
 
 import { InheritanceApp } from '../../src/index';
 
-describe('InheritanceApp.encryptMessages', () => {
+describe('InheritanceApp.decryptMessagesWithPin', () => {
   let connection: MockDeviceConnection;
   let inheritanceApp: InheritanceApp;
 
@@ -21,12 +21,12 @@ describe('InheritanceApp.encryptMessages', () => {
     await inheritanceApp.destroy();
   });
 
-  describe('should be able to encrypt messages', () => {
+  describe('should be able to decrypt messages', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const output = await inheritanceApp.encryptMessages({
+        const output = await inheritanceApp.decryptMessagesWithPin({
           ...testCase.params,
         });
         expect(output).toEqual(testCase.output);
@@ -41,7 +41,9 @@ describe('InheritanceApp.encryptMessages', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const rejectedPromise = inheritanceApp.encryptMessages(testCase.params);
+        const rejectedPromise = inheritanceApp.decryptMessagesWithPin(
+          testCase.params,
+        );
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {
@@ -60,7 +62,9 @@ describe('InheritanceApp.encryptMessages', () => {
       test(testCase.name, async () => {
         setupMocks(testCase);
 
-        const rejectedPromise = inheritanceApp.encryptMessages(testCase.params);
+        const rejectedPromise = inheritanceApp.decryptMessagesWithPin(
+          testCase.params,
+        );
 
         await expect(rejectedPromise).rejects.toThrow(testCase.errorInstance);
         if (testCase.errorMessage) {

@@ -6,16 +6,19 @@ import {
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
-import { IDecryptMessagesParams, IDecryptMessagesResult } from './types';
+import {
+  IDecryptMessagesWithPinParams,
+  IDecryptMessagesWithPinResult,
+} from './types';
 
 export * from './types';
 
 const logger = createLoggerWithPrefix(rootLogger, 'decryptMessages');
 
-export const decryptMessages = async (
+export const decryptMessagesWithPin = async (
   sdk: ISDK,
-  params: IDecryptMessagesParams,
-): Promise<IDecryptMessagesResult> => {
+  params: IDecryptMessagesWithPinParams,
+): Promise<IDecryptMessagesWithPinResult> => {
   assert(params, 'Params should be defined');
   assert(params.encryptedData, 'data should be defined');
   assert(
@@ -43,12 +46,12 @@ export const decryptMessages = async (
   logger.verbose('decryptMessages response', result);
 
   assertOrThrowInvalidResult(result.plainData);
-
-  const parsedData = result.plainData.map(data => {
-    if (params.getRawData) return data.message;
-    return Buffer.from(data.message).toString();
-  });
-
   logger.info('Completed');
-  return { decryptedData: parsedData };
+
+  return {
+    decryptedData: result.plainData.map(data => data.message),
+    decryptedDataAsStrings: result.plainData.map(data =>
+      Buffer.from(data.message).toString(),
+    ),
+  };
 };

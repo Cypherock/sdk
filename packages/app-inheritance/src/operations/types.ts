@@ -1,2 +1,2 @@
-export * from './encryptMessages/types';
-export * from './decryptMessages/types';
+export * from './encryptMessagesWithPin/types';
+export * from './decryptMessagesWithPin/types';

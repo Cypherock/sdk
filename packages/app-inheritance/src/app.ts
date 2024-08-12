@@ -16,15 +16,19 @@ export class InheritanceApp {
     return new InheritanceApp(sdk);
   }
 
-  public async encryptMessages(params: operations.IEncryptMessagesParams) {
+  public async encryptMessagesWithPin(
+    params: operations.IEncryptMessagesWithPinParams,
+  ) {
     return this.sdk.runOperation(() =>
-      operations.encryptMessages(this.sdk, params),
+      operations.encryptMessageWithPin(this.sdk, params),
     );
   }
 
-  public async decryptMessages(params: operations.IDecryptMessagesParams) {
+  public async decryptMessagesWithPin(
+    params: operations.IDecryptMessagesWithPinParams,
+  ) {
     return this.sdk.runOperation(() =>
-      operations.decryptMessages(this.sdk, params),
+      operations.decryptMessagesWithPin(this.sdk, params),
     );
   }
 
