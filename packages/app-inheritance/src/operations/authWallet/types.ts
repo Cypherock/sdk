@@ -4,7 +4,6 @@ export enum WalletAuthEvent {
 }
 
 export type AuthWalletEventHandler = (event: WalletAuthEvent) => void;
-export const WALLET_ID_LENGTH = 32;
 
 export interface IAuthWalletParams {
   challenge: Uint8Array;

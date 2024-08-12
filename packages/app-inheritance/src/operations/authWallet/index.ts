@@ -11,8 +11,9 @@ import {
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
-import { IAuthWalletParams, WALLET_ID_LENGTH, WalletAuthEvent } from './types';
+import { IAuthWalletParams, WalletAuthEvent } from './types';
 import { WalletAuthStatus } from '../../proto/generated/inheritance/wallet_auth';
+import { WALLET_ID_LENGTH } from '../../constants';
 
 export * from './types';
 
