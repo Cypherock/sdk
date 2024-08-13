@@ -16,13 +16,15 @@ const encryptSingeMessage: IEncryptMessagesTestCase = {
       data: Uint8Array.from(
         Query.encode(
           Query.create({
-            setup: {
+            encrypt: {
               walletId: new Uint8Array([
                 199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
                 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86,
                 128, 26, 3, 187,
               ]),
-              plainData: [{ message: Buffer.from('test'), isPrivate: false }],
+              plainData: [
+                { message: Buffer.from('test'), isVerifiedOnDevice: false },
+              ],
             },
           }),
         ).finish(),
@@ -35,7 +37,7 @@ const encryptSingeMessage: IEncryptMessagesTestCase = {
       data: Uint8Array.from(
         Result.encode(
           Result.create({
-            setup: {
+            encrypt: {
               encryptedData: {
                 packet: new Uint8Array([0]), // dummy data, encrypted data actually depends on session
               },
@@ -58,7 +60,10 @@ const encryptMultipleMessages: IEncryptMessagesTestCase = {
     messages: [
       { value: 'test' },
       { value: 'something else' },
-      { value: 'something other than something else', isPrivate: true },
+      {
+        value: 'something other than something else',
+        verifyOnDevice: true,
+      },
     ],
   },
   queries: [
@@ -67,18 +72,21 @@ const encryptMultipleMessages: IEncryptMessagesTestCase = {
       data: Uint8Array.from(
         Query.encode(
           Query.create({
-            setup: {
+            encrypt: {
               walletId: new Uint8Array([
                 199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103,
                 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86,
                 128, 26, 3, 187,
               ]),
               plainData: [
-                { message: Buffer.from('test'), isPrivate: false },
-                { message: Buffer.from('something else'), isPrivate: false },
+                { message: Buffer.from('test'), isVerifiedOnDevice: false },
+                {
+                  message: Buffer.from('something else'),
+                  isVerifiedOnDevice: false,
+                },
                 {
                   message: Buffer.from('something other than something else'),
-                  isPrivate: true,
+                  isVerifiedOnDevice: true,
                 },
               ],
             },
@@ -93,7 +101,7 @@ const encryptMultipleMessages: IEncryptMessagesTestCase = {
       data: Uint8Array.from(
         Result.encode(
           Result.create({
-            setup: {
+            encrypt: {
               encryptedData: {
                 packet: new Uint8Array([0]), // dummy data, encrypted data actually depends on session
               },

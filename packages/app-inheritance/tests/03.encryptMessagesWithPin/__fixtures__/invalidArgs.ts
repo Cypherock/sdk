@@ -51,14 +51,6 @@ const invalidArgs: IEncryptMessagesTestCase[] = [
     params: { ...validParams, messages: undefined } as any,
   },
   {
-    name: 'Empty messages',
-    ...commonParams,
-    params: {
-      ...validParams,
-      messages: [],
-    } as any,
-  },
-  {
     name: 'Invalid messages',
     ...commonParams,
     params: { ...validParams, messages: [{ random: 'value' }] } as any,

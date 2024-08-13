@@ -1,6 +1,6 @@
 export interface InheritanceMessage {
   value: string;
-  isPrivate?: boolean;
+  verifyOnDevice?: boolean;
 }
 
 export interface IEncryptMessagesWithPinParams {

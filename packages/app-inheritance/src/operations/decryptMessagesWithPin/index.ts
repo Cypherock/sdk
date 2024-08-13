@@ -32,8 +32,8 @@ export const decryptMessagesWithPin = async (
 
   const helper = new OperationHelper({
     sdk,
-    queryKey: 'recovery',
-    resultKey: 'recovery',
+    queryKey: 'decrypt',
+    resultKey: 'decrypt',
   });
 
   await helper.sendQuery({

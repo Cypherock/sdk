@@ -12,7 +12,7 @@ const decryptSingeMessage: IDecryptMessagesTestCase = {
       data: Uint8Array.from(
         Query.encode(
           Query.create({
-            recovery: {
+            decrypt: {
               encryptedData: {
                 packet: new Uint8Array([0]),
               },
@@ -28,7 +28,7 @@ const decryptSingeMessage: IDecryptMessagesTestCase = {
       data: Uint8Array.from(
         Result.encode(
           Result.create({
-            recovery: {
+            decrypt: {
               plainData: [
                 {
                   message: Buffer.from('test'),
@@ -57,7 +57,7 @@ const decryptMultipleMessages: IDecryptMessagesTestCase = {
       data: Uint8Array.from(
         Query.encode(
           Query.create({
-            recovery: {
+            decrypt: {
               encryptedData: {
                 packet: new Uint8Array([0]),
               },
@@ -73,7 +73,7 @@ const decryptMultipleMessages: IDecryptMessagesTestCase = {
       data: Uint8Array.from(
         Result.encode(
           Result.create({
-            recovery: {
+            decrypt: {
               plainData: [
                 { message: Buffer.from('test') },
                 { message: Buffer.from('new message') },

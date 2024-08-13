@@ -37,15 +37,15 @@ export const encryptMessageWithPin = async (
 
   const helper = new OperationHelper({
     sdk,
-    queryKey: 'setup',
-    resultKey: 'setup',
+    queryKey: 'encrypt',
+    resultKey: 'encrypt',
   });
 
   await helper.sendQuery({
     walletId: params.walletId,
     plainData: params.messages.map(message => ({
       message: Buffer.from(message.value),
-      isPrivate: message.isPrivate ?? false,
+      isVerifiedOnDevice: message.verifyOnDevice ?? false,
     })),
   });
 

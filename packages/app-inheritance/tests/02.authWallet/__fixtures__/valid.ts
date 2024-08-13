@@ -22,7 +22,7 @@ const authenticateWalletWithPublicKey: IAuthWalletTestCase = {
       data: Uint8Array.from(
         Query.encode(
           Query.create({
-            walletAuth: {
+            authWallet: {
               initiate: {
                 walletId: new Uint8Array([
                   199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
@@ -34,7 +34,7 @@ const authenticateWalletWithPublicKey: IAuthWalletTestCase = {
                   103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
                   86, 128, 26, 3, 187, 121, 64,
                 ]),
-                isPublickey: true,
+                isPublicKey: true,
               },
             },
           }),
@@ -48,7 +48,7 @@ const authenticateWalletWithPublicKey: IAuthWalletTestCase = {
       data: Uint8Array.from(
         Result.encode(
           Result.create({
-            walletAuth: {
+            authWallet: {
               result: {
                 signature: hexToUint8Array(
                   '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
