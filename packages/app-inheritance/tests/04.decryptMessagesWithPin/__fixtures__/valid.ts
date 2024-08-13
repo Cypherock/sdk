@@ -13,9 +13,23 @@ const decryptSingeMessage: IDecryptMessagesTestCase = {
         Query.encode(
           Query.create({
             decrypt: {
-              encryptedData: {
-                packet: new Uint8Array([0]),
+              initiate: {
+                encryptedData: {
+                  packet: new Uint8Array([0]),
+                },
               },
+            },
+          }),
+        ).finish(),
+      ),
+    },
+    {
+      name: 'ack query',
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            decrypt: {
+              ack: {},
             },
           }),
         ).finish(),
@@ -24,16 +38,30 @@ const decryptSingeMessage: IDecryptMessagesTestCase = {
   ],
   results: [
     {
-      name: 'result',
+      name: 'messages',
       data: Uint8Array.from(
         Result.encode(
           Result.create({
             decrypt: {
-              plainData: [
-                {
-                  message: Buffer.from('test'),
-                },
-              ],
+              messages: {
+                plainData: [
+                  {
+                    message: Buffer.from('test'),
+                  },
+                ],
+              },
+            },
+          }),
+        ).finish(),
+      ),
+    },
+    {
+      name: 'ack',
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            decrypt: {
+              ack: {},
             },
           }),
         ).finish(),
@@ -58,9 +86,23 @@ const decryptMultipleMessages: IDecryptMessagesTestCase = {
         Query.encode(
           Query.create({
             decrypt: {
-              encryptedData: {
-                packet: new Uint8Array([0]),
+              initiate: {
+                encryptedData: {
+                  packet: new Uint8Array([0]),
+                },
               },
+            },
+          }),
+        ).finish(),
+      ),
+    },
+    {
+      name: 'ack',
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            decrypt: {
+              ack: {},
             },
           }),
         ).finish(),
@@ -74,11 +116,25 @@ const decryptMultipleMessages: IDecryptMessagesTestCase = {
         Result.encode(
           Result.create({
             decrypt: {
-              plainData: [
-                { message: Buffer.from('test') },
-                { message: Buffer.from('new message') },
-                { message: Buffer.from('another message') },
-              ],
+              messages: {
+                plainData: [
+                  { message: Buffer.from('test') },
+                  { message: Buffer.from('new message') },
+                  { message: Buffer.from('another message') },
+                ],
+              },
+            },
+          }),
+        ).finish(),
+      ),
+    },
+    {
+      name: 'ack',
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            decrypt: {
+              ack: {},
             },
           }),
         ).finish(),

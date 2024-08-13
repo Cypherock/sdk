@@ -37,20 +37,26 @@ export const decryptMessagesWithPin = async (
   });
 
   await helper.sendQuery({
-    encryptedData: {
-      packet: params.encryptedData,
+    initiate: {
+      encryptedData: {
+        packet: params.encryptedData,
+      },
     },
   });
 
   const result = await helper.waitForResult();
   logger.verbose('decryptMessages response', result);
 
-  assertOrThrowInvalidResult(result.plainData);
-  logger.info('Completed');
+  assertOrThrowInvalidResult(result.messages?.plainData);
 
+  await helper.sendQuery({ ack: {} });
+
+  await helper.waitForResult();
+
+  logger.info('Completed');
   return {
-    decryptedData: result.plainData.map(data => data.message),
-    decryptedDataAsStrings: result.plainData.map(data =>
+    decryptedData: result.messages.plainData.map(data => data.message),
+    decryptedDataAsStrings: result.messages.plainData.map(data =>
       Buffer.from(data.message).toString(),
     ),
   };

@@ -42,18 +42,20 @@ export const encryptMessageWithPin = async (
   });
 
   await helper.sendQuery({
-    walletId: params.walletId,
-    plainData: params.messages.map(message => ({
-      message: Buffer.from(message.value),
-      isVerifiedOnDevice: message.verifyOnDevice ?? false,
-    })),
+    initiate: {
+      walletId: params.walletId,
+      plainData: params.messages.map(message => ({
+        message: Buffer.from(message.value),
+        isVerifiedOnDevice: message.verifyOnDevice ?? false,
+      })),
+    },
   });
 
   const result = await helper.waitForResult();
   logger.verbose('encryptMessages response', result);
 
-  assertOrThrowInvalidResult(result.encryptedData);
+  assertOrThrowInvalidResult(result.result?.encryptedData);
 
   logger.info('Completed');
-  return { encryptedPacket: result.encryptedData.packet };
+  return { encryptedPacket: result.result.encryptedData.packet };
 };

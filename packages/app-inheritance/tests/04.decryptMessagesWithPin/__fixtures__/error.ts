@@ -17,8 +17,10 @@ const commonParams = {
         Query.encode(
           Query.create({
             decrypt: {
-              encryptedData: {
-                packet: new Uint8Array([0]),
+              initiate: {
+                encryptedData: {
+                  packet: new Uint8Array([0]),
+                },
               },
             },
           }),
