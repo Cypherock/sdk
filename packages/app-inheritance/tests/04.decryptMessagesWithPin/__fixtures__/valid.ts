@@ -5,6 +5,10 @@ const decryptSingeMessage: IDecryptMessagesTestCase = {
   name: 'Decrypt single message',
   params: {
     encryptedData: new Uint8Array([0]), // TODO: update data
+    walletId: new Uint8Array([
+      199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103, 233, 62,
+      110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187,
+    ]),
   },
   queries: [
     {
@@ -14,9 +18,12 @@ const decryptSingeMessage: IDecryptMessagesTestCase = {
           Query.create({
             decrypt: {
               initiate: {
-                encryptedData: {
-                  packet: new Uint8Array([0]),
-                },
+                encryptedData: new Uint8Array([0]),
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187,
+                ]),
               },
             },
           }),
@@ -78,6 +85,10 @@ const decryptMultipleMessages: IDecryptMessagesTestCase = {
   name: 'Decrypt multiple messages',
   params: {
     encryptedData: new Uint8Array([0]),
+    walletId: new Uint8Array([
+      199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103, 233, 62,
+      110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187,
+    ]),
   },
   queries: [
     {
@@ -87,9 +98,13 @@ const decryptMultipleMessages: IDecryptMessagesTestCase = {
           Query.create({
             decrypt: {
               initiate: {
-                encryptedData: {
-                  packet: new Uint8Array([0]),
-                },
+                encryptedData: new Uint8Array([0]),
+
+                walletId: new Uint8Array([
+                  199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160,
+                  103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
+                  86, 128, 26, 3, 187,
+                ]),
               },
             },
           }),

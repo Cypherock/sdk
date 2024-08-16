@@ -1,5 +1,6 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { assert, createLoggerWithPrefix } from '@cypherock/sdk-utils';
+import { WALLET_ID_LENGTH } from '../../constants';
 import { APP_VERSION } from '../../constants/appId';
 import {
   assertOrThrowInvalidResult,
@@ -20,6 +21,11 @@ export const decryptMessagesWithPin = async (
   params: IDecryptMessagesWithPinParams,
 ): Promise<IDecryptMessagesWithPinResult> => {
   assert(params, 'Params should be defined');
+  assert(params.walletId, 'walletId should be defined');
+  assert(
+    params.walletId.length === WALLET_ID_LENGTH,
+    `Wallet Id should be exactly ${WALLET_ID_LENGTH} bytes`,
+  );
   assert(params.encryptedData, 'data should be defined');
   assert(
     params.encryptedData.length > 0,
@@ -38,9 +44,8 @@ export const decryptMessagesWithPin = async (
 
   await helper.sendQuery({
     initiate: {
-      encryptedData: {
-        packet: params.encryptedData,
-      },
+      walletId: params.walletId,
+      encryptedData: params.encryptedData,
     },
   });
 
@@ -49,15 +54,19 @@ export const decryptMessagesWithPin = async (
 
   assertOrThrowInvalidResult(result.messages?.plainData);
 
-  await helper.sendQuery({ ack: {} });
-
-  await helper.waitForResult();
-
-  logger.info('Completed');
-  return {
+  const output = {
     decryptedData: result.messages.plainData.map(data => data.message),
     decryptedDataAsStrings: result.messages.plainData.map(data =>
       Buffer.from(data.message).toString(),
     ),
   };
+
+  params.onDecryption?.(output);
+
+  await helper.sendQuery({ ack: {} });
+
+  await helper.waitForResult();
+
+  logger.info('Completed');
+  return output;
 };

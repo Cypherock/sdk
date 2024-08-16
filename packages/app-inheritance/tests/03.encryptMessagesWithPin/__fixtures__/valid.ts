@@ -41,9 +41,7 @@ const encryptSingeMessage: IEncryptMessagesTestCase = {
           Result.create({
             encrypt: {
               result: {
-                encryptedData: {
-                  packet: new Uint8Array([0]), // dummy data, encrypted data actually depends on session
-                },
+                encryptedData: new Uint8Array([0]), // dummy data, encrypted data actually depends on session
               },
             },
           }),
@@ -109,9 +107,7 @@ const encryptMultipleMessages: IEncryptMessagesTestCase = {
           Result.create({
             encrypt: {
               result: {
-                encryptedData: {
-                  packet: new Uint8Array([0]), // dummy data, encrypted data actually depends on session
-                },
+                encryptedData: new Uint8Array([0]), // dummy data, encrypted data actually depends on session
               },
             },
           }),

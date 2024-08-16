@@ -57,5 +57,5 @@ export const encryptMessageWithPin = async (
   assertOrThrowInvalidResult(result.result?.encryptedData);
 
   logger.info('Completed');
-  return { encryptedPacket: result.result.encryptedData.packet };
+  return { encryptedPacket: result.result.encryptedData };
 };
