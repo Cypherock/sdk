@@ -1,3 +1,4 @@
+import { createFlowStatus } from '@cypherock/sdk-utils';
 import { IDecryptMessagesTestCase } from './types';
 import { Query, Result } from '../../../src/proto/generated/inheritance/core';
 
@@ -73,8 +74,27 @@ const decryptSingeMessage: IDecryptMessagesTestCase = {
           }),
         ).finish(),
       ),
+      statuses: [
+        {
+          flowStatus: createFlowStatus(0, 0),
+          expectEventCalls: [0],
+        },
+        {
+          flowStatus: createFlowStatus(1, 0),
+          expectEventCalls: [1],
+        },
+        {
+          flowStatus: createFlowStatus(2, 0),
+          expectEventCalls: [2],
+        },
+        {
+          flowStatus: createFlowStatus(3, 0),
+          expectEventCalls: [3],
+        },
+      ],
     },
   ],
+  mocks: { eventCalls: [[0], [1], [2], [3]] },
   output: {
     decryptedData: [new Uint8Array(Buffer.from('test'))],
     decryptedDataAsStrings: ['test'],
@@ -154,8 +174,27 @@ const decryptMultipleMessages: IDecryptMessagesTestCase = {
           }),
         ).finish(),
       ),
+      statuses: [
+        {
+          flowStatus: createFlowStatus(0, 0),
+          expectEventCalls: [0],
+        },
+        {
+          flowStatus: createFlowStatus(1, 0),
+          expectEventCalls: [1],
+        },
+        {
+          flowStatus: createFlowStatus(2, 0),
+          expectEventCalls: [2],
+        },
+        {
+          flowStatus: createFlowStatus(3, 0),
+          expectEventCalls: [3],
+        },
+      ],
     },
   ],
+  mocks: { eventCalls: [[0], [1], [2], [3]] },
   output: {
     decryptedData: ['test', 'new message', 'another message'].map(
       x => new Uint8Array(Buffer.from(x)),

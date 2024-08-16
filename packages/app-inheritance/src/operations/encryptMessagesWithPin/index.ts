@@ -1,13 +1,19 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { assert, createLoggerWithPrefix } from '@cypherock/sdk-utils';
+import {
+  assert,
+  createLoggerWithPrefix,
+  createStatusListener,
+} from '@cypherock/sdk-utils';
 import { WALLET_ID_LENGTH } from '../../constants';
 import { APP_VERSION } from '../../constants/appId';
+import { EncryptDataStatus } from '../../types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
 import {
+  EncryptMessagesWithPinEvent,
   IEncryptMessagesWithPinParams,
   IEncryptMessagesWithPinResult,
 } from './types';
@@ -35,10 +41,18 @@ export const encryptMessageWithPin = async (
 
   logger.info('Started', { ...params, onEvent: undefined });
 
+  const { forceStatusUpdate, onStatus } = createStatusListener({
+    enums: EncryptMessagesWithPinEvent,
+    operationEnums: EncryptDataStatus,
+    onEvent: params.onEvent,
+    logger,
+  });
+
   const helper = new OperationHelper({
     sdk,
     queryKey: 'encrypt',
     resultKey: 'encrypt',
+    onStatus,
   });
 
   await helper.sendQuery({
@@ -55,6 +69,8 @@ export const encryptMessageWithPin = async (
   logger.verbose('encryptMessages response', result);
 
   assertOrThrowInvalidResult(result.result?.encryptedData);
+
+  forceStatusUpdate(EncryptMessagesWithPinEvent.MESSAGE_ENCRYPTED);
 
   logger.info('Completed');
   return { encryptedPacket: result.result.encryptedData };

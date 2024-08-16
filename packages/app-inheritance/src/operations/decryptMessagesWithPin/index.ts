@@ -1,13 +1,19 @@
 import { ISDK } from '@cypherock/sdk-core';
-import { assert, createLoggerWithPrefix } from '@cypherock/sdk-utils';
+import {
+  assert,
+  createLoggerWithPrefix,
+  createStatusListener,
+} from '@cypherock/sdk-utils';
 import { WALLET_ID_LENGTH } from '../../constants';
 import { APP_VERSION } from '../../constants/appId';
+import { DecryptDataStatus } from '../../types';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
 import {
+  DecryptMessagesWithPinEvent,
   IDecryptMessagesWithPinParams,
   IDecryptMessagesWithPinResult,
 } from './types';
@@ -36,10 +42,18 @@ export const decryptMessagesWithPin = async (
 
   logger.info('Started', { ...params, onEvent: undefined });
 
+  const { forceStatusUpdate, onStatus } = createStatusListener({
+    enums: DecryptMessagesWithPinEvent,
+    operationEnums: DecryptDataStatus,
+    onEvent: params.onEvent,
+    logger,
+  });
+
   const helper = new OperationHelper({
     sdk,
     queryKey: 'decrypt',
     resultKey: 'decrypt',
+    onStatus,
   });
 
   await helper.sendQuery({
@@ -67,6 +81,7 @@ export const decryptMessagesWithPin = async (
 
   await helper.waitForResult();
 
+  forceStatusUpdate(DecryptMessagesWithPinEvent.PIN_VERIFIED);
   logger.info('Completed');
   return output;
 };

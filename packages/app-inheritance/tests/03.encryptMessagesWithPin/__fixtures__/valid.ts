@@ -1,3 +1,4 @@
+import { createFlowStatus } from '@cypherock/sdk-utils';
 import { IEncryptMessagesTestCase } from './types';
 import { Query, Result } from '../../../src/proto/generated/inheritance/core';
 
@@ -47,8 +48,31 @@ const encryptSingeMessage: IEncryptMessagesTestCase = {
           }),
         ).finish(),
       ),
+      statuses: [
+        {
+          flowStatus: createFlowStatus(0, 0),
+          expectEventCalls: [0],
+        },
+        {
+          flowStatus: createFlowStatus(1, 0),
+          expectEventCalls: [1],
+        },
+        {
+          flowStatus: createFlowStatus(2, 0),
+          expectEventCalls: [2],
+        },
+        {
+          flowStatus: createFlowStatus(3, 0),
+          expectEventCalls: [3],
+        },
+        {
+          flowStatus: createFlowStatus(4, 0),
+          expectEventCalls: [4],
+        },
+      ],
     },
   ],
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: { encryptedPacket: new Uint8Array([0]) },
 };
 
@@ -113,8 +137,31 @@ const encryptMultipleMessages: IEncryptMessagesTestCase = {
           }),
         ).finish(),
       ),
+      statuses: [
+        {
+          flowStatus: createFlowStatus(0, 0),
+          expectEventCalls: [0],
+        },
+        {
+          flowStatus: createFlowStatus(1, 0),
+          expectEventCalls: [1],
+        },
+        {
+          flowStatus: createFlowStatus(2, 0),
+          expectEventCalls: [2],
+        },
+        {
+          flowStatus: createFlowStatus(3, 0),
+          expectEventCalls: [3],
+        },
+        {
+          flowStatus: createFlowStatus(4, 0),
+          expectEventCalls: [4],
+        },
+      ],
     },
   ],
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: { encryptedPacket: new Uint8Array([0]) },
 };
 

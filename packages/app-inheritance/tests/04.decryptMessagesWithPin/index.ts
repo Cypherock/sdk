@@ -24,10 +24,11 @@ describe('InheritanceApp.decryptMessagesWithPin', () => {
   describe('should be able to decrypt messages', () => {
     fixtures.valid.forEach(testCase => {
       test(testCase.name, async () => {
-        setupMocks(testCase);
+        const onEvent = setupMocks(testCase);
 
         const output = await inheritanceApp.decryptMessagesWithPin({
           ...testCase.params,
+          onEvent,
         });
         expect(output).toEqual(testCase.output);
 
