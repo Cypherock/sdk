@@ -18,6 +18,7 @@ const commonParams = {
       64,
     ]),
     isPublicKey: true,
+    isSeedBased: false,
   },
   queries: [
     {

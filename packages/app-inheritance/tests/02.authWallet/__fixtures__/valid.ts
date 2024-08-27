@@ -15,6 +15,7 @@ const authenticateWalletWithPublicKey: IAuthWalletTestCase = {
       64,
     ]),
     isPublicKey: true,
+    isSeedBased: false,
   },
   queries: [
     {

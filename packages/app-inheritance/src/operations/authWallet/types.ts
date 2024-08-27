@@ -9,5 +9,6 @@ export interface IAuthWalletParams {
   challenge: Uint8Array;
   walletId: Uint8Array;
   isPublicKey: boolean;
+  isSeedBased: boolean;
   onEvent?: AuthWalletEventHandler;
 }

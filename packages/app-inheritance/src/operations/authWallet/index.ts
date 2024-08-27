@@ -56,6 +56,7 @@ export const authWallet = async (
       challenge: params.challenge,
       walletId: params.walletId,
       isPublicKey: params.isPublicKey,
+      isSeedBased: params.isSeedBased,
     },
   });
 
