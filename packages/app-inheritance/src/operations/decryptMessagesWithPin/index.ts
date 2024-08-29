@@ -75,12 +75,6 @@ export const decryptMessagesWithPin = async (
     ),
   };
 
-  params.onDecryption?.(output);
-
-  await helper.sendQuery({ ack: {} });
-
-  await helper.waitForResult();
-
   forceStatusUpdate(DecryptMessagesWithPinEvent.PIN_VERIFIED);
   logger.info('Completed');
   return output;
