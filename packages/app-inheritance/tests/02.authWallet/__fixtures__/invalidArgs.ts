@@ -17,7 +17,8 @@ const validParams = {
     110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
     64,
   ]),
-  isPublicKey: true,
+  withPublicKey: true,
+  type: 'wallet-based',
 };
 
 const invalidArgs: IAuthWalletTestCase[] = [
@@ -47,9 +48,14 @@ const invalidArgs: IAuthWalletTestCase[] = [
     params: { ...validParams, walletId: undefined } as any,
   },
   {
-    name: 'No isPublicKey',
+    name: 'No withPublicKey',
     ...commonParams,
-    params: { ...validParams, isPublicKey: undefined } as any,
+    params: { ...validParams, withPublicKey: undefined } as any,
+  },
+  {
+    name: 'No type',
+    ...commonParams,
+    params: { ...validParams, type: undefined } as any,
   },
   {
     name: 'Incorrect length walletId',

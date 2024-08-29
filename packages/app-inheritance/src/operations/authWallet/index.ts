@@ -10,13 +10,31 @@ import {
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
-import { IAuthWalletParams, AuthWalletEvent } from './types';
+import { IAuthWalletParams, AuthWalletEvent, AuthWalletType } from './types';
 import { WALLET_ID_LENGTH } from '../../constants';
 import { AuthWalletStatus, IAuthWalletResultResponse } from '../../types';
 
 export * from './types';
 
 const logger = createLoggerWithPrefix(rootLogger, 'authWallet');
+
+const typeMap: Record<
+  AuthWalletType,
+  { doSeedBased: boolean; doWalletBased: boolean }
+> = {
+  'seed-based': {
+    doSeedBased: true,
+    doWalletBased: false,
+  },
+  'wallet-based': {
+    doSeedBased: false,
+    doWalletBased: true,
+  },
+  'seed-and-wallet-based': {
+    doSeedBased: true,
+    doWalletBased: true,
+  },
+};
 
 export const authWallet = async (
   sdk: ISDK,
@@ -26,9 +44,10 @@ export const authWallet = async (
   assert(params.walletId, 'walletId should be defined');
   assert(params.challenge, 'challenge should be defined');
   assert(
-    typeof params.isPublicKey === 'boolean',
+    typeof params.withPublicKey === 'boolean',
     'isPublicKey should be defined',
   );
+  assert(typeMap[params.type] !== undefined, 'invaild type provided');
   assert(
     params.walletId.length === WALLET_ID_LENGTH,
     `Wallet Id should be exactly ${WALLET_ID_LENGTH} bytes`,
@@ -55,8 +74,8 @@ export const authWallet = async (
     initiate: {
       challenge: params.challenge,
       walletId: params.walletId,
-      isPublicKey: params.isPublicKey,
-      isSeedBased: params.isSeedBased,
+      withPublicKey: params.withPublicKey,
+      ...typeMap[params.type],
     },
   });
 
@@ -65,7 +84,7 @@ export const authWallet = async (
 
   assertOrThrowInvalidResult(result.result);
 
-  forceStatusUpdate(AuthWalletEvent.CARD_TAP);
+  forceStatusUpdate(AuthWalletEvent.WALLET_BASED);
 
   logger.info('Completed');
   return result.result;

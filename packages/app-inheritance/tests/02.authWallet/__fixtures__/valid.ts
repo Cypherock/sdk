@@ -14,8 +14,8 @@ const authenticateWalletWithPublicKey: IAuthWalletTestCase = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    isPublicKey: true,
-    isSeedBased: false,
+    withPublicKey: true,
+    type: 'wallet-based',
   },
   queries: [
     {
@@ -35,7 +35,9 @@ const authenticateWalletWithPublicKey: IAuthWalletTestCase = {
                   103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
                   86, 128, 26, 3, 187, 121, 64,
                 ]),
-                isPublicKey: true,
+                withPublicKey: true,
+                doWalletBased: true,
+                doSeedBased: false,
               },
             },
           }),
@@ -51,12 +53,14 @@ const authenticateWalletWithPublicKey: IAuthWalletTestCase = {
           Result.create({
             authWallet: {
               result: {
-                signature: hexToUint8Array(
-                  '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
-                ),
-                publicKey: hexToUint8Array(
-                  '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
-                ),
+                walletBased: {
+                  signature: hexToUint8Array(
+                    '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
+                  ),
+                  publicKey: hexToUint8Array(
+                    '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
+                  ),
+                },
               },
             },
           }),
@@ -71,17 +75,23 @@ const authenticateWalletWithPublicKey: IAuthWalletTestCase = {
           flowStatus: createFlowStatus(1, 0),
           expectEventCalls: [1],
         },
+        {
+          flowStatus: createFlowStatus(2, 0),
+          expectEventCalls: [2],
+        },
       ],
     },
   ],
-  mocks: { eventCalls: [[0], [1]] },
+  mocks: { eventCalls: [[0], [1], [2]] },
   output: {
-    signature: hexToUint8Array(
-      '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
-    ),
-    publicKey: hexToUint8Array(
-      '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
-    ),
+    walletBased: {
+      signature: hexToUint8Array(
+        '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
+      ),
+      publicKey: hexToUint8Array(
+        '0x032891c403786eed3405bf29304abbcbb5282bc2b30eb3c45759f42bc9bb1b62c6',
+      ),
+    },
   },
 };
 
