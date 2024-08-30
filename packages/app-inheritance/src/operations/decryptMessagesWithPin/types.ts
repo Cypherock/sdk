@@ -16,6 +16,5 @@ export interface IDecryptMessagesWithPinResult {
 export interface IDecryptMessagesWithPinParams {
   walletId: Uint8Array;
   encryptedData: Uint8Array;
-  onDecryption?: (result: IDecryptMessagesWithPinResult) => void;
   onEvent?: DecryptMessagesWithPinEventHandler;
 }

@@ -31,18 +31,6 @@ const decryptSingeMessage: IDecryptMessagesTestCase = {
         ).finish(),
       ),
     },
-    {
-      name: 'ack query',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            decrypt: {
-              ack: {},
-            },
-          }),
-        ).finish(),
-      ),
-    },
   ],
   results: [
     {
@@ -58,18 +46,6 @@ const decryptSingeMessage: IDecryptMessagesTestCase = {
                   },
                 ],
               },
-            },
-          }),
-        ).finish(),
-      ),
-    },
-    {
-      name: 'ack',
-      data: Uint8Array.from(
-        Result.encode(
-          Result.create({
-            decrypt: {
-              ack: {},
             },
           }),
         ).finish(),
@@ -131,18 +107,6 @@ const decryptMultipleMessages: IDecryptMessagesTestCase = {
         ).finish(),
       ),
     },
-    {
-      name: 'ack',
-      data: Uint8Array.from(
-        Query.encode(
-          Query.create({
-            decrypt: {
-              ack: {},
-            },
-          }),
-        ).finish(),
-      ),
-    },
   ],
   results: [
     {
@@ -158,18 +122,6 @@ const decryptMultipleMessages: IDecryptMessagesTestCase = {
                   { message: Buffer.from('another message') },
                 ],
               },
-            },
-          }),
-        ).finish(),
-      ),
-    },
-    {
-      name: 'ack',
-      data: Uint8Array.from(
-        Result.encode(
-          Result.create({
-            decrypt: {
-              ack: {},
             },
           }),
         ).finish(),
