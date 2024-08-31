@@ -6,6 +6,10 @@ import {
 } from '@cypherock/sdk-utils';
 import { WALLET_ID_LENGTH } from '../../constants';
 import { APP_VERSION } from '../../constants/appId';
+import {
+  EncryptDataWithPinEncryptedDataStructure,
+  EncryptDataWithPinPlainDataStructure,
+} from '../../proto/generated/inheritance/encrypt_data_with_pin';
 import { EncryptDataStatus } from '../../types';
 import {
   assertOrThrowInvalidResult,
@@ -58,20 +62,33 @@ export const encryptMessageWithPin = async (
   await helper.sendQuery({
     initiate: {
       walletId: params.walletId,
-      plainData: params.messages.map(message => ({
-        message: Buffer.from(message.value),
-        isVerifiedOnDevice: message.verifyOnDevice ?? false,
-      })),
     },
   });
 
-  const result = await helper.waitForResult();
+  // Wait for confirmation
+  await helper.waitForResult();
+
+  const rawData = EncryptDataWithPinPlainDataStructure.encode(
+    EncryptDataWithPinPlainDataStructure.create({
+      data: params.messages.map(message => ({
+        message: Buffer.from(message.value),
+        isVerifiedOnDevice: message.verifyOnDevice ?? false,
+      })),
+    }),
+  ).finish();
+  await helper.sendInChunks(rawData, 'plainData', 'dataAccepted');
+
+  const encryptedData = await helper.receiveInChunks(
+    'encryptedDataRequest',
+    'encryptedData',
+  );
+  const result = EncryptDataWithPinEncryptedDataStructure.decode(encryptedData);
   logger.verbose('encryptMessages response', result);
 
-  assertOrThrowInvalidResult(result.result?.encryptedData);
+  assertOrThrowInvalidResult(result.encryptedData);
 
   forceStatusUpdate(EncryptMessagesWithPinEvent.MESSAGE_ENCRYPTED_CARD_TAP);
 
   logger.info('Completed');
-  return { encryptedPacket: result.result.encryptedData };
+  return { encryptedPacket: result.encryptedData };
 };
