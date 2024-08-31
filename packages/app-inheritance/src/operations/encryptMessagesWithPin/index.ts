@@ -65,8 +65,8 @@ export const encryptMessageWithPin = async (
     },
   });
 
+  // Wait for confirmation
   await helper.waitForResult();
-  logger.verbose('encryptMessages confirmed');
 
   const rawData = EncryptDataWithPinPlainDataStructure.encode(
     EncryptDataWithPinPlainDataStructure.create({
