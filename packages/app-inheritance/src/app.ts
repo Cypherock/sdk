@@ -36,6 +36,14 @@ export class InheritanceApp {
     return this.sdk.runOperation(() => operations.authWallet(this.sdk, params));
   }
 
+  public async testSessionStart() {
+    return this.sdk.startSession();
+  }
+
+  public async testSessionStop() {
+    return this.sdk.closeSession();
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }

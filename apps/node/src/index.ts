@@ -3,7 +3,7 @@ import DeviceConnection, {
 } from '@cypherock/sdk-hw-hid';
 import DeviceConnectionSerialport from '@cypherock/sdk-hw-serialport';
 import { ManagerApp, updateLogger } from '@cypherock/sdk-app-manager';
-import { updateLogger as updateLoggerCore } from '@cypherock/sdk-core';
+import { SDK, updateLogger as updateLoggerCore } from '@cypherock/sdk-core';
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as bitcoinJsLib from 'bitcoinjs-lib';
 import * as nearApiJs from 'near-api-js';
@@ -14,6 +14,7 @@ import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
 import { ethers } from 'ethers';
 import { createServiceLogger } from './logger';
+import { InheritanceApp } from '@cypherock/sdk-app-inheritance';
 
 const run = async () => {
   updateLogger(createServiceLogger);
@@ -33,29 +34,55 @@ const run = async () => {
     connection = await DeviceConnectionSerialport.create();
   }
 
+  console.log('started');
+
   const managerApp = await ManagerApp.create(connection);
 
-  const deviceInfo = await managerApp.getDeviceInfo();
+  const { walletList } = await managerApp.getWallets();
 
-  console.log(deviceInfo);
+  const inheritanceApp = await InheritanceApp.create(connection);
 
-  await managerApp.authDevice();
+  setTimeout(async () => {
+    //console.log('aborting');
+    //await inheritanceApp.abort();
+    //console.log('aborted');
+  }, 3000);
 
-  await managerApp.trainCard({ onWallets: async () => true });
+  //console.log(walletList[1].id.join(','));
+  const walletId = walletList[1].id;
 
-  await managerApp.authCard();
+  //await inheritanceApp.authWallet({
+  //  challenge: walletId,
+  //  walletId: walletId,
+  //  withPublicKey: true,
+  //  type: 'wallet-based',
+  //});
 
-  // await managerApp.updateFirmware({
-  //   getDevices: async () => [
-  //     ...(await DeviceConnection.list()),
-  //     ...(await DeviceConnectionSerialport.list()),
-  //   ],
-  //   createConnection: async d =>
-  //     d.type === 'hid'
-  //       ? DeviceConnection.connect(d)
-  //       : DeviceConnectionSerialport.connect(d),
-  //   allowPrerelease: true,
-  // });
+  await inheritanceApp.testSessionStart();
+
+  const thing = await inheritanceApp.encryptMessagesWithPin({
+    walletId: walletId,
+    messages: [
+      {
+        value: 'test message',
+        verifyOnDevice: false,
+      },
+      {
+        value:
+          'Lorem ipsum dolor sit amet, -=test "device" consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        verifyOnDevice: true,
+      },
+    ],
+  });
+
+  const output = await inheritanceApp.decryptMessagesWithPin({
+    walletId: walletId,
+    encryptedData: thing.encryptedPacket,
+  });
+
+  await inheritanceApp.testSessionStop();
+
+  console.log(JSON.stringify(output));
 };
 
 run();
