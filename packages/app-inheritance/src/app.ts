@@ -37,11 +37,11 @@ export class InheritanceApp {
   }
 
   public async testSessionStart() {
-    return this.sdk.startSession();
+    return this.sdk.runOperation(() => this.sdk.startSession());
   }
 
   public async testSessionStop() {
-    return this.sdk.closeSession();
+    return this.sdk.runOperation(() => this.sdk.closeSession());
   }
 
   public async destroy() {
