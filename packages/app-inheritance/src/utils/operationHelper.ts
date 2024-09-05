@@ -130,8 +130,6 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
   >(queryKey: QK, resultKey: RK): Promise<Uint8Array> {
     const chunks: Uint8Array[] = [];
 
-    await this.sendQuery({ [queryKey]: {} });
-
     let index = 0;
 
     while (1) {

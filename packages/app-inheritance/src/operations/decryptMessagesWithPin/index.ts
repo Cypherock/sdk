@@ -6,6 +6,10 @@ import {
 } from '@cypherock/sdk-utils';
 import { WALLET_ID_LENGTH } from '../../constants';
 import { APP_VERSION } from '../../constants/appId';
+import {
+  DecryptDataWithPinDecryptedDataStructure,
+  DecryptDataWithPinEncryptedDataStructure,
+} from '../../proto/generated/inheritance/decrypt_data_with_pin';
 import { DecryptDataStatus } from '../../types';
 import {
   assertOrThrowInvalidResult,
@@ -59,18 +63,31 @@ export const decryptMessagesWithPin = async (
   await helper.sendQuery({
     initiate: {
       walletId: params.walletId,
-      encryptedData: params.encryptedData,
     },
   });
 
-  const result = await helper.waitForResult();
+  await helper.waitForResult();
+  logger.verbose('decryptMessages confirmed');
+
+  const rawData = DecryptDataWithPinEncryptedDataStructure.encode(
+    DecryptDataWithPinEncryptedDataStructure.create({
+      data: params.encryptedData,
+    }),
+  ).finish();
+  await helper.sendInChunks(rawData, 'encryptedData', 'dataAccepted');
+
+  const decryptedData = await helper.receiveInChunks(
+    'decryptedDataRequest',
+    'decryptedData',
+  );
+  const result = DecryptDataWithPinDecryptedDataStructure.decode(decryptedData);
   logger.verbose('decryptMessages response', result);
 
-  assertOrThrowInvalidResult(result.messages?.plainData);
+  assertOrThrowInvalidResult(result.decryptedData);
 
   const output = {
-    decryptedData: result.messages.plainData.map(data => data.message),
-    decryptedDataAsStrings: result.messages.plainData.map(data =>
+    decryptedData: result.decryptedData.map(data => data.message),
+    decryptedDataAsStrings: result.decryptedData.map(data =>
       Buffer.from(data.message).toString(),
     ),
   };
