@@ -84,7 +84,7 @@ export const authWallet = async (
 
   assertOrThrowInvalidResult(result.result);
 
-  forceStatusUpdate(AuthWalletEvent.WALLET_BASED);
+  forceStatusUpdate(AuthWalletEvent.WALLET_BASED_CARD_TAP);
 
   logger.info('Completed');
   return result.result;

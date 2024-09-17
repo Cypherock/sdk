@@ -1,8 +1,9 @@
 export enum AuthWalletEvent {
   INIT = 0,
-  SEED_BASED = 1,
-  CARD_PAIRING = 2,
-  WALLET_BASED = 3,
+  CONFIRMED = 1,
+  SEED_BASED_CARD_TAP = 2,
+  CARD_PAIRING_CARD_TAP = 3,
+  WALLET_BASED_CARD_TAP = 4,
 }
 
 export type AuthWalletType =

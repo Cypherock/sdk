@@ -2,8 +2,8 @@ export enum EncryptMessagesWithPinEvent {
   INIT = 0,
   CONFIRMED = 1,
   MESSAGE_VERIFIED = 2,
-  PIN_ENTERED = 3,
-  MESSAGE_ENCRYPTED = 4,
+  PIN_ENTERED_CARD_TAP = 3,
+  MESSAGE_ENCRYPTED_CARD_TAP = 4,
 }
 
 export type EncryptMessagesWithPinEventHandler = (

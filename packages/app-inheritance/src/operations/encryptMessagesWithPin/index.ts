@@ -70,7 +70,7 @@ export const encryptMessageWithPin = async (
 
   assertOrThrowInvalidResult(result.result?.encryptedData);
 
-  forceStatusUpdate(EncryptMessagesWithPinEvent.MESSAGE_ENCRYPTED);
+  forceStatusUpdate(EncryptMessagesWithPinEvent.MESSAGE_ENCRYPTED_CARD_TAP);
 
   logger.info('Completed');
   return { encryptedPacket: result.result.encryptedData };

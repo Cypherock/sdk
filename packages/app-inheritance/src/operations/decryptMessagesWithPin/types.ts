@@ -1,7 +1,7 @@
 export enum DecryptMessagesWithPinEvent {
   INIT = 0,
   CONFIRMED = 1,
-  MESSAGE_DECRYPTIED = 2,
+  MESSAGE_DECRYPTED_CARD_TAP = 2,
   PIN_VERIFIED = 3,
 }
 
