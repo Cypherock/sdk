@@ -5,7 +5,7 @@ import {
   IInitiateServerSessionResult,
 } from './types';
 
-const baseURL = '/device/session';
+const baseURL = '/device-session';
 
 export const initiateServerSession = async (
   params: IInitiateServerSessionParams,
@@ -16,20 +16,11 @@ export const initiateServerSession = async (
     signature: uint8ArrayToHex(params.signature),
     postfix1: uint8ArrayToHex(params.postfix1),
     postfix2: uint8ArrayToHex(params.postfix2),
+    keyIndex: 1,
   };
 
-  const res = await http.post(`${baseURL}/initiate`, body);
+  const res = await http.post(`${baseURL}/create`, body);
 
+  console.log({ res });
   return res.data;
-};
-
-export const startServerSession = async (params: {
-  sessionId: string;
-}): Promise<void> => {
-  const body = {
-    ...params,
-    status: 'started',
-  };
-
-  await http.post(`${baseURL}/start`, body);
 };

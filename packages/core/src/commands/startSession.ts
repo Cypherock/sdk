@@ -10,7 +10,7 @@ import { ISessionStartResponse } from '../encoders/proto/generated/types';
 import { Status } from '../encoders/types';
 import { sendCommand } from '../operations/helpers';
 import { waitForResult } from '../operations/proto';
-import { initiateServerSession, startServerSession } from '../services';
+import { initiateServerSession } from '../services';
 import {
   assertOrThrowInvalidResult,
   PacketVersionMap,
@@ -98,18 +98,16 @@ export const startSession = async (
 
   const serverInitiateResponse =
     await initiateServerSession(confirmationInitiate);
-  const { sessionId } = serverInitiateResponse;
-  assert(sessionId, 'Invalid sessionId from server');
 
   await sendSessionCommand(params, {
     request: {
       start: {
         sessionAge: serverInitiateResponse.sessionAge,
         sessionRandomPublic: hexToUint8Array(
-          serverInitiateResponse.serverRandomPublic ?? '',
+          serverInitiateResponse.publicKey ?? '',
         ),
         signature: hexToUint8Array(serverInitiateResponse.signature ?? ''),
-        deviceId: hexToUint8Array(serverInitiateResponse.deviceId ?? ''),
+        deviceId: confirmationInitiate.deviceId,
       },
     },
   });
@@ -117,7 +115,5 @@ export const startSession = async (
   const { confirmationStart } = await waitForSessionResult(params);
   assertOrThrowInvalidResult(confirmationStart);
 
-  await startServerSession({ sessionId });
-
-  return sessionId;
+  return '';
 };

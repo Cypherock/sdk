@@ -7,9 +7,7 @@ export interface IInitiateServerSessionParams {
 }
 
 export interface IInitiateServerSessionResult {
-  serverRandomPublic?: string;
+  publicKey?: string;
   sessionAge?: number;
   signature?: string;
-  sessionId?: string;
-  deviceId?: string;
 }
