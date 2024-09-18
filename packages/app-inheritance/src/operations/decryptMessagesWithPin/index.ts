@@ -85,12 +85,14 @@ export const decryptMessagesWithPin = async (
 
   assertOrThrowInvalidResult(result.decryptedData);
 
-  const output = {
-    decryptedData: result.decryptedData.map(data => data.message),
-    decryptedDataAsStrings: result.decryptedData.map(data =>
-      Buffer.from(data.message).toString(),
-    ),
-  };
+  const output: IDecryptMessagesWithPinResult = {};
+
+  for (const data of result.decryptedData) {
+    output[data.tag] = {
+      data: data.message,
+      dataAsString: Buffer.from(data.message).toString(),
+    };
+  }
 
   forceStatusUpdate(DecryptMessagesWithPinEvent.PIN_VERIFIED);
   logger.info('Completed');
