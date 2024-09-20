@@ -37,7 +37,7 @@ export const encryptMessageWithPin = async (
     params.walletId.length === WALLET_ID_LENGTH,
     `Wallet Id should be exactly ${WALLET_ID_LENGTH} bytes`,
   );
-  params.messages.forEach(message =>
+  Object.values(params.messages).forEach(message =>
     assert(message.value, 'Every message should have a valid value'),
   );
 
@@ -70,9 +70,10 @@ export const encryptMessageWithPin = async (
 
   const rawData = EncryptDataWithPinPlainDataStructure.encode(
     EncryptDataWithPinPlainDataStructure.create({
-      data: params.messages.map(message => ({
+      data: Object.entries(params.messages).map(([key, message]) => ({
         message: Buffer.from(message.value),
         isVerifiedOnDevice: message.verifyOnDevice ?? false,
+        tag: parseInt(key, 10),
       })),
     }),
   ).finish();

@@ -8,10 +8,16 @@ export enum DecryptMessagesWithPinEvent {
 export type DecryptMessagesWithPinEventHandler = (
   event: DecryptMessagesWithPinEvent,
 ) => void;
-export interface IDecryptMessagesWithPinResult {
-  decryptedData: Uint8Array[];
-  decryptedDataAsStrings: string[];
+
+export interface IDecryptMessagesWithPinResultValue {
+  data: Uint8Array;
+  dataAsString: string;
 }
+
+export type IDecryptMessagesWithPinResult = Record<
+  number,
+  IDecryptMessagesWithPinResultValue
+>;
 
 export interface IDecryptMessagesWithPinParams {
   walletId: Uint8Array;

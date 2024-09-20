@@ -17,7 +17,7 @@ export interface InheritanceMessage {
 
 export interface IEncryptMessagesWithPinParams {
   walletId: Uint8Array;
-  messages: InheritanceMessage[];
+  messages: Record<number, InheritanceMessage>;
   onEvent?: EncryptMessagesWithPinEventHandler;
 }
 
