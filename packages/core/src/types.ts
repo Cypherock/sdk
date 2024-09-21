@@ -130,7 +130,7 @@ export interface ISDK {
   startSession(
     onStatus?: commands.IStartSessionParams['onStatus'],
     options?: commands.IStartSessionParams['options'],
-  ): Promise<string>;
+  ): Promise<commands.IStartSessionResult>;
   closeSession(
     onStatus?: commands.ICloseSessionParams['onStatus'],
     options?: commands.ICloseSessionParams['options'],

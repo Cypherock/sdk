@@ -481,7 +481,7 @@ export class SDK implements ISDK {
   public async startSession(
     onStatus?: commands.IStartSessionParams['onStatus'],
     options?: commands.IStartSessionParams['options'],
-  ): Promise<string> {
+  ): Promise<commands.IStartSessionResult> {
     await this.validateNotInBootloaderMode();
     assert(
       this.packetVersion,

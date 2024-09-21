@@ -25,6 +25,11 @@ export interface IStartSessionParams {
   getNewSequenceNumber: () => Promise<number>;
 }
 
+export interface IStartSessionResult {
+  sessionId: string;
+  sessionAge: number;
+}
+
 const sendSessionCommand = async (
   params: IStartSessionParams,
   data: DeepPartial<Msg['sessionStart']>,
@@ -83,7 +88,7 @@ const waitForSessionResult = async (
 
 export const startSession = async (
   params: IStartSessionParams,
-): Promise<string> => {
+): Promise<IStartSessionResult> => {
   assert(params.connection, 'Invalid connection');
   assert(params.getNewSequenceNumber, 'Invalid getNewSequenceNumber');
 
@@ -115,5 +120,11 @@ export const startSession = async (
   const { confirmationStart } = await waitForSessionResult(params);
   assertOrThrowInvalidResult(confirmationStart);
 
-  return '';
+  assert(serverInitiateResponse.sessionId, 'Invalid session ID from server');
+  assert(serverInitiateResponse.sessionAge, 'Invalid session age from server');
+
+  return {
+    sessionId: serverInitiateResponse.sessionId,
+    sessionAge: serverInitiateResponse.sessionAge,
+  };
 };

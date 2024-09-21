@@ -10,4 +10,5 @@ export interface IInitiateServerSessionResult {
   publicKey?: string;
   sessionAge?: number;
   signature?: string;
+  sessionId?: string;
 }
