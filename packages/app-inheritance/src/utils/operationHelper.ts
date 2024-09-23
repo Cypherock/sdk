@@ -94,15 +94,16 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
   >(data: Uint8Array, queryKey: QK, resultKey: RK) {
     const chunks = OperationHelper.splitIntoChunks(data);
     let remainingSize = data.length;
+    let i = 0;
 
-    for (let i = 0; i < chunks.length; i += 1) {
-      const chunk = chunks[i];
+    do {
+      const chunk = chunks[i] ?? [];
       remainingSize -= chunk.length;
 
       const chunkPayload: ChunkPayload = {
         chunk,
         chunkIndex: i,
-        totalChunks: chunks.length,
+        totalChunks: Math.max(chunks.length, 1),
         remainingSize,
       };
 
@@ -121,7 +122,8 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
       assertOrThrowInvalidResult(chunkAck);
       assertOrThrowInvalidResult(chunkAck.chunkIndex === i);
-    }
+      i += 1;
+    } while (i < chunks.length);
   }
 
   public async receiveInChunks<
@@ -152,7 +154,7 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
       if (
         chunkPayload.remainingSize === 0 &&
-        chunkPayload.chunkIndex + 1 === chunkPayload.totalChunks
+        chunkPayload.chunkIndex + 1 >= chunkPayload.totalChunks
       ) {
         break;
       }
