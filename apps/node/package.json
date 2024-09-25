@@ -25,6 +25,7 @@
     "@cypherock/sdk-app-evm": "workspace:^",
     "@cypherock/sdk-app-manager": "workspace:^",
     "@cypherock/sdk-app-near": "workspace:^",
+    "@cypherock/sdk-app-xrp": "workspace:^",
     "@cypherock/sdk-app-solana": "workspace:^",
     "@cypherock/sdk-app-tron": "workspace:^",
     "@cypherock/sdk-core": "workspace:^",

@@ -108,6 +108,9 @@ importers:
       '@cypherock/sdk-app-tron':
         specifier: workspace:^
         version: link:../../packages/app-tron
+      '@cypherock/sdk-app-xrp':
+        specifier: workspace:^
+        version: link:../../packages/app-xrp
       '@cypherock/sdk-core':
         specifier: workspace:^
         version: link:../../packages/core
