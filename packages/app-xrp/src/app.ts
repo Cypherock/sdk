@@ -4,7 +4,7 @@ import { SDK } from '@cypherock/sdk-core';
 export class XrpApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 21;
+  private static readonly APPLET_ID = 20;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;
