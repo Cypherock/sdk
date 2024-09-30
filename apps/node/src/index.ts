@@ -10,12 +10,12 @@ import * as nearApiJs from 'near-api-js';
 import * as solanaWeb3 from '@solana/web3.js';
 import { setBitcoinJSLib } from '@cypherock/sdk-app-btc';
 import { setEthersLib } from '@cypherock/sdk-app-evm';
-import { NearApp, setNearApiJs } from '@cypherock/sdk-app-near';
+import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
 import { ethers } from 'ethers';
-import { createServiceLogger } from './logger';
 import { setXrpLib, XrpApp } from '@cypherock/sdk-app-xrp';
 import * as xrpl from 'xrpl';
+import { createServiceLogger } from './logger';
 
 const run = async () => {
   updateLogger(createServiceLogger);
@@ -49,7 +49,7 @@ const run = async () => {
 
   const xrpApp = await XrpApp.create(connection);
 
-  const result_pub_key = await xrpApp.getPublicKeys({
+  const resultPubKey = await xrpApp.getPublicKeys({
     walletId: wallet.id,
     derivationPaths: [
       {
@@ -64,14 +64,14 @@ const run = async () => {
     ],
   });
 
-  console.log({result_pub_key});
+  console.log({resultPubKey});
 
-  // const result_user_verified_pub_key = await xrpApp.getUserVerifiedPublicKey({
+  // const resultUserVerifiedPubKey = await xrpApp.getUserVerifiedPublicKey({
   //   walletId: wallet.id,
   //   derivationPath: [0x80000000 + 44, 0x80000000 + 144, 0x80000000, 0, 0]
   // })
 
-  // console.log({result_user_verified_pub_key});
+  // console.log({resultUserVerifiedPubKey});
 
   await xrpApp.destroy();
 
