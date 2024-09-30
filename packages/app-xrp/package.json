@@ -39,7 +39,8 @@
     "@cypherock/sdk-interfaces": "workspace:^0.0.15",
     "@cypherock/sdk-utils": "workspace:^0.0.18",
     "long": "^5.2.1",
-    "protobufjs": "^7.2.2"
+    "protobufjs": "^7.2.2",
+    "xrpl": "^4.0.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
