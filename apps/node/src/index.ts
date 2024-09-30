@@ -45,7 +45,7 @@ const run = async () => {
   const wallets = await managerApp.getWallets();
   const wallet = wallets.walletList[0];
 
-  console.log({wallet});
+  console.log({ wallet });
 
   const xrpApp = await XrpApp.create(connection);
 
@@ -64,17 +64,16 @@ const run = async () => {
     ],
   });
 
-  console.log({resultPubKey});
+  console.log({ resultPubKey });
 
   // const resultUserVerifiedPubKey = await xrpApp.getUserVerifiedPublicKey({
   //   walletId: wallet.id,
   //   derivationPath: [0x80000000 + 44, 0x80000000 + 144, 0x80000000, 0, 0]
   // })
 
-  // console.log({resultUserVerifiedPubKey});
+  // console.log({ resultUserVerifiedPubKey });
 
   await xrpApp.destroy();
-
 
   // await managerApp.authDevice();
 
