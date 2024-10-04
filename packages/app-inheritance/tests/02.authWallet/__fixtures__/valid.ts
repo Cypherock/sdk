@@ -83,10 +83,14 @@ const authenticateWalletWithPublicKey: IAuthWalletTestCase = {
           flowStatus: createFlowStatus(3, 0),
           expectEventCalls: [3],
         },
+        {
+          flowStatus: createFlowStatus(4, 0),
+          expectEventCalls: [4],
+        },
       ],
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
     walletBased: {
       signature: hexToUint8Array(

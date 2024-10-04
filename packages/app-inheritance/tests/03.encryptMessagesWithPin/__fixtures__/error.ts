@@ -31,17 +31,6 @@ const commonParams = {
                   103, 233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53,
                   86, 128, 26, 3, 187,
                 ]),
-                plainData: [
-                  { message: Buffer.from('test'), isVerifiedOnDevice: false },
-                  {
-                    message: Buffer.from('something else'),
-                    isVerifiedOnDevice: false,
-                  },
-                  {
-                    message: Buffer.from('something other than something else'),
-                    isVerifiedOnDevice: true,
-                  },
-                ],
               },
             },
           }),
