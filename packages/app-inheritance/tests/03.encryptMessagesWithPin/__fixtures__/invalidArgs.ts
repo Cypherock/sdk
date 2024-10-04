@@ -1,4 +1,4 @@
-import { IAuthWalletTestCase } from './types';
+import { IEncryptMessagesTestCase } from './types';
 
 const commonParams = {
   queries: [{ name: 'empty', data: new Uint8Array([]) }],
@@ -12,16 +12,14 @@ const validParams = {
     199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103, 233, 62,
     110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187,
   ]),
-  challenge: new Uint8Array([
-    199, 89, 252, 26, 32, 135, 183, 211, 90, 220, 38, 17, 160, 103, 233, 62,
-    110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
-    64,
-  ]),
-  withPublicKey: true,
-  type: 'wallet-based',
+  messages: [
+    { value: 'test' },
+    { value: 'something else' },
+    { value: 'something other than something else', isPrivate: true },
+  ],
 };
 
-const invalidArgs: IAuthWalletTestCase[] = [
+const invalidArgs: IEncryptMessagesTestCase[] = [
   {
     name: 'Null',
     ...commonParams,
@@ -38,32 +36,24 @@ const invalidArgs: IAuthWalletTestCase[] = [
     params: {} as any,
   },
   {
-    name: 'No challenge',
-    ...commonParams,
-    params: { ...validParams, challenge: undefined } as any,
-  },
-  {
     name: 'No wallet id',
     ...commonParams,
     params: { ...validParams, walletId: undefined } as any,
   },
   {
-    name: 'No withPublicKey',
+    name: 'Invalid wallet id',
     ...commonParams,
-    params: { ...validParams, withPublicKey: undefined } as any,
+    params: { ...validParams, walletId: [0] } as any,
   },
   {
-    name: 'No type',
+    name: 'No messages',
     ...commonParams,
-    params: { ...validParams, type: undefined } as any,
+    params: { ...validParams, messages: undefined } as any,
   },
   {
-    name: 'Incorrect length walletId',
+    name: 'Invalid messages',
     ...commonParams,
-    params: {
-      ...validParams,
-      walletId: [0],
-    } as any,
+    params: { ...validParams, messages: [{ random: 'value' }] } as any,
   },
 ];
 

@@ -16,6 +16,22 @@ export class InheritanceApp {
     return new InheritanceApp(sdk);
   }
 
+  public async encryptMessagesWithPin(
+    params: operations.IEncryptMessagesWithPinParams,
+  ) {
+    return this.sdk.runOperation(() =>
+      operations.encryptMessageWithPin(this.sdk, params),
+    );
+  }
+
+  public async decryptMessagesWithPin(
+    params: operations.IDecryptMessagesWithPinParams,
+  ) {
+    return this.sdk.runOperation(() =>
+      operations.decryptMessagesWithPin(this.sdk, params),
+    );
+  }
+
   public async authWallet(params: operations.IAuthWalletParams) {
     return this.sdk.runOperation(() => operations.authWallet(this.sdk, params));
   }
