@@ -62,5 +62,6 @@ export const getUserVerifiedPublicKey = async (
 
   return {
     publicKey: result.publicKeys[0],
+    address: result.addresses[0],
   };
 };

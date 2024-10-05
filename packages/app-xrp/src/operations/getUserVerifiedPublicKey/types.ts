@@ -9,4 +9,5 @@ export interface IGetUserVerifiedPublicKeyParams {
 
 export interface IGetUserVerifiedPublicKeyResult {
   publicKey: string;
+  address: string;
 }
