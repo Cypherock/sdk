@@ -1,3 +1,3 @@
 export * from './app';
 export * from './types';
-export { updateLogger } from './utils';
+export { updateLogger, setXrpLib } from './utils';
