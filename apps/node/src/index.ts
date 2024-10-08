@@ -13,6 +13,7 @@ import { setEthersLib } from '@cypherock/sdk-app-evm';
 import { setNearApiJs } from '@cypherock/sdk-app-near';
 import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
 import { ethers } from 'ethers';
+import { InheritanceApp } from '@cypherock/sdk-app-inheritance';
 import { createServiceLogger } from './logger';
 
 const run = async () => {
@@ -33,29 +34,50 @@ const run = async () => {
     connection = await DeviceConnectionSerialport.create();
   }
 
+  console.log('started');
+
   const managerApp = await ManagerApp.create(connection);
 
-  const deviceInfo = await managerApp.getDeviceInfo();
+  const { walletList } = await managerApp.getWallets();
 
-  console.log(deviceInfo);
+  const inheritanceApp = await InheritanceApp.create(connection);
 
-  await managerApp.authDevice();
+  setTimeout(async () => {
+    // console.log('aborting');
+    // await inheritanceApp.abort();
+    // console.log('aborted');
+  }, 3000);
 
-  await managerApp.trainCard({ onWallets: async () => true });
+  // console.log(walletList[1].id.join(','));
+  const walletId = walletList[1].id;
 
-  await managerApp.authCard();
-
-  // await managerApp.updateFirmware({
-  //   getDevices: async () => [
-  //     ...(await DeviceConnection.list()),
-  //     ...(await DeviceConnectionSerialport.list()),
-  //   ],
-  //   createConnection: async d =>
-  //     d.type === 'hid'
-  //       ? DeviceConnection.connect(d)
-  //       : DeviceConnectionSerialport.connect(d),
-  //   allowPrerelease: true,
+  // await inheritanceApp.authWallet({
+  //  challenge: walletId,
+  //  walletId: walletId,
+  //  withPublicKey: true,
+  //  type: 'wallet-based',
   // });
+
+  await inheritanceApp.startSession();
+
+  const thing = await inheritanceApp.encryptMessagesWithPin({
+    walletId,
+    messages: {
+      2: {
+        value: 'test value',
+        verifyOnDevice: true,
+      },
+    },
+  });
+
+  const output = await inheritanceApp.decryptMessagesWithPin({
+    walletId,
+    encryptedData: thing.encryptedPacket,
+  });
+
+  await inheritanceApp.closeSession();
+
+  console.log(JSON.stringify(output));
 };
 
 run();

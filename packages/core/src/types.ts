@@ -1,6 +1,7 @@
 import { DeviceState, IDeviceConnection } from '@cypherock/sdk-interfaces';
 import * as rawOperations from './operations/raw';
 import * as operations from './operations/proto';
+import * as commands from './commands';
 import { PacketVersion } from './utils';
 import { RawData, StatusData } from './encoders/raw';
 import {
@@ -101,13 +102,13 @@ export interface ISDK {
     timeout?: number;
   }): Promise<import('.').Status>;
   getAppVersions(
-    onStatus?: operations.IGetAppVersionsParams['onStatus'],
-    options?: operations.IGetAppVersionsParams['options'],
+    onStatus?: commands.IGetAppVersionsParams['onStatus'],
+    options?: commands.IGetAppVersionsParams['options'],
   ): Promise<IAppVersionResultResponse>;
   getAppVersion(appId: number): Promise<IVersion | undefined>;
   checkAppCompatibility(
     version: { from: string; to?: string },
-    options?: operations.IGetAppVersionsParams['options'],
+    options?: commands.IGetAppVersionsParams['options'],
   ): Promise<void>;
   checkFeatureSupportCompatibility(feature: IFeatureSupport[]): Promise<void>;
   sendBootloaderAbort(options?: {
@@ -126,4 +127,12 @@ export interface ISDK {
   ): Promise<void>;
   runOperation<R>(operation: () => Promise<R>): Promise<R>;
   validateNotInBootloaderMode(): Promise<void>;
+  startSession(
+    onStatus?: commands.IStartSessionParams['onStatus'],
+    options?: commands.IStartSessionParams['options'],
+  ): Promise<commands.IStartSessionResult>;
+  closeSession(
+    onStatus?: commands.ICloseSessionParams['onStatus'],
+    options?: commands.ICloseSessionParams['options'],
+  ): Promise<void>;
 }

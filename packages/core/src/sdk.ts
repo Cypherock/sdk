@@ -16,6 +16,7 @@ import { compareVersions } from 'compare-versions';
 import * as bootloaderOperations from './operations/bootloader';
 import * as legacyOperations from './operations/legacy';
 import * as operations from './operations/proto';
+import * as commands from './commands';
 import { getPacketVersionFromSDK, formatSDKVersion } from './utils/sdkVersions';
 import { PacketVersion, PacketVersionMap } from './utils/packetVersions';
 import { FeatureName, isFeatureEnabled } from './utils/featureMap';
@@ -297,8 +298,8 @@ export class SDK implements ISDK {
   }
 
   public async getAppVersions(
-    onStatus?: operations.IGetAppVersionsParams['onStatus'],
-    options?: operations.IGetAppVersionsParams['options'],
+    onStatus?: commands.IGetAppVersionsParams['onStatus'],
+    options?: commands.IGetAppVersionsParams['options'],
   ) {
     await this.validateNotInBootloaderMode();
     assert(
@@ -315,12 +316,14 @@ export class SDK implements ISDK {
     }
 
     if (!this.appVersionsMap) {
-      this.appVersionsMap = await operations.getAppVersions({
+      const result = await commands.getAppVersions({
         connection: this.connection,
         options,
         sequenceNumber: await this.getNewSequenceNumber(),
         onStatus,
       });
+      this.appVersionsMap = result;
+      return result;
     }
 
     return this.appVersionsMap;
@@ -356,7 +359,7 @@ export class SDK implements ISDK {
   // from is inclusive and to is exclusive
   public async checkAppCompatibility(
     version: { from: string; to?: string },
-    options?: operations.IGetAppVersionsParams['options'],
+    options?: commands.IGetAppVersionsParams['options'],
   ) {
     const appVersionResult = (
       await this.getAppVersions(undefined, options)
@@ -473,6 +476,60 @@ export class SDK implements ISDK {
         DeviceCommunicationErrorType.IN_BOOTLOADER,
       );
     }
+  }
+
+  public async startSession(
+    onStatus?: commands.IStartSessionParams['onStatus'],
+    options?: commands.IStartSessionParams['options'],
+  ): Promise<commands.IStartSessionResult> {
+    await this.validateNotInBootloaderMode();
+    assert(
+      this.packetVersion,
+      new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.DEVICE_NOT_SUPPORTED,
+      ),
+    );
+
+    if (!(await this.isSupported())) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
+    return commands.startSession({
+      connection: this.connection,
+      getNewSequenceNumber: this.getSequenceNumber.bind(this),
+      getSequenceNumber: this.getSequenceNumber.bind(this),
+      onStatus,
+      options,
+    });
+  }
+
+  public async closeSession(
+    onStatus?: commands.ICloseSessionParams['onStatus'],
+    options?: commands.ICloseSessionParams['options'],
+  ) {
+    await this.validateNotInBootloaderMode();
+    assert(
+      this.packetVersion,
+      new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.DEVICE_NOT_SUPPORTED,
+      ),
+    );
+
+    if (!(await this.isSupported())) {
+      throw new DeviceCompatibilityError(
+        DeviceCompatibilityErrorType.INVALID_SDK_OPERATION,
+      );
+    }
+
+    return commands.closeSession({
+      connection: this.connection,
+      getNewSequenceNumber: this.getSequenceNumber.bind(this),
+      getSequenceNumber: this.getSequenceNumber.bind(this),
+      onStatus,
+      options,
+    });
   }
 
   private async ensureIfUSBIdle() {
