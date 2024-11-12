@@ -31,6 +31,8 @@ export enum DeviceAppErrorType {
 
   DEVICE_AUTH_FAILED = 'APP_0700',
   CARD_AUTH_FAILED = 'APP_0701',
+
+  DEVICE_SESSION_INVALID = 'APP_0800',
 }
 
 type CodeToErrorMap = {
@@ -112,6 +114,10 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.CARD_AUTH_FAILED]: {
     subError: {},
     message: 'Card seems to be compromised. Contact Cypherock support',
+  },
+  [DeviceAppErrorType.DEVICE_SESSION_INVALID]: {
+    subError: {},
+    message: 'Session establishment Failed. Invalid Session!',
   },
 };
 
