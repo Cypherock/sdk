@@ -19,6 +19,7 @@ export enum DeviceAppErrorType {
   DEVICE_SETUP_REQUIRED = 'APP_0205',
 
   APP_TIMEOUT = 'APP_0206',
+  DEVICE_SESSION_INVALID = 'APP_0207',
 
   WALLET_NOT_FOUND = 'APP_0300',
   WALLET_PARTIAL_STATE = 'APP_0301',
@@ -31,8 +32,6 @@ export enum DeviceAppErrorType {
 
   DEVICE_AUTH_FAILED = 'APP_0700',
   CARD_AUTH_FAILED = 'APP_0701',
-
-  DEVICE_SESSION_INVALID = 'APP_0800',
 }
 
 type CodeToErrorMap = {
@@ -117,7 +116,8 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   },
   [DeviceAppErrorType.DEVICE_SESSION_INVALID]: {
     subError: {},
-    message: 'Session establishment Failed. Invalid Session!',
+    message:
+      'Could not establish session on device. Try again, or contact Cypherock support',
   },
 };
 
