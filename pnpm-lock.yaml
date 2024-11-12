@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -111,6 +111,9 @@ importers:
       '@cypherock/sdk-app-tron':
         specifier: workspace:^
         version: link:../../packages/app-tron
+      '@cypherock/sdk-app-xrp':
+        specifier: workspace:^
+        version: link:../../packages/app-xrp
       '@cypherock/sdk-core':
         specifier: workspace:^
         version: link:../../packages/core
@@ -144,6 +147,9 @@ importers:
       winston:
         specifier: ^3.11.0
         version: 3.11.0
+      xrpl:
+        specifier: ^4.0.0
+        version: 4.0.0
     devDependencies:
       '@cypherock/eslint-config':
         specifier: workspace:*
@@ -686,6 +692,79 @@ importers:
       tronweb:
         specifier: ^5.3.2
         version: 5.3.2
+      ts-jest:
+        specifier: ^29.0.5
+        version: 29.0.5(@babel/core@7.25.2)(jest@29.4.1)(typescript@4.9.5)
+      ts-proto:
+        specifier: ^1.139.0
+        version: 1.139.0
+      typescript:
+        specifier: ^4.5.2
+        version: 4.9.5
+
+  packages/app-xrp:
+    dependencies:
+      '@cypherock/sdk-core':
+        specifier: workspace:^0.0.25
+        version: link:../core
+      '@cypherock/sdk-interfaces':
+        specifier: workspace:^0.0.15
+        version: link:../interfaces
+      '@cypherock/sdk-utils':
+        specifier: workspace:^0.0.18
+        version: link:../util
+      long:
+        specifier: ^5.2.1
+        version: 5.2.1
+      protobufjs:
+        specifier: ^7.2.2
+        version: 7.2.2
+      xrpl:
+        specifier: ^4.0.0
+        version: 4.0.0
+    devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.7
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
+      '@jest/globals':
+        specifier: ^29.4.1
+        version: 29.7.0
+      '@stryker-mutator/core':
+        specifier: ^6.4.1
+        version: 6.4.1
+      '@stryker-mutator/jest-runner':
+        specifier: ^6.4.1
+        version: 6.4.1(@stryker-mutator/core@6.4.1)
+      '@stryker-mutator/typescript-checker':
+        specifier: ^6.4.1
+        version: 6.4.1(@stryker-mutator/core@6.4.1)(typescript@4.9.5)
+      '@types/jest':
+        specifier: ^29.4.0
+        version: 29.4.0
+      '@types/node':
+        specifier: 18.11.18
+        version: 18.11.18
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
+      eslint:
+        specifier: ^7.32.0
+        version: 7.32.0
+      jest:
+        specifier: ^29.4.1
+        version: 29.4.1(@types/node@18.11.18)(ts-node@10.9.2)
+      lint-staged:
+        specifier: ^13.2.0
+        version: 13.2.0
+      rimraf:
+        specifier: ^4.1.2
+        version: 4.1.2
       ts-jest:
         specifier: ^29.0.5
         version: 29.0.5(@babel/core@7.25.2)(jest@29.4.1)(typescript@4.9.5)
@@ -3381,7 +3460,7 @@ packages:
       debug: 4.3.6
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.2
+      semver: 7.6.3
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -3402,7 +3481,7 @@ packages:
       debug: 4.3.6
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.2
+      semver: 7.6.3
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -3442,6 +3521,28 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.62.0
       eslint-visitor-keys: 3.4.3
+
+  /@xrplf/isomorphic@1.0.1:
+    resolution: {integrity: sha512-0bIpgx8PDjYdrLFeC3csF305QQ1L7sxaWnL5y71mCvhenZzJgku9QsA+9QCXBC1eNYtxWO/xR91zrXJy2T/ixg==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      '@noble/hashes': 1.4.0
+      eventemitter3: 5.0.1
+      ws: 8.18.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
+  /@xrplf/secret-numbers@1.0.0:
+    resolution: {integrity: sha512-qsCLGyqe1zaq9j7PZJopK+iGTGRbk6akkg6iZXJJgxKwck0C5x5Gnwlb1HKYGOwPKyrXWpV6a2YmcpNpUFctGg==}
+    dependencies:
+      '@xrplf/isomorphic': 1.0.1
+      ripple-keypairs: 2.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
 
   /JSONStream@1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -5197,7 +5298,7 @@ packages:
     dependencies:
       confusing-browser-globals: 1.0.11
       eslint: 7.32.0
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@3.6.1)(eslint@7.32.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.62.0)(eslint@7.32.0)
       object.assign: 4.1.5
       object.entries: 1.1.8
       semver: 6.3.1
@@ -5330,6 +5431,41 @@ packages:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
+
+  /eslint-plugin-import@2.29.1(@typescript-eslint/parser@5.62.0)(eslint@7.32.0):
+    resolution: {integrity: sha512-BbPC0cuExzhiMo4Ff1BTVwHpjjv28C5R+btTOGaCRC7UEz801up0JadwkeSk5Ued6TG34uaczuVuH6qyy5YUxw==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      '@typescript-eslint/parser': '*'
+      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
+    peerDependenciesMeta:
+      '@typescript-eslint/parser':
+        optional: true
+    dependencies:
+      '@typescript-eslint/parser': 5.62.0(eslint@7.32.0)(typescript@4.9.5)
+      array-includes: 3.1.8
+      array.prototype.findlastindex: 1.2.5
+      array.prototype.flat: 1.3.2
+      array.prototype.flatmap: 1.3.2
+      debug: 3.2.7
+      doctrine: 2.1.0
+      eslint: 7.32.0
+      eslint-import-resolver-node: 0.3.9
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@7.32.0)
+      hasown: 2.0.2
+      is-core-module: 2.15.0
+      is-glob: 4.0.3
+      minimatch: 3.1.2
+      object.fromentries: 2.0.8
+      object.groupby: 1.0.3
+      object.values: 1.2.0
+      semver: 6.3.1
+      tsconfig-paths: 3.15.0
+    transitivePeerDependencies:
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - supports-color
+    dev: true
 
   /eslint-plugin-jsx-a11y@6.9.0(eslint@7.32.0):
     resolution: {integrity: sha512-nOFOCaJG2pYqORjK19lqPqxMO/JpvdCZdPtNdxY3kvom3jTvkAbOvQvD8wuD0G8BYR0IGAGYDlzqWJOh/ybn2g==}
@@ -5540,6 +5676,10 @@ packages:
 
   /eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
+
+  /eventemitter3@5.0.1:
+    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
+    dev: false
 
   /events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
@@ -7674,7 +7814,7 @@ packages:
     resolution: {integrity: sha512-ThjYBfoDNr08AWx6hGaRbfPwxKV9kVzAzOzlLKbk2CuqXE2xnCh+cbAGnwM3t8Lq4v9rUB7VfondlkBckcJrVA==}
     engines: {node: '>=10'}
     dependencies:
-      semver: 7.5.2
+      semver: 7.6.3
     dev: false
 
   /node-addon-api@2.0.2:
@@ -7741,7 +7881,7 @@ packages:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.15.0
-      semver: 7.5.2
+      semver: 7.6.3
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -8524,6 +8664,41 @@ packages:
       inherits: 2.0.4
     dev: true
 
+  /ripple-address-codec@5.0.0:
+    resolution: {integrity: sha512-de7osLRH/pt5HX2xw2TRJtbdLLWHu0RXirpQaEeCnWKY5DYHykh3ETSkofvm0aX0LJiV7kwkegJxQkmbO94gWw==}
+    engines: {node: '>= 16'}
+    dependencies:
+      '@scure/base': 1.1.7
+      '@xrplf/isomorphic': 1.0.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
+  /ripple-binary-codec@2.1.0:
+    resolution: {integrity: sha512-q0GAx+hj3UVcDbhXVjk7qeNfgUMehlElYJwiCuIBwqs/51GVTOwLr39Ht3eNsX5ow2xPRaC5mqHwcFDvLRm6cA==}
+    engines: {node: '>= 16'}
+    dependencies:
+      '@xrplf/isomorphic': 1.0.1
+      bignumber.js: 9.1.2
+      ripple-address-codec: 5.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
+  /ripple-keypairs@2.0.0:
+    resolution: {integrity: sha512-b5rfL2EZiffmklqZk1W+dvSy97v3V/C7936WxCCgDynaGPp7GE6R2XO7EU9O2LlM/z95rj870IylYnOQs+1Rag==}
+    engines: {node: '>= 16'}
+    dependencies:
+      '@noble/curves': 1.4.2
+      '@xrplf/isomorphic': 1.0.1
+      ripple-address-codec: 5.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
   /rpc-websockets@7.11.2:
     resolution: {integrity: sha512-pL9r5N6AVHlMN/vT98+fcO+5+/UcPLf/4tq+WUaid/PPUGS/ttJ3y8e9IqmaWKtShNAysMSjkczuEA49NuV7UQ==}
     dependencies:
@@ -8624,7 +8799,6 @@ packages:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
     engines: {node: '>=10'}
     hasBin: true
-    dev: true
 
   /serialport@10.0.0:
     resolution: {integrity: sha512-fqOs6u4buZLbTpAPYZP4j2qwcOJ5Jxtg0x+llJFuMc4AVwrxx+iQc68/46aHCr+qJ2Wo2N86AZ/DDY5acSOODA==}
@@ -9931,6 +10105,19 @@ packages:
       utf-8-validate:
         optional: true
 
+  /ws@8.18.0:
+    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
+
   /ws@8.5.0(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-BWX0SWVgLPzYwF8lTzEy1egjhS4S4OEAHfsO8o65WOVsrnSRGaSiUaa9e0ggGlkMTtBlmOpEXiie9RUcBO86qg==}
     engines: {node: '>=10.0.0'}
@@ -9945,6 +10132,24 @@ packages:
     dependencies:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
+
+  /xrpl@4.0.0:
+    resolution: {integrity: sha512-VZm1lQWHQ6PheAAFGdH+ISXKvqB2hZDQ0w4ZcdAEtmqZQXtSIVQHOKPz95rEgGANbos7+XClxJ73++joPhA8Cw==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@scure/bip32': 1.4.0
+      '@scure/bip39': 1.3.0
+      '@xrplf/isomorphic': 1.0.1
+      '@xrplf/secret-numbers': 1.0.0
+      bignumber.js: 9.1.2
+      eventemitter3: 5.0.1
+      ripple-address-codec: 5.0.0
+      ripple-binary-codec: 2.1.0
+      ripple-keypairs: 2.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
 
   /xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}

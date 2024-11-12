@@ -19,6 +19,7 @@ export enum DeviceAppErrorType {
   DEVICE_SETUP_REQUIRED = 'APP_0205',
 
   APP_TIMEOUT = 'APP_0206',
+  DEVICE_SESSION_INVALID = 'APP_0207',
 
   WALLET_NOT_FOUND = 'APP_0300',
   WALLET_PARTIAL_STATE = 'APP_0301',
@@ -112,6 +113,11 @@ export const deviceAppErrorTypeDetails: CodeToErrorMap = {
   [DeviceAppErrorType.CARD_AUTH_FAILED]: {
     subError: {},
     message: 'Card seems to be compromised. Contact Cypherock support',
+  },
+  [DeviceAppErrorType.DEVICE_SESSION_INVALID]: {
+    subError: {},
+    message:
+      'Could not establish session on device. Try again, or contact Cypherock support',
   },
 };
 

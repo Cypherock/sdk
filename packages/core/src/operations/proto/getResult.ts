@@ -53,6 +53,8 @@ export const getResult = async ({
         [ErrorType.INVALID_MSG]: DeviceAppErrorType.INVALID_MSG,
         [ErrorType.APP_NOT_ACTIVE]: DeviceAppErrorType.APP_NOT_ACTIVE,
         [ErrorType.APP_TIMEOUT_OCCURRED]: DeviceAppErrorType.APP_TIMEOUT,
+        [ErrorType.DEVICE_SESSION_INVALID]:
+          DeviceAppErrorType.DEVICE_SESSION_INVALID,
       };
 
       throw new DeviceAppError(errorMap[result.error.type]);
