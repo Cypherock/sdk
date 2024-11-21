@@ -10,7 +10,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   rootDir: '.',
-  testPathIgnorePatterns: ['/node_modules/', '/__fixtures__/', '/dist/'],
+  testPathIgnorePatterns: ['/node_modules/', '/__fixtures__/', '/__helpers__/', '/dist/'],
   testMatch: [
     '**/tests/**/*.[jt]s?(x)',
     '**/__tests__/**/*.[jt]s?(x)',
