@@ -32,6 +32,7 @@ const run = async () => {
   } catch (error) {
     connection = await DeviceConnectionSerialport.create();
   }
+
   const managerApp = await ManagerApp.create(connection);
 
   const deviceInfo = await managerApp.getDeviceInfo();
@@ -54,7 +55,7 @@ const run = async () => {
   //       ? DeviceConnection.connect(d)
   //       : DeviceConnectionSerialport.connect(d),
   //   allowPrerelease: true,
-  // });  console.log('started');
+  // });
 };
 
 run();
