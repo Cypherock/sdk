@@ -4,6 +4,7 @@ export interface IInitiateServerSessionParams {
   signature: Uint8Array;
   postfix1: Uint8Array;
   postfix2: Uint8Array;
+  keyIndex: number;
 }
 
 export interface IInitiateServerSessionResult {

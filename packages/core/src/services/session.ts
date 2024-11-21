@@ -1,11 +1,11 @@
 import { uint8ArrayToHex } from '@cypherock/sdk-utils';
-import axios from 'axios';
+import { http } from '../utils';
 import {
   IInitiateServerSessionParams,
   IInitiateServerSessionResult,
 } from './types';
 
-const baseURL = '/device-session';
+const baseURL = '/inheritance/device-session';
 
 export const initiateServerSession = async (
   params: IInitiateServerSessionParams,
@@ -16,13 +16,8 @@ export const initiateServerSession = async (
     signature: uint8ArrayToHex(params.signature),
     postfix1: uint8ArrayToHex(params.postfix1),
     postfix2: uint8ArrayToHex(params.postfix2),
-    keyIndex: 1,
+    keyIndex: params.keyIndex,
   };
-
-  //! TODO: Remove this before merging
-  const http = axios.create({
-    baseURL: 'https://api-inheritance-dev.cypherock.com',
-  });
 
   const res = await http.post(`${baseURL}/create`, body);
 
