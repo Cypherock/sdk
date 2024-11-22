@@ -1,5 +1,5 @@
 import * as bip66 from 'bip66';
-import type { Signer } from 'bitcoinjs-lib';
+import { Signer, payments, networks } from 'bitcoinjs-lib';
 
 import { assert } from '@cypherock/sdk-utils';
 import { getBitcoinJsLib } from './bitcoinjs-lib';
@@ -24,6 +24,14 @@ export function isScriptSegwit(script: string) {
   return script.startsWith('0014');
 }
 
+export function isScriptNestedSegwit(script: string) {
+  return (
+    script.toLowerCase().startsWith('a914') &&
+    script.endsWith('87') &&
+    script.length === 46
+  );
+}
+
 export const createSignedTransaction = (params: {
   inputs: ISignTxnInputData[];
   outputs: ISignTxnOutputData[];
@@ -37,10 +45,12 @@ export const createSignedTransaction = (params: {
     network: getNetworkFromPath(derivationPath),
   });
 
+  let inputIndex = 0;
   for (const input of inputs) {
     const script = addressToScriptPubKey(input.address, derivationPath);
 
-    const isSegwit = isScriptSegwit(script);
+    const isNestedSegwit = isScriptNestedSegwit(script);
+    const isSegwit = isScriptSegwit(script) || isNestedSegwit;
 
     const txnInput: any = {
       hash: input.prevTxnId,
@@ -52,12 +62,23 @@ export const createSignedTransaction = (params: {
         script: Buffer.from(script, 'hex'),
         value: parseInt(input.value, 10),
       };
+      if (isNestedSegwit) {
+        const publickey = Buffer.from(
+          signatures[inputIndex].slice(signatures[0].length - 66),
+          'hex',
+        );
+        txnInput.redeemScript = payments.p2wpkh({
+          pubkey: publickey,
+          network: networks.bitcoin,
+        }).output;
+      }
     } else {
       assert(input.prevTxn, 'prevTxn is required in input');
       txnInput.nonWitnessUtxo = Buffer.from(input.prevTxn, 'hex');
     }
 
     transaction.addInput(txnInput);
+    inputIndex += 1;
   }
 
   for (const output of outputs) {
