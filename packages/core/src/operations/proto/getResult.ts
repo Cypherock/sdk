@@ -8,7 +8,6 @@ import { assert, hexToUint8Array } from '@cypherock/sdk-utils';
 import { PacketVersion } from '../../utils';
 import { Status, Msg, ErrorType } from '../../encoders/proto/generated/core';
 import { getCommandOutput as getCommandOutputHelper } from '../helpers';
-import { AppVersionResponse } from '../../encoders/proto/generated/version';
 
 export const getResult = async ({
   connection,
@@ -53,6 +52,8 @@ export const getResult = async ({
         [ErrorType.INVALID_MSG]: DeviceAppErrorType.INVALID_MSG,
         [ErrorType.APP_NOT_ACTIVE]: DeviceAppErrorType.APP_NOT_ACTIVE,
         [ErrorType.APP_TIMEOUT_OCCURRED]: DeviceAppErrorType.APP_TIMEOUT,
+        [ErrorType.DEVICE_SESSION_INVALID]:
+          DeviceAppErrorType.DEVICE_SESSION_INVALID,
       };
 
       throw new DeviceAppError(errorMap[result.error.type]);
@@ -69,8 +70,8 @@ export const getResult = async ({
         throw new DeviceAppError(DeviceAppErrorType.INVALID_APP_ID_FROM_DEVICE);
       }
       output = hexToUint8Array(rawData);
-    } else if (result.appVersion?.response) {
-      output = AppVersionResponse.encode(result.appVersion.response).finish();
+    } else {
+      output = hexToUint8Array(protobufData);
     }
   }
 

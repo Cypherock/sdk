@@ -1,45 +1,45 @@
 {
-    "name": "sdk",
-    "version": "0.0.0",
-    "private": true,
-    "workspaces": [
-        "apps/*",
-        "packages/*"
-    ],
-    "scripts": {
-        "build": "turbo run build --no-daemon",
-        "prebuild": "turbo run prebuild --no-daemon",
-        "dev": "turbo run dev --parallel --no-daemon",
-        "lint": "turbo run lint --no-daemon",
-        "pretty": "turbo run pretty --no-daemon",
-        "lint:check": "turbo run lint:check --no-daemon",
-        "pretty:check": "turbo run pretty:check --no-daemon",
-        "test": "turbo run test --no-daemon",
-        "start:node": "turbo run start:node --no-daemon",
-        "start:browser": "turbo run start:browser --no-daemon",
-        "dev:browser": "turbo run dev:browser --no-daemon",
-        "pre-commit": "turbo run pre-commit --concurrency=1",
-        "prepare": "husky install",
-        "clean": "node scripts/clean.js && bash ./scripts/clean.sh",
-        "clean:force": "node scripts/clean.js -f && bash ./scripts/clean.sh",
-        "ci:publish": "pnpm publish -r --access public --no-git-checks --filter \"@cypherock/sdk-*\"",
-        "ci:version": "pnpm changeset version && pnpm i --no-frozen-lockfile",
-        "doc:serve": "mkdocs serve",
-        "doc:build": "mkdocs build"
-    },
-    "devDependencies": {
-        "@changesets/changelog-github": "^0.4.8",
-        "@changesets/cli": "^2.26.1",
-        "@commitlint/cli": "^17.4.4",
-        "@commitlint/config-conventional": "^17.4.4",
-        "@cypherock/eslint-config": "workspace:*",
-        "@cypherock/prettier-config": "workspace:*",
-        "husky": "^8.0.0",
-        "prettier": "^3.2.4",
-        "turbo": "^1.13.4"
-    },
-    "engines": {
-        "node": ">=18.0.0"
-    },
-    "packageManager": "pnpm@8.6.0"
+  "name": "sdk",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build --no-daemon",
+    "prebuild": "turbo run prebuild --no-daemon",
+    "dev": "turbo run dev --parallel --no-daemon",
+    "lint": "turbo run lint --no-daemon",
+    "pretty": "turbo run pretty --no-daemon",
+    "lint:check": "turbo run lint:check --no-daemon",
+    "pretty:check": "turbo run pretty:check --no-daemon",
+    "test": "turbo run test --no-daemon",
+    "start:node": "turbo run start:node --no-daemon",
+    "start:browser": "turbo run start:browser --no-daemon",
+    "dev:browser": "turbo run dev:browser --no-daemon",
+    "pre-commit": "turbo run pre-commit --concurrency=1",
+    "prepare": "husky install",
+    "clean": "node scripts/clean.js && bash ./scripts/clean.sh",
+    "clean:force": "node scripts/clean.js -f && bash ./scripts/clean.sh",
+    "ci:publish": "pnpm publish -r --access public --no-git-checks --filter \"@cypherock/sdk-*\"",
+    "ci:version": "pnpm changeset version && pnpm i --no-frozen-lockfile",
+    "doc:serve": "mkdocs serve",
+    "doc:build": "mkdocs build"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/cli": "^2.26.1",
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
+    "@cypherock/eslint-config": "workspace:*",
+    "@cypherock/prettier-config": "workspace:*",
+    "husky": "^8.0.0",
+    "prettier": "^3.2.4",
+    "turbo": "^1.13.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "pnpm@8.6.0"
 }
