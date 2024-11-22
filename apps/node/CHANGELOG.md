@@ -1,5 +1,26 @@
 # nodejs-test
 
+## 0.0.51
+
+### Patch Changes
+
+- [#134](https://github.com/Cypherock/sdk/pull/134) [`3ece027`](https://github.com/Cypherock/sdk/commit/3ece0278c69471e199575644f5ccae4f25eb1e26) Thanks [@TejasvOnly](https://github.com/TejasvOnly)! - Added Inheritance Support
+
+- Updated dependencies [[`3ece027`](https://github.com/Cypherock/sdk/commit/3ece0278c69471e199575644f5ccae4f25eb1e26), [`3ece027`](https://github.com/Cypherock/sdk/commit/3ece0278c69471e199575644f5ccae4f25eb1e26)]:
+  - @cypherock/sdk-app-inheritance@1.0.0
+  - @cypherock/sdk-core@0.1.0
+  - @cypherock/sdk-interfaces@0.0.16
+  - @cypherock/sdk-app-btc@0.0.37
+  - @cypherock/sdk-app-evm@0.0.33
+  - @cypherock/sdk-app-manager@0.0.32
+  - @cypherock/sdk-app-near@0.0.31
+  - @cypherock/sdk-app-solana@0.0.7
+  - @cypherock/sdk-app-tron@0.0.2
+  - @cypherock/sdk-app-xrp@1.0.1
+  - @cypherock/sdk-hw-hid@0.0.23
+  - @cypherock/sdk-hw-serialport@0.0.20
+  - @cypherock/sdk-utils@0.0.19
+
 ## 0.0.50
 
 ### Patch Changes

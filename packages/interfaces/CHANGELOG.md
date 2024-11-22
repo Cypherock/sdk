@@ -1,5 +1,11 @@
 # @cypherock/sdk-interfaces
 
+## 0.0.16
+
+### Patch Changes
+
+- [#134](https://github.com/Cypherock/sdk/pull/134) [`3ece027`](https://github.com/Cypherock/sdk/commit/3ece0278c69471e199575644f5ccae4f25eb1e26) Thanks [@TejasvOnly](https://github.com/TejasvOnly)! - Added Inheritance Support
+
 ## 0.0.15
 
 ### Patch Changes
