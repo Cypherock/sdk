@@ -1,3 +1,5 @@
+import { ISignTxnUnsignedTxn } from '../../proto/generated/types';
+
 export enum SignTxnEvent {
   INIT = 0,
   CONFIRM = 1,
@@ -13,7 +15,7 @@ export interface ISignTxnParams {
 
   walletId: Uint8Array;
   derivationPath: number[];
-  txn: string;
+  txn: ISignTxnUnsignedTxn;
 }
 
 export interface ISignTxnResult {

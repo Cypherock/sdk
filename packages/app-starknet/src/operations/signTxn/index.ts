@@ -2,7 +2,6 @@ import { ISDK } from '@cypherock/sdk-core';
 import {
   createStatusListener,
   assert,
-  hexToUint8Array,
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
@@ -13,7 +12,6 @@ import {
 } from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
-  getStarknetApiJs,
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
@@ -64,11 +62,8 @@ export const signTxn = async (
   assertOrThrowInvalidResult(confirmResponse.confirmation);
   forceStatusUpdate(SignTxnEvent.CONFIRM);
 
-  const txnBytes = hexToUint8Array(params.txn);
   await helper.sendQuery({
-    txn: {
-      txn: txnBytes,
-    },
+    txn: params.txn,
   });
 
   const accepted = await helper.waitForResult();
@@ -83,12 +78,10 @@ export const signTxn = async (
 
   forceStatusUpdate(SignTxnEvent.PIN_CARD);
 
-  const key = uint8ArrayToHex(result.signature.signature);
-  const starknet = getStarknetApiJs();
-  const signature = starknet.ec.starkCurve.sign(params.txn, key.slice(0, 64));
+  const signature = uint8ArrayToHex(result.signature.signature);
 
   return {
-    signature: signature.toCompactHex(),
-    serializedTxn: signature.toCompactHex(),
+    signature,
+    serializedTxn: signature,
   };
 };
