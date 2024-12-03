@@ -11,7 +11,6 @@ import {
 } from '../../proto/generated/types';
 import {
   OperationHelper,
-  getStarknetApiJs,
   logger as rootLogger,
 } from '../../utils';
 import { runGetPublicKeysOnDevice } from '../runGetPublicKeys';
@@ -64,14 +63,6 @@ export const getPublicKeys = async (
     params,
     forceStatusUpdate,
   );
-  const publicKeyList = [];
 
-  const starkAPI = getStarknetApiJs();
-  for (let key = 0; key < publicKeys.publicKeys.length; key += 1) {
-    const starkPubKey = starkAPI.ec.starkCurve.getStarkKey(
-      publicKeys.publicKeys[key].slice(0, 64),
-    );
-    publicKeyList.push(starkPubKey);
-  }
-  return { publicKeys: publicKeyList };
+  return { publicKeys: publicKeys.publicKeys };
 };

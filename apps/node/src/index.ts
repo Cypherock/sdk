@@ -5,18 +5,19 @@ import DeviceConnectionSerialport from '@cypherock/sdk-hw-serialport';
 import { IWalletItem, ManagerApp, updateLogger } from '@cypherock/sdk-app-manager';
 import { updateLogger as updateLoggerCore } from '@cypherock/sdk-core';
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
-import * as bitcoinJsLib from 'bitcoinjs-lib';
-import * as nearApiJs from 'near-api-js';
-import * as solanaWeb3 from '@solana/web3.js';
+// import * as bitcoinJsLib from 'bitcoinjs-lib';
+// import * as nearApiJs from 'near-api-js';
+// import * as solanaWeb3 from '@solana/web3.js';
 import * as starknetApiJs from 'starknet';
-import { setBitcoinJSLib } from '@cypherock/sdk-app-btc';
-import { setEthersLib } from '@cypherock/sdk-app-evm';
-import { setNearApiJs } from '@cypherock/sdk-app-near';
-import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
-import { setStarknetApiJs, StarknetApp } from '@cypherock/sdk-app-starknet';
-import { ethers } from 'ethers';
+// import { setBitcoinJSLib } from '@cypherock/sdk-app-btc';
+// import { setEthersLib } from '@cypherock/sdk-app-evm';
+// import { setNearApiJs } from '@cypherock/sdk-app-near';
+// import { setSolanaWeb3 } from '@cypherock/sdk-app-solana';
+import { ISignTxnUnsignedTxn, setStarknetApiJs, StarknetApp } from '@cypherock/sdk-app-starknet';
+// import { ethers } from 'ethers';
 import { createServiceLogger } from './logger';
-import dotEnv from 'dotenv-flow';
+import { hexToUint8Array } from '@cypherock/sdk-utils';
+// import dotEnv from 'dotenv-flow';
 
 // dotEnv.config();
 const getEnvVariable = (key: string, defaultValue?: string): string => {
@@ -53,7 +54,7 @@ const amountStr =  '0x1dcd6500';
 const unit = "strk"; // or "eth"
 
 // Select ETH/STRK and Contract Info
-const contractAXclassHash = "0x01a736d6ed154502257f02b1ccdf4d9d1089f80811cd6acad48e6b6a9d1f2003";
+const contractAXclassHash = "0x036078334509b514626504edc9fb252328d1a240e4e948bef8d0c08dff45927f";
 const strkContractAddress = '0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d';
 const ethContractAddress  = '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7';
 
@@ -92,7 +93,7 @@ async function fetchBalances(accountAXAddress: string) {
   return [formatBalance(ethBalance, 18) + " ETH", formatBalance(strkBalance, 18) + " STRK"];
 }
 
-// ================ Starknet App -- Account fetching ========== //
+// // ================ Starknet App -- Account fetching ========== //
 async function fetchAccount(connection: IDeviceConnection) {
   const managerApp = await ManagerApp.create(connection);
 
@@ -102,7 +103,12 @@ async function fetchAccount(connection: IDeviceConnection) {
   const starkApp = await StarknetApp.create(connection);
   const starkKeyPubAX = (await starkApp.getPublicKeys({
     walletId: wallet.id,
-    derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex] }]
+    derivationPaths: [{ path: [0x80000000 + 0xA55,
+                     0x80000000 + 0x4741E9C9,
+                     0x80000000 + 0x447A6028,
+                     0x80000000,
+                     0x80000000,
+                     0xC] }]
   })).publicKeys[0];
 
   const constructorAXCallData = starknetApiJs.CallData.compile([starkKeyPubAX,0]);
@@ -113,70 +119,75 @@ async function fetchAccount(connection: IDeviceConnection) {
   return {accountAXAddress, starkKeyPubAX, wallet};
 }
 
-// ================ Starknet App -- Account deploy if not already ========== //
-async function deployAddress(connection: IDeviceConnection, wallet: IWalletItem) {
+// // ================ Starknet App -- Account deploy if not already ========== //
+// async function deployAddress(connection: IDeviceConnection, wallet: IWalletItem) {
 
-  const starkApp = await StarknetApp.create(connection);
-  const starkKeyPubAX = (await starkApp.getPublicKeys({
-    walletId: wallet.id,
-    derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex] }]
-  })).publicKeys[0];
+//   const starkApp = await StarknetApp.create(connection);
+//   const starkKeyPubAX = (await starkApp.getPublicKeys({
+//     walletId: wallet.id,
+//     derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex] }]
+//   })).publicKeys[0];
 
-  const constructorAXCallData = starknetApiJs.CallData.compile([starkKeyPubAX,0]);
-  const accountAXAddress = starknetApiJs.hash.calculateContractAddressFromHash(starkKeyPubAX, contractAXclassHash, constructorAXCallData, 0);
-  console.log("Deploying address : ", {accountAXAddress});
+//   const constructorAXCallData = starknetApiJs.CallData.compile([starkKeyPubAX,0]);
+//   const accountAXAddress = starknetApiJs.hash.calculateContractAddressFromHash(starkKeyPubAX, contractAXclassHash, constructorAXCallData, 0);
+//   console.log("Deploying address : ", {accountAXAddress});
 
-  const txnVersion = 1;
-  const maxFee = 0x8110e6d36a8;
-  const deployAccountTxnHash = starknetApiJs.hash.calculateDeployAccountTransactionHash(
-    {
-      contractAddress: contractAddress,
-      classHash: contractAXclassHash,
-      compiledConstructorCalldata: constructorAXCallData,
-      salt: 0,
-      version: "0x3",
-      chainId: chainId,
-      nonce: 0,
-      nonceDataAvailabilityMode: 0,
-      feeDataAvailabilityMode: 0,
-      resourceBounds: {
-        l1_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" },
-        l2_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" }
-      },
-      tip: 0,
-      paymasterData: [],
-  });
-  const sig = await starkApp.signTxn({
-    derivationPath: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex],
-    txn: deployAccountTxnHash,
-    walletId: wallet.id,
-  });
-  console.log("sig : ", {sig});
-  const signature = [`0x${sig.signature.slice(0, 64)}`, `0x${sig.signature.slice(64, 128)}`];
-  const txn = await provider.deployAccountContract({
-    classHash: contractAXclassHash,
-    addressSalt: starkKeyPubAX,
-    constructorCalldata: constructorAXCallData,
-    signature: signature}, {
-      nonce: 0,
-      version: txnVersion,
-      maxFee: maxFee
-    });
+//   const txnVersion = 1;
+//   const maxFee = 0x8110e6d36a8;
+//   const deployAccountTxnHash = starknetApiJs.hash.calculateDeployAccountTransactionHash(
+//     {
+//       contractAddress: contractAddress,
+//       classHash: contractAXclassHash,
+//       compiledConstructorCalldata: constructorAXCallData,
+//       salt: 0,
+//       version: "0x3",
+//       chainId: chainId,
+//       nonce: 0,
+//       nonceDataAvailabilityMode: 0,
+//       feeDataAvailabilityMode: 0,
+//       resourceBounds: {
+//         l1_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" },
+//         l2_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" }
+//       },
+//       tip: 0,
+//       paymasterData: [],
+//   });
+//   const sig = await starkApp.signTxn({
+//     derivationPath: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex],
+//     txn: deployAccountTxnHash,
+//     walletId: wallet.id,
+//   });
+//   console.log("sig : ", {sig});
+//   const signature = [`0x${sig.signature.slice(0, 64)}`, `0x${sig.signature.slice(64, 128)}`];
+//   const txn = await provider.deployAccountContract({
+//     classHash: contractAXclassHash,
+//     addressSalt: starkKeyPubAX,
+//     constructorCalldata: constructorAXCallData,
+//     signature: signature}, {
+//       nonce: 0,
+//       version: txnVersion,
+//       maxFee: maxFee
+//     });
   
-  console.log("Deploying txn : ", {txn});
-  return txn;
-}
+//   console.log("Deploying txn : ", {txn});
+//   return txn;
+// }
 
 // ================ Starknet App -- Fund Transfer ========== //
 async function transfer(connection: IDeviceConnection, wallet: IWalletItem) {
   const starkApp = await StarknetApp.create(connection);
   const starkKeyPubAX = (await starkApp.getPublicKeys({
     walletId: wallet.id,
-    derivationPaths: [{ path: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex] }]
+    derivationPaths:  [{ path: [0x80000000 + 0xA55,
+      0x80000000 + 0x4741E9C9,
+      0x80000000 + 0x447A6028,
+      0x80000000,
+      0x80000000,
+      0xC] }]
   })).publicKeys[0];
-
-  const constructorAXCallData = starknetApiJs.CallData.compile([starkKeyPubAX,0]);
-  const accountAXAddress = starknetApiJs.hash.calculateContractAddressFromHash(starkKeyPubAX, contractAXclassHash, constructorAXCallData, 0);
+  console.log("Public key: ", starkKeyPubAX)
+  const constructorAXCallData = starknetApiJs.CallData.compile([0,starkKeyPubAX,1]);
+  const accountAXAddress = "0x7b419b63869cd1e23f0354aed454b8fe2908afbe6386f2a29a508f9d34da4d9";//starknetApiJs.hash.calculateContractAddressFromHash(starkKeyPubAX, contractAXclassHash, constructorAXCallData, 0);
   console.log("Transfering from : ", {accountAXAddress});
 
   const txnVersion = 1;
@@ -208,25 +219,49 @@ async function transfer(connection: IDeviceConnection, wallet: IWalletItem) {
     paymasterData: [],
   });
 
+  const txn : ISignTxnUnsignedTxn = {
+    senderAddress:
+      hexToUint8Array("0x07B419B63869CD1E23f0354AeD454b8fE2908AfBE6386f2a29A508f9d34Da4d9"),
+    version: hexToUint8Array("0x3"),
+    calldata: {value: [  hexToUint8Array("0x01")]},
+    chainId: hexToUint8Array("0x2"),
+    nonce: hexToUint8Array("0x2"),
+    accountDeploymentData: hexToUint8Array("0x0"), // NULL
+    nonceDataAvailabilityMode: hexToUint8Array("0x0"),
+    feeDataAvailabilityMode: hexToUint8Array("0x0"),
+    resourceBound: {
+      level1: { maxAmount: hexToUint8Array("0x0"), maxPricePerUnit: hexToUint8Array("0x0") },
+      level2: { maxAmount: hexToUint8Array("0x0"), maxPricePerUnit: hexToUint8Array("0x0") },
+    },
+    tip: hexToUint8Array("0x0"),
+    paymasterData: hexToUint8Array("0x0"), // NULL
+  };
+
   const sig = await starkApp.signTxn({
-    derivationPath: [0x80000000 + 44, 0x80000000 + 9004, 0x80000000, 0, sourceAddressIindex],
-    txn: transferTxnHash,
+    derivationPath: [0x80000000 + 0xA55,
+      0x80000000 + 0x4741E9C9,
+      0x80000000 + 0x447A6028,
+      0x80000000,
+      0x80000000,
+      0xC],
+    txn: txn,
     walletId: wallet.id,
   });
+  console.log("SIGNATURE", sig);
   const signature = [`0x${sig.signature.slice(0, 64)}`, `0x${sig.signature.slice(64, 128)}`];
 
-  const txn = await provider.invokeFunction({
-    contractAddress: accountAXAddress,
-    entrypoint: 'transfer',
-    calldata: callData,
-    signature: signature
-  }, {
-    nonce: nonce,
-    version: txnVersion,
-    maxFee: maxFee
-  });
-  console.log("transferStrk : ", {txn});
-  return txn;
+  // const txn = await provider.invokeFunction({
+  //   contractAddress: accountAXAddress,
+  //   entrypoint: 'transfer',
+  //   calldata: callData,
+  //   signature: signature
+  // }, {
+  //   nonce: nonce,
+  //   version: txnVersion,
+  //   maxFee: maxFee
+  // });
+  // console.log("transferStrk : ", {txn});
+  // return txn;
 }
 
 const run = async () => {
@@ -234,10 +269,10 @@ const run = async () => {
   updateLoggerCore(createServiceLogger);
   updateLoggerHid(createServiceLogger);
 
-  setBitcoinJSLib(bitcoinJsLib);
-  setEthersLib(ethers);
-  setNearApiJs(nearApiJs);
-  setSolanaWeb3(solanaWeb3);
+  // setBitcoinJSLib(bitcoinJsLib);
+  // setEthersLib(ethers);
+  // setNearApiJs(nearApiJs);
+  // setSolanaWeb3(solanaWeb3);
   setStarknetApiJs(starknetApiJs);
 
   let connection: IDeviceConnection;
@@ -248,12 +283,15 @@ const run = async () => {
     connection = await DeviceConnectionSerialport.create();
   }
 
-  const {accountAXAddress, wallet} = await fetchAccount(connection);
-  console.log(await fetchBalances(accountAXAddress));
-  console.log(await deployAddress(connection, wallet));
-  console.log(await fetchBalances(accountAXAddress));
+  // const {accountAXAddress, wallet} = await fetchAccount(connection);
+  // console.log(await fetchBalances(accountAXAddress));
+  // console.log(await deployAddress(connection, wallet));
+  // console.log(await fetchBalances(accountAXAddress));
+  const managerApp = await ManagerApp.create(connection);
+  const wallet = (await managerApp.getWallets()).walletList[1];
+
   console.log(await transfer(connection, wallet));
-  console.log(await fetchBalances(accountAXAddress));
+  // console.log(await fetchBalances(accountAXAddress));
 
   connection.destroy();
 };
