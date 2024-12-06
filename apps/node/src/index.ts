@@ -40,7 +40,7 @@ const getEnvVariable = (key: string, defaultValue?: string): string => {
 // Select RPC provider
 // const provider = new starknetApiJs.RpcProvider({ nodeUrl: `https://starknet-sepolia.infura.io/v3/${getEnvVariable('INFURA_STARKNET_API_KEY', '')}` });
 const provider = new starknetApiJs.RpcProvider({ nodeUrl: "https://starknet-sepolia.infura.io/v3/9643040ea0d04fd0ac5a38cb5f025b02" });
-const chainId = starknetApiJs.constants.StarknetChainId.SN_SEPOLIA;
+// const chainId = starknetApiJs.constants.StarknetChainId.SN_SEPOLIA;
 
 // Select Stark Wallet
 const wallet_index = 2;
@@ -202,22 +202,22 @@ async function transfer(connection: IDeviceConnection, wallet: IWalletItem) {
     '0x0'
   ];
 
-  const transferTxnHash = starknetApiJs.hash.calculateInvokeTransactionHash({
-    senderAddress: accountAXAddress,
-    version: "0x3",
-    compiledCalldata: callData,
-    chainId: chainId,
-    nonce: nonce,
-    accountDeploymentData: [],
-    nonceDataAvailabilityMode: 0,
-    feeDataAvailabilityMode: 0,
-    resourceBounds: {
-      l1_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" },
-      l2_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" }
-    },
-    tip: 0,
-    paymasterData: [],
-  });
+  // const transferTxnHash = starknetApiJs.hash.calculateInvokeTransactionHash({
+  //   senderAddress: accountAXAddress,
+  //   version: "0x3",
+  //   compiledCalldata: callData,
+  //   chainId: chainId,
+  //   nonce: nonce,
+  //   accountDeploymentData: [],
+  //   nonceDataAvailabilityMode: 0,
+  //   feeDataAvailabilityMode: 0,
+  //   resourceBounds: {
+  //     l1_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" },
+  //     l2_gas: { max_amount: "0x0000", max_price_per_unit: "0x0000" }
+  //   },
+  //   tip: 0,
+  //   paymasterData: [],
+  // });
 
   const txn : ISignTxnUnsignedTxn = {
     senderAddress:
@@ -273,7 +273,7 @@ const run = async () => {
   // setEthersLib(ethers);
   // setNearApiJs(nearApiJs);
   // setSolanaWeb3(solanaWeb3);
-  setStarknetApiJs(starknetApiJs);
+  // setStarknetApiJs(starknetApiJs);
 
   let connection: IDeviceConnection;
 
