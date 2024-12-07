@@ -9,10 +9,7 @@ import {
   GetPublicKeysStatus,
   SeedGenerationStatus,
 } from '../../proto/generated/types';
-import {
-  OperationHelper,
-  logger as rootLogger,
-} from '../../utils';
+import { OperationHelper, logger as rootLogger } from '../../utils';
 import { runGetPublicKeysOnDevice } from '../runGetPublicKeys';
 import {
   IGetPublicKeysParams,
@@ -64,5 +61,5 @@ export const getPublicKeys = async (
     forceStatusUpdate,
   );
 
-  return { publicKeys: publicKeys.publicKeys };
+  return { publicKeys: publicKeys.publicKeys.map(key => `0x${key}`) };
 };
