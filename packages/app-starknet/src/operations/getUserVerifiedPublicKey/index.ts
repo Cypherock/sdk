@@ -63,12 +63,8 @@ export const getUserVerifiedPublicKey = async (
     },
     forceStatusUpdate,
   );
-  // const starkAPI = getStarknetApiJs();
-  // const starkPubKey = starkAPI.ec.starkCurve.getStarkKey(
-  //   result.publicKeys[0].slice(0, 64),
-  // );
 
   return {
-    publicKey: result.publicKeys[0],
+    publicKey: '0x' + result.publicKeys[0],
   };
 };

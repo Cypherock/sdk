@@ -17,9 +17,9 @@ import { ISignTxnUnsignedTxn, setStarknetApiJs, StarknetApp } from '@cypherock/s
 // import { ethers } from 'ethers';
 import { createServiceLogger } from './logger';
 import { hexToUint8Array } from '@cypherock/sdk-utils';
-// import dotEnv from 'dotenv-flow';
+import dotEnv from 'dotenv-flow';
 
-// dotEnv.config();
+dotEnv.config();
 const getEnvVariable = (key: string, defaultValue?: string): string => {
   let value: string | undefined;
 
@@ -176,15 +176,15 @@ async function fetchAccount(connection: IDeviceConnection) {
 // ================ Starknet App -- Fund Transfer ========== //
 async function transfer(connection: IDeviceConnection, wallet: IWalletItem) {
   const starkApp = await StarknetApp.create(connection);
-  const starkKeyPubAX = (await starkApp.getPublicKeys({
+  const starkKeyPubAX = (await starkApp.getUserVerifiedPublicKey({
     walletId: wallet.id,
-    derivationPaths:  [{ path: [0x80000000 + 0xA55,
+    derivationPath:  [0x80000000 + 0xA55,
       0x80000000 + 0x4741E9C9,
       0x80000000 + 0x447A6028,
       0x80000000,
       0x80000000,
-      0xC] }]
-  })).publicKeys[0];
+      0xC]
+  }));
   console.log("Public key: ", starkKeyPubAX)
   const constructorAXCallData = starknetApiJs.CallData.compile([0,starkKeyPubAX,1]);
   const accountAXAddress = "0x7b419b63869cd1e23f0354aed454b8fe2908afbe6386f2a29a508f9d34da4d9";//starknetApiJs.hash.calculateContractAddressFromHash(starkKeyPubAX, contractAXclassHash, constructorAXCallData, 0);
@@ -273,7 +273,7 @@ const run = async () => {
   // setEthersLib(ethers);
   // setNearApiJs(nearApiJs);
   // setSolanaWeb3(solanaWeb3);
-  // setStarknetApiJs(starknetApiJs);
+  setStarknetApiJs(starknetApiJs);
 
   let connection: IDeviceConnection;
 
