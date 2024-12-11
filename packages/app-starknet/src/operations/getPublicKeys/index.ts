@@ -55,11 +55,5 @@ export const getPublicKeys = async (
     onStatus,
   });
 
-  const publicKeys = await runGetPublicKeysOnDevice(
-    helper,
-    params,
-    forceStatusUpdate,
-  );
-
-  return { publicKeys: publicKeys.publicKeys.map(key => `0x${key}`) };
+  return runGetPublicKeysOnDevice(helper, params, forceStatusUpdate);
 };
