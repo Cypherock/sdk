@@ -10,11 +10,7 @@ import {
   SeedGenerationStatus,
 } from '../../proto/generated/types';
 import { runGetPublicKeysOnDevice } from '../runGetPublicKeys';
-import {
-  OperationHelper,
-  logger as rootLogger,
-  getStarknetApiJs,
-} from '../../utils';
+import { OperationHelper, logger as rootLogger } from '../../utils';
 import { GetPublicKeysEvent } from '../types';
 import {
   IGetUserVerifiedPublicKeyParams,

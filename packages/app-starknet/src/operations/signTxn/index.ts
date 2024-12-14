@@ -30,8 +30,8 @@ export const signTxn = async (
   assert(params.txn, 'txn should be defined');
   assert(params.derivationPath, 'derivationPaths should be defined');
   assert(
-    params.derivationPath.length > 3,
-    'derivationPath should be greater than 3',
+    params.derivationPath.length > 5,
+    'derivationPath should be greater than 5',
   );
 
   await sdk.checkAppCompatibility(APP_VERSION);
