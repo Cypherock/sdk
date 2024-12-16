@@ -32,7 +32,7 @@ const commonParams = {
         calldata: { value: [new Uint8Array([0x0])] },
         chainId: new Uint8Array([0x0]),
         nonce: new Uint8Array([0x20]),
-        accountDeploymentData: new Uint8Array([0x0]),
+        accountDeploymentData: [new Uint8Array([0x0])],
         nonceDataAvailabilityMode: new Uint8Array([0x0]),
         feeDataAvailabilityMode: new Uint8Array([0x0]),
         resourceBound: {
@@ -46,7 +46,7 @@ const commonParams = {
           },
         },
         tip: new Uint8Array([0x0]),
-        paymasterData: new Uint8Array([0x0]),
+        paymasterData: [new Uint8Array([0x0])],
       },
     },
   },

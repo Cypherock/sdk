@@ -29,7 +29,7 @@ export const getUserVerifiedPublicKey = async (
   assert(params.walletId, 'walletId should be defined');
   assert(params.derivationPath, 'derivationPath should be defined');
   assert(
-    params.derivationPath.length > 3,
+    params.derivationPath.length > 5,
     'derivationPath should be greater than 3',
   );
 
