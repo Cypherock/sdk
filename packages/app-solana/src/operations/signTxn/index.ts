@@ -63,6 +63,7 @@ export const signTxn = async (
       walletId: params.walletId,
       derivationPath: params.derivationPath,
       transactionSize: txnBytes.length,
+      tokenData: params.tokenData,
     },
   });
 
