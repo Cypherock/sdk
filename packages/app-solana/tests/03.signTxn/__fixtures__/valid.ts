@@ -27,6 +27,10 @@ const sendWithSerialize: ISignTxnTestCase = {
             ]),
             derivationPath: [0x80000000 + 44, 0x80000000 + 501, 0x80000000],
             transactionSize: 150,
+            tokenData: {
+              mintAddress: new Uint8Array(),
+              recipientAddress: new Uint8Array(),
+            },
           },
         },
       }),
