@@ -3,6 +3,7 @@ import { assert } from '@cypherock/sdk-utils';
 export const HARDENED_BASE = 0x80000000;
 
 export const LEGACY_PURPOSE = HARDENED_BASE + 44;
+export const NESTED_SEGWIT_PURPOSE = HARDENED_BASE + 49;
 export const SEGWIT_PURPOSE = HARDENED_BASE + 84;
 
 export const BITCOIN_COIN_INDEX = HARDENED_BASE + 0;
@@ -65,11 +66,12 @@ export const coinIndexToNetworkMap: Record<number, typeof bitcoin | undefined> =
     [DASH_COIN_INDEX]: dash,
   };
 
-export type purposeType = 'segwit' | 'legacy';
+export type purposeType = 'segwit' | 'legacy' | 'nested_segwit';
 
 const purposeMap: Record<number, purposeType | undefined> = {
   [SEGWIT_PURPOSE]: 'segwit',
   [LEGACY_PURPOSE]: 'legacy',
+  [NESTED_SEGWIT_PURPOSE]: 'nested_segwit',
 };
 
 export const coinIndexToCoinTypeMap: Record<number, string | undefined> = {
@@ -105,7 +107,7 @@ export const getCoinTypeFromPath = (path: number[]) => {
 };
 
 const supportedPurposeMap: Record<number, purposeType[] | undefined> = {
-  [BITCOIN_COIN_INDEX]: ['legacy', 'segwit'],
+  [BITCOIN_COIN_INDEX]: ['legacy', 'segwit', 'nested_segwit'],
   [LITECOIN_COIN_INDEX]: ['legacy', 'segwit'],
   [DOGECOIN_COIN_INDEX]: ['legacy'],
   [DASH_COIN_INDEX]: ['legacy'],
