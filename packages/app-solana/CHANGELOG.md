@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-solana
 
+## 0.1.0
+
+### Minor Changes
+
+- [#138](https://github.com/Cypherock/sdk/pull/138) [`580623c`](https://github.com/Cypherock/sdk/commit/580623c91ae06ef2b7e81ac068074ef9ed2379aa) Thanks [@vrockz747](https://github.com/vrockz747)! - Added solana token support
+
 ## 0.0.7
 
 ### Patch Changes
