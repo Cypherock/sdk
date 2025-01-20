@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "lib": ["ES2015"],
+  },
+  "extends": "@cypherock/tsconfig/base.json",
+  "include": ["./src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "src/coverage",
+    "src/**/__fixtures__/*.ts",
+    "src/**/__tests__/*.ts",
+    "src/**/__mocks__/*.ts",
+  ],
+}
