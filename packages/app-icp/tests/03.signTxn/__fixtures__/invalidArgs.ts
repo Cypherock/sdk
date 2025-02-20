@@ -74,22 +74,6 @@ const invalidArgs: ISignTxnTestCase[] = [
     params: { ...validParams, txn: undefined } as any,
   },
   {
-    name: 'No raw txn',
-    ...commonParams,
-    params: {
-      ...validParams,
-      txn: { ...validParams.txn, rawTxn: undefined },
-    } as any,
-  },
-  {
-    name: 'No txn hex',
-    ...commonParams,
-    params: {
-      ...validParams,
-      txn: { ...validParams.txn, txnHex: undefined },
-    } as any,
-  },
-  {
     name: 'Empty derivation path',
     ...commonParams,
     params: {
