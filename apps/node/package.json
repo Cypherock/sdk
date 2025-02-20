@@ -29,6 +29,7 @@
     "@cypherock/sdk-app-tron": "workspace:^",
     "@cypherock/sdk-app-xrp": "workspace:^",
     "@cypherock/sdk-app-starknet": "workspace:^",
+    "@cypherock/sdk-app-icp": "workspace:^",
     "@cypherock/sdk-core": "workspace:^",
     "@cypherock/sdk-hw-hid": "workspace:^",
     "@cypherock/sdk-hw-serialport": "workspace:^",
