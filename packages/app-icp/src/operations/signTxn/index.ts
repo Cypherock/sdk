@@ -79,6 +79,11 @@ export const signTxn = async (
   forceStatusUpdate(SignTxnEvent.PIN_CARD);
 
   return {
-    signature: uint8ArrayToHex(result.signature.signature),
+    transferRequestSignature: uint8ArrayToHex(
+      result.signature.transferReqSignature,
+    ),
+    readStateRequestSignature: uint8ArrayToHex(
+      result.signature.readStateReqSignature,
+    ),
   };
 };

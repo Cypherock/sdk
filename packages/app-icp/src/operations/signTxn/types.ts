@@ -19,5 +19,6 @@ export interface ISignTxnParams {
 }
 
 export interface ISignTxnResult {
-  signature: string;
+  transferRequestSignature: string;
+  readStateRequestSignature: string;
 }
