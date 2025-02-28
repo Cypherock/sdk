@@ -21,6 +21,6 @@ technologies:
 | Coin Family | Coins                                                                                                                          |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Bitcoin     | - Bitcoin (Legacy & Native Segwit)<br>- Litecoin<br>- Dogecoin<br>- Dashcoin                                                   |
-| EVM         | - Ethereum<br>- Polygon<br>- Binance<br>- Fantom<br>- Avalanche<br>- Harmony<br>- Ethereum Classic<br>- Arbitrum<br>- Optimism |
+| EVM         | - Ethereum<br>- Polygon<br>- Binance<br>- Fantom<br>- Avalanche<br>- Harmony<br>- Ethereum Classic<br>- Arbitrum<br>- Optimism<br>- Base |
 | Solana      | - Solana                                                                                                                       |
 | Near        | - Near                                                                                                                         |
