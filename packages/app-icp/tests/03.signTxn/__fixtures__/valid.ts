@@ -125,7 +125,10 @@ const icpTransferWithSerialize: ISignTxnTestCase = {
       data: resultToUint8Array({
         signTxn: {
           signature: {
-            signature: hexToUint8Array(
+            transferReqSignature: hexToUint8Array(
+              '93f28fc2e5b93766fcedf18e0c5e2a6894f0155f6e5bcbc56502ac122b8e07556d132eddc229a71b26668c9e89c8b454c45aee659b40bf9682aae650e9b08757',
+            ),
+            readStateReqSignature: hexToUint8Array(
               '93f28fc2e5b93766fcedf18e0c5e2a6894f0155f6e5bcbc56502ac122b8e07556d132eddc229a71b26668c9e89c8b454c45aee659b40bf9682aae650e9b08757',
             ),
           },
@@ -135,7 +138,9 @@ const icpTransferWithSerialize: ISignTxnTestCase = {
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
-    signature:
+    transferRequestSignature:
+      '93f28fc2e5b93766fcedf18e0c5e2a6894f0155f6e5bcbc56502ac122b8e07556d132eddc229a71b26668c9e89c8b454c45aee659b40bf9682aae650e9b08757',
+    readStateRequestSignature:
       '93f28fc2e5b93766fcedf18e0c5e2a6894f0155f6e5bcbc56502ac122b8e07556d132eddc229a71b26668c9e89c8b454c45aee659b40bf9682aae650e9b08757',
   },
 };
@@ -263,7 +268,10 @@ const icpTransferWithoutSerialize: ISignTxnTestCase = {
       data: resultToUint8Array({
         signTxn: {
           signature: {
-            signature: hexToUint8Array(
+            transferReqSignature: hexToUint8Array(
+              '93f28fc2e5b93766fcedf18e0c5e2a6894f0155f6e5bcbc56502ac122b8e07556d132eddc229a71b26668c9e89c8b454c45aee659b40bf9682aae650e9b08757',
+            ),
+            readStateReqSignature: hexToUint8Array(
               '93f28fc2e5b93766fcedf18e0c5e2a6894f0155f6e5bcbc56502ac122b8e07556d132eddc229a71b26668c9e89c8b454c45aee659b40bf9682aae650e9b08757',
             ),
           },
@@ -273,7 +281,9 @@ const icpTransferWithoutSerialize: ISignTxnTestCase = {
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
-    signature:
+    transferRequestSignature:
+      '93f28fc2e5b93766fcedf18e0c5e2a6894f0155f6e5bcbc56502ac122b8e07556d132eddc229a71b26668c9e89c8b454c45aee659b40bf9682aae650e9b08757',
+    readStateRequestSignature:
       '93f28fc2e5b93766fcedf18e0c5e2a6894f0155f6e5bcbc56502ac122b8e07556d132eddc229a71b26668c9e89c8b454c45aee659b40bf9682aae650e9b08757',
   },
 };
