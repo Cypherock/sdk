@@ -31,8 +31,8 @@ export class ConstellationApp {
     );
   }
 
-  public async signTxn(params: any) {
-    throw new Error(`Method not implemented: ${this.sdk},${params}`);
+  public async signTxn(params: operations.ISignTxnParams) {
+    return this.sdk.runOperation(() => operations.signTxn(this.sdk, params));
   }
 
   public async destroy() {
