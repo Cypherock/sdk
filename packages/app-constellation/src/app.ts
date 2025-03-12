@@ -2,6 +2,7 @@ import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { SDK } from '@cypherock/sdk-core';
 
 import * as operations from './operations';
+import { SignMsgType } from './types';
 
 export class ConstellationApp {
   private readonly sdk: SDK;
@@ -33,6 +34,17 @@ export class ConstellationApp {
 
   public async signTxn(params: operations.ISignTxnParams) {
     return this.sdk.runOperation(() => operations.signTxn(this.sdk, params));
+  }
+
+  public async blindSign(
+    params: Omit<operations.ISignMsgParams, 'messageType'>,
+  ) {
+    return this.sdk.runOperation(() =>
+      operations.signMsg(this.sdk, {
+        ...params,
+        messageType: SignMsgType.SIGN_MSG_TYPE_BLIND_SIGN,
+      }),
+    );
   }
 
   public async destroy() {
