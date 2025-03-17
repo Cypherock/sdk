@@ -56,6 +56,17 @@ export class ConstellationApp {
     );
   }
 
+  public async signData(
+    params: Omit<operations.ISignMsgParams, 'messageType'>,
+  ) {
+    return this.sdk.runOperation(() =>
+      operations.signMsg(this.sdk, {
+        ...params,
+        messageType: SignMsgType.SIGN_MSG_TYPE_SIGN_ARBITRARY_DATA,
+      }),
+    );
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }
