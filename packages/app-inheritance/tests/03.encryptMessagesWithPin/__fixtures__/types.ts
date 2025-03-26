@@ -1,8 +1,11 @@
-import { IEncryptMessagesParams, IEncryptMessagesResult } from '../../../src';
+import {
+  IEncryptMessagesWithPinParams,
+  IEncryptMessagesWithPinResult,
+} from '../../../src';
 
 export interface IEncryptMessagesTestCase {
   name: string;
-  params: IEncryptMessagesParams;
+  params: IEncryptMessagesWithPinParams;
   queries: {
     name: string;
     data: Uint8Array;
@@ -12,7 +15,7 @@ export interface IEncryptMessagesTestCase {
     data: Uint8Array;
     statuses?: { flowStatus: number; expectEventCalls?: number[] }[];
   }[];
-  output?: IEncryptMessagesResult;
+  output?: IEncryptMessagesWithPinResult;
   errorInstance?: any;
   [key: string]: any;
 }
