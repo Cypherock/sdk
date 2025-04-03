@@ -5,7 +5,8 @@ export enum GetPublicKeysEvent {
   CONFIRM = 1,
   PASSPHRASE = 2,
   PIN_CARD = 3,
-  VERIFY = 4,
+  ACCOUNT_ID_VERIFY = 4,
+  PRINCIPAL_ID_VERIFY = 5,
 }
 
 export type GetPublicKeysEventHandler = (event: GetPublicKeysEvent) => void;

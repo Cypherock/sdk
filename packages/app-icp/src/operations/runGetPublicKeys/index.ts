@@ -21,10 +21,19 @@ export const runGetPublicKeysOnDevice = async (
   let publicKeys: Uint8Array[] = [];
   const hasMore = () => publicKeys.length !== params.derivationPaths.length;
   do {
+    const verified = await helper.waitForResult();
+    assertOrThrowInvalidResult(verified.verifyAccountId);
+
+    forceStatusUpdate(GetPublicKeysEvent.ACCOUNT_ID_VERIFY);
+
+    await helper.sendQuery({
+      result: {},
+    });
+
     const result = await helper.waitForResult();
     assertOrThrowInvalidResult(result.result);
     publicKeys = [...publicKeys, ...result.result.publicKeys];
-    forceStatusUpdate(GetPublicKeysEvent.PIN_CARD);
+
     if (hasMore()) {
       await helper.sendQuery({
         fetchNext: {},
@@ -32,7 +41,7 @@ export const runGetPublicKeysOnDevice = async (
     }
   } while (hasMore());
 
-  forceStatusUpdate(GetPublicKeysEvent.VERIFY);
+  forceStatusUpdate(GetPublicKeysEvent.PRINCIPAL_ID_VERIFY);
 
   return {
     publicKeys: publicKeys.map(e => uint8ArrayToHex(e)),
