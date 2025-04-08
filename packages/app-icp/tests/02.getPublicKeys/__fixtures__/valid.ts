@@ -1,4 +1,4 @@
-import { hexToUint8Array, createFlowStatus } from '@cypherock/sdk-utils';
+import { hexToUint8Array } from '@cypherock/sdk-utils';
 import { IGetPublicKeysTestCase } from './types';
 import { Query, Result } from '../../../src/proto/generated/icp/core';
 
@@ -40,8 +40,32 @@ const requestOneAddress: IGetPublicKeysTestCase = {
         ).finish(),
       ),
     },
+    {
+      name: 'Get result',
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            getPublicKeys: {
+              result: {},
+            },
+          }),
+        ).finish(),
+      ),
+    },
   ],
   results: [
+    {
+      name: 'verify account id',
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            getPublicKeys: {
+              verifyAccountId: {},
+            },
+          }),
+        ).finish(),
+      ),
+    },
     {
       name: 'result',
       data: Uint8Array.from(
@@ -59,23 +83,9 @@ const requestOneAddress: IGetPublicKeysTestCase = {
           }),
         ).finish(),
       ),
-      statuses: [
-        {
-          flowStatus: createFlowStatus(0, 0),
-          expectEventCalls: [0],
-        },
-        {
-          flowStatus: createFlowStatus(1, 0),
-          expectEventCalls: [1],
-        },
-        {
-          flowStatus: createFlowStatus(2, 1),
-          expectEventCalls: [2],
-        },
-      ],
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
   output: {
     publicKeys: [
       '020f3ef96d6cbaf889ca02907374e6776163e60de2d926a84575f64dfcab039c27',
@@ -133,8 +143,32 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
         ).finish(),
       ),
     },
+    {
+      name: 'Get result',
+      data: Uint8Array.from(
+        Query.encode(
+          Query.create({
+            getPublicKeys: {
+              result: {},
+            },
+          }),
+        ).finish(),
+      ),
+    },
   ],
   results: [
+    {
+      name: 'verify account id',
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            getPublicKeys: {
+              verifyAccountId: {},
+            },
+          }),
+        ).finish(),
+      ),
+    },
     {
       name: 'result',
       data: Uint8Array.from(
@@ -152,23 +186,9 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
           }),
         ).finish(),
       ),
-      statuses: [
-        {
-          flowStatus: createFlowStatus(0, 0),
-          expectEventCalls: [0],
-        },
-        {
-          flowStatus: createFlowStatus(1, 0),
-          expectEventCalls: [1],
-        },
-        {
-          flowStatus: createFlowStatus(2, 1),
-          expectEventCalls: [2],
-        },
-      ],
     },
   ],
-  mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
+  mocks: { eventCalls: [[0], [1], [2], [3], [4], [5]] },
   output: {
     publicKeys: [
       '020f3ef96d6cbaf889ca02907374e6776163e60de2d926a84575f64dfcab039c27',

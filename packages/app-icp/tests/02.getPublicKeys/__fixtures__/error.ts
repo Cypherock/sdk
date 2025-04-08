@@ -4,7 +4,7 @@ import {
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
 import { IGetPublicKeysTestCase } from './types';
-import { Query } from '../../../src/proto/generated/icp/core';
+import { Query, Result } from '../../../src/proto/generated/icp/core';
 
 const commonParams = {
   params: {
@@ -52,7 +52,17 @@ const withUnknownError: IGetPublicKeysTestCase = {
   results: [
     {
       name: 'error',
-      data: new Uint8Array([10, 4, 18, 2, 8, 1]),
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            getPublicKeys: {
+              commonError: {
+                unknownError: 1,
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
   errorInstance: DeviceAppError,
@@ -66,7 +76,17 @@ const withInvalidAppId: IGetPublicKeysTestCase = {
   results: [
     {
       name: 'error',
-      data: new Uint8Array([10, 4, 18, 2, 16, 1]),
+      data: Uint8Array.from(
+        Result.encode(
+          Result.create({
+            getPublicKeys: {
+              commonError: {
+                corruptData: 1,
+              },
+            },
+          }),
+        ).finish(),
+      ),
     },
   ],
   errorInstance: DeviceAppError,
