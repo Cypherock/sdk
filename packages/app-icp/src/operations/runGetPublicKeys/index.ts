@@ -18,18 +18,18 @@ export const runGetPublicKeysOnDevice = async (
     },
   });
 
+  const verified = await helper.waitForResult();
+  assertOrThrowInvalidResult(verified.verifyAccountId);
+
+  forceStatusUpdate(GetPublicKeysEvent.ACCOUNT_ID_VERIFY);
+
+  await helper.sendQuery({
+    result: {},
+  });
+
   let publicKeys: Uint8Array[] = [];
   const hasMore = () => publicKeys.length !== params.derivationPaths.length;
   do {
-    const verified = await helper.waitForResult();
-    assertOrThrowInvalidResult(verified.verifyAccountId);
-
-    forceStatusUpdate(GetPublicKeysEvent.ACCOUNT_ID_VERIFY);
-
-    await helper.sendQuery({
-      result: {},
-    });
-
     const result = await helper.waitForResult();
     assertOrThrowInvalidResult(result.result);
     publicKeys = [...publicKeys, ...result.result.publicKeys];
