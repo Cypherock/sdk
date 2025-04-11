@@ -1,5 +1,13 @@
 # nodejs-test
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`0f5003f`](https://github.com/Cypherock/sdk/commit/0f5003fcb4c528150a814a6137a6df173c2c8101), [`bd60b5c`](https://github.com/Cypherock/sdk/commit/bd60b5c7860f93e6b8a07b1af4bcf03e914d35bd)]:
+  - @cypherock/sdk-app-icp@2.0.1
+  - @cypherock/sdk-app-constellation@1.0.0
+
 ## 0.1.2
 
 ### Patch Changes
