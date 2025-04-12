@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-icp
 
+## 2.0.1
+
+### Patch Changes
+
+- [#147](https://github.com/Cypherock/sdk/pull/147) [`0f5003f`](https://github.com/Cypherock/sdk/commit/0f5003fcb4c528150a814a6137a6df173c2c8101) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Added verify account id event in icp receive flow
+
 ## 2.0.0
 
 ### Major Changes
