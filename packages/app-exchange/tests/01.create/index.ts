@@ -2,9 +2,9 @@ import { MockDeviceConnection } from '@cypherock/sdk-interfaces';
 import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
 import * as sdkMocks from '../../src/__mocks__/sdk';
-import { ExchnageApp } from '../../src/index';
+import { ExchangeApp } from '../../src/index';
 
-describe('ExchnageApp.create', () => {
+describe('ExchangeApp.create', () => {
   let connection: MockDeviceConnection;
 
   beforeEach(async () => {
@@ -16,8 +16,8 @@ describe('ExchnageApp.create', () => {
     await connection.destroy();
   });
 
-  test('should be able to create exchnage app instance', async () => {
-    await ExchnageApp.create(connection);
+  test('should be able to create exchange app instance', async () => {
+    await ExchangeApp.create(connection);
 
     expect(sdkMocks.create).toHaveBeenCalledTimes(1);
     expect(sdkMocks.create.mock.lastCall).toContainEqual(connection);

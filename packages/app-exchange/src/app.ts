@@ -1,7 +1,8 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { SDK } from '@cypherock/sdk-core';
+import * as operations from './operations';
 
-export class ExchnageApp {
+export class ExchangeApp {
   private readonly sdk: SDK;
 
   private static readonly APPLET_ID = 19;
@@ -11,8 +12,8 @@ export class ExchnageApp {
   }
 
   public static async create(connection: IDeviceConnection) {
-    const sdk = await SDK.create(connection, ExchnageApp.APPLET_ID);
-    return new ExchnageApp(sdk);
+    const sdk = await SDK.create(connection, ExchangeApp.APPLET_ID);
+    return new ExchangeApp(sdk);
   }
 
   public async destroy() {
@@ -21,5 +22,11 @@ export class ExchnageApp {
 
   public async abort() {
     await this.sdk.sendAbort();
+  }
+
+  public async initiateFlow(params: operations.IInitiateFlowParams) {
+    return this.sdk.runOperation(() =>
+      operations.initiateFlow(this.sdk, params),
+    );
   }
 }

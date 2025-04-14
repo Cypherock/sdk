@@ -7,7 +7,7 @@ import {
   Exact,
   Query,
   Result,
-} from '../proto/generated/exchnage/core';
+} from '../proto/generated/exchange/core';
 import { assertOrThrowInvalidResult, parseCommonError } from './asserts';
 
 export function decodeResult(data: Uint8Array) {
