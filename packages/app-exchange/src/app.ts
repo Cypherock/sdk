@@ -29,4 +29,14 @@ export class ExchangeApp {
       operations.initiateFlow(this.sdk, params),
     );
   }
+
+  public async getSignature() {
+    return this.sdk.runOperation(() => operations.getSignature(this.sdk));
+  }
+
+  public async storeSignature(params: operations.IStoreSignatureParams) {
+    return this.sdk.runOperation(() =>
+      operations.storeSignature(this.sdk, params),
+    );
+  }
 }
