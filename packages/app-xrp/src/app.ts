@@ -6,7 +6,7 @@ import * as operations from './operations';
 export class XrpApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 20;
+  public static readonly APPLET_ID = 20;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;

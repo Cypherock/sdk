@@ -7,7 +7,7 @@ import { SignMsgType } from './types';
 export class ConstellationApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 23;
+  public static readonly APPLET_ID = 23;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;

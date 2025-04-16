@@ -6,7 +6,7 @@ import * as operations from './operations';
 export class BtcApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 2;
+  public static readonly APPLET_ID = 2;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;

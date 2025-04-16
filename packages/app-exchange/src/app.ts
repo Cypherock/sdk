@@ -5,7 +5,7 @@ import * as operations from './operations';
 export class ExchangeApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 19;
+  public static readonly APPLET_ID = 24;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;

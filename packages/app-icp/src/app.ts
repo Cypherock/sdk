@@ -6,7 +6,7 @@ import * as operations from './operations';
 export class IcpApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 22;
+  public static readonly APPLET_ID = 22;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;
