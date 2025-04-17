@@ -6,5 +6,4 @@ export interface IAccountInfo {
 export interface IInitiateFlowParams {
   from: IAccountInfo;
   to: IAccountInfo;
-  amount: number;
 }

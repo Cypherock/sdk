@@ -18,7 +18,6 @@ export const initiateFlow = async (
   assert(params.to.walletId, 'walletId should be defined');
   assert(params.from.appletId, 'appletId should be defined');
   assert(params.to.appletId, 'appletId should be defined');
-  assert(params.amount, 'amount should be defined');
   assert(
     params.from.walletId.length === WALLET_ID_LENGTH,
     `Wallet Id should be exactly ${WALLET_ID_LENGTH} bytes`,
@@ -47,7 +46,6 @@ export const initiateFlow = async (
         appletId: params.to.appletId,
         walletId: params.to.walletId,
       },
-      amount: params.amount,
     },
   });
 
