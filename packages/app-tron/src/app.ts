@@ -6,7 +6,7 @@ import * as operations from './operations';
 export class TronApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 18;
+  public static readonly APPLET_ID = 18;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;

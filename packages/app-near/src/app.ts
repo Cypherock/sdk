@@ -6,7 +6,7 @@ import * as operations from './operations';
 export class NearApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 0x08;
+  public static readonly APPLET_ID = 0x08;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;

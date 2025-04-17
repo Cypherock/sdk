@@ -6,7 +6,7 @@ import * as operations from './operations';
 export class StarknetApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 21;
+  public static readonly APPLET_ID = 21;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;

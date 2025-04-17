@@ -11,7 +11,7 @@ import { eip712JsonToStruct } from './utils';
 export class EvmApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 7;
+  public static readonly APPLET_ID = 7;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;

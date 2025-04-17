@@ -6,7 +6,7 @@ import * as operations from './operations';
 export class SolanaApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 10;
+  public static readonly APPLET_ID = 10;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;

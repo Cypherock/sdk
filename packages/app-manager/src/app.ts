@@ -8,7 +8,7 @@ import { GetLatestFirmwareOptions } from './services/firmware';
 export class ManagerApp {
   private readonly sdk: SDK;
 
-  private static readonly APPLET_ID = 1;
+  public static readonly APPLET_ID = 1;
 
   private static readonly COMPATIBLE_VERSION = {
     from: '1.0.0',
