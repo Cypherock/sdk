@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-icp
 
+## 2.0.2
+
+### Patch Changes
+
+- [#149](https://github.com/Cypherock/sdk/pull/149) [`213470d`](https://github.com/Cypherock/sdk/commit/213470dd7c2c9b24fbd3ba3206a6a14030a227ca) Thanks [@TejasvOnly](https://github.com/TejasvOnly)! - Add support for exchange app
+
 ## 2.0.1
 
 ### Patch Changes

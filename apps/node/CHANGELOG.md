@@ -1,5 +1,22 @@
 # nodejs-test
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [[`213470d`](https://github.com/Cypherock/sdk/commit/213470dd7c2c9b24fbd3ba3206a6a14030a227ca)]:
+  - @cypherock/sdk-app-constellation@1.0.1
+  - @cypherock/sdk-app-inheritance@1.0.1
+  - @cypherock/sdk-app-starknet@0.1.1
+  - @cypherock/sdk-app-manager@0.0.33
+  - @cypherock/sdk-app-solana@0.1.1
+  - @cypherock/sdk-app-near@0.0.32
+  - @cypherock/sdk-app-tron@0.0.3
+  - @cypherock/sdk-app-btc@0.0.38
+  - @cypherock/sdk-app-evm@0.0.34
+  - @cypherock/sdk-app-icp@2.0.2
+  - @cypherock/sdk-app-xrp@1.0.2
+
 ## 0.1.3
 
 ### Patch Changes
