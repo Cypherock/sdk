@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-exchange
 
+## 1.1.0
+
+### Minor Changes
+
+- [#151](https://github.com/Cypherock/sdk/pull/151) [`5db0ed3`](https://github.com/Cypherock/sdk/commit/5db0ed3da2d693274fbee4b2d715075201e7682b) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Adds close exchange flow functionality to exchange app
+
 ## 1.0.0
 
 ### Major Changes
