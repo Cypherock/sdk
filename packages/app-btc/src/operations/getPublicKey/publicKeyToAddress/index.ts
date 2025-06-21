@@ -6,6 +6,8 @@ import {
   getNetworkFromPath,
   getPurposeType,
   purposeType,
+  SEGWIT_PURPOSE,
+  NESTED_SEGWIT_PURPOSE,
 } from '../../../utils';
 
 const getPaymentsFunction = (path: number[]) => {
@@ -16,6 +18,7 @@ const getPaymentsFunction = (path: number[]) => {
   > = {
     segwit: bitcoinJsLib.payments.p2wpkh,
     legacy: bitcoinJsLib.payments.p2pkh,
+    nested_segwit: bitcoinJsLib.payments.p2sh,
   };
   const purpose = getPurposeType(path);
   return paymentFunctionMap[purpose];
@@ -29,9 +32,19 @@ export const getAddressFromPublicKey = async (
 
   const paymentsFunction = getPaymentsFunction(path);
 
+  let redeem: Payment | undefined;
+  if (path[0] === NESTED_SEGWIT_PURPOSE) {
+    const segwitPaymentsFunction = getPaymentsFunction([SEGWIT_PURPOSE]);
+    redeem = segwitPaymentsFunction({
+      pubkey: Buffer.from(compressedPublicKey),
+      network: getNetworkFromPath(path),
+    });
+  }
+
   const { address } = paymentsFunction({
-    pubkey: Buffer.from(compressedPublicKey),
+    pubkey: !redeem ? Buffer.from(compressedPublicKey) : undefined,
     network: getNetworkFromPath(path),
+    redeem,
   });
 
   assert(address, 'Could not derive address');
