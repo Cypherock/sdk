@@ -1,5 +1,5 @@
 import * as bip66 from 'bip66';
-import { Signer, payments, networks } from 'bitcoinjs-lib';
+import type { Signer } from 'bitcoinjs-lib';
 
 import { assert } from '@cypherock/sdk-utils';
 import { getBitcoinJsLib } from './bitcoinjs-lib';
@@ -67,9 +67,9 @@ export const createSignedTransaction = (params: {
           signatures[inputIndex].slice(signatures[0].length - 66),
           'hex',
         );
-        txnInput.redeemScript = payments.p2wpkh({
+        txnInput.redeemScript = bitcoinjs.payments.p2wpkh({
           pubkey: publickey,
-          network: networks.bitcoin,
+          network: bitcoinjs.networks.bitcoin,
         }).output;
       }
     } else {
