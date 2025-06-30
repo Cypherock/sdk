@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-btc
 
+## 0.1.0
+
+### Minor Changes
+
+- [#153](https://github.com/Cypherock/sdk/pull/153) [`59ae781`](https://github.com/Cypherock/sdk/commit/59ae7818668bb20f68e59e53776a0f8cc5454798) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Added btc nested segwit support
+
 ## 0.0.38
 
 ### Patch Changes
