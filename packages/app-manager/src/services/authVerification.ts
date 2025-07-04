@@ -1,7 +1,11 @@
-import { hexToUint8Array, uint8ArrayToHex } from '@cypherock/sdk-utils';
-import { http } from '../utils';
+import axios from 'axios';
+import {
+  getConfig,
+  hexToUint8Array,
+  uint8ArrayToHex,
+} from '@cypherock/sdk-utils';
 
-const baseURL = '/verification';
+const getBaseURL = () => `${getConfig().API_CYPHEROCK}/verification`;
 
 export const verifySerialSignature = async (params: {
   serial: Uint8Array;
@@ -18,7 +22,7 @@ export const verifySerialSignature = async (params: {
     message: params.message ? uint8ArrayToHex(params.message) : undefined,
   };
 
-  const res = await http.post(`${baseURL}/verify`, verifyParams);
+  const res = await axios.post(`${getBaseURL()}/verify`, verifyParams);
 
   if (res.data.verified === true) {
     return hexToUint8Array(res.data.challenge);
@@ -56,7 +60,7 @@ export const verifyChallengeSignature = async (params: {
     onlyFailure: params.onlyFailure,
   };
 
-  const res = await http.post(`${baseURL}/challenge`, verifyParams);
+  const res = await axios.post(`${getBaseURL()}/challenge`, verifyParams);
 
   return {
     isVerified: res.data.verified || false,
