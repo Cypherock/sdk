@@ -19,10 +19,10 @@ const fixtures = {
           229, 110, 241, 198, 94, 38, 9, 115, 23, 87, 147, 84, 31, 0, 124, 70,
           242, 232, 20, 111, 134, 139, 53, 53,
         ]),
-        httpPostMocks: {
+        axiosPostMocks: {
           calls: [
             [
-              '/verification/verify',
+              'https://api.cypherock.com/verification/verify',
               {
                 serial:
                   'c9cc681dac19e2f7db84b5142ec6f97f7f3036f7ffd10f9755596521c61ac5e1d09b67f6',
@@ -66,10 +66,10 @@ const fixtures = {
           117, 19, 209, 63, 85, 118, 84, 197, 65, 74, 227, 5, 189, 72, 75, 177,
           182,
         ]),
-        httpPostMocks: {
+        axiosPostMocks: {
           calls: [
             [
-              '/verification/verify',
+              'https://api.cypherock.com/verification/verify',
               {
                 serial:
                   'c9cc681dac19e2f7db84b5142ec6f97f7f3036f7ffd10f9755596521c61ac5e1d09b67f6',
@@ -110,10 +110,10 @@ const fixtures = {
           postfix2: new Uint8Array([12, 28, 106, 169, 138, 41]),
         },
         result: undefined,
-        httpPostMocks: {
+        axiosPostMocks: {
           calls: [
             [
-              '/verification/verify',
+              'https://api.cypherock.com/verification/verify',
               {
                 serial:
                   'c9cc681dac19e2f7db84b5142ec6f97f7f3036f7ffd10f9755596521c61ac5e1d09b67f6',
@@ -158,10 +158,10 @@ const fixtures = {
           isTestApp: false,
         },
         result: true,
-        httpPostMocks: {
+        axiosPostMocks: {
           calls: [
             [
-              '/verification/challenge',
+              'https://api.cypherock.com/verification/challenge',
               {
                 serial:
                   'c9cc681dac19e2f7db84b5142ec6f97f7f3036f7ffd10f9755596521c61ac5e1d09b67f6',
@@ -209,10 +209,10 @@ const fixtures = {
           isTestApp: true,
         },
         result: true,
-        httpPostMocks: {
+        axiosPostMocks: {
           calls: [
             [
-              '/verification/challenge',
+              'https://api.cypherock.com/verification/challenge',
               {
                 serial:
                   'c9cc681dac19e2f7db84b5142ec6f97f7f3036f7ffd10f9755596521c61ac5e1d09b67f6',
@@ -260,10 +260,10 @@ const fixtures = {
           isTestApp: false,
         },
         result: false,
-        httpPostMocks: {
+        axiosPostMocks: {
           calls: [
             [
-              '/verification/challenge',
+              'https://api.cypherock.com/verification/challenge',
               {
                 serial:
                   'c9cc681dac19e2f7db84b5142ec6f97f7f3036f7ffd10f9755596521c61ac5e1d09b67f6',
