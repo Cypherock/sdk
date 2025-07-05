@@ -1,11 +1,13 @@
-import { uint8ArrayToHex } from '@cypherock/sdk-utils';
-import { http } from '../utils';
+import axios from 'axios';
+import { getConfig, uint8ArrayToHex } from '@cypherock/sdk-utils';
+
 import {
   IInitiateServerSessionParams,
   IInitiateServerSessionResult,
 } from './types';
 
-const baseURL = '/inheritance/device-session';
+const getBaseURL = () =>
+  `${getConfig().API_CYPHEROCK}/inheritance/device-session`;
 
 export const initiateServerSession = async (
   params: IInitiateServerSessionParams,
@@ -19,7 +21,7 @@ export const initiateServerSession = async (
     keyIndex: params.keyIndex,
   };
 
-  const res = await http.post(`${baseURL}/create`, body);
+  const res = await axios.post(`${getBaseURL()}/create`, body);
 
   console.log({ res });
   return res.data;

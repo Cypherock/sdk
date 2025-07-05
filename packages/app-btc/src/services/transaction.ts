@@ -1,11 +1,12 @@
-import { http } from '../utils/http';
+import axios from 'axios';
+import { getConfig } from '@cypherock/sdk-utils';
 
-const baseURL = '/v2/transaction';
+const getBaseURL = () => `${getConfig().API_CYPHEROCK}/v2/transaction`;
 
 export const getRawTxnHash = async (params: {
   coinType: string;
   hash: string;
 }): Promise<string> => {
-  const res = await http.post(`${baseURL}/hex`, params);
+  const res = await axios.post(`${getBaseURL()}/hex`, params);
   return res.data.data;
 };

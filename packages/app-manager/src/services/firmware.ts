@@ -1,7 +1,7 @@
-import { createQueryString } from '@cypherock/sdk-utils';
-import { http, downloadFile } from '../utils';
+import axios from 'axios';
+import { createQueryString, getConfig } from '@cypherock/sdk-utils';
 
-const baseURL = '/firmware-stm';
+const getBaseURL = () => `${getConfig().API_CYPHEROCK}/firmware-stm`;
 
 export interface GetLatestFirmwareOptions {
   prerelease?: boolean;
@@ -13,9 +13,17 @@ export interface LatestFirmware {
   firmware?: Uint8Array;
 }
 
+const downloadFile = async (url: string) => {
+  const response = await fetch(url);
+
+  const buffer = await response.arrayBuffer();
+
+  return new Uint8Array(buffer);
+};
+
 export async function getLatest(params: GetLatestFirmwareOptions = {}) {
-  const response = await http.get(
-    `${baseURL}/latest?${createQueryString({
+  const response = await axios.get(
+    `${getBaseURL()}/latest?${createQueryString({
       prerelease: params.prerelease,
     })}`,
   );
