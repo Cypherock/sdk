@@ -1,5 +1,11 @@
 # @cypherock/sdk-utils
 
+## 0.0.20
+
+### Patch Changes
+
+- [#155](https://github.com/Cypherock/sdk/pull/155) [`30cb514`](https://github.com/Cypherock/sdk/commit/30cb514ced9f0b72d1cf80dd57a0d23b9bc811e6) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Fix config env issue
+
 ## 0.0.19
 
 ### Patch Changes

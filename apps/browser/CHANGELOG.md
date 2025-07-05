@@ -1,5 +1,15 @@
 # browser-test
 
+## 0.0.42
+
+### Patch Changes
+
+- Updated dependencies [[`30cb514`](https://github.com/Cypherock/sdk/commit/30cb514ced9f0b72d1cf80dd57a0d23b9bc811e6)]:
+  - @cypherock/sdk-app-manager@0.0.34
+  - @cypherock/sdk-app-btc@0.1.1
+  - @cypherock/sdk-core@0.1.1
+  - @cypherock/sdk-hw-webusb@0.0.19
+
 ## 0.0.41
 
 ### Patch Changes

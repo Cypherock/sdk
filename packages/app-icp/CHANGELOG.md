@@ -1,5 +1,13 @@
 # @cypherock/sdk-app-icp
 
+## 2.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`30cb514`](https://github.com/Cypherock/sdk/commit/30cb514ced9f0b72d1cf80dd57a0d23b9bc811e6)]:
+  - @cypherock/sdk-core@0.1.1
+  - @cypherock/sdk-utils@0.0.20
+
 ## 2.0.2
 
 ### Patch Changes
