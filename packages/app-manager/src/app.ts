@@ -1,3 +1,4 @@
+// packages/app-manager/src/app.ts
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { SDK } from '@cypherock/sdk-core';
 
@@ -80,7 +81,7 @@ export class ManagerApp {
     await this.sdk.sendAbort();
   }
 
-  public static async getLatestFirmware(params?: GetLatestFirmwareOptions) {
+  public static async getLatestFirmware(params: GetLatestFirmwareOptions) {
     return firmwareService.getLatest(params);
   }
 }
