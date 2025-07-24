@@ -16,7 +16,6 @@ import {
   logger as rootLogger,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
-import { getStellarLib } from '../../utils';
 
 export * from './types';
 
@@ -112,7 +111,8 @@ export const signTxn = async (
 
   if (params.serializeTxn) {
     try {
-      // const { getStellarLib } = require('../../utils');
+      // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
+      const { getStellarLib } = require('../../utils');
       const StellarSdk = getStellarLib();
       
       // Parse the original unsigned transaction
