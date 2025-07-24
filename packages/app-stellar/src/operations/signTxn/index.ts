@@ -16,6 +16,7 @@ import {
   logger as rootLogger,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
+import { getStellarLib } from '../../utils';
 
 export * from './types';
 
@@ -107,18 +108,11 @@ export const signTxn = async (
 
   const signature = uint8ArrayToHex(result.signature.signature);
 
-  // DEBUG: Log what the device actually returns
-  // logger.info('DEBUG - Device result keys:', Object.keys(result));
-  // logger.info('DEBUG - Device signature result:', result.signature);
-  // logger.info('DEBUG - Signature hex:', signature);
-  // logger.info('DEBUG - Original XDR:', params.txn.xdr);
-
-  // STELLAR CHANGE: Reconstruct signed XDR transaction following XRP pattern
   let serializedTxn: string | undefined;
 
   if (params.serializeTxn) {
     try {
-      const { getStellarLib } = require('../../utils');
+      // const { getStellarLib } = require('../../utils');
       const StellarSdk = getStellarLib();
       
       // Parse the original unsigned transaction
