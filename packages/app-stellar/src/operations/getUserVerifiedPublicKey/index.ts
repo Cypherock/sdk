@@ -28,17 +28,18 @@ export const getUserVerifiedPublicKey = async (
   assert(params, 'Params should be defined');
   assert(params.walletId, 'walletId should be defined');
   assert(params.derivationPath, 'derivationPath should be defined');
-  
+
   // STELLAR CHANGE: Updated validation for Stellar derivation paths
   assert(
     params.derivationPath.length >= 3,
-    'derivationPath should have at least 3 elements for Stellar (m/44\'/148\'/account\')',
+    "derivationPath should have at least 3 elements for Stellar (m/44'/148'/account')",
   );
 
   // STELLAR CHANGE: Validate Stellar-specific derivation path format
   assert(
-    params.derivationPath[0] === (0x80000000 + 44) && params.derivationPath[1] === (0x80000000 + 148),
-    'derivationPath should follow Stellar format: m/44\'/148\'/account\'',
+    params.derivationPath[0] === 0x80000000 + 44 &&
+      params.derivationPath[1] === 0x80000000 + 148,
+    "derivationPath should follow Stellar format: m/44'/148'/account'",
   );
 
   await sdk.checkAppCompatibility(APP_VERSION);

@@ -25,21 +25,21 @@ function base32Encode(data: Buffer): string {
   let result = '';
   let bits = 0;
   let value = 0;
-  
+
   for (let i = 0; i < data.length; i++) {
     value = (value << 8) | data[i];
     bits += 8;
-    
+
     while (bits >= 5) {
       bits -= 5;
       result += BASE32_ALPHABET[(value >>> bits) & 31];
     }
   }
-  
+
   if (bits > 0) {
     result += BASE32_ALPHABET[(value << (5 - bits)) & 31];
   }
-  
+
   return result;
 }
 
@@ -49,30 +49,29 @@ function deriveAddressFromHex(publicKey: string): string {
   if (publicKey.startsWith('G') && publicKey.length === 56) {
     return publicKey;
   }
-  
+
   try {
     // Convert hex to Buffer
     const pubKeyBuffer = Buffer.from(publicKey, 'hex');
-    
+
     // Create payload with version byte (0x30 = 6 << 3 for account ID) + public key
     const payload = Buffer.alloc(33);
     payload[0] = 6 << 3; // Version byte for Account ID
     pubKeyBuffer.copy(payload, 1);
-    
+
     // Calculate checksum
     const checksum = crc16(payload);
-    
+
     // Create final buffer with payload + checksum
     const finalBuffer = Buffer.alloc(35);
     payload.copy(finalBuffer, 0);
     finalBuffer[33] = checksum & 0xff;
     finalBuffer[34] = (checksum >> 8) & 0xff;
-    
+
     // Encode with base32
     const address = base32Encode(finalBuffer);
-    
+
     return address;
-    
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Failed to derive Stellar address: ${error.message}`);
@@ -84,14 +83,14 @@ function deriveAddressFromHex(publicKey: string): string {
 
 export const getAddressFromPublicKey = (publicKey: string | Uint8Array) => {
   let hexKey: string;
-  
+
   // Convert input to hex string
   if (typeof publicKey === 'string') {
     hexKey = publicKey;
   } else {
     hexKey = uint8ArrayToHex(publicKey);
   }
-  
+
   // Use the same derivation logic as CySync
   return deriveAddressFromHex(hexKey);
 };

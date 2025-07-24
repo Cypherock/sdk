@@ -2,7 +2,12 @@ import { ISDK } from '@cypherock/sdk-core';
 import { DeviceAppError, DeviceAppErrorType } from '@cypherock/sdk-interfaces';
 import { OnStatus } from '@cypherock/sdk-utils';
 import { ChunkPayload, ChunkAck } from '../proto/generated/common';
-import { DeepPartial, Exact, Query, Result } from '../proto/generated/stellar/core';
+import {
+  DeepPartial,
+  Exact,
+  Query,
+  Result,
+} from '../proto/generated/stellar/core';
 import { assertOrThrowInvalidResult, parseCommonError } from './asserts';
 
 export function decodeResult(data: Uint8Array) {

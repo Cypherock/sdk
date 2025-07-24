@@ -10,7 +10,7 @@ export type SignTxnEventHandler = (event: SignTxnEvent) => void;
 
 // STELLAR interface for XDR transaction format
 export interface IUnsignedTransaction {
-  xdr: string;              // Base64 XDR transaction envelope
+  xdr: string; // Base64 XDR transaction envelope
   networkPassphrase: string; // Network identifier (testnet/mainnet)
 }
 
@@ -24,6 +24,6 @@ export interface ISignTxnParams {
 }
 
 export interface ISignTxnResult {
-  signature: string;       // Hex string of Ed25519 signature
+  signature: string; // Hex string of Ed25519 signature
   serializedTxn?: string; // Signed XDR ready for broadcast (if serializeTxn=true)
 }

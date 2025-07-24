@@ -29,7 +29,7 @@ export const signTxn = async (
   assert(params.walletId, 'walletId should be defined');
   assert(params.txn, 'txn should be defined');
   assert(typeof params.txn === 'object', 'txn should be an object');
-  
+
   // STELLAR CHANGE: Updated validation for XDR transaction format
   assert(
     typeof params.txn.xdr === 'string',
@@ -39,19 +39,20 @@ export const signTxn = async (
     typeof params.txn.networkPassphrase === 'string',
     'txn.networkPassphrase should be a string',
   );
-  
+
   assert(params.derivationPath, 'derivationPath should be defined');
-  
+
   // Stellar uses 3-element derivation paths
   assert(
     params.derivationPath.length === 3,
     'derivationPath should have 3 elements for Stellar: [44, 148, account]',
   );
-  
+
   // Validate Stellar derivation path format
   assert(
-    params.derivationPath[0] === (0x80000000 + 44) && params.derivationPath[1] === (0x80000000 + 148),
-    'derivationPath should follow Stellar format: m/44\'/148\'/account\'',
+    params.derivationPath[0] === 0x80000000 + 44 &&
+      params.derivationPath[1] === 0x80000000 + 148,
+    "derivationPath should follow Stellar format: m/44'/148'/account'",
   );
 
   await sdk.checkAppCompatibility(APP_VERSION);
@@ -73,7 +74,7 @@ export const signTxn = async (
 
   // STELLAR CHANGE: Convert XDR to bytes for hardware wallet
   let txnBytes: Uint8Array;
-  
+
   try {
     // Convert base64 XDR to bytes
     txnBytes = Buffer.from(params.txn.xdr, 'base64');
@@ -99,7 +100,7 @@ export const signTxn = async (
   await helper.sendQuery({
     signature: {},
   });
-  
+
   const result = await helper.waitForResult();
   assertOrThrowInvalidResult(result.signature);
 
@@ -114,30 +115,29 @@ export const signTxn = async (
       // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
       const { getStellarLib } = require('../../utils');
       const StellarSdk = getStellarLib();
-      
+
       // Parse the original unsigned transaction
       const transaction = StellarSdk.TransactionBuilder.fromXDR(
-        params.txn.xdr, 
-        params.txn.networkPassphrase
+        params.txn.xdr,
+        params.txn.networkPassphrase,
       );
-      
+
       // Convert hex signature back to bytes
       const signatureBytes = Buffer.from(signature, 'hex');
-      
+
       // Create a custom signer to add our signature
       const deviceSigner = {
         sign: () => signatureBytes,
         hint: () => Buffer.alloc(4), // 4-byte signature hint
       };
-      
+
       // Add the signature to the transaction
       transaction.sign(deviceSigner);
-      
+
       // Get the signed XDR ready for broadcast
       serializedTxn = transaction.toEnvelope().toXDR('base64');
-      
+
       // logger.info('DEBUG - Successfully created serialized transaction');
-      
     } catch (error) {
       logger.error('Failed to reconstruct signed transaction:', error);
       // For debugging: temporarily return original XDR instead of throwing

@@ -9,5 +9,5 @@ export interface IGetUserVerifiedPublicKeyParams {
 
 export interface IGetUserVerifiedPublicKeyResult {
   publicKey: string; // Hex string of Ed25519 public key
-  address: string;   // Stellar address starting with 'G'
+  address: string; // Stellar address starting with 'G'
 }

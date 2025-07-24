@@ -32,28 +32,29 @@ export const getPublicKeys = async (
     params.derivationPaths.length > 0,
     'derivationPaths should not be empty',
   );
-  
-    // Stellar uses m/44'/148'/account'
+
+  // Stellar uses m/44'/148'/account'
   assert(
     params.derivationPaths.reduce(
       (acc, path) => acc && path.path.length >= 3,
       true,
     ),
-    'derivationPaths should have at least 3 elements (m/44\'/148\'/account\')',
+    "derivationPaths should have at least 3 elements (m/44'/148'/account')",
   );
 
   // STELLAR CHANGE: Validate Stellar-specific derivation path format
   assert(
-    params.derivationPaths.reduce(
-      (acc, path) => {
-        if (path.path.length >= 2) {
-            return acc && path.path[0] === (0x80000000 + 44) && path.path[1] === (0x80000000 + 148);
-        }
-        return acc;
-      },
-      true,
-    ),
-    'derivationPaths should follow Stellar format: m/44\'/148\'/account\'',
+    params.derivationPaths.reduce((acc, path) => {
+      if (path.path.length >= 2) {
+        return (
+          acc &&
+          path.path[0] === 0x80000000 + 44 &&
+          path.path[1] === 0x80000000 + 148
+        );
+      }
+      return acc;
+    }, true),
+    "derivationPaths should follow Stellar format: m/44'/148'/account'",
   );
 
   await sdk.checkAppCompatibility(APP_VERSION);
