@@ -48,7 +48,7 @@ export const signTxn = async (
     'derivationPath should have 3 elements for Stellar: [44, 148, account]',
   );
   
-  //Validate Stellar derivation path format
+  // Validate Stellar derivation path format
   assert(
     params.derivationPath[0] === (0x80000000 + 44) && params.derivationPath[1] === (0x80000000 + 148),
     'derivationPath should follow Stellar format: m/44\'/148\'/account\'',
