@@ -96,7 +96,7 @@ const stellarTransferWithSerialize: ISignTxnTestCase = {
   output: {
     signature:
       'da2bb7324ee1a78bc62ea120b09d8caf3e6bf1ab1906b01a56eacc4a64b00ed5f1a2b3c4d5e6f7890123456789abcdef0123456789abcdef0123456789abcdef',
-    serializedTxn: undefined, // Device should handle serialization
+    serializedTxn: sampleStellarXDR, // FIXED: Expect the actual serialized transaction when serializeTxn is true
   },
 };
 
@@ -189,6 +189,7 @@ const stellarTransferWithoutSerialize: ISignTxnTestCase = {
   output: {
     signature:
       'da2bb7324ee1a78bc62ea120b09d8caf3e6bf1ab1906b01a56eacc4a64b00ed5f1a2b3c4d5e6f7890123456789abcdef0123456789abcdef0123456789abcdef',
+    // No serializedTxn property when serializeTxn is false (undefined by default)
   },
 };
 
