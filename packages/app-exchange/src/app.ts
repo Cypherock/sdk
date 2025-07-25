@@ -39,4 +39,8 @@ export class ExchangeApp {
       operations.storeSignature(this.sdk, params),
     );
   }
+
+  public async closeFlow() {
+    return this.sdk.runOperation(() => operations.closeFlow(this.sdk));
+  }
 }

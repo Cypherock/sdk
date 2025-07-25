@@ -1,5 +1,5 @@
 import { ILogger } from '@cypherock/sdk-interfaces';
-import { config } from './config';
+import { getConfig } from './config';
 
 const logLevelPriority: Record<string, number | undefined> = {
   error: 0,
@@ -11,7 +11,7 @@ const logLevelPriority: Record<string, number | undefined> = {
 
 const doLog = (level: string) => {
   const currentPriority = logLevelPriority[level];
-  const allowedPriority = logLevelPriority[config.LOG_LEVEL] ?? 2;
+  const allowedPriority = logLevelPriority[getConfig().LOG_LEVEL] ?? 2;
 
   if (currentPriority === undefined) {
     return false;
