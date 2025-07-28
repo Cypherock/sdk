@@ -3,9 +3,9 @@ import { jest } from '@jest/globals';
 export const post = jest.fn();
 export const get = jest.fn();
 
-jest.mock('../utils/http', () => ({
+jest.mock('axios', () => ({
   __esModule: true,
-  http: {
+  default: {
     post,
     get,
   },

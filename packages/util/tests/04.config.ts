@@ -15,14 +15,16 @@ describe('config.ts', () => {
 
       process.env.API_CYPHEROCK = customUrl;
 
-      const { config } = await import('../src');
+      const { getConfig } = await import('../src');
+      const config = getConfig();
 
       expect(config).toBeDefined();
       expect(config.API_CYPHEROCK).toEqual(customUrl);
     });
 
     test('should have default value with no external configuration', async () => {
-      const { config } = await import('../src');
+      const { getConfig } = await import('../src');
+      const config = getConfig();
 
       expect(config).toBeDefined();
       expect(config.API_CYPHEROCK).toEqual('https://api.cypherock.com');

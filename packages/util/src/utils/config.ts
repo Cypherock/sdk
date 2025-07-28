@@ -13,7 +13,7 @@ export const getEnvVariable = (key: string, defaultValue?: string): string => {
   throw new Error(`ENVIREMENT VARIABLE '${key}' NOT SPECIFIED.`);
 };
 
-export const config = {
+export const getConfig = () => ({
   API_CYPHEROCK: getEnvVariable('API_CYPHEROCK', 'https://api.cypherock.com'),
   LOG_LEVEL: getEnvVariable('LOG_LEVEL', 'debug'),
-};
+});
