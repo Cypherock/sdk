@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      rpc-websockets:
+        specifier: 9.1.2
+        version: 9.1.2
     devDependencies:
       '@changesets/changelog-github':
         specifier: ^0.4.8
@@ -948,7 +952,7 @@ importers:
         specifier: workspace:^0.0.16
         version: link:../interfaces
       '@cypherock/sdk-utils':
-        specifier: workspace:^0.0.19
+        specifier: workspace:^0.0.20
         version: link:../util
       long:
         specifier: ^5.2.1
@@ -3707,6 +3711,12 @@ packages:
       tslib: 2.8.1
     dev: false
 
+  /@swc/helpers@0.5.17:
+    resolution: {integrity: sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==}
+    dependencies:
+      tslib: 2.8.1
+    dev: false
+
   /@tronweb3/google-protobuf@3.21.2:
     resolution: {integrity: sha512-IVcT2GfWX3K6tHUVhs14NP5uzKhQt4KeDya1g9ACxuZsUzsaoGUIGzceK2Ltu7xp1YV94AaHOf4yxLAivlvEkQ==}
 
@@ -3893,6 +3903,10 @@ packages:
     resolution: {integrity: sha512-6WaYesThRMCl19iryMYP7/x2OVgCtbIVflDGFpWnb9irXI3UjYE4AzmYuiUKY1AJstGijoY+MgUszMgRxIYTYw==}
     dev: false
 
+  /@types/uuid@8.3.4:
+    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
+    dev: false
+
   /@types/uuid@9.0.0:
     resolution: {integrity: sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==}
     dev: true
@@ -3904,6 +3918,12 @@ packages:
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
     dependencies:
       '@types/node': 18.11.18
+
+  /@types/ws@8.18.1:
+    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
+    dependencies:
+      '@types/node': 18.11.18
+    dev: false
 
   /@types/yargs-parser@21.0.3:
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -9845,6 +9865,21 @@ packages:
     optionalDependencies:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
+
+  /rpc-websockets@9.1.2:
+    resolution: {integrity: sha512-fvA0JfSqWmJsq0FqLnl51DPRMqPer7hcIqqLwuhgAUOWrLVuJhmNeL+Y4Ds5PdoX/NyUhUWoflL6A7bT93Xfkg==}
+    dependencies:
+      '@swc/helpers': 0.5.17
+      '@types/uuid': 8.3.4
+      '@types/ws': 8.18.1
+      buffer: 6.0.3
+      eventemitter3: 5.0.1
+      uuid: 8.3.2
+      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    optionalDependencies:
+      bufferutil: 4.0.8
+      utf-8-validate: 5.0.10
+    dev: false
 
   /run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
