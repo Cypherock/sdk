@@ -14,6 +14,7 @@ import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
+  getStellarLib,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
 
@@ -72,7 +73,6 @@ export const signTxn = async (
     onStatus,
   });
 
-  // STELLAR CHANGE: Convert XDR to bytes for hardware wallet
   let txnBytes: Uint8Array;
 
   try {
@@ -112,8 +112,6 @@ export const signTxn = async (
 
   if (params.serializeTxn) {
     try {
-      // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
-      const { getStellarLib } = require('../../utils');
       const StellarSdk = getStellarLib();
 
       // Parse the original unsigned transaction
@@ -126,13 +124,13 @@ export const signTxn = async (
       const signatureBytes = Buffer.from(signature, 'hex');
 
       // Create a custom signer to add our signature
-      const deviceSigner = {
-        sign: () => signatureBytes,
-        hint: () => Buffer.alloc(4), // 4-byte signature hint
-      };
+      const hint = transaction.hash().slice(-4);
+      const decoratedSignature = new StellarSdk.xdr.DecoratedSignature({
+        hint,
+        signature: signatureBytes,
+      });
 
-      // Add the signature to the transaction
-      transaction.sign(deviceSigner);
+      transaction.signatures.push(decoratedSignature);
 
       // Get the signed XDR ready for broadcast
       serializedTxn = transaction.toEnvelope().toXDR('base64');
@@ -140,9 +138,7 @@ export const signTxn = async (
       // logger.info('DEBUG - Successfully created serialized transaction');
     } catch (error) {
       logger.error('Failed to reconstruct signed transaction:', error);
-      // For debugging: temporarily return original XDR instead of throwing
-      logger.warn('Falling back to original XDR for debugging');
-      serializedTxn = params.txn.xdr;
+      throw error;
     }
   }
 

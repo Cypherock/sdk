@@ -4,7 +4,7 @@ import { queryToUint8Array, resultToUint8Array } from '../__helpers__';
 
 // Sample Stellar XDR transaction for testing
 const sampleStellarXDR =
-  'AAAAAgAAAABt7324zmZ7Qs3TJ9Ug7QWX8Qx3vx5ld9CZ8t6KGVNa8AAAA+gAAAFmAAAAAQAAAAEAAAAAAAAAAAAAAABk4LTWAAAAAAAAAAEAAAAAAAAADgAAAAFYTEGQQ5QAA+gAAAFmAAAAAAAAAAEAAAAAAAAAAQAAAABt7324zmZ7Qs3TJ9Ug7QWX8Qx3vx5ld9CZ8t6KGVNa8AAAAAAAAAAAAmJaAAAAAAAAAFEAAAAAAA==';
+  'AAAAAgAAAADCqTIZAnYwoZ3oQWx9HISjQ+docmusJBWB7UuwyB1l1gAAAGQAAVpoAAAAFQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAABxIZWxsb29vbyBCb3JpbmcgV29ybGxkZGQuLi4gAAAAAQAAAAAAAAABAAAAAJZDpSknyjuaOzYpuvE7OxpsA8/mnsNCikb6I1McklSWAAAAAAAAAAA7msoAAAAAAAAAAAA=';
 
 const stellarTransferWithSerialize: ISignTxnTestCase = {
   name: 'Stellar transfer with serialize',
@@ -14,7 +14,7 @@ const stellarTransferWithSerialize: ISignTxnTestCase = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0], // CORRECTED: 3 elements for Stellar
+    derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0],
     serializeTxn: true,
     txn: {
       xdr: sampleStellarXDR,
@@ -32,7 +32,7 @@ const stellarTransferWithSerialize: ISignTxnTestCase = {
               233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
               26, 3, 187, 121, 64,
             ]),
-            derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0], // CORRECTED
+            derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0],
             transactionSize: Buffer.from(sampleStellarXDR, 'base64').length,
           },
         },
@@ -96,7 +96,9 @@ const stellarTransferWithSerialize: ISignTxnTestCase = {
   output: {
     signature:
       'da2bb7324ee1a78bc62ea120b09d8caf3e6bf1ab1906b01a56eacc4a64b00ed5f1a2b3c4d5e6f7890123456789abcdef0123456789abcdef0123456789abcdef',
-    serializedTxn: sampleStellarXDR, // FIXED: Expect the actual serialized transaction when serializeTxn is true
+
+    serializedTxn:
+      'AAAAAgAAAADCqTIZAnYwoZ3oQWx9HISjQ+docmusJBWB7UuwyB1l1gAAAGQAAVpoAAAAFQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAABxIZWxsb29vbyBCb3JpbmcgV29ybGxkZGQuLi4gAAAAAQAAAAAAAAABAAAAAJZDpSknyjuaOzYpuvE7OxpsA8/mnsNCikb6I1McklSWAAAAAAAAAAA7msoAAAAAAAAAAAGJo6RuAAAAQNortzJO4aeLxi6hILCdjK8+a/GrGQawGlbqzEpksA7V8aKzxNXm94kBI0VniavN7wEjRWeJq83vASNFZ4mrze8=',
   },
 };
 
@@ -108,7 +110,7 @@ const stellarTransferWithoutSerialize: ISignTxnTestCase = {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0], // CORRECTED: 3 elements for Stellar
+    derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0],
     txn: {
       xdr: sampleStellarXDR,
       networkPassphrase: 'Test SDF Network ; September 2015',
@@ -125,7 +127,7 @@ const stellarTransferWithoutSerialize: ISignTxnTestCase = {
               233, 62, 110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128,
               26, 3, 187, 121, 64,
             ]),
-            derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0], // CORRECTED
+            derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0],
             transactionSize: Buffer.from(sampleStellarXDR, 'base64').length,
           },
         },
@@ -189,7 +191,6 @@ const stellarTransferWithoutSerialize: ISignTxnTestCase = {
   output: {
     signature:
       'da2bb7324ee1a78bc62ea120b09d8caf3e6bf1ab1906b01a56eacc4a64b00ed5f1a2b3c4d5e6f7890123456789abcdef0123456789abcdef0123456789abcdef',
-    // No serializedTxn property when serializeTxn is false (undefined by default)
   },
 };
 

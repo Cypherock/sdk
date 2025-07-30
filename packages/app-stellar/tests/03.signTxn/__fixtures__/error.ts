@@ -8,7 +8,7 @@ import { queryToUint8Array, resultToUint8Array } from '../__helpers__';
 import { ISignTxnParams } from '../../../src';
 
 const sampleStellarXDR =
-  'AAAAAgAAAABt7324zmZ7Qs3TJ9Ug7QWX8Qx3vx5ld9CZ8t6KGVNa8AAAA+gAAAFmAAAAAQAAAAEAAAAAAAAAAAAAAABk4LTWAAAAAAAAAAEAAAAAAAAADgAAAAFYTEGQQ5QAA+gAAAFmAAAAAAAAAAEAAAAAAAAAAQAAAABt7324zmZ7Qs3TJ9Ug7QWX8Qx3vx5ld9CZ8t6KGVNa8AAAAAAAAAAAAmJaAAAAAAAAAFEAAAAAAA==';
+  'AAAAAgAAAADCqTIZAnYwoZ3oQWx9HISjQ+docmusJBWB7UuwyB1l1gAAAGQAAVpoAAAAFQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAABxIZWxsb29vbyBCb3JpbmcgV29ybGxkZGQuLi4gAAAAAQAAAAAAAAABAAAAAJZDpSknyjuaOzYpuvE7OxpsA8/mnsNCikb6I1McklSWAAAAAAAAAAA7msoAAAAAAAAAAAA=';
 
 const commonParams: {
   params: ISignTxnParams;
@@ -23,7 +23,7 @@ const commonParams: {
       110, 172, 92, 20, 35, 250, 190, 146, 62, 8, 53, 86, 128, 26, 3, 187, 121,
       64,
     ]),
-    derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0], // CORRECTED: 3 elements for Stellar
+    derivationPath: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0],
     txn: {
       xdr: sampleStellarXDR,
       networkPassphrase: 'Test SDF Network ; September 2015',

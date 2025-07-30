@@ -1,5 +1,3 @@
-// packages/app-stellar/src/operations/getPublicKeys/index.ts
-
 import { ISDK } from '@cypherock/sdk-core';
 import {
   createStatusListener,
@@ -42,7 +40,6 @@ export const getPublicKeys = async (
     "derivationPaths should have at least 3 elements (m/44'/148'/account')",
   );
 
-  // STELLAR CHANGE: Validate Stellar-specific derivation path format
   assert(
     params.derivationPaths.reduce((acc, path) => {
       if (path.path.length >= 2) {

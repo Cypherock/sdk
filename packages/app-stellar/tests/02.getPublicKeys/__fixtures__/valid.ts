@@ -12,7 +12,7 @@ const requestOneAddress: IGetPublicKeysTestCase = {
     ]),
     derivationPaths: [
       {
-        path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0], // CORRECTED: 3 elements for Stellar
+        path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0],
       },
     ],
   },
@@ -31,7 +31,7 @@ const requestOneAddress: IGetPublicKeysTestCase = {
                 ]),
                 derivationPaths: [
                   {
-                    path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0], // CORRECTED
+                    path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0],
                   },
                 ],
               },
@@ -77,10 +77,7 @@ const requestOneAddress: IGetPublicKeysTestCase = {
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
-    publicKeys: [
-      'da2bb7324ee1a78bc62ea120b09d8caf3e6bf1ab1906b01a56eacc4a64b00ed5',
-    ],
-    addresses: ['GDNCXNZSJ3Q2PC6GF2QSBME5RSXT427RVMMQNMA2K3VMYSTEWAHNLXD6'], // UPDATED: Use actual generated address
+    addresses: ['GDNCXNZSJ3Q2PC6GF2QSBME5RSXT427RVMMQNMA2K3VMYSTEWAHNLXD6'],
   },
 };
 
@@ -119,13 +116,13 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
                 ]),
                 derivationPaths: [
                   {
-                    path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0], // CORRECTED
+                    path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 0],
                   },
                   {
-                    path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 1], // CORRECTED
+                    path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 1],
                   },
                   {
-                    path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 2], // CORRECTED
+                    path: [0x80000000 + 44, 0x80000000 + 148, 0x80000000 + 2],
                   },
                 ],
               },
@@ -171,15 +168,10 @@ const requestMultipleAddress: IGetPublicKeysTestCase = {
   ],
   mocks: { eventCalls: [[0], [1], [2], [3], [4]] },
   output: {
-    publicKeys: [
-      'da2bb7324ee1a78bc62ea120b09d8caf3e6bf1ab1906b01a56eacc4a64b00ed5',
-      'f1a2b3c4d5e6f7890123456789abcdef0123456789abcdef0123456789abcdef',
-      'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789',
-    ],
     addresses: [
-      'GDNCXNZSJ3Q2PC6GF2QSBME5RSXT427RVMMQNMA2K3VMYSTEWAHNLXD6', // UPDATED: Use actual generated addresses
-      'GDY2FM6E2XTPPCIBENCWPCNLZXXQCI2FM6E2XTPPAERUKZ4JVPG67KOR', // UPDATED
-      'GCV433YBENCWPCNLZXXQCI2FM6E2XTPPAERUKZ4JVPG66AJDIVTYTFGN', // UPDATED
+      'GDNCXNZSJ3Q2PC6GF2QSBME5RSXT427RVMMQNMA2K3VMYSTEWAHNLXD6',
+      'GDY2FM6E2XTPPCIBENCWPCNLZXXQCI2FM6E2XTPPAERUKZ4JVPG67KOR',
+      'GCV433YBENCWPCNLZXXQCI2FM6E2XTPPAERUKZ4JVPG66AJDIVTYTFGN',
     ],
   },
 };
