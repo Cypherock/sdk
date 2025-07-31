@@ -11,6 +11,7 @@ Supported coins from the evm family are:
 7. Ethereum Classic
 8. Arbitrum
 9. Optimism
+10. Base
 
 ## 1. Generate Address
 
