@@ -31,7 +31,6 @@ export const signTxn = async (
   assert(params.txn, 'txn should be defined');
   assert(typeof params.txn === 'object', 'txn should be an object');
 
-  // STELLAR CHANGE: Updated validation for XDR transaction format
   assert(
     typeof params.txn.xdr === 'string',
     'txn.xdr should be a base64 XDR string',
@@ -114,16 +113,13 @@ export const signTxn = async (
     try {
       const StellarSdk = getStellarLib();
 
-      // Parse the original unsigned transaction
       const transaction = StellarSdk.TransactionBuilder.fromXDR(
         params.txn.xdr,
         params.txn.networkPassphrase,
       );
 
-      // Convert hex signature back to bytes
       const signatureBytes = Buffer.from(signature, 'hex');
 
-      // Create a custom signer to add our signature
       const hint = transaction.hash().slice(-4);
       const decoratedSignature = new StellarSdk.xdr.DecoratedSignature({
         hint,
@@ -132,10 +128,7 @@ export const signTxn = async (
 
       transaction.signatures.push(decoratedSignature);
 
-      // Get the signed XDR ready for broadcast
       serializedTxn = transaction.toEnvelope().toXDR('base64');
-
-      // logger.info('DEBUG - Successfully created serialized transaction');
     } catch (error) {
       logger.error('Failed to reconstruct signed transaction:', error);
       throw error;
