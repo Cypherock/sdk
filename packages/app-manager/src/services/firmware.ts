@@ -1,9 +1,12 @@
+// packages/app-manager/src/services/firmware.ts
 import axios from 'axios';
 import { createQueryString, getConfig } from '@cypherock/sdk-utils';
+import { FirmwareChannel } from '../constants/firmware';
 
 const getBaseURL = () => `${getConfig().API_CYPHEROCK}/firmware-stm`;
 
 export interface GetLatestFirmwareOptions {
+  channel: FirmwareChannel;
   prerelease?: boolean;
   doDownload?: boolean;
 }
@@ -21,9 +24,10 @@ const downloadFile = async (url: string) => {
   return new Uint8Array(buffer);
 };
 
-export async function getLatest(params: GetLatestFirmwareOptions = {}) {
+export async function getLatest(params: GetLatestFirmwareOptions) {
   const response = await axios.get(
     `${getBaseURL()}/latest?${createQueryString({
+      channel: params.channel,
       prerelease: params.prerelease,
     })}`,
   );
