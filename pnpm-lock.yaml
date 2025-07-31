@@ -4,13 +4,14 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@solana/web3.js@1.87.6':
+    hash: sfzhfighzr2bsfbmnapg4kjna4
+    path: patches/@solana__web3.js@1.87.6.patch
+
 importers:
 
   .:
-    dependencies:
-      rpc-websockets:
-        specifier: 9.1.2
-        version: 9.1.2
     devDependencies:
       '@changesets/changelog-github':
         specifier: ^0.4.8
@@ -147,7 +148,7 @@ importers:
         version: link:../../packages/util
       '@solana/web3.js':
         specifier: ^1.87.6
-        version: 1.87.6
+        version: 1.87.6(patch_hash=sfzhfighzr2bsfbmnapg4kjna4)
       '@stardust-collective/dag4':
         specifier: ^2.2.2
         version: 2.2.2
@@ -829,7 +830,7 @@ importers:
         version: 29.4.1
       '@solana/web3.js':
         specifier: ^1.87.6
-        version: 1.87.6
+        version: 1.87.6(patch_hash=sfzhfighzr2bsfbmnapg4kjna4)
       '@stryker-mutator/core':
         specifier: ^6.4.1
         version: 6.4.1
@@ -3497,7 +3498,7 @@ packages:
     dependencies:
       buffer: 6.0.3
 
-  /@solana/web3.js@1.87.6:
+  /@solana/web3.js@1.87.6(patch_hash=sfzhfighzr2bsfbmnapg4kjna4):
     resolution: {integrity: sha512-LkqsEBgTZztFiccZZXnawWa8qNCATEqE97/d0vIwjTclmVlc8pBpD1DmjfVHtZ1HS5fZorFlVhXfpwnCNDZfyg==}
     dependencies:
       '@babel/runtime': 7.26.0
@@ -3519,6 +3520,7 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
+    patched: true
 
   /@stardust-collective/dag4-core@2.2.2:
     resolution: {integrity: sha512-1j8KcYJqAe0zKSF6B3uXfuQJHBocg6SgHKbsIR5YRUXMPuaffZmqEXzfRK1hlPjwXQhgu8hy+U6Jxj4XmiVLeA==}
@@ -3711,12 +3713,6 @@ packages:
       tslib: 2.8.1
     dev: false
 
-  /@swc/helpers@0.5.17:
-    resolution: {integrity: sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==}
-    dependencies:
-      tslib: 2.8.1
-    dev: false
-
   /@tronweb3/google-protobuf@3.21.2:
     resolution: {integrity: sha512-IVcT2GfWX3K6tHUVhs14NP5uzKhQt4KeDya1g9ACxuZsUzsaoGUIGzceK2Ltu7xp1YV94AaHOf4yxLAivlvEkQ==}
 
@@ -3903,10 +3899,6 @@ packages:
     resolution: {integrity: sha512-6WaYesThRMCl19iryMYP7/x2OVgCtbIVflDGFpWnb9irXI3UjYE4AzmYuiUKY1AJstGijoY+MgUszMgRxIYTYw==}
     dev: false
 
-  /@types/uuid@8.3.4:
-    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
-    dev: false
-
   /@types/uuid@9.0.0:
     resolution: {integrity: sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==}
     dev: true
@@ -3918,12 +3910,6 @@ packages:
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
     dependencies:
       '@types/node': 18.11.18
-
-  /@types/ws@8.18.1:
-    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
-    dependencies:
-      '@types/node': 18.11.18
-    dev: false
 
   /@types/yargs-parser@21.0.3:
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -9866,21 +9852,6 @@ packages:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
 
-  /rpc-websockets@9.1.2:
-    resolution: {integrity: sha512-fvA0JfSqWmJsq0FqLnl51DPRMqPer7hcIqqLwuhgAUOWrLVuJhmNeL+Y4Ds5PdoX/NyUhUWoflL6A7bT93Xfkg==}
-    dependencies:
-      '@swc/helpers': 0.5.17
-      '@types/uuid': 8.3.4
-      '@types/ws': 8.18.1
-      buffer: 6.0.3
-      eventemitter3: 5.0.1
-      uuid: 8.3.2
-      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-    optionalDependencies:
-      bufferutil: 4.0.8
-      utf-8-validate: 5.0.10
-    dev: false
-
   /run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
     engines: {node: '>=0.12.0'}
@@ -10811,7 +10782,7 @@ packages:
       json5: 2.2.3
       lodash.memoize: 4.1.2
       make-error: 1.3.6
-      semver: 7.5.2
+      semver: 7.6.3
       typescript: 4.9.5
       yargs-parser: 21.1.1
     dev: true

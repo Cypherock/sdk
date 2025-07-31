@@ -42,7 +42,9 @@
     "node": ">=18.0.0"
   },
   "packageManager": "pnpm@8.6.0",
-  "dependencies": {
-    "rpc-websockets": "9.1.2"
+  "pnpm": {
+    "patchedDependencies": {
+      "@solana/web3.js@1.87.6": "patches/@solana__web3.js@1.87.6.patch"
+    }
   }
 }
