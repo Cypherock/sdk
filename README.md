@@ -79,7 +79,7 @@ pnpm build        # build all modules
 - `pnpm lint`: Lint all files
 - `pnpm pretty`: Prettify all files
 
-### Turorepo Remote Caching
+### Turborepo Remote Caching
 
 - Create a new file `.turbo/config.json` and add the following content -
   ```json
