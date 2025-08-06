@@ -1,6 +1,6 @@
-export const FirmwareChannel = {
+export const FirmwareVariant = {
   MULTICOIN: 'MULTICOIN',
   BTC_ONLY: 'BTC_ONLY',
 } as const;
 
-export type FirmwareChannel = (typeof FirmwareChannel)[keyof typeof FirmwareChannel];
+export type FirmwareVariant = (typeof FirmwareVariant)[keyof typeof FirmwareVariant];

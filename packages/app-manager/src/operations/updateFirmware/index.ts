@@ -1,4 +1,3 @@
-// packages/app-manager/src/operations/updateFirmware/index.ts
 import { ISDK } from '@cypherock/sdk-core';
 import {
   createLoggerWithPrefix,
@@ -52,8 +51,8 @@ export const updateFirmware = async (
 ): Promise<void> => {
   logger.info('Started');
 
-  let { firmware, version, channel } = params;
-  const { onEvent } = params;
+  const { onEvent, variant } = params;
+  let { firmware, version } = params;
 
   const { forceStatusUpdate } = createStatusListener({
     enums: UpdateFirmwareStatus,
@@ -65,7 +64,7 @@ export const updateFirmware = async (
     logger.info('Fetching latest firmware version');
 
     const latestFirmware = await firmwareService.getLatest({
-      channel,
+      variant,
       prerelease: params.allowPrerelease,
       doDownload: true,
     });
