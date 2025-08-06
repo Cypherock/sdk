@@ -1,6 +1,5 @@
 import { IDevice, IDeviceConnection } from '@cypherock/sdk-interfaces';
-import { IVersion, UpdateFirmwareStatus } from '../../proto/types';
-import { FirmwareVariant } from '../../constants/firmware';
+import { IVersion, UpdateFirmwareStatus, FirmwareVariant } from '../../proto/types';
 
 export type GetDevices = () => Promise<IDevice[]>;
 
