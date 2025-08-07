@@ -1,5 +1,14 @@
 # nodejs-test
 
+## 0.1.9
+
+### Patch Changes
+
+- [#160](https://github.com/Cypherock/sdk/pull/160) [`32476b8`](https://github.com/Cypherock/sdk/commit/32476b86c1655486423197095684a38bdd01c3cd) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Stellar release
+
+- Updated dependencies [[`32476b8`](https://github.com/Cypherock/sdk/commit/32476b86c1655486423197095684a38bdd01c3cd)]:
+  - @cypherock/sdk-app-stellar@1.0.1
+
 ## 0.1.8
 
 ### Patch Changes
