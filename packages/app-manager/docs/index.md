@@ -35,15 +35,23 @@ const managerApp = await ManagerApp.create();
 
 ### 2.2. `async ManagerApp.getLatestFirmware(params?)`
 
-Fetches the latest firmware of the device from the server.
+Fetches the latest firmware of the device from the server for a specific variant.
 
 **Arguments**:<br/>
 `params?` (Optional): `GetLatestFirmwareOptions`
 
 ```ts
+import { FirmwareVariant } from '@cypherock/sdk-app-manager/lib/constants/firmware';
+
 interface GetLatestFirmwareOptions {
+  // The firmware variant to check. Defaults to 'MULTICOIN'.
+  variant?: FirmwareVariant;
+
   // If true, downloads the firmware binary
   doDownload?: boolean;
+  
+  // If true, checks the prerelease channel instead
+  prerelease?: boolean;
 }
 ```
 
@@ -62,7 +70,16 @@ interface LatestFirmware {
 **Example:**
 
 ```ts
+import { FirmwareVariant } from '@cypherock/sdk-app-manager/lib/constants/firmware';
+
+// To get MULTICOIN firmware (variant is optional, defaults to MULTICOIN):
 const { firmware, version } = await ManagerApp.getLatestFirmware({
+  doDownload: true,
+});
+
+// To get BTC_ONLY firmware:
+const { firmware, version } = await ManagerApp.getLatestFirmware({
+  variant: FirmwareVariant.BTC_ONLY,
   doDownload: true,
 });
 ```
@@ -375,7 +392,7 @@ interface IExistingWalletItem {
 await managerApp.trainCard({ onWallets: () => Promise.resolve(true) });
 ```
 
-### 4.8. `async managerApp.update(params)`
+### 4.8. `async managerApp.updateFirmware(params)`
 
 Updates the firmware of the connected device.
 
@@ -386,6 +403,8 @@ Updates the firmware of the connected device.
 `params`: `IUpdateFirmwareParams`
 
 ```ts
+import { FirmwareVariant } from '@cypherock/sdk-app-manager/lib/constants/firmware';
+
 type GetDevices = () => Promise<IDevice[]>;
 
 type CreateDeviceConnection = (device: IDevice) => Promise<IDeviceConnection>;
@@ -393,6 +412,9 @@ type CreateDeviceConnection = (device: IDevice) => Promise<IDeviceConnection>;
 type UpdateFirmwareEventHandler = (event: UpdateFirmwareStatus) => void;
 
 interface IUpdateFirmwareParams {
+  // The firmware variant. This determines which firmware is fetched if not provided directly. Defaults to 'MULTICOIN'.
+  variant?: FirmwareVariant;
+
   // The firmware binary
   firmware?: Uint8Array;
 
@@ -417,5 +439,15 @@ interface IUpdateFirmwareParams {
 **Example:**
 
 ```ts
-await managerApp.updateFirmware({ createConnection, getDevices });
+import { FirmwareVariant } from '@cypherock/sdk-app-manager/lib/constants/firmware';
+
+// The client application should determine the device variant first.
+// This can be done by calling managerApp.getDeviceInfo() and checking the `variant_str` property.
+const deviceVariant = getVariantFromDevice(); // e.g., FirmwareVariant.BTC_ONLY
+
+await managerApp.updateFirmware({ 
+  variant: deviceVariant, 
+  createConnection, 
+  getDevices 
+});
 ```
