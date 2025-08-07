@@ -1,5 +1,12 @@
 # nodejs-test
 
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`a9ed7fa`](https://github.com/Cypherock/sdk/commit/a9ed7fa3d241c0db323a2df6be5144da7fc911e8)]:
+  - @cypherock/sdk-app-stellar@1.0.0
+
 ## 0.1.7
 
 ### Patch Changes
