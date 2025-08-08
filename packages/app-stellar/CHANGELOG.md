@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-stellar
 
+## 1.0.2
+
+### Patch Changes
+
+- [#162](https://github.com/Cypherock/sdk/pull/162) [`05939a1`](https://github.com/Cypherock/sdk/commit/05939a17a8a91d3c815e6a83d4d10c2f02613bc8) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Fixed stellar sign txn signature hint
+
 ## 1.0.1
 
 ### Patch Changes
