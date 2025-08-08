@@ -1,6 +1,6 @@
 {
   "name": "nodejs-test",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -33,6 +33,7 @@
     "@cypherock/sdk-app-tron": "workspace:^",
     "@cypherock/sdk-app-xrp": "workspace:^",
     "@cypherock/sdk-app-stellar": "workspace:^",
+    "@cypherock/sdk-app-sia": "workspace:^",
     "@cypherock/sdk-core": "workspace:^",
     "@cypherock/sdk-hw-hid": "workspace:^",
     "@cypherock/sdk-hw-serialport": "workspace:^",
