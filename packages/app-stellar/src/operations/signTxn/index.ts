@@ -118,19 +118,23 @@ export const signTxn = async (
         params.txn.networkPassphrase,
       );
 
-      const signatureBytes = Buffer.from(signature, 'hex');
+      const pubkey = transaction
+        .toEnvelope()
+        .v1()
+        .tx()
+        .sourceAccount()
+        .ed25519();
 
-      const hint = transaction.hash().slice(-4);
       const decoratedSignature = new StellarSdk.xdr.DecoratedSignature({
-        hint,
-        signature: signatureBytes,
+        hint: pubkey.slice(-4),
+        signature: Buffer.from(signature, 'hex'),
       });
 
-      transaction.signatures.push(decoratedSignature);
+      transaction.addDecoratedSignature(decoratedSignature);
 
       serializedTxn = transaction.toEnvelope().toXDR('base64');
     } catch (error) {
-      logger.error('Failed to reconstruct signed transaction:', error);
+      logger.error('Failed to construct signed transaction:', error);
       throw error;
     }
   }
