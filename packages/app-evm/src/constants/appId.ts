@@ -15,6 +15,8 @@ export const chainToAppIdMap: Record<number, number | undefined> = {
   10: 0x0e,
   // Arbitrum
   42161: 0x11,
+  // Base
+  8453: 0x12,
 };
 
 export const APP_VERSION = {
