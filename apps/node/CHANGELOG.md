@@ -1,5 +1,28 @@
 # nodejs-test
 
+## 0.1.10
+
+### Patch Changes
+
+- Updated dependencies [[`05939a1`](https://github.com/Cypherock/sdk/commit/05939a17a8a91d3c815e6a83d4d10c2f02613bc8)]:
+  - @cypherock/sdk-app-stellar@1.0.2
+
+## 0.1.9
+
+### Patch Changes
+
+- [#160](https://github.com/Cypherock/sdk/pull/160) [`32476b8`](https://github.com/Cypherock/sdk/commit/32476b86c1655486423197095684a38bdd01c3cd) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Stellar release
+
+- Updated dependencies [[`32476b8`](https://github.com/Cypherock/sdk/commit/32476b86c1655486423197095684a38bdd01c3cd)]:
+  - @cypherock/sdk-app-stellar@1.0.1
+
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`a9ed7fa`](https://github.com/Cypherock/sdk/commit/a9ed7fa3d241c0db323a2df6be5144da7fc911e8)]:
+  - @cypherock/sdk-app-stellar@1.0.0
+
 ## 0.1.7
 
 ### Patch Changes

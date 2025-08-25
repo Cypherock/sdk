@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@solana/web3.js@1.87.6':
+    hash: sfzhfighzr2bsfbmnapg4kjna4
+    path: patches/@solana__web3.js@1.87.6.patch
+
 importers:
 
   .:
@@ -117,6 +122,9 @@ importers:
       '@cypherock/sdk-app-starknet':
         specifier: workspace:^
         version: link:../../packages/app-starknet
+      '@cypherock/sdk-app-stellar':
+        specifier: workspace:^
+        version: link:../../packages/app-stellar
       '@cypherock/sdk-app-tron':
         specifier: workspace:^
         version: link:../../packages/app-tron
@@ -140,7 +148,7 @@ importers:
         version: link:../../packages/util
       '@solana/web3.js':
         specifier: ^1.87.6
-        version: 1.87.6
+        version: 1.87.6(patch_hash=sfzhfighzr2bsfbmnapg4kjna4)
       '@stardust-collective/dag4':
         specifier: ^2.2.2
         version: 2.2.2
@@ -159,6 +167,9 @@ importers:
       starknet:
         specifier: ^6.11.0
         version: 6.11.0
+      stellar-sdk:
+        specifier: ^13.3.0
+        version: 13.3.0
       tronweb:
         specifier: ^5.3.2
         version: 5.3.2
@@ -819,7 +830,7 @@ importers:
         version: 29.4.1
       '@solana/web3.js':
         specifier: ^1.87.6
-        version: 1.87.6
+        version: 1.87.6(patch_hash=sfzhfighzr2bsfbmnapg4kjna4)
       '@stryker-mutator/core':
         specifier: ^6.4.1
         version: 6.4.1
@@ -923,6 +934,79 @@ importers:
       starknet:
         specifier: ^6.11.0
         version: 6.11.0
+      ts-jest:
+        specifier: ^29.0.5
+        version: 29.0.5(@babel/core@7.26.0)(jest@29.4.1)(typescript@4.9.5)
+      ts-proto:
+        specifier: ^1.139.0
+        version: 1.139.0
+      typescript:
+        specifier: ^4.5.2
+        version: 4.9.5
+
+  packages/app-stellar:
+    dependencies:
+      '@cypherock/sdk-core':
+        specifier: workspace:^0.1.0
+        version: link:../core
+      '@cypherock/sdk-interfaces':
+        specifier: workspace:^0.0.16
+        version: link:../interfaces
+      '@cypherock/sdk-utils':
+        specifier: workspace:^0.0.20
+        version: link:../util
+      long:
+        specifier: ^5.2.1
+        version: 5.2.1
+      protobufjs:
+        specifier: ^7.2.2
+        version: 7.2.2
+    devDependencies:
+      '@cypherock/eslint-config':
+        specifier: workspace:*
+        version: link:../util-eslint-config
+      '@cypherock/prettier-config':
+        specifier: workspace:^0.0.8
+        version: link:../util-prettier-config
+      '@cypherock/tsconfig':
+        specifier: workspace:*
+        version: link:../util-tsconfig
+      '@jest/globals':
+        specifier: ^29.4.1
+        version: 29.4.1
+      '@stryker-mutator/core':
+        specifier: ^6.4.1
+        version: 6.4.1
+      '@stryker-mutator/jest-runner':
+        specifier: ^6.4.1
+        version: 6.4.1(@stryker-mutator/core@6.4.1)
+      '@stryker-mutator/typescript-checker':
+        specifier: ^6.4.1
+        version: 6.4.1(@stryker-mutator/core@6.4.1)(typescript@4.9.5)
+      '@types/jest':
+        specifier: ^29.4.0
+        version: 29.4.0
+      '@types/node':
+        specifier: 18.11.18
+        version: 18.11.18
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
+      eslint:
+        specifier: ^7.32.0
+        version: 7.32.0
+      jest:
+        specifier: ^29.4.1
+        version: 29.4.1(@types/node@18.11.18)(ts-node@10.9.2)
+      lint-staged:
+        specifier: ^13.2.0
+        version: 13.2.0
+      rimraf:
+        specifier: ^4.1.2
+        version: 4.1.2
+      stellar-sdk:
+        specifier: ^13.3.0
+        version: 13.3.0
       ts-jest:
         specifier: ^29.0.5
         version: 29.0.5(@babel/core@7.26.0)(jest@29.4.1)(typescript@4.9.5)
@@ -3414,7 +3498,7 @@ packages:
     dependencies:
       buffer: 6.0.3
 
-  /@solana/web3.js@1.87.6:
+  /@solana/web3.js@1.87.6(patch_hash=sfzhfighzr2bsfbmnapg4kjna4):
     resolution: {integrity: sha512-LkqsEBgTZztFiccZZXnawWa8qNCATEqE97/d0vIwjTclmVlc8pBpD1DmjfVHtZ1HS5fZorFlVhXfpwnCNDZfyg==}
     dependencies:
       '@babel/runtime': 7.26.0
@@ -3436,6 +3520,7 @@ packages:
       - bufferutil
       - encoding
       - utf-8-validate
+    patched: true
 
   /@stardust-collective/dag4-core@2.2.2:
     resolution: {integrity: sha512-1j8KcYJqAe0zKSF6B3uXfuQJHBocg6SgHKbsIR5YRUXMPuaffZmqEXzfRK1hlPjwXQhgu8hy+U6Jxj4XmiVLeA==}
@@ -3444,7 +3529,7 @@ packages:
     resolution: {integrity: sha512-i8/BUlFgCVHvvJBy8MjPY+7mNRtWqMDgSmO0bj8txNUfQWzYlzey4VO5E9UrS2NBdnbLnqhXQsFgyUXeVQ79zA==}
     dependencies:
       '@noble/secp256k1': 1.7.1
-      bignumber.js: 9.1.2
+      bignumber.js: 9.3.1
       bip39: 3.1.0
       blakejs: 1.2.1
       bn.js: 5.2.1
@@ -3471,7 +3556,7 @@ packages:
     resolution: {integrity: sha512-LtA8dS7bctmarKpDIipooCslDlMkk6NY4Rvd3FGBBs+JCYggQW5w5chrnZxRQzWXNcFCRHhkkAeDyZ6oaGH7LQ==}
     dependencies:
       '@stardust-collective/dag4-core': 2.2.2
-      bignumber.js: 9.1.2
+      bignumber.js: 9.3.1
       rxjs: 6.6.7
 
   /@stardust-collective/dag4-wallet@2.2.2:
@@ -3480,7 +3565,7 @@ packages:
       '@stardust-collective/dag4-core': 2.2.2
       '@stardust-collective/dag4-keystore': 2.2.2
       '@stardust-collective/dag4-network': 2.2.2
-      bignumber.js: 9.1.2
+      bignumber.js: 9.3.1
       rimraf: 3.0.2
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -3504,6 +3589,22 @@ packages:
 
   /@starknet-io/types-js@0.7.10:
     resolution: {integrity: sha512-1VtCqX4AHWJlRRSYGSn+4X1mqolI1Tdq62IwzoU2vUuEE72S1OlEeGhpvd6XsdqXcfHmVzYfj8k1XtKBQqwo9w==}
+
+  /@stellar/js-xdr@3.1.2:
+    resolution: {integrity: sha512-VVolPL5goVEIsvuGqDc5uiKxV03lzfWdvYg1KikvwheDmTBO68CKDji3bAZ/kppZrx5iTA8z3Ld5yuytcvhvOQ==}
+
+  /@stellar/stellar-base@13.1.0:
+    resolution: {integrity: sha512-90EArG+eCCEzDGj3OJNoCtwpWDwxjv+rs/RNPhvg4bulpjN/CSRj+Ys/SalRcfM4/WRC5/qAfjzmJBAuquWhkA==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@stellar/js-xdr': 3.1.2
+      base32.js: 0.1.0
+      bignumber.js: 9.3.1
+      buffer: 6.0.3
+      sha.js: 2.4.11
+      tweetnacl: 1.0.3
+    optionalDependencies:
+      sodium-native: 4.3.3
 
   /@stryker-mutator/api@6.4.1:
     resolution: {integrity: sha512-xHK5mqTXqMKegfOAhURDqaPNA2vOj79f0/fC3J9Udnol0OkTresSfOG06t2Y80Qr0iH50RQm+Dzgg0Sgt8ODzg==}
@@ -4365,6 +4466,15 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
+  /axios@1.10.0:
+    resolution: {integrity: sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==}
+    dependencies:
+      follow-redirects: 1.15.9
+      form-data: 4.0.1
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+
   /axios@1.3.4:
     resolution: {integrity: sha512-toYm+Bsyl6VC5wSkfkbbNB6ROv7KY93PEBBL6xyDczaIHasAiv4wPqQ/c4RjoQzipxRD2W5g21cOqQulZ7rHwQ==}
     dependencies:
@@ -4467,6 +4577,52 @@ packages:
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
+  /bare-addon-resolve@1.9.4(bare-url@2.1.6):
+    resolution: {integrity: sha512-unn6Vy/Yke6F99vg/7tcrvM2KUvIhTNniaSqDbam4AWkd4NhvDVSrQiRYVlNzUV2P7SPobkCK7JFVxrJk9btCg==}
+    peerDependencies:
+      bare-url: '*'
+    peerDependenciesMeta:
+      bare-url:
+        optional: true
+    dependencies:
+      bare-module-resolve: 1.11.1(bare-url@2.1.6)
+      bare-semver: 1.0.1
+      bare-url: 2.1.6
+    optional: true
+
+  /bare-module-resolve@1.11.1(bare-url@2.1.6):
+    resolution: {integrity: sha512-DCxeT9i8sTs3vUMA3w321OX/oXtNEu5EjObQOnTmCdNp5RXHBAvAaBDHvAi9ta0q/948QPz+co6SsGi6aQMYRg==}
+    peerDependencies:
+      bare-url: '*'
+    peerDependenciesMeta:
+      bare-url:
+        optional: true
+    dependencies:
+      bare-semver: 1.0.1
+      bare-url: 2.1.6
+    optional: true
+
+  /bare-os@3.6.1:
+    resolution: {integrity: sha512-uaIjxokhFidJP+bmmvKSgiMzj2sV5GPHaZVAIktcxcpCyBFFWO+YlikVAdhmUo2vYFvFhOXIAlldqV29L8126g==}
+    engines: {bare: '>=1.14.0'}
+    optional: true
+
+  /bare-path@3.0.0:
+    resolution: {integrity: sha512-tyfW2cQcB5NN8Saijrhqn0Zh7AnFNsnczRcuWODH0eYAXBsJ5gVxAUuNr7tsHSC6IZ77cA0SitzT+s47kot8Mw==}
+    dependencies:
+      bare-os: 3.6.1
+    optional: true
+
+  /bare-semver@1.0.1:
+    resolution: {integrity: sha512-UtggzHLiTrmFOC/ogQ+Hy7VfoKoIwrP1UFcYtTxoCUdLtsIErT8+SWtOC2DH/snT9h+xDrcBEPcwKei1mzemgg==}
+    optional: true
+
+  /bare-url@2.1.6:
+    resolution: {integrity: sha512-FgjDeR+/yDH34By4I0qB5NxAoWv7dOTYcOXwn73kr+c93HyC2lU6tnjifqUe33LKMJcDyCYPQjEAqgOQiXkE2Q==}
+    dependencies:
+      bare-path: 3.0.0
+    optional: true
+
   /base-x@3.0.10:
     resolution: {integrity: sha512-7d0s06rR9rYaIWHkpfLIFICM/tkSVdoPC9qYAQRpxn9DdKNWNsKC0uk++akckyLq16Tx2WIinnZ6WRriAt6njQ==}
     dependencies:
@@ -4474,6 +4630,10 @@ packages:
 
   /base-x@4.0.0:
     resolution: {integrity: sha512-FuwxlW4H5kh37X/oW59pwTzzTKRzfrrQwhmyspRM7swOEZcHtDZSCt45U6oKgtuFE+WYPblePMVIPR4RZrh/hw==}
+
+  /base32.js@0.1.0:
+    resolution: {integrity: sha512-n3TkB02ixgBOhTvANakDb4xaMXnYUVkNoRFJjQflcqMQhyEKxEHdj3E6N8t8sUQ0mjH/3/JxzlXuz3ul/J90pQ==}
+    engines: {node: '>=0.12.0'}
 
   /base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
@@ -4502,6 +4662,9 @@ packages:
 
   /bignumber.js@9.1.2:
     resolution: {integrity: sha512-2/mKyZH9K85bzOEfhXDBFZTGd1CTs+5IHpeFQo9luiBG7hghdC851Pj2WAhb6E3R6b9tZj/XKhbg4fum+Kepug==}
+
+  /bignumber.js@9.3.1:
+    resolution: {integrity: sha512-Ko0uX15oIUS7wJ3Rb30Fs6SkVbLmPBAKdlm7q9+ak9bbIeFf0MwuBsQV6z7+X768/cHsfg+WlysDWJcmthjsjQ==}
 
   /bindings@1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
@@ -6347,6 +6510,10 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
 
+  /eventsource@2.0.2:
+    resolution: {integrity: sha512-IzUmBGPR3+oUG9dUeXynyNmf91/3zUSJg1lCktzKw47OXuhco54U3r9B7O4XX+Rb1Itm9OZ2b0RkTs10bICOxA==}
+    engines: {node: '>=12.0.0'}
+
   /evp_bytestokey@1.0.3:
     resolution: {integrity: sha512-/f2Go4TognH/KvCISP7OUsHn85hT9nUkxxA9BEWxFn+Oj9o8ZNLm/40hdlgSLyuOimsrTKLUMEorQexp/aPQeA==}
     dependencies:
@@ -6520,6 +6687,11 @@ packages:
     dependencies:
       bser: 2.1.1
     dev: true
+
+  /feaxios@0.0.23:
+    resolution: {integrity: sha512-eghR0A21fvbkcQBgZuMfQhrXxJzC0GNUGC9fXhBge33D+mFDTwl0aJ35zoQQn575BhyjQitRc5N4f+L4cP708g==}
+    dependencies:
+      is-retry-allowed: 3.0.0
 
   /fecha@4.2.3:
     resolution: {integrity: sha512-OP2IUU6HeYKJi3i0z4A19kHMQoLVs4Hc+DPqqxI2h/DPZHTm/vjsfC6P0b4jCMy14XizLBqvndQ+UilD7707Jw==}
@@ -7326,6 +7498,10 @@ packages:
       gopd: 1.2.0
       has-tostringtag: 1.0.2
       hasown: 2.0.2
+
+  /is-retry-allowed@3.0.0:
+    resolution: {integrity: sha512-9xH0xvoggby+u0uGF7cZXdrutWiBiaFG8ZT4YFPXL8NzkyAwX3AKGLeFQLvzDpM430+nDFBZ1LHkie/8ocL06A==}
+    engines: {node: '>=12'}
 
   /is-set@2.0.3:
     resolution: {integrity: sha512-iPAjerrse27/ygGLxw+EBR9agv9Y6uLeYVJMu+QNCoouJ1/1ri0mGrcWpfCqFZuzzx3WjtwxG098X+n4OuRkPg==}
@@ -9510,6 +9686,14 @@ packages:
       tunnel-agent: 0.6.0
       uuid: 3.4.0
 
+  /require-addon@1.1.0:
+    resolution: {integrity: sha512-KbXAD5q2+v1GJnkzd8zzbOxchTkStSyJZ9QwoCq3QwEXAaIlG3wDYRZGzVD357jmwaGY7hr5VaoEAL0BkF0Kvg==}
+    engines: {bare: '>=1.10.0'}
+    dependencies:
+      bare-addon-resolve: 1.9.4(bare-url@2.1.6)
+      bare-url: 2.1.6
+    optional: true
+
   /require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
@@ -9633,7 +9817,7 @@ packages:
     engines: {node: '>= 16'}
     dependencies:
       '@xrplf/isomorphic': 1.0.1
-      bignumber.js: 9.1.2
+      bignumber.js: 9.3.1
       ripple-address-codec: 5.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -9993,6 +10177,13 @@ packages:
       yargs: 15.4.1
     dev: true
 
+  /sodium-native@4.3.3:
+    resolution: {integrity: sha512-OnxSlN3uyY8D0EsLHpmm2HOFmKddQVvEMmsakCrXUzSd8kjjbzL413t4ZNF3n0UxSwNgwTyUvkmZHTfuCeiYSw==}
+    requiresBuild: true
+    dependencies:
+      require-addon: 1.1.0
+    optional: true
+
   /source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -10120,6 +10311,22 @@ packages:
     dependencies:
       bl: 5.1.0
     dev: true
+
+  /stellar-sdk@13.3.0:
+    resolution: {integrity: sha512-jAA3+U7oAUueldoS4kuEhcym+DigElWq9isPxt7tjMrE7kTJ2vvY29waavUb2FSfQIWwGbuwAJTYddy2BeyJsw==}
+    engines: {node: '>=18.0.0'}
+    deprecated: ⚠️ This package has moved to @stellar/stellar-sdk! 🚚
+    dependencies:
+      '@stellar/stellar-base': 13.1.0
+      axios: 1.10.0
+      bignumber.js: 9.3.1
+      eventsource: 2.0.2
+      feaxios: 0.0.23
+      randombytes: 2.1.0
+      toml: 3.0.0
+      urijs: 1.19.11
+    transitivePeerDependencies:
+      - debug
 
   /stream-browserify@3.0.0:
     resolution: {integrity: sha512-H73RAHsVBapbim0tU2JwwOiXUj+fikfiaoYAKHF3VJfA0pe2BCzkhAHBlLG6REzE+2WNZcxOXjK7lkso+9euLA==}
@@ -10488,6 +10695,9 @@ packages:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
     engines: {node: '>=0.6'}
 
+  /toml@3.0.0:
+    resolution: {integrity: sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==}
+
   /tough-cookie@2.5.0:
     resolution: {integrity: sha512-nlLsUzgm1kfLXSXfRZMc1KLAugd4hqJHDTvc2hDIwS3mZAfMEuMbc03SujMF+GEcpaX/qboeycw6iO8JwVv2+g==}
     engines: {node: '>=0.8'}
@@ -10572,7 +10782,7 @@ packages:
       json5: 2.2.3
       lodash.memoize: 4.1.2
       make-error: 1.3.6
-      semver: 7.5.2
+      semver: 7.6.3
       typescript: 4.9.5
       yargs-parser: 21.1.1
     dev: true
@@ -10945,6 +11155,9 @@ packages:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
     dependencies:
       punycode: 2.3.1
+
+  /urijs@1.19.11:
+    resolution: {integrity: sha512-HXgFDgDommxn5/bIv0cnQZsPhHDA90NPHD6+c/v21U5+Sx5hoP8+dP9IZXBU1gIfvdRfhG8cel9QNPeionfcCQ==}
 
   /url-join@4.0.1:
     resolution: {integrity: sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==}
