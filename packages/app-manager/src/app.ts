@@ -80,7 +80,7 @@ export class ManagerApp {
     await this.sdk.sendAbort();
   }
 
-  public static async getLatestFirmware(params: GetLatestFirmwareOptions = {}) {
+  public static async getLatestFirmware(params?: GetLatestFirmwareOptions) {
     return firmwareService.getLatest(params);
   }
 }
