@@ -51,8 +51,8 @@ export const updateFirmware = async (
 ): Promise<void> => {
   logger.info('Started');
 
+  const { onEvent, variant } = params;
   let { firmware, version } = params;
-  const { onEvent } = params;
 
   const { forceStatusUpdate } = createStatusListener({
     enums: UpdateFirmwareStatus,
@@ -64,6 +64,7 @@ export const updateFirmware = async (
     logger.info('Fetching latest firmware version');
 
     const latestFirmware = await firmwareService.getLatest({
+      variant,
       prerelease: params.allowPrerelease,
       doDownload: true,
     });
