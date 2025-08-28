@@ -6,7 +6,7 @@ import { PacketVersion } from './utils';
 import { RawData, StatusData } from './encoders/raw';
 import {
   IAppVersionResultResponse,
-  IAppVersion,
+  IVersion,
 } from './encoders/proto/generated/types';
 
 export interface IDeprecatedCommunication {
@@ -105,7 +105,7 @@ export interface ISDK {
     onStatus?: commands.IGetAppVersionsParams['onStatus'],
     options?: commands.IGetAppVersionsParams['options'],
   ): Promise<IAppVersionResultResponse>;
-  getAppVersion(appId: number): Promise<IAppVersion | undefined>;
+  getAppVersion(appId: number): Promise<IVersion | undefined>;
   checkAppCompatibility(
     version: { from: string; to?: string },
     options?: commands.IGetAppVersionsParams['options'],
