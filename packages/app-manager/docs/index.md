@@ -41,7 +41,7 @@ Fetches the latest firmware of the device from the server for a specific variant
 `params?` (Optional): `GetLatestFirmwareOptions`
 
 ```ts
-import { FirmwareVariant } from '@cypherock/sdk-app-manager/lib/constants/firmware';
+import { FirmwareVariant } from '../proto/types';
 
 interface GetLatestFirmwareOptions {
   // The firmware variant to check. Defaults to 'MULTICOIN'.
@@ -49,7 +49,7 @@ interface GetLatestFirmwareOptions {
 
   // If true, downloads the firmware binary
   doDownload?: boolean;
-  
+
   // If true, checks the prerelease channel instead
   prerelease?: boolean;
 }
@@ -70,10 +70,11 @@ interface LatestFirmware {
 **Example:**
 
 ```ts
-import { FirmwareVariant } from '@cypherock/sdk-app-manager/lib/constants/firmware';
+import { FirmwareVariant } from '../proto/types';
 
-// To get MULTICOIN firmware (variant is optional, defaults to MULTICOIN):
+// To get MULTICOIN firmware
 const { firmware, version } = await ManagerApp.getLatestFirmware({
+  variant: FirmwareVariant.MULTI_COIN,
   doDownload: true,
 });
 
@@ -102,6 +103,7 @@ interface IGetDeviceInfoResultResponse {
   appletList: ISupportedAppletItem[];
   isInitial: boolean;
   onboardingStep: OnboardingStep;
+  firmwareVariantInfo: IFirmwareVariantInfo | undefined;
 }
 ```
 
@@ -403,8 +405,6 @@ Updates the firmware of the connected device.
 `params`: `IUpdateFirmwareParams`
 
 ```ts
-import { FirmwareVariant } from '@cypherock/sdk-app-manager/lib/constants/firmware';
-
 type GetDevices = () => Promise<IDevice[]>;
 
 type CreateDeviceConnection = (device: IDevice) => Promise<IDeviceConnection>;
@@ -412,7 +412,7 @@ type CreateDeviceConnection = (device: IDevice) => Promise<IDeviceConnection>;
 type UpdateFirmwareEventHandler = (event: UpdateFirmwareStatus) => void;
 
 interface IUpdateFirmwareParams {
-  // The firmware variant. This determines which firmware is fetched if not provided directly. Defaults to 'MULTICOIN'.
+  // The firmware variant. This determines which firmware is fetched if not provided directly.
   variant?: FirmwareVariant;
 
   // The firmware binary
@@ -439,15 +439,9 @@ interface IUpdateFirmwareParams {
 **Example:**
 
 ```ts
-import { FirmwareVariant } from '@cypherock/sdk-app-manager/lib/constants/firmware';
-
-// The client application should determine the device variant first.
-// This can be done by calling managerApp.getDeviceInfo() and checking the `variant_str` property.
-const deviceVariant = getVariantFromDevice(); // e.g., FirmwareVariant.BTC_ONLY
-
-await managerApp.updateFirmware({ 
-  variant: deviceVariant, 
-  createConnection, 
-  getDevices 
+await managerApp.updateFirmware({
+  variant,
+  createConnection,
+  getDevices,
 });
 ```
