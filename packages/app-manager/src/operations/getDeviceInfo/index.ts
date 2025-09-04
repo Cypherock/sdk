@@ -1,18 +1,20 @@
 import { ISDK } from '@cypherock/sdk-core';
 import { createLoggerWithPrefix } from '@cypherock/sdk-utils';
 import { APP_VERSION } from '../../constants/appId';
-import { IGetDeviceInfoResultResponse } from '../../proto/generated/types';
+import { FirmwareVariant } from '../../proto/types';
+import { firmwareVariantToJSON } from '../../proto/generated/common';
 import {
   assertOrThrowInvalidResult,
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
+import { IGetDeviceInfoResponse } from './types';
 
 const logger = createLoggerWithPrefix(rootLogger, 'GetDeviceInfo');
 
 export const getDeviceInfo = async (
   sdk: ISDK,
-): Promise<IGetDeviceInfoResultResponse> => {
+): Promise<IGetDeviceInfoResponse> => {
   logger.info('Started');
   await sdk.checkAppCompatibility(APP_VERSION);
 
@@ -24,5 +26,14 @@ export const getDeviceInfo = async (
   assertOrThrowInvalidResult(result.result);
 
   logger.info('Completed');
-  return result.result;
+
+  const variantId =
+    result.result?.firmwareVariant ?? FirmwareVariant.MULTI_COIN;
+  return {
+    ...result.result,
+    firmwareVariantInfo: {
+      variantId,
+      variantStr: firmwareVariantToJSON(variantId),
+    },
+  };
 };
