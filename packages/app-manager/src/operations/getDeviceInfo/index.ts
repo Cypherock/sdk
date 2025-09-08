@@ -8,13 +8,13 @@ import {
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
-import { IGetDeviceInfoResponse } from './types';
+import { GetDeviceInfoResult } from './types';
 
 const logger = createLoggerWithPrefix(rootLogger, 'GetDeviceInfo');
 
 export const getDeviceInfo = async (
   sdk: ISDK,
-): Promise<IGetDeviceInfoResponse> => {
+): Promise<GetDeviceInfoResult> => {
   logger.info('Started');
   await sdk.checkAppCompatibility(APP_VERSION);
 

@@ -8,6 +8,6 @@ export interface FirmwareVariantInfo {
   variantStr: string;
 }
 
-export interface IGetDeviceInfoResponse extends IGetDeviceInfoResultResponse {
+export interface GetDeviceInfoResult extends IGetDeviceInfoResultResponse {
   firmwareVariantInfo: FirmwareVariantInfo;
 }
