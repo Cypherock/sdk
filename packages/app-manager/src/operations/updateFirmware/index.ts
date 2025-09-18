@@ -10,6 +10,7 @@ import {
   IFirmwareUpdateErrorResponse,
   FirmwareUpdateError,
   UpdateFirmwareStatus,
+  FirmwareVariant,
 } from '../../proto/types';
 import { firmwareService } from '../../services';
 import {
@@ -40,6 +41,8 @@ const parseFirmwareUpdateError = async (
       UpdateFirmwareErrorType.UNKNOWN_ERROR,
     [FirmwareUpdateError.FIRMWARE_UPDATE_ERROR_VERSION_NOT_ALLOWED]:
       UpdateFirmwareErrorType.VERSION_NOT_ALLOWED,
+    [FirmwareUpdateError.FIRMWARE_UPDATE_ERROR_VARIANT_NOT_ALLOWED]:
+      UpdateFirmwareErrorType.VARIANT_NOT_ALLOWED,
   };
 
   throw new UpdateFirmwareError(errorTypesMap[error.error]);
@@ -85,7 +88,9 @@ export const updateFirmware = async (
     if (await sdk.isSupported()) {
       await sdk.checkAppCompatibility(APP_VERSION);
 
-      await helper.sendQuery({ initiate: { version } });
+      await helper.sendQuery({
+        initiate: { version, variant: variant ?? FirmwareVariant.MULTI_COIN },
+      });
       const result = await helper.waitForResult();
       parseFirmwareUpdateError(result.error);
       logger.verbose('FirmwareUpdateConfirmedResponse', { result });
