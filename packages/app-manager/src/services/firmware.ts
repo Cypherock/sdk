@@ -8,6 +8,7 @@ const getBaseURL = () => `${getConfig().API_CYPHEROCK}/firmware-stm`;
 export interface GetLatestFirmwareOptions {
   variant?: FirmwareVariant;
   prerelease?: boolean;
+  isUserRelevant?: boolean;
   doDownload?: boolean;
 }
 
@@ -32,6 +33,7 @@ export async function getLatest(params: GetLatestFirmwareOptions = {}) {
     `${getBaseURL()}/latest?${createQueryString({
       variant: variantString,
       prerelease: params.prerelease,
+      isUserRelevant: params.isUserRelevant,
     })}`,
   );
 
