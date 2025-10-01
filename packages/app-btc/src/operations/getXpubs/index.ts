@@ -15,6 +15,7 @@ import {
   logger as rootLogger,
   configureAppId,
   assertDerivationPath,
+  TAPROOT_PURPOSE,
 } from '../../utils';
 import { GetXpubsEvent, IGetXpubsParams } from './types';
 
@@ -83,6 +84,10 @@ export const getXpubs = async (
   } while (hasMore());
 
   return {
-    xpubs,
+    xpubs: xpubs.map((xpub, index) =>
+      params.derivationPaths[index].path[0] === TAPROOT_PURPOSE
+        ? `tr(${xpub})`
+        : xpub,
+    ),
   };
 };
