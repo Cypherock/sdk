@@ -23,6 +23,7 @@
   "dependencies": {
     "@cypherock/sdk-app-btc": "workspace:^",
     "@cypherock/sdk-app-constellation": "workspace:^",
+    "@cypherock/sdk-app-canton": "workspace:^",
     "@cypherock/sdk-app-evm": "workspace:^",
     "@cypherock/sdk-app-icp": "workspace:^",
     "@cypherock/sdk-app-inheritance": "workspace:^",
