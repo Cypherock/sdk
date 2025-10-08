@@ -1,4 +1,6 @@
-export type CantonLibType = any;
+import type cantonWalletSdk from '@canton-network/wallet-sdk';
+
+export type CantonLibType = typeof cantonWalletSdk;
 
 let cantonLibInstance: CantonLibType | undefined;
 
