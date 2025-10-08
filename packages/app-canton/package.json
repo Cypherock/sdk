@@ -16,6 +16,7 @@
     "pre-commit": "lint-staged"
   },
   "devDependencies": {
+    "@canton-network/wallet-sdk": "^0.10.0",
     "@cypherock/eslint-config": "workspace:*",
     "@cypherock/prettier-config": "workspace:^0.0.8",
     "@cypherock/tsconfig": "workspace:*",

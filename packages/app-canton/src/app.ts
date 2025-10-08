@@ -1,7 +1,7 @@
 import { IDeviceConnection } from '@cypherock/sdk-interfaces';
 import { SDK } from '@cypherock/sdk-core';
 
-// import * as operations from './operations';
+import * as operations from './operations';
 
 export class CantonApp {
   private readonly sdk: SDK;
@@ -17,16 +17,18 @@ export class CantonApp {
     return new CantonApp(sdk);
   }
 
-  public async getPublicKeys(params: any) {
-    return this.sdk.runOperation(() => {
-      throw new Error(`Method not implemented: ${params}`);
-    });
+  public async getPublicKeys(params: operations.IGetPublicKeysParams) {
+    return this.sdk.runOperation(() =>
+      operations.getPublicKeys(this.sdk, params),
+    );
   }
 
-  public async getUserVerifiedPublicKey(params: any) {
-    return this.sdk.runOperation(() => {
-      throw new Error(`Method not implemented: ${params}`);
-    });
+  public async getUserVerifiedPublicKey(
+    params: operations.IGetUserVerifiedPublicKeyParams,
+  ) {
+    return this.sdk.runOperation(() =>
+      operations.getUserVerifiedPublicKey(this.sdk, params),
+    );
   }
 
   public async signTxn(params: any) {
