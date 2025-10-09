@@ -31,10 +31,8 @@ export class CantonApp {
     );
   }
 
-  public async signTxn(params: any) {
-    return this.sdk.runOperation(() => {
-      throw new Error(`Method not implemented: ${params}`);
-    });
+  public async signTxn(params: operations.ISignTxnParams) {
+    return this.sdk.runOperation(() => operations.signTxn(this.sdk, params));
   }
 
   public async destroy() {

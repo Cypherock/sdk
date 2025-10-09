@@ -14,7 +14,7 @@ import { getCantonLib } from './cantonLib';
 // https://github.com/hyperledger-labs/splice-wallet-kernel/blob/main/core/ledger-client/src/topology-write-service.ts#L62
 // fingerprint = 0x1220 + sha256(HASH_PURPOSE + public_key)
 export const derivePartyId = async (publicKey: Uint8Array) => {
-  const { TopologyController } = getCantonLib();
+  const { TopologyController } = getCantonLib().CantonWalletSdk;
 
   const fingerprint = TopologyController.createFingerprintFromPublicKey(
     Buffer.from(publicKey).toString('base64'),

@@ -186,6 +186,9 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
     devDependencies:
+      '@canton-network/core-ledger-proto':
+        specifier: ^0.6.0
+        version: 0.6.0
       '@cypherock/eslint-config':
         specifier: workspace:*
         version: link:../../packages/util-eslint-config
@@ -305,6 +308,9 @@ importers:
         specifier: ^7.2.2
         version: 7.2.2
     devDependencies:
+      '@canton-network/core-ledger-proto':
+        specifier: ^0.6.0
+        version: 0.6.0
       '@canton-network/wallet-sdk':
         specifier: ^0.10.0
         version: 0.10.0

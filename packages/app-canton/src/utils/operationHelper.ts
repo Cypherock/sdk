@@ -39,7 +39,7 @@ export class OperationHelper<Q extends QueryKey, R extends ResultKey> {
 
   private readonly onStatus?: OnStatus;
 
-  private static readonly CHUNK_SIZE = 5120;
+  private static readonly CHUNK_SIZE = 2048;
 
   constructor(params: {
     sdk: ISDK;
