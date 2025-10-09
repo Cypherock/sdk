@@ -4,6 +4,8 @@ export enum UpdateFirmwareErrorType {
   UNKNOWN_ERROR = 'MGA_UF_0000',
 
   VERSION_NOT_ALLOWED = 'MGA_UF_0100',
+
+  VARIANT_NOT_ALLOWED = 'MGA_UF_0200',
 }
 
 type CodeToErrorMap = {
@@ -18,6 +20,9 @@ export const updateFirmwareErrorTypeDetails: CodeToErrorMap = {
   },
   [UpdateFirmwareErrorType.VERSION_NOT_ALLOWED]: {
     message: 'Given firmware version is not allowed',
+  },
+  [UpdateFirmwareErrorType.VARIANT_NOT_ALLOWED]: {
+    message: 'Given firmware variant is not allowed',
   },
 };
 
