@@ -43,7 +43,7 @@ export const signTxn = async (
 
   await sdk.checkAppCompatibility(APP_VERSION);
   const cantonLib = getCantonLib();
-  const { decodePreparedTransaction } = cantonLib;
+  const { decodePreparedTransaction } = cantonLib.CantonWalletSdk;
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,
