@@ -44,6 +44,10 @@ export const signTxn = async (
   await sdk.checkAppCompatibility(APP_VERSION);
   const cantonLib = getCantonLib();
   const { decodePreparedTransaction } = cantonLib.CantonWalletSdk;
+  const {
+    DamlTransaction_Node: damlTransactionNode,
+    Metadata_InputContract: metadataInputContract,
+  } = cantonLib.CantonCoreLedgerProto;
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,
@@ -150,13 +154,10 @@ export const signTxn = async (
     visitNode(n.nodeId);
   }
 
+  // send ordererd nodes
   for (const nodeId of orderedNodeIds) {
-    // DamlTransaction_Node.encode(node);
-    // TODO: serialize node
     const node = getNodesById[nodeId];
-    console.log('nodeId : %d : %s', nodeId, node);
-
-    const serializedNode = new Uint8Array();
+    const serializedNode = damlTransactionNode.toBinary(node);
     await helper.sendInChunks(serializedNode, 'txnNode', 'txnNodeAccepted');
   }
 
@@ -169,8 +170,6 @@ export const signTxn = async (
       transactionUuid: prepareTransaction.metadata.transactionUuid,
       preparationTime: prepareTransaction.metadata.preparationTime.toString(),
       inputContractsCount: prepareTransaction.metadata.inputContracts.length,
-      globalKeyMappingCount:
-        prepareTransaction.metadata.globalKeyMapping.length,
       minLedgerEffectiveTime:
         prepareTransaction.metadata.minLedgerEffectiveTime?.toString(),
       maxLedgerEffectiveTime:
@@ -181,25 +180,12 @@ export const signTxn = async (
   assertOrThrowInvalidResult(cantonMetaAccepted);
 
   for (const inputContract of prepareTransaction.metadata.inputContracts) {
-    console.log('inputContract', inputContract);
-    // TODO: serialize input contract
-    const serializedInputContract = new Uint8Array();
+    const serializedInputContract =
+      metadataInputContract.toBinary(inputContract);
     await helper.sendInChunks(
       serializedInputContract,
       'metaInputContract',
       'metaInputContractAccepted',
-    );
-  }
-
-  for (const globalKeyMappingEntry of prepareTransaction.metadata
-    .globalKeyMapping) {
-    console.log('globalKeyMappingEntry', globalKeyMappingEntry);
-    // TODO: serialize global key mapping entry
-    const serializedGlobalKeyMappingEntry = new Uint8Array();
-    await helper.sendInChunks(
-      serializedGlobalKeyMappingEntry,
-      'metaGlobalKeyMappingEntry',
-      'metaGlobalKeyMappingEntryAccepted',
     );
   }
 
