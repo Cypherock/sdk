@@ -5,6 +5,7 @@ import {
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
+import { type PreparedTransaction } from '@canton-network/wallet-sdk';
 import { APP_VERSION } from '../../constants/appId';
 import {
   SeedGenerationStatus,
@@ -12,6 +13,7 @@ import {
 } from '../../proto/generated/types';
 import {
   assertOrThrowInvalidResult,
+  getCantonLib,
   OperationHelper,
   logger as rootLogger,
 } from '../../utils';
@@ -40,6 +42,8 @@ export const signTxn = async (
   );
 
   await sdk.checkAppCompatibility(APP_VERSION);
+  const cantonLib = getCantonLib();
+  const { decodePreparedTransaction } = cantonLib;
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,
@@ -56,8 +60,12 @@ export const signTxn = async (
     onStatus,
   });
 
-  // TODO: decode base64 protoSerializedPreparedTransaction to preparedTransaction object
-  const prepareTransaction: any = {};
+  const prepareTransaction: PreparedTransaction = decodePreparedTransaction(
+    params.txn.protoSerializedPreparedTransaction,
+  );
+
+  assert(prepareTransaction.transaction, 'transaction object is null');
+  assert(prepareTransaction.metadata, 'metadata object is null');
 
   await helper.sendQuery({
     initiate: {
@@ -74,14 +82,14 @@ export const signTxn = async (
     txnMeta: {
       version: prepareTransaction.transaction.version,
       roots: prepareTransaction.transaction.roots,
-      nodeSeedsCount: prepareTransaction.transaction.node_seeds.length,
+      nodeSeedsCount: prepareTransaction.transaction.nodeSeeds.length,
       nodesCount: prepareTransaction.transaction.nodes.length,
     },
   });
   const { txnMetaAccepted } = await helper.waitForResult();
   assertOrThrowInvalidResult(txnMetaAccepted);
 
-  for (const nodeSeed of prepareTransaction.transaction.node_seeds) {
+  for (const nodeSeed of prepareTransaction.transaction.nodeSeeds) {
     await helper.sendQuery({
       txnNodeSeed: {
         nodeSeed,
@@ -101,24 +109,24 @@ export const signTxn = async (
   // TODO: validate data types in metadata
   await helper.sendQuery({
     cantonMeta: {
-      submitterInfo: prepareTransaction.metadata.submitter_info,
-      synchronizerId: prepareTransaction.metadata.synchronizer_id,
-      mediatorGroup: prepareTransaction.metadata.mediator_group,
-      transactionUuid: prepareTransaction.metadata.transaction_uuid,
-      preparationTime: prepareTransaction.metadata.preparation_time,
-      inputContractsCount: prepareTransaction.metadata.input_contracts.length,
+      submitterInfo: prepareTransaction.metadata.submitterInfo,
+      synchronizerId: prepareTransaction.metadata.synchronizerId,
+      mediatorGroup: prepareTransaction.metadata.mediatorGroup,
+      transactionUuid: prepareTransaction.metadata.transactionUuid,
+      preparationTime: prepareTransaction.metadata.preparationTime.toString(),
+      inputContractsCount: prepareTransaction.metadata.inputContracts.length,
       globalKeyMappingCount:
-        prepareTransaction.metadata.global_key_mapping.length,
+        prepareTransaction.metadata.globalKeyMapping.length,
       minLedgerEffectiveTime:
-        prepareTransaction.metadata.min_ledger_effective_time,
+        prepareTransaction.metadata.minLedgerEffectiveTime?.toString(),
       maxLedgerEffectiveTime:
-        prepareTransaction.metadata.max_ledger_effective_time,
+        prepareTransaction.metadata.maxLedgerEffectiveTime?.toString(),
     },
   });
   const { cantonMetaAccepted } = await helper.waitForResult();
   assertOrThrowInvalidResult(cantonMetaAccepted);
 
-  for (const inputContract of prepareTransaction.metadata.input_contracts) {
+  for (const inputContract of prepareTransaction.metadata.inputContracts) {
     console.log('inputContract', inputContract);
     // TODO: serialize input contract
     const serializedInputContract = new Uint8Array();
@@ -130,7 +138,7 @@ export const signTxn = async (
   }
 
   for (const globalKeyMappingEntry of prepareTransaction.metadata
-    .global_key_mapping) {
+    .globalKeyMapping) {
     console.log('globalKeyMappingEntry', globalKeyMappingEntry);
     // TODO: serialize global key mapping entry
     const serializedGlobalKeyMappingEntry = new Uint8Array();
