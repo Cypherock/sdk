@@ -18,6 +18,7 @@ import {
   logger as rootLogger,
 } from '../../utils';
 import { ISignTxnParams, ISignTxnResult, SignTxnEvent } from './types';
+import { getOrderedNodeIds } from './utils';
 
 export * from './types';
 
@@ -42,12 +43,13 @@ export const signTxn = async (
   );
 
   await sdk.checkAppCompatibility(APP_VERSION);
-  const cantonLib = getCantonLib();
-  const { decodePreparedTransaction } = cantonLib.CantonWalletSdk;
+
+  const { CantonWalletSdk, CantonCoreLedgerProto } = getCantonLib();
+  const { decodePreparedTransaction } = CantonWalletSdk;
   const {
-    DamlTransaction_Node: damlTransactionNode,
-    Metadata_InputContract: metadataInputContract,
-  } = cantonLib.CantonCoreLedgerProto;
+    DamlTransaction_Node: DamlTransactionNode,
+    Metadata_InputContract: MetadataInputContract,
+  } = CantonCoreLedgerProto;
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,
@@ -64,12 +66,24 @@ export const signTxn = async (
     onStatus,
   });
 
-  const prepareTransaction: PreparedTransaction = decodePreparedTransaction(
+  const preparedTransaction: PreparedTransaction = decodePreparedTransaction(
     params.txn.protoSerializedPreparedTransaction,
   );
+  assert(preparedTransaction, 'preparedTransaction object is null');
 
-  assert(prepareTransaction.transaction, 'transaction object is null');
-  assert(prepareTransaction.metadata, 'metadata object is null');
+  const { transaction, metadata } = preparedTransaction;
+
+  assert(transaction, 'transaction object is null');
+  assert(metadata, 'metadata object is null');
+
+  // mapped node ids with their node objects
+  // nodeId  => Node { nodeId, ... }
+  const getNodesById = Object.fromEntries(
+    transaction.nodes.map(n => [n.nodeId, n]),
+  );
+
+  // order nodes in the txn based on their dependencies
+  const orderedNodeIds = getOrderedNodeIds(transaction.nodes);
 
   await helper.sendQuery({
     initiate: {
@@ -84,16 +98,16 @@ export const signTxn = async (
 
   await helper.sendQuery({
     txnMeta: {
-      version: prepareTransaction.transaction.version,
-      roots: prepareTransaction.transaction.roots,
-      nodeSeedsCount: prepareTransaction.transaction.nodeSeeds.length,
-      nodesCount: prepareTransaction.transaction.nodes.length,
+      version: transaction.version,
+      roots: transaction.roots,
+      nodeSeedsCount: transaction.nodeSeeds.length,
+      nodesCount: transaction.nodes.length,
     },
   });
   const { txnMetaAccepted } = await helper.waitForResult();
   assertOrThrowInvalidResult(txnMetaAccepted);
 
-  for (const nodeSeed of prepareTransaction.transaction.nodeSeeds) {
+  for (const nodeSeed of transaction.nodeSeeds) {
     await helper.sendQuery({
       txnNodeSeed: {
         nodeSeed,
@@ -103,85 +117,49 @@ export const signTxn = async (
     assertOrThrowInvalidResult(txnNodeSeedAccepted);
   }
 
-  // mapped node ids with their node objects
-  // nodeId  => Node { nodeId, ... }
-  const getNodesById = Object.fromEntries(
-    prepareTransaction.transaction.nodes.map(n => [n.nodeId, n]),
-  );
-
-  // This contains a map of nodes with their children
-  // parentid => [ children1, children2 ]
-  const nodesWithChildren: Record<string, string[]> = {};
-
-  for (const individualNode of prepareTransaction.transaction.nodes) {
-    if (
-      individualNode.versionedNode.oneofKind === 'v1' &&
-      individualNode.versionedNode.v1.nodeType.oneofKind
-    ) {
-      const v1Node = individualNode.versionedNode.v1;
-      // only exercise and rollback nodes has children
-      if (v1Node.nodeType.oneofKind === 'exercise') {
-        const exerciseNode = v1Node.nodeType.exercise;
-        nodesWithChildren[individualNode.nodeId] = exerciseNode.children;
-      } else if (v1Node.nodeType.oneofKind === 'rollback') {
-        const rollbackNode = v1Node.nodeType.rollback;
-        nodesWithChildren[individualNode.nodeId] = rollbackNode.children;
-      } else {
-        nodesWithChildren[individualNode.nodeId] = [];
-      }
-    }
-  }
-
-  // nodes which are already explored
-  const visitedNodes = new Set();
-  // this contains node ids in order they are safe to send
-  const orderedNodeIds: string[] = [];
-
-  const visitNode = (nodeId: string) => {
-    if (visitedNodes.has(nodeId)) {
-      return;
-    }
-    visitedNodes.add(nodeId);
-
-    for (const childrenId of nodesWithChildren[nodeId]) {
-      visitNode(childrenId);
-    }
-    orderedNodeIds.push(nodeId);
-  };
-
-  // start visiting nodes
-  for (const n of prepareTransaction.transaction.nodes) {
-    visitNode(n.nodeId);
-  }
-
-  // send ordererd nodes
   for (const nodeId of orderedNodeIds) {
     const node = getNodesById[nodeId];
-    const serializedNode = damlTransactionNode.toBinary(node);
+    const serializedNode = DamlTransactionNode.toBinary(node);
+
+    await helper.sendQuery({
+      txnNodeMeta: {
+        serializedDataSize: serializedNode.length,
+      },
+    });
+    const { txnNodeMetaAccepted } = await helper.waitForResult();
+    assertOrThrowInvalidResult(txnNodeMetaAccepted);
+
     await helper.sendInChunks(serializedNode, 'txnNode', 'txnNodeAccepted');
   }
 
   // TODO: validate data types in metadata
   await helper.sendQuery({
     cantonMeta: {
-      submitterInfo: prepareTransaction.metadata.submitterInfo,
-      synchronizerId: prepareTransaction.metadata.synchronizerId,
-      mediatorGroup: prepareTransaction.metadata.mediatorGroup,
-      transactionUuid: prepareTransaction.metadata.transactionUuid,
-      preparationTime: prepareTransaction.metadata.preparationTime.toString(),
-      inputContractsCount: prepareTransaction.metadata.inputContracts.length,
-      minLedgerEffectiveTime:
-        prepareTransaction.metadata.minLedgerEffectiveTime?.toString(),
-      maxLedgerEffectiveTime:
-        prepareTransaction.metadata.maxLedgerEffectiveTime?.toString(),
+      submitterInfo: metadata.submitterInfo,
+      synchronizerId: metadata.synchronizerId,
+      mediatorGroup: metadata.mediatorGroup,
+      transactionUuid: metadata.transactionUuid,
+      preparationTime: metadata.preparationTime.toString(),
+      inputContractsCount: metadata.inputContracts.length,
+      minLedgerEffectiveTime: metadata.minLedgerEffectiveTime?.toString(),
+      maxLedgerEffectiveTime: metadata.maxLedgerEffectiveTime?.toString(),
     },
   });
   const { cantonMetaAccepted } = await helper.waitForResult();
   assertOrThrowInvalidResult(cantonMetaAccepted);
 
-  for (const inputContract of prepareTransaction.metadata.inputContracts) {
+  for (const inputContract of metadata.inputContracts) {
     const serializedInputContract =
-      metadataInputContract.toBinary(inputContract);
+      MetadataInputContract.toBinary(inputContract);
+
+    await helper.sendQuery({
+      metaInputContractMeta: {
+        serializedDataSize: serializedInputContract.length,
+      },
+    });
+    const { metaInputContractMetaAccepted } = await helper.waitForResult();
+    assertOrThrowInvalidResult(metaInputContractMetaAccepted);
+
     await helper.sendInChunks(
       serializedInputContract,
       'metaInputContract',
