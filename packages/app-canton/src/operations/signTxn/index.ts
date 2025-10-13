@@ -82,9 +82,6 @@ export const signTxn = async (
     transaction.nodes.map(n => [n.nodeId, n]),
   );
 
-  // order nodes in the txn based on their dependencies
-  const orderedNodeIds = getOrderedNodeIds(transaction.nodes);
-
   await helper.sendQuery({
     initiate: {
       walletId: params.walletId,
@@ -116,6 +113,9 @@ export const signTxn = async (
     const { txnNodeSeedAccepted } = await helper.waitForResult();
     assertOrThrowInvalidResult(txnNodeSeedAccepted);
   }
+
+  // order nodes in the txn based on their dependencies
+  const orderedNodeIds = getOrderedNodeIds(transaction.nodes);
 
   for (const nodeId of orderedNodeIds) {
     const node = getNodesById[nodeId];
@@ -149,9 +149,9 @@ export const signTxn = async (
   assertOrThrowInvalidResult(cantonMetaAccepted);
 
   for (const inputContract of metadata.inputContracts) {
+    inputContract.eventBlob = Uint8Array.from([]);
     const serializedInputContract =
       MetadataInputContract.toBinary(inputContract);
-
     await helper.sendQuery({
       metaInputContractMeta: {
         serializedDataSize: serializedInputContract.length,
