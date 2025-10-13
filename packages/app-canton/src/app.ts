@@ -37,6 +37,12 @@ export class CantonApp {
     });
   }
 
+  public async signTopologyTxn(params: operations.ISignTopologyTxnParams) {
+    return this.sdk.runOperation(() =>
+      operations.signTopologyTxn(this.sdk, params),
+    );
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }
