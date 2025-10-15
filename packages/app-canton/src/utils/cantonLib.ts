@@ -1,8 +1,12 @@
 import type cantonWalletSdk from '@canton-network/wallet-sdk';
+import type cantonLedgerProto from '@canton-network/core-ledger-proto';
 
-export type CantonLibType = typeof cantonWalletSdk;
+export interface CantonLib {
+  CantonWalletSdk: typeof cantonWalletSdk;
+  CantonCoreLedgerProto: typeof cantonLedgerProto;
+}
 
-let cantonLibInstance: CantonLibType | undefined;
+let cantonLibInstance: CantonLib | undefined;
 
 export const getCantonLib = () => {
   if (!cantonLibInstance) {
@@ -11,6 +15,6 @@ export const getCantonLib = () => {
   return cantonLibInstance;
 };
 
-export const setCantonLib = (cantonLibrary: CantonLibType) => {
+export const setCantonLib = (cantonLibrary: CantonLib) => {
   cantonLibInstance = cantonLibrary;
 };
