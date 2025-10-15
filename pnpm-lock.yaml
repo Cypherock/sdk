@@ -95,9 +95,12 @@ importers:
 
   apps/node:
     dependencies:
+      '@canton-network/core-ledger-proto':
+        specifier: ^0.6.0
+        version: 0.6.0
       '@canton-network/wallet-sdk':
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^0.7.0
+        version: 0.7.0
       '@cypherock/sdk-app-btc':
         specifier: workspace:^
         version: link:../../packages/app-btc
@@ -186,9 +189,6 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
     devDependencies:
-      '@canton-network/core-ledger-proto':
-        specifier: ^0.6.0
-        version: 0.6.0
       '@cypherock/eslint-config':
         specifier: workspace:*
         version: link:../../packages/util-eslint-config
@@ -312,8 +312,8 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
       '@canton-network/wallet-sdk':
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^0.7.0
+        version: 0.7.0
       '@cypherock/eslint-config':
         specifier: workspace:*
         version: link:../util-eslint-config
@@ -2232,13 +2232,13 @@ packages:
   /@bufbuild/protobuf@2.9.0:
     resolution: {integrity: sha512-rnJenoStJ8nvmt9Gzye8nkYd6V22xUAnu4086ER7h1zJ508vStko4pMvDeQ446ilDTFpV5wnoc5YS7XvMwwMqA==}
 
-  /@canton-network/core-ledger-client@0.10.0:
-    resolution: {integrity: sha512-E6RVFXQ6syCP12hM5GZDoTkm+HDVkX52D9GvNXsQ3xI7L4oWGU0ZGM79Ds6hRFKOYjqwD/fwCNshG9kMk8wClg==}
+  /@canton-network/core-ledger-client@0.7.0:
+    resolution: {integrity: sha512-hw+QpmWzNXpnce8MH34EP46Jl38Vkbo5VD4VOZQ5PMP0Gozdet7Ol59RpL0G/MMVufEpAZMHJ7OPi9YSB1nrPQ==}
     dependencies:
-      '@canton-network/core-ledger-proto': 0.6.0
-      '@canton-network/core-splice-client': 0.7.0
-      '@canton-network/core-token-standard': 0.6.0
-      '@canton-network/core-types': 0.5.0
+      '@canton-network/core-ledger-proto': 0.3.1
+      '@canton-network/core-splice-client': 0.5.2
+      '@canton-network/core-token-standard': 0.4.3
+      '@canton-network/core-types': 0.3.3
       '@grpc/grpc-js': 1.14.0
       '@protobuf-ts/grpc-transport': 2.11.1(@grpc/grpc-js@1.14.0)
       '@protobuf-ts/runtime': 2.11.1
@@ -2252,33 +2252,45 @@ packages:
       - encoding
       - utf-8-validate
 
+  /@canton-network/core-ledger-proto@0.3.1:
+    resolution: {integrity: sha512-zxYxwV7cWeOLQfN8ChLHHHAE1TQXcFTUz1PWyBc/x6OA/4hU6x6KNg5nOYFQKMSJxFF73z7OxO9Oe9uhiw7R5Q==}
+    dependencies:
+      '@protobuf-ts/runtime': 2.11.1
+      '@protobuf-ts/runtime-rpc': 2.11.1
+
+  /@canton-network/core-ledger-proto@0.4.0:
+    resolution: {integrity: sha512-WjQpuD/WWaikcrx4LiM00tumBdByf1EYIVsBI8BUW7NAsCMav7q8EYtnUppETcYQsjlPDOY5cIi92KmQtmrBig==}
+    dependencies:
+      '@protobuf-ts/runtime': 2.11.1
+      '@protobuf-ts/runtime-rpc': 2.11.1
+
   /@canton-network/core-ledger-proto@0.6.0:
     resolution: {integrity: sha512-Ebq6KgcGUZRRa1JhJw7ZacAnoMZpZPS8TEkioqIy814kQUiRpR+8y3Z4pLdrVgEMtVpwNvVbJbkbm6525vy67w==}
     dependencies:
       '@protobuf-ts/runtime': 2.11.1
       '@protobuf-ts/runtime-rpc': 2.11.1
 
-  /@canton-network/core-signing-lib@0.7.0:
-    resolution: {integrity: sha512-itXM53SpvKXoD4NYha/VmHvbld1zmUj5E0bj0srUJGtJXncimcMb+NDclw78W/ELY1rhtj9l72BhEDDlpq27IA==}
+  /@canton-network/core-signing-lib@0.5.1:
+    resolution: {integrity: sha512-F9LJ5AUhaq3IQcR9gcFncFmJ1TUgByhYUBnLtyweGf4nXNaxBQpSFR7onFSrTr6pCEMZ7YPIQhEfMBLADlMjZA==}
     dependencies:
-      '@canton-network/core-wallet-auth': 0.5.0
+      '@canton-network/core-wallet-auth': 0.3.3
       fs-extra: 11.3.2
       lodash: 4.17.21
       tweetnacl: 1.0.3
       tweetnacl-util: 0.15.1
 
-  /@canton-network/core-splice-client@0.7.0:
-    resolution: {integrity: sha512-WiizWam8w+QGpz04DDvLVn+XF1iFvrZutHbpkG8ffg+zxgZ/nubvGPaPkPbabXHTFQqrFWauJhaOdNX6Gq7GSw==}
+  /@canton-network/core-splice-client@0.5.2:
+    resolution: {integrity: sha512-DpXSj0tlOjvMYyAiGT1JF/gTZsuAjZgKt55ClKYpscVRDbHjNMPQG2SRbHfiTInU1A8ZpzVb7OvnrtjoZKCAgw==}
     dependencies:
-      '@canton-network/core-types': 0.5.0
+      '@canton-network/core-types': 0.3.3
       openapi-fetch: 0.14.1
       uuid: 11.1.0
       zod: 3.25.76
 
-  /@canton-network/core-token-standard@0.6.0:
-    resolution: {integrity: sha512-3JC2HllnqRvGYgNb6BkiHLf7JO0PPKJs/EoPjIIZETqXeGJQySaneU3xnj1T031yubL3DkaQpfHUlegr02UrJw==}
+  /@canton-network/core-token-standard@0.4.3:
+    resolution: {integrity: sha512-YvH97T9B5NYQ1YtPPovVGyQ+DS/VccBiSAEe1diG0hT5J3UHT8ffuKlYOwzS9VD16nQ4RXmmHdKG2DmkY3ccuw==}
     dependencies:
-      '@canton-network/core-types': 0.5.0
+      '@canton-network/core-types': 0.3.3
       '@daml/ledger': 3.4.0-snapshot.20250616.13911.0.v482d9ec0
       '@daml/types': 3.4.0-snapshot.20250616.13911.0.v482d9ec0
       lodash: 4.17.21
@@ -2290,10 +2302,10 @@ packages:
       - encoding
       - utf-8-validate
 
-  /@canton-network/core-tx-visualizer@0.5.0:
-    resolution: {integrity: sha512-b2CWpkj+ChQl/JI+HqSekj9IXEB3nzg7g9f9qcLwkh+BmWYF6MjduRnqjIcczk9x0fXZ9QkLxFypskrbpn1qLg==}
+  /@canton-network/core-tx-visualizer@0.3.2:
+    resolution: {integrity: sha512-v5po31qCF+q4wXMh9ZlUBOtAzWLfWKWW77u43fOH4Ny9vzLPKgTBFpFeoxvQvfrWWsExgXM7KTjwqvRTi7pl2Q==}
     dependencies:
-      '@canton-network/core-ledger-proto': 0.6.0
+      '@canton-network/core-ledger-proto': 0.4.0
       '@protobuf-ts/runtime': 2.11.1
       '@protobuf-ts/runtime-rpc': 2.11.1
       '@swc/core': 1.13.5
@@ -2304,28 +2316,28 @@ packages:
     transitivePeerDependencies:
       - '@swc/helpers'
 
-  /@canton-network/core-types@0.5.0:
-    resolution: {integrity: sha512-Kv96ymL6FHuJgd3QuX4YGG9+mRnK8U8IYt9v9sKEzFk1DybbXMU9+vrg7uOVdACVNHC/e42LMZ8cWxqokr7+Ug==}
+  /@canton-network/core-types@0.3.3:
+    resolution: {integrity: sha512-W2EoNtxf8Qt4nc7MHjDPaXQRkUz1vQ/8eEWOFM9g4izp9OKhgAzIXpG4Yv5NqcAJwQt1o1m5tRZDVUgKj7/WVA==}
     dependencies:
       uuid: 11.1.0
       zod: 3.25.76
 
-  /@canton-network/core-wallet-auth@0.5.0:
-    resolution: {integrity: sha512-yCgX9hW9gDFxDI1PpdjRjRuXWZF1MaC0Khq48QiJ9gB+3t0HdIBAsfD9ZxzublEEUsp4yHHw3kULOoYqJMcXfw==}
+  /@canton-network/core-wallet-auth@0.3.3:
+    resolution: {integrity: sha512-yDBvuAHTExjZdbthROa+OxfzWT5Jme3/Q9PDc1bPsM3GMuIKByKc1kFCTnmjgtt8PXi1xm2sqZ6YN/rtFA3N3w==}
     dependencies:
-      '@canton-network/core-types': 0.5.0
+      '@canton-network/core-types': 0.3.3
 
-  /@canton-network/wallet-sdk@0.10.0:
-    resolution: {integrity: sha512-/y83Jks/oNZc1DNeC/iwd0hhScmXd5FrLqsmxQjSV63dz5xqqvzMsDKjZOmDUwKpMP32ktQh2Y0UtGJAiB4jKQ==}
+  /@canton-network/wallet-sdk@0.7.0:
+    resolution: {integrity: sha512-4v+4nHIpY0BJOSRc9ZtyNQXSferr/HXrzktbhZ8EnAkGajXUE3xqHLw2YS0utKGEJVw/BS2mT4+c44Twko4nPw==}
     dependencies:
-      '@canton-network/core-ledger-client': 0.10.0
-      '@canton-network/core-ledger-proto': 0.6.0
-      '@canton-network/core-signing-lib': 0.7.0
-      '@canton-network/core-splice-client': 0.7.0
-      '@canton-network/core-token-standard': 0.6.0
-      '@canton-network/core-tx-visualizer': 0.5.0
-      '@canton-network/core-types': 0.5.0
-      '@canton-network/core-wallet-auth': 0.5.0
+      '@canton-network/core-ledger-client': 0.7.0
+      '@canton-network/core-ledger-proto': 0.3.1
+      '@canton-network/core-signing-lib': 0.5.1
+      '@canton-network/core-splice-client': 0.5.2
+      '@canton-network/core-token-standard': 0.4.3
+      '@canton-network/core-tx-visualizer': 0.3.2
+      '@canton-network/core-types': 0.3.3
+      '@canton-network/core-wallet-auth': 0.3.3
       jose: 5.10.0
       pino: 9.13.1
       uuid: 11.1.0

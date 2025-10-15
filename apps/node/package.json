@@ -13,7 +13,6 @@
     "start:node": "node dist/index.js"
   },
   "devDependencies": {
-    "@canton-network/core-ledger-proto": "^0.6.0",
     "@cypherock/eslint-config": "workspace:*",
     "@cypherock/prettier-config": "workspace:^0.0.8",
     "@cypherock/tsconfig": "workspace:*",
@@ -22,7 +21,8 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@canton-network/wallet-sdk": "^0.10.0",
+    "@canton-network/core-ledger-proto": "^0.6.0",
+    "@canton-network/wallet-sdk": "^0.7.0",
     "@cypherock/sdk-app-btc": "workspace:^",
     "@cypherock/sdk-app-canton": "workspace:^",
     "@cypherock/sdk-app-constellation": "workspace:^",
