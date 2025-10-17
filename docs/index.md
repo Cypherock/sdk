@@ -23,6 +23,6 @@ technologies:
 | Coin Family | Coins                                                                                       | Package                                                  |
 | ----------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | Bitcoin     | - Bitcoin (Legacy & Native Segwit)<br>- Litecoin<br>- Dogecoin<br>- Dashcoin                | [@cypherock/sdk-app-btc](../cypherock-sdk-app-btc)       |
-| EVM         | - Ethereum<br>- Polygon<br>- Binance<br>- Fantom<br>- Avalanche<br>- Arbitrum<br>- Optimism | [@cypherock/sdk-app-evm](../cypherock-sdk-app-evm)       |
+| EVM         | - Ethereum<br>- Polygon<br>- Binance<br>- Fantom<br>- Avalanche<br>- Arbitrum<br>- Optimism<br>- Base | [@cypherock/sdk-app-evm](../cypherock-sdk-app-evm)       |
 | Solana      | - Solana                                                                                    | [@cypherock/sdk-app-solana](../cypherock-sdk-app-solana) |
 | Near        | - Near                                                                                      | [@cypherock/sdk-app-near](../cypherock-sdk-app-near)     |
