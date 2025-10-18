@@ -1,3 +1,8 @@
 export * from './app';
 export * from './types';
-export { updateLogger, setCantonLib } from './utils';
+export {
+  updateLogger,
+  setCantonLib,
+  getCantonLib,
+  derivePartyId,
+} from './utils';
