@@ -5,7 +5,6 @@ import {
   uint8ArrayToHex,
   createLoggerWithPrefix,
 } from '@cypherock/sdk-utils';
-import { type PreparedTransaction } from '@canton-network/wallet-sdk';
 import { APP_VERSION } from '../../constants/appId';
 import {
   SeedGenerationStatus,
@@ -44,12 +43,12 @@ export const signTxn = async (
 
   await sdk.checkAppCompatibility(APP_VERSION);
 
-  const { CantonWalletSdk, CantonCoreLedgerProto } = getCantonLib();
-  const { decodePreparedTransaction } = CantonWalletSdk;
+  const { cantonCoreLedgerProto } = getCantonLib();
   const {
+    PreparedTransaction,
     DamlTransaction_Node: DamlTransactionNode,
     Metadata_InputContract: MetadataInputContract,
-  } = CantonCoreLedgerProto;
+  } = cantonCoreLedgerProto;
 
   const { onStatus, forceStatusUpdate } = createStatusListener({
     enums: SignTxnEvent,
@@ -66,8 +65,8 @@ export const signTxn = async (
     onStatus,
   });
 
-  const preparedTransaction: PreparedTransaction = decodePreparedTransaction(
-    params.txn.protoSerializedPreparedTransaction,
+  const preparedTransaction = PreparedTransaction.fromBinary(
+    Buffer.from(params.txn.protoSerializedPreparedTransaction, 'base64'),
   );
   assert(preparedTransaction, 'preparedTransaction object is null');
 
