@@ -17,7 +17,6 @@
   },
   "devDependencies": {
     "@canton-network/core-ledger-proto": "^0.6.0",
-    "@canton-network/wallet-sdk": "^0.7.0",
     "@cypherock/eslint-config": "workspace:*",
     "@cypherock/prettier-config": "workspace:^0.0.8",
     "@cypherock/tsconfig": "workspace:*",

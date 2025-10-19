@@ -1,9 +1,7 @@
-import type cantonWalletSdk from '@canton-network/wallet-sdk';
 import type cantonLedgerProto from '@canton-network/core-ledger-proto';
 
 export interface CantonLib {
-  CantonWalletSdk: typeof cantonWalletSdk;
-  CantonCoreLedgerProto: typeof cantonLedgerProto;
+  cantonCoreLedgerProto: typeof cantonLedgerProto;
 }
 
 let cantonLibInstance: CantonLib | undefined;
