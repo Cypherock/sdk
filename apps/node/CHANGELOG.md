@@ -1,5 +1,12 @@
 # nodejs-test
 
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [[`82adb19`](https://github.com/Cypherock/sdk/commit/82adb19d0e920992593c25a41101ea225589d2fc)]:
+  - @cypherock/sdk-app-evm@0.1.0
+
 ## 0.1.10
 
 ### Patch Changes
