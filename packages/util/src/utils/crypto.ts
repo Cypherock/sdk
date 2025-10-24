@@ -176,3 +176,35 @@ export const numToByteArray = (num: number) => {
 
   return byteArray.reverse();
 };
+
+export const base64ToUint8Array = (base64: string): Uint8Array => {
+  const binary =
+    typeof atob === 'function'
+      ? atob(base64)
+      : Buffer.from(base64, 'base64').toString('binary');
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+};
+
+export const uint8ArrayToBase64 = (bytes: Uint8Array): string => {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i += 1) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return typeof btoa === 'function'
+    ? btoa(binary)
+    : Buffer.from(binary, 'binary').toString('base64');
+};
+
+export const base64ToHex = (base64: string): string => {
+  const bytes = base64ToUint8Array(base64);
+  return uint8ArrayToHex(bytes);
+};
+
+export const hexToBase64 = (hex: string): string => {
+  const bytes = hexToUint8Array(hex);
+  return uint8ArrayToBase64(bytes);
+};
