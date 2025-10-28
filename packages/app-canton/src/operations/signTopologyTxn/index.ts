@@ -4,6 +4,7 @@ import {
   assert,
   uint8ArrayToHex,
   createLoggerWithPrefix,
+  base64ToUint8Array,
 } from '@cypherock/sdk-utils';
 import { APP_VERSION } from '../../constants/appId';
 import {
@@ -81,7 +82,7 @@ export const signTopologyTxn = async (
   for (const txn of params.topologyTxn.partyTransactions) {
     await helper.sendQuery({
       txnData: {
-        serializedTxn: txn,
+        serializedTxn: base64ToUint8Array(txn),
       },
     });
     const { dataAccepted } = await helper.waitForResult();

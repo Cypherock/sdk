@@ -9,7 +9,7 @@ export enum SignTopologyTxnEvent {
 export type SignTopologyTxnEventHandler = (event: SignTopologyTxnEvent) => void;
 
 export interface IUnsignedTopologyTransaction {
-  partyTransactions: Uint8Array[];
+  partyTransactions: string[];
 }
 
 export interface ISignTopologyTxnParams {
