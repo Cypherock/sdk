@@ -1,5 +1,30 @@
 # nodejs-test
 
+## 0.1.12
+
+### Patch Changes
+
+- [#166](https://github.com/Cypherock/sdk/pull/166) [`e5fb785`](https://github.com/Cypherock/sdk/commit/e5fb78564c335399c09888610f050496b4495480) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Added canton support
+
+- Updated dependencies [[`e5fb785`](https://github.com/Cypherock/sdk/commit/e5fb78564c335399c09888610f050496b4495480)]:
+  - @cypherock/sdk-app-canton@1.0.0
+  - @cypherock/sdk-utils@0.0.21
+  - @cypherock/sdk-app-btc@0.1.2
+  - @cypherock/sdk-app-constellation@1.0.3
+  - @cypherock/sdk-app-evm@0.1.1
+  - @cypherock/sdk-app-icp@2.0.4
+  - @cypherock/sdk-app-inheritance@1.0.3
+  - @cypherock/sdk-app-manager@0.0.35
+  - @cypherock/sdk-app-near@0.0.34
+  - @cypherock/sdk-app-solana@0.1.3
+  - @cypherock/sdk-app-starknet@0.1.3
+  - @cypherock/sdk-app-stellar@1.0.3
+  - @cypherock/sdk-app-tron@0.0.5
+  - @cypherock/sdk-app-xrp@1.0.4
+  - @cypherock/sdk-core@0.1.2
+  - @cypherock/sdk-hw-hid@0.0.25
+  - @cypherock/sdk-hw-serialport@0.0.22
+
 ## 0.1.11
 
 ### Patch Changes
