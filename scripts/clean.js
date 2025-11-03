@@ -8,6 +8,7 @@ const packages = {
   'apps/browser': [...commonTSFolders, '.next'],
   'apps/node': [...commonTSFolders],
   'packages/app-btc': [...commonTSFolders, 'src/proto/generated'],
+  'packages/app-canton': [...commonTSFolders, 'src/proto/generated'],
   'packages/app-evm': [...commonTSFolders, 'src/proto/generated'],
   'packages/app-manager': [...commonTSFolders, 'src/proto/generated'],
   'packages/app-near': [...commonTSFolders, 'src/proto/generated'],
