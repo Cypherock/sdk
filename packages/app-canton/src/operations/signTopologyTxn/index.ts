@@ -72,6 +72,7 @@ export const signTopologyTxn = async (
     initiate: {
       walletId: params.walletId,
       derivationPath: params.derivationPath,
+      network: params.network,
     },
   });
 

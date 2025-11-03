@@ -1,3 +1,5 @@
+import { CantonNetworkType } from '../../proto/generated/canton/common';
+
 export enum SignTopologyTxnEvent {
   INIT = 0,
   CONFIRM = 1,
@@ -18,10 +20,9 @@ export interface ISignTopologyTxnParams {
   walletId: Uint8Array;
   derivationPath: number[];
   topologyTxn: IUnsignedTopologyTransaction;
-  serializeTopologyTxn?: boolean;
+  network?: CantonNetworkType;
 }
 
 export interface ISignTopologyTxnResult {
   signature: string;
-  serializedTopologyTxn?: string;
 }

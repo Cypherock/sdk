@@ -4,6 +4,7 @@ import {
   assert,
   uint8ArrayToHex,
   createLoggerWithPrefix,
+  base64ToUint8Array,
 } from '@cypherock/sdk-utils';
 import { APP_VERSION } from '../../constants/appId';
 import {
@@ -66,7 +67,7 @@ export const signTxn = async (
   });
 
   const preparedTransaction = PreparedTransaction.fromBinary(
-    Buffer.from(params.txn.protoSerializedPreparedTransaction, 'base64'),
+    base64ToUint8Array(params.txn.protoSerializedPreparedTransaction),
   );
   assert(preparedTransaction, 'preparedTransaction object is null');
 
@@ -85,6 +86,7 @@ export const signTxn = async (
     initiate: {
       walletId: params.walletId,
       derivationPath: params.derivationPath,
+      network: params.network,
     },
   });
 

@@ -1,3 +1,5 @@
+import { CantonNetworkType } from '../../proto/generated/canton/common';
+
 export enum SignTxnEvent {
   INIT = 0,
   CONFIRM = 1,
@@ -18,10 +20,9 @@ export interface ISignTxnParams {
   walletId: Uint8Array;
   derivationPath: number[];
   txn: IUnsignedTransaction;
-  serializeTxn?: boolean;
+  network?: CantonNetworkType;
 }
 
 export interface ISignTxnResult {
   signature: string;
-  serializedTxn?: string;
 }
