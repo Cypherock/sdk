@@ -1,5 +1,19 @@
 # @cypherock/sdk-app-evm
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`e5fb785`](https://github.com/Cypherock/sdk/commit/e5fb78564c335399c09888610f050496b4495480)]:
+  - @cypherock/sdk-utils@0.0.21
+  - @cypherock/sdk-core@0.1.2
+
+## 0.1.0
+
+### Minor Changes
+
+- [#164](https://github.com/Cypherock/sdk/pull/164) [`82adb19`](https://github.com/Cypherock/sdk/commit/82adb19d0e920992593c25a41101ea225589d2fc) Thanks [@0xcuriosity](https://github.com/0xcuriosity)! - Add hyperliquid coin support (chainToAppIdMap)
+
 ## 0.0.35
 
 ### Patch Changes
