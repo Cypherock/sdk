@@ -35,6 +35,7 @@
     "@cypherock/sdk-app-stellar": "workspace:^",
     "@cypherock/sdk-app-tron": "workspace:^",
     "@cypherock/sdk-app-xrp": "workspace:^",
+    "@cypherock/sdk-app-sia": "workspace:^",
     "@cypherock/sdk-core": "workspace:^",
     "@cypherock/sdk-hw-hid": "workspace:^",
     "@cypherock/sdk-hw-serialport": "workspace:^",
