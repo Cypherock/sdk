@@ -1,5 +1,17 @@
 # nodejs-test
 
+## 0.2.0
+
+### Minor Changes
+
+- [#170](https://github.com/Cypherock/sdk/pull/170) [`424d519`](https://github.com/Cypherock/sdk/commit/424d519e4f2e1faba1933cde0ed2d0edadef4391) Thanks [@prashantrahul141](https://github.com/prashantrahul141)! - Add base network support with docs
+
+### Patch Changes
+
+- Updated dependencies [[`424d519`](https://github.com/Cypherock/sdk/commit/424d519e4f2e1faba1933cde0ed2d0edadef4391), [`15a41cd`](https://github.com/Cypherock/sdk/commit/15a41cd9a47650024dbeb03462b8fa8fa18881ab)]:
+  - @cypherock/sdk-app-evm@0.2.0
+  - @cypherock/sdk-app-sia@2.0.0
+
 ## 0.1.12
 
 ### Patch Changes
