@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-evm
 
+## 0.2.0
+
+### Minor Changes
+
+- [#170](https://github.com/Cypherock/sdk/pull/170) [`424d519`](https://github.com/Cypherock/sdk/commit/424d519e4f2e1faba1933cde0ed2d0edadef4391) Thanks [@prashantrahul141](https://github.com/prashantrahul141)! - Add base network support with docs
+
 ## 0.1.1
 
 ### Patch Changes
