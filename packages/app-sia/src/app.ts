@@ -6,7 +6,7 @@ import * as operations from './operations';
 export class SiaApp {
   private readonly sdk: SDK;
 
-  public static readonly APPLET_ID = 26;
+  public static readonly APPLET_ID = 27;
 
   private constructor(sdk: SDK) {
     this.sdk = sdk;
