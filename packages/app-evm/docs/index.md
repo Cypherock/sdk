@@ -14,6 +14,7 @@ EVM coin family.
 - Avalanche: (ChainId: `43114`)
 - Arbitrum: (ChainId: `42161`)
 - Optimism: (ChainId: `10`)
+- Base: (ChainId: `8453`)
 
 ## 2. Usage
 
