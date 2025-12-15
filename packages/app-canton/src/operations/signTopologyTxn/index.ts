@@ -47,8 +47,12 @@ export const signTopologyTxn = async (
     'topologyTxn.partyTransactions should be defined',
   );
   assert(
-    params.topologyTxn.partyTransactions.length === 3,
-    'topologyTxn.partyTransactions length should be equal to 3',
+    params.topologyTxn.partyTransactions.length > 0,
+    'topologyTxn.partyTransactions length should be greater than 0',
+  );
+  assert(
+    params.topologyTxn.partyTransactions.length <= 5,
+    'topologyTxn.partyTransactions length should be less than or equal to 5',
   );
 
   await sdk.checkAppCompatibility(APP_VERSION);
@@ -72,6 +76,7 @@ export const signTopologyTxn = async (
     initiate: {
       walletId: params.walletId,
       derivationPath: params.derivationPath,
+      topologyTxnsCount: params.topologyTxn.partyTransactions.length,
       network: params.network,
     },
   });
