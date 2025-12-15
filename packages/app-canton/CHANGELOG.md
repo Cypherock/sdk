@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-canton
 
+## 1.0.1
+
+### Patch Changes
+
+- [#174](https://github.com/Cypherock/sdk/pull/174) [`0f0bbad`](https://github.com/Cypherock/sdk/commit/0f0bbad58c91a6f2dcc75aedb4d291ab069c906b) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Fixes canton topology txns count
+
 ## 1.0.0
 
 ### Major Changes

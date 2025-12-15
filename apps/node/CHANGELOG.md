@@ -1,5 +1,12 @@
 # nodejs-test
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`0f0bbad`](https://github.com/Cypherock/sdk/commit/0f0bbad58c91a6f2dcc75aedb4d291ab069c906b)]:
+  - @cypherock/sdk-app-canton@1.0.1
+
 ## 0.2.0
 
 ### Minor Changes
