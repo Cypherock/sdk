@@ -1,5 +1,15 @@
 # browser-test
 
+## 0.0.43
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @cypherock/sdk-app-btc@0.1.2
+  - @cypherock/sdk-app-manager@0.0.35
+  - @cypherock/sdk-core@0.1.2
+  - @cypherock/sdk-hw-webusb@0.0.20
+
 ## 0.0.42
 
 ### Patch Changes
