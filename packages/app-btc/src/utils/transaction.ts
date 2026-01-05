@@ -107,8 +107,7 @@ export const createSignedTransaction = (params: {
     if (isTaproot) {
       // For Taproot, signature is already in 64-byte format (r + s)
       const taprootSignature = Buffer.from(signature.slice(0, 128), 'hex');
-
-      transaction.updateInput(i, {
+      transaction.data.updateInput(i, {
         tapKeySig: taprootSignature,
       });
     } else {
