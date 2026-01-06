@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-btc
 
+## 0.1.3
+
+### Patch Changes
+
+- [#176](https://github.com/Cypherock/sdk/pull/176) [`204fd57`](https://github.com/Cypherock/sdk/commit/204fd57a94d1b7461024fe13c69e5be88d20e8b7) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Added taproot support to btc app
+
 ## 0.1.2
 
 ### Patch Changes
