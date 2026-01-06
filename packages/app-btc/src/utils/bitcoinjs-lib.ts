@@ -1,3 +1,4 @@
+import * as ecc from '@bitcoin-js/tiny-secp256k1-asmjs';
 import type btcJsLib from 'bitcoinjs-lib';
 
 export type bitcoinJsLibType = typeof btcJsLib;
@@ -13,4 +14,5 @@ export const getBitcoinJsLib = () => {
 
 export const setBitcoinJSLib = (bitcoinJsLibrary: bitcoinJsLibType) => {
   bitcoinJsLib = bitcoinJsLibrary;
+  bitcoinJsLib.initEccLib(ecc);
 };

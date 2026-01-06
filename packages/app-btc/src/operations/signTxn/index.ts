@@ -16,6 +16,7 @@ import {
   getCoinTypeFromPath,
   configureAppId,
   AppFeatures,
+  TAPROOT_PURPOSE,
 } from '../../utils';
 import { getRawTxnHash } from '../../services/transaction';
 import {
@@ -80,7 +81,11 @@ export const signTxn = async (
       locktime: params.txn.locktime ?? signTxnDefaultParams.locktime,
       inputCount: params.txn.inputs.length,
       outputCount: params.txn.outputs.length,
-      sighash: params.txn.hashType ?? signTxnDefaultParams.hashtype,
+      sighash:
+        params.txn.hashType ??
+        (params.derivationPath[0] === TAPROOT_PURPOSE
+          ? 0
+          : signTxnDefaultParams.hashtype),
     },
   });
   const { metaAccepted } = await helper.waitForResult();
