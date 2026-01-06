@@ -79,7 +79,7 @@ export const createSignedTransaction = (params: {
       }
       if (isTaproot) {
         txnInput.tapInternalKey = Buffer.from(
-          signatures[inputIndex].slice(130, 130 + 64),
+          signatures[inputIndex].slice(signatures[inputIndex].length - 64),
           'hex',
         );
       }
