@@ -1,4 +1,6 @@
 import { Sha256 } from '@aws-crypto/sha256-browser';
+import { blake2b as internalBlake2b } from 'blakejs';
+import { bech32 } from 'bech32';
 import { assert } from './assert';
 
 const updateCRC16 = (crcParam: number, byte: number) => {
@@ -207,4 +209,71 @@ export const base64ToHex = (base64: string): string => {
 export const hexToBase64 = (hex: string): string => {
   const bytes = hexToUint8Array(hex);
   return uint8ArrayToBase64(bytes);
+};
+
+/**
+ * Hash given Uint8Array using blake2b
+ *
+ * @param input   input as Uint8Array or string
+ * @param key     Optional key
+ * @param outlen  Optional out len
+ */
+export const blake2b = (
+  input: Uint8Array | string,
+  key?: Uint8Array,
+  outlen?: number,
+): Uint8Array => internalBlake2b(input, key, outlen);
+
+/**
+ * bech32 encoding
+ *
+ * @param prefix   bech32 encoding prefix
+ * @param input    input bytes
+ * @param LIMIT    set max LIMIT for bech32 encoding
+ */
+export const bech32Encode = (
+  prefix: string,
+  input: ArrayLike<number>,
+  LIMIT?: number,
+): string => bech32.encode(prefix, input, LIMIT);
+
+/**
+ * Bit group conversion from fixed width `inbits` to symbols of width `outbits`
+ *
+ * @param outBits   Out stream byte width
+ * @param inBits    In stream byte width
+ * @param input     Input stream
+ * @param pad       Optional padding
+ *
+ */
+export const convertBits = (
+  outBits: number,
+  inBits: number,
+  input: Uint8Array,
+  pad: boolean,
+) => {
+  let val = 0;
+  let bits = 0;
+  const maxv = (1 << outBits) - 1;
+  const output = [];
+
+  for (let i = 0; i < input.length; i += 1) {
+    val = (val << inBits) | input[i];
+    bits += inBits;
+
+    while (bits >= outBits) {
+      bits -= outBits;
+      output.push((val >> bits) & maxv);
+    }
+  }
+
+  if (pad) {
+    if (bits > 0) {
+      output.push((val << (outBits - bits)) & maxv);
+    }
+  } else if (bits >= inBits || (val << (outBits - bits)) & maxv) {
+    return null;
+  }
+
+  return output;
 };
