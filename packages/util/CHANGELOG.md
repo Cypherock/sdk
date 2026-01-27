@@ -1,5 +1,11 @@
 # @cypherock/sdk-utils
 
+## 0.0.21
+
+### Patch Changes
+
+- [#166](https://github.com/Cypherock/sdk/pull/166) [`e5fb785`](https://github.com/Cypherock/sdk/commit/e5fb78564c335399c09888610f050496b4495480) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Added canton support
+
 ## 0.0.20
 
 ### Patch Changes

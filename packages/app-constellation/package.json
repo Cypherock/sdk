@@ -1,6 +1,6 @@
 {
   "name": "@cypherock/sdk-app-constellation",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -36,9 +36,9 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@cypherock/sdk-core": "workspace:^0.1.1",
+    "@cypherock/sdk-core": "workspace:^0.1.2",
     "@cypherock/sdk-interfaces": "workspace:^0.0.16",
-    "@cypherock/sdk-utils": "workspace:^0.0.20",
+    "@cypherock/sdk-utils": "workspace:^0.0.21",
     "long": "^5.2.1",
     "protobufjs": "^7.2.2"
   },

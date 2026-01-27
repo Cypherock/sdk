@@ -1,5 +1,63 @@
 # nodejs-test
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [[`204fd57`](https://github.com/Cypherock/sdk/commit/204fd57a94d1b7461024fe13c69e5be88d20e8b7)]:
+  - @cypherock/sdk-app-btc@0.1.3
+
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`0f0bbad`](https://github.com/Cypherock/sdk/commit/0f0bbad58c91a6f2dcc75aedb4d291ab069c906b)]:
+  - @cypherock/sdk-app-canton@1.0.1
+
+## 0.2.0
+
+### Minor Changes
+
+- [#170](https://github.com/Cypherock/sdk/pull/170) [`424d519`](https://github.com/Cypherock/sdk/commit/424d519e4f2e1faba1933cde0ed2d0edadef4391) Thanks [@prashantrahul141](https://github.com/prashantrahul141)! - Add base network support with docs
+
+### Patch Changes
+
+- Updated dependencies [[`424d519`](https://github.com/Cypherock/sdk/commit/424d519e4f2e1faba1933cde0ed2d0edadef4391), [`15a41cd`](https://github.com/Cypherock/sdk/commit/15a41cd9a47650024dbeb03462b8fa8fa18881ab)]:
+  - @cypherock/sdk-app-evm@0.2.0
+  - @cypherock/sdk-app-sia@2.0.0
+
+## 0.1.12
+
+### Patch Changes
+
+- [#166](https://github.com/Cypherock/sdk/pull/166) [`e5fb785`](https://github.com/Cypherock/sdk/commit/e5fb78564c335399c09888610f050496b4495480) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Added canton support
+
+- Updated dependencies [[`e5fb785`](https://github.com/Cypherock/sdk/commit/e5fb78564c335399c09888610f050496b4495480)]:
+  - @cypherock/sdk-app-canton@1.0.0
+  - @cypherock/sdk-utils@0.0.21
+  - @cypherock/sdk-app-btc@0.1.2
+  - @cypherock/sdk-app-constellation@1.0.3
+  - @cypherock/sdk-app-evm@0.1.1
+  - @cypherock/sdk-app-icp@2.0.4
+  - @cypherock/sdk-app-inheritance@1.0.3
+  - @cypherock/sdk-app-manager@0.0.35
+  - @cypherock/sdk-app-near@0.0.34
+  - @cypherock/sdk-app-solana@0.1.3
+  - @cypherock/sdk-app-starknet@0.1.3
+  - @cypherock/sdk-app-stellar@1.0.3
+  - @cypherock/sdk-app-tron@0.0.5
+  - @cypherock/sdk-app-xrp@1.0.4
+  - @cypherock/sdk-core@0.1.2
+  - @cypherock/sdk-hw-hid@0.0.25
+  - @cypherock/sdk-hw-serialport@0.0.22
+
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [[`82adb19`](https://github.com/Cypherock/sdk/commit/82adb19d0e920992593c25a41101ea225589d2fc)]:
+  - @cypherock/sdk-app-evm@0.1.0
+
 ## 0.1.10
 
 ### Patch Changes

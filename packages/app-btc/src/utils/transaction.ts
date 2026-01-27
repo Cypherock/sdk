@@ -32,6 +32,10 @@ export function isScriptNestedSegwit(script: string) {
   );
 }
 
+export function isScriptTaproot(script: string) {
+  return script.toLowerCase().startsWith('5120') && script.length === 68;
+}
+
 export const createSignedTransaction = (params: {
   inputs: ISignTxnInputData[];
   outputs: ISignTxnOutputData[];
@@ -51,13 +55,14 @@ export const createSignedTransaction = (params: {
 
     const isNestedSegwit = isScriptNestedSegwit(script);
     const isSegwit = isScriptSegwit(script) || isNestedSegwit;
+    const isTaproot = isScriptTaproot(script);
 
     const txnInput: any = {
       hash: input.prevTxnId,
       index: input.prevIndex,
     };
 
-    if (isSegwit) {
+    if (isSegwit || isTaproot) {
       txnInput.witnessUtxo = {
         script: Buffer.from(script, 'hex'),
         value: parseInt(input.value, 10),
@@ -71,6 +76,12 @@ export const createSignedTransaction = (params: {
           pubkey: publickey,
           network: bitcoinjs.networks.bitcoin,
         }).output;
+      }
+      if (isTaproot) {
+        txnInput.tapInternalKey = Buffer.from(
+          signatures[inputIndex].slice(signatures[inputIndex].length - 64),
+          'hex',
+        );
       }
     } else {
       assert(input.prevTxn, 'prevTxn is required in input');
@@ -90,36 +101,47 @@ export const createSignedTransaction = (params: {
 
   for (let i = 0; i < inputs.length; i += 1) {
     const signature = signatures[i];
+    const script = addressToScriptPubKey(inputs[i].address, derivationPath);
+    const isTaproot = isScriptTaproot(script);
 
-    const derLength = parseInt(signature.slice(4, 6), 16) * 2;
-    const derEncoded = signature.slice(2, derLength + 6);
-    const decoded = bip66.decode(Buffer.from(derEncoded, 'hex'));
+    if (isTaproot) {
+      // For Taproot, signature is already in 64-byte format (r + s)
+      const taprootSignature = Buffer.from(signature.slice(0, 128), 'hex');
+      transaction.data.updateInput(i, {
+        tapKeySig: taprootSignature,
+      });
+    } else {
+      // For legacy and segwit, signature is in DER format
+      const derLength = parseInt(signature.slice(4, 6), 16) * 2;
+      const derEncoded = signature.slice(2, derLength + 6);
+      const decoded = bip66.decode(Buffer.from(derEncoded, 'hex'));
 
-    const signer: Signer = {
-      publicKey: Buffer.from(signature.slice(signature.length - 66), 'hex'),
-      sign: () => {
-        let rValue =
-          decoded.r.length > 32
-            ? decoded.r.subarray(decoded.r.length - 32, 33)
-            : decoded.r;
-        let sValue =
-          decoded.s.length > 32
-            ? decoded.s.subarray(decoded.s.length - 32, 33)
-            : decoded.s;
+      const signer: Signer = {
+        publicKey: Buffer.from(signature.slice(signature.length - 66), 'hex'),
+        sign: () => {
+          let rValue =
+            decoded.r.length > 32
+              ? decoded.r.subarray(decoded.r.length - 32, 33)
+              : decoded.r;
+          let sValue =
+            decoded.s.length > 32
+              ? decoded.s.subarray(decoded.s.length - 32, 33)
+              : decoded.s;
 
-        if (rValue.length !== 32) {
-          rValue = Buffer.concat([Buffer.alloc(32 - rValue.length), rValue]);
-        }
+          if (rValue.length !== 32) {
+            rValue = Buffer.concat([Buffer.alloc(32 - rValue.length), rValue]);
+          }
 
-        if (sValue.length !== 32) {
-          sValue = Buffer.concat([Buffer.alloc(32 - sValue.length), sValue]);
-        }
+          if (sValue.length !== 32) {
+            sValue = Buffer.concat([Buffer.alloc(32 - sValue.length), sValue]);
+          }
 
-        return Buffer.concat([rValue, sValue]);
-      },
-    };
+          return Buffer.concat([rValue, sValue]);
+        },
+      };
 
-    transaction.signInput(i, signer);
+      transaction.signInput(i, signer);
+    }
   }
 
   transaction.finalizeAllInputs();
