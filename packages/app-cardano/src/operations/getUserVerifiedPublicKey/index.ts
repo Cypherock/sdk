@@ -65,7 +65,7 @@ export const getUserVerifiedPublicKey = async (
       stake: result.publicKeys.stake[0],
       payment: result.publicKeys.payment[0],
     },
-    addresse: {
+    address: {
       stake: result.addresses.stake[0],
       payment: result.addresses.payment[0],
     },

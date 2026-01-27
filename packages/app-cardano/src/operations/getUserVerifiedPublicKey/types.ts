@@ -12,7 +12,7 @@ export interface IGetUserVerifiedPublicKeyResult {
     stake: string;
     payment: string;
   };
-  addresse: {
+  address: {
     stake: string;
     payment: string;
   };
