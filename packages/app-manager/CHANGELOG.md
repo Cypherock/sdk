@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.36
+
+### Patch Changes
+
+- [#158](https://github.com/Cypherock/sdk/pull/158) [`a3085fb`](https://github.com/Cypherock/sdk/commit/a3085fb11b8684e3bc593057c6bcf5a3848ffef2) Thanks [@cy-utkarshM](https://github.com/cy-utkarshM)! - Adds variant support to firmware version
+
 ## 0.0.35
 
 ### Patch Changes
