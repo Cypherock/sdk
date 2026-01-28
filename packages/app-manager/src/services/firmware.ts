@@ -1,10 +1,14 @@
 import axios from 'axios';
 import { createQueryString, getConfig } from '@cypherock/sdk-utils';
+import { FirmwareVariant } from '../proto/types';
+import { firmwareVariantToJSON } from '../proto/generated/common';
 
 const getBaseURL = () => `${getConfig().API_CYPHEROCK}/firmware-stm`;
 
 export interface GetLatestFirmwareOptions {
+  variant?: FirmwareVariant;
   prerelease?: boolean;
+  isUserRelevant?: boolean;
   doDownload?: boolean;
 }
 
@@ -22,9 +26,14 @@ const downloadFile = async (url: string) => {
 };
 
 export async function getLatest(params: GetLatestFirmwareOptions = {}) {
+  const variantEnum = params.variant ?? FirmwareVariant.MULTI_COIN;
+  const variantString = firmwareVariantToJSON(variantEnum);
+
   const response = await axios.get(
     `${getBaseURL()}/latest?${createQueryString({
+      variant: variantString,
       prerelease: params.prerelease,
+      isUserRelevant: params.isUserRelevant,
     })}`,
   );
 

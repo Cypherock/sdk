@@ -1,3 +1,5 @@
+import { FirmwareVariant } from '../../../src';
+import { firmwareVariantToJSON } from '../../../src/proto/generated/common';
 import { IGetDeviceInfoTestCase } from './types';
 
 const withOneApplet: IGetDeviceInfoTestCase = {
@@ -15,6 +17,11 @@ const withOneApplet: IGetDeviceInfoTestCase = {
       major: 1,
       minor: 0,
       patch: 0,
+    },
+    firmwareVariant: FirmwareVariant.MULTI_COIN,
+    firmwareVariantInfo: {
+      variantId: FirmwareVariant.MULTI_COIN,
+      variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
     },
     isAuthenticated: true,
     appletList: [
@@ -45,6 +52,11 @@ const withTwoApplet: IGetDeviceInfoTestCase = {
       major: 1,
       minor: 0,
       patch: 0,
+    },
+    firmwareVariant: FirmwareVariant.MULTI_COIN,
+    firmwareVariantInfo: {
+      variantId: FirmwareVariant.MULTI_COIN,
+      variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
     },
     isAuthenticated: true,
     appletList: [
@@ -77,6 +89,11 @@ const withOnlyDeviceSerial: IGetDeviceInfoTestCase = {
   output: {
     deviceSerial: new Uint8Array([12, 124]),
     firmwareVersion: undefined,
+    firmwareVariant: FirmwareVariant.MULTI_COIN,
+    firmwareVariantInfo: {
+      variantId: FirmwareVariant.MULTI_COIN,
+      variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
+    },
     isAuthenticated: false,
     appletList: [],
     onboardingStep: 0,
@@ -91,6 +108,11 @@ const withPartialData: IGetDeviceInfoTestCase = {
   output: {
     deviceSerial: new Uint8Array([234, 21, 53, 31, 64]),
     firmwareVersion: undefined,
+    firmwareVariant: FirmwareVariant.MULTI_COIN,
+    firmwareVariantInfo: {
+      variantId: FirmwareVariant.MULTI_COIN,
+      variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
+    },
     isAuthenticated: true,
     appletList: [],
     onboardingStep: 0,
@@ -113,6 +135,11 @@ const withInitialStates: IGetDeviceInfoTestCase = {
       major: 1,
       minor: 0,
       patch: 0,
+    },
+    firmwareVariant: FirmwareVariant.MULTI_COIN,
+    firmwareVariantInfo: {
+      variantId: FirmwareVariant.MULTI_COIN,
+      variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
     },
     isAuthenticated: true,
     appletList: [

@@ -35,15 +35,23 @@ const managerApp = await ManagerApp.create();
 
 ### 2.2. `async ManagerApp.getLatestFirmware(params?)`
 
-Fetches the latest firmware of the device from the server.
+Fetches the latest firmware of the device from the server for a specific variant.
 
 **Arguments**:<br/>
 `params?` (Optional): `GetLatestFirmwareOptions`
 
 ```ts
+import { FirmwareVariant } from '../proto/types';
+
 interface GetLatestFirmwareOptions {
+  // The firmware variant to check. Defaults to 'MULTICOIN'.
+  variant?: FirmwareVariant;
+
   // If true, downloads the firmware binary
   doDownload?: boolean;
+
+  // If true, checks the prerelease channel instead
+  prerelease?: boolean;
 }
 ```
 
@@ -62,7 +70,17 @@ interface LatestFirmware {
 **Example:**
 
 ```ts
+import { FirmwareVariant } from '../proto/types';
+
+// To get MULTICOIN firmware
 const { firmware, version } = await ManagerApp.getLatestFirmware({
+  variant: FirmwareVariant.MULTI_COIN,
+  doDownload: true,
+});
+
+// To get BTC_ONLY firmware:
+const { firmware, version } = await ManagerApp.getLatestFirmware({
+  variant: FirmwareVariant.BTC_ONLY,
   doDownload: true,
 });
 ```
@@ -85,6 +103,7 @@ interface IGetDeviceInfoResultResponse {
   appletList: ISupportedAppletItem[];
   isInitial: boolean;
   onboardingStep: OnboardingStep;
+  firmwareVariantInfo: IFirmwareVariantInfo | undefined;
 }
 ```
 
@@ -375,7 +394,7 @@ interface IExistingWalletItem {
 await managerApp.trainCard({ onWallets: () => Promise.resolve(true) });
 ```
 
-### 4.8. `async managerApp.update(params)`
+### 4.8. `async managerApp.updateFirmware(params)`
 
 Updates the firmware of the connected device.
 
@@ -393,6 +412,9 @@ type CreateDeviceConnection = (device: IDevice) => Promise<IDeviceConnection>;
 type UpdateFirmwareEventHandler = (event: UpdateFirmwareStatus) => void;
 
 interface IUpdateFirmwareParams {
+  // The firmware variant. This determines which firmware is fetched if not provided directly.
+  variant?: FirmwareVariant;
+
   // The firmware binary
   firmware?: Uint8Array;
 
@@ -417,5 +439,9 @@ interface IUpdateFirmwareParams {
 **Example:**
 
 ```ts
-await managerApp.updateFirmware({ createConnection, getDevices });
+await managerApp.updateFirmware({
+  variant,
+  createConnection,
+  getDevices,
+});
 ```
