@@ -27,6 +27,16 @@ export const runGetPublicKeysOnDevice = async (
     paymentKeys: [],
     stakeKeys: [],
   };
+
+  /* wait for stake verification */
+  const stakeResult = await helper.waitForResult();
+  assertOrThrowInvalidResult(stakeResult.stakeVerify);
+  forceStatusUpdate(GetPublicKeysEvent.VERIFY_STAKE);
+
+  await helper.sendQuery({
+    result: {},
+  });
+
   const hasMore = () =>
     publicKeys.paymentKeys.length !== params.derivationPaths.length;
   do {
@@ -48,7 +58,7 @@ export const runGetPublicKeysOnDevice = async (
     }
   } while (hasMore());
 
-  forceStatusUpdate(GetPublicKeysEvent.VERIFY);
+  forceStatusUpdate(GetPublicKeysEvent.VERIFY_PAYMENT);
 
   const addresses: { stake: string[]; payment: string[] } = {
     stake: [],
