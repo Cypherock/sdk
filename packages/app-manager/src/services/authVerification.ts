@@ -39,6 +39,7 @@ export const verifyChallengeSignature = async (params: {
 
   challenge: Uint8Array;
   firmwareVersion: string;
+  firmwareVariant: string;
   isTestApp?: boolean;
   email?: string;
   cysyncVersion?: string;
@@ -53,6 +54,7 @@ export const verifyChallengeSignature = async (params: {
 
     challenge: uint8ArrayToHex(params.challenge),
     firmwareVersion: params.firmwareVersion,
+    firmwareVariant: params.firmwareVariant,
     isTestApp: params.isTestApp,
     email: params.email,
     cysyncVersion: params.cysyncVersion,

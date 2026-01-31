@@ -198,6 +198,7 @@ const withChallengeSignatureFailure: IAuthCardTestCase = {
             141, 85, 215, 54, 106,
           ]),
           firmwareVersion: '0.0.0',
+          firmwareVariant: 'MULTI_COIN',
         },
       ],
     ],

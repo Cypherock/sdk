@@ -18,6 +18,7 @@ export const verifyDeviceChallengeSignature = async (params: {
 
   challenge: Uint8Array;
   firmwareVersion: string;
+  firmwareVariant: string;
   isTestApp: boolean;
   email?: string;
   cysyncVersion?: string;
