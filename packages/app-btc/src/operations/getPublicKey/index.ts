@@ -68,16 +68,15 @@ export const getPublicKey = async (
 
   forceStatusUpdate(GetPublicKeyEvent.VERIFY);
 
+  const { publicKey } = result.result;
+
   let { address } = result.result;
   if (!address) {
-    address = await getAddressFromPublicKey(
-      result.result.publicKey,
-      params.derivationPath,
-    );
+    address = await getAddressFromPublicKey(publicKey, params.derivationPath);
   }
 
   return {
-    publicKey: result.result.publicKey,
+    publicKey,
     address,
   };
 };
