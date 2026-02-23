@@ -20,6 +20,7 @@ import {
   IGetPublicKeyParams,
   IGetPublicKeyResult,
 } from './types';
+import { getAddressFromPublicKey } from './publicKeyToAddress';
 
 export * from './types';
 
@@ -67,8 +68,16 @@ export const getPublicKey = async (
 
   forceStatusUpdate(GetPublicKeyEvent.VERIFY);
 
+  let { address } = result.result;
+  if (!address) {
+    address = await getAddressFromPublicKey(
+      result.result.publicKey,
+      params.derivationPath,
+    );
+  }
+
   return {
     publicKey: result.result.publicKey,
-    address: result.result.address,
+    address,
   };
 };
