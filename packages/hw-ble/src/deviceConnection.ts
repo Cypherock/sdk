@@ -94,7 +94,7 @@ export default class DeviceConnection implements IDeviceConnection {
       await deviceConnection.discoverAllServicesAndCharacteristics();
       this.connectedDevice = device;
     } catch (e) {
-      logger.error('Error while closing device connection');
+      logger.error('Error while connecting to the device');
       logger.error(e);
     }
 
