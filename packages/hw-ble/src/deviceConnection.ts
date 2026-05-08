@@ -107,11 +107,11 @@ export default class DeviceConnection implements IDeviceConnection {
     characteristic: Characteristic | null,
   ): void {
     if (error) {
-      console.log(error);
+      logger.error(error);
       return;
     }
     if (!characteristic?.value) {
-      console.log('No Data was recieved');
+      logger.warn('No Data was recieved');
       return;
     }
 
@@ -148,7 +148,7 @@ export default class DeviceConnection implements IDeviceConnection {
     return this.deviceState;
   }
 
-  public async isInitialized() {
+  public isInitialized() {
     return this.initialized;
   }
 
