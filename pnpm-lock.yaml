@@ -1412,6 +1412,9 @@ importers:
       '@cypherock/tsconfig':
         specifier: workspace:*
         version: link:../util-tsconfig
+      '@types/node':
+        specifier: 18.11.18
+        version: 18.11.18
       '@types/uuid':
         specifier: ^9.0.0
         version: 9.0.0

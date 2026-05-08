@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "types": ["node"],
   },
   "extends": "@cypherock/tsconfig/base.json",
   "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

@@ -3,14 +3,28 @@ import {
   IDeviceConnection,
   ConnectionTypeMap,
   DeviceState,
+  PoolData,
 } from '@cypherock/sdk-interfaces';
 import * as ExpoDevice from 'expo-device';
 import { PermissionsAndroid } from 'react-native';
-import { BleManager, Device } from 'react-native-ble-plx';
+import {
+  BleError,
+  BleManager,
+  Characteristic,
+  Device,
+} from 'react-native-ble-plx';
+import { Buffer } from 'buffer';
+import uuid from 'uuid';
 import { logger } from './logger';
+
+const NUS_SERVICE_UUID = '6E400001-B5A3-F393-E0A9-E50E24DCCA9E';
+const NUS_RX_CHARACTERISTICS_UUID = '6E400002-B5A3-F393-E0A9-E50E24DCCA9E';
+const NUS_TX_CHARACTERISTICS_UUID = '6E400003-B5A3-F393-E0A9-E50E24DCCA9E';
 
 export default class DeviceConnection implements IDeviceConnection {
   private readonly bleManager: BleManager;
+
+  private pool: PoolData[];
 
   private availableDevices: Device[];
 
@@ -24,6 +38,7 @@ export default class DeviceConnection implements IDeviceConnection {
 
   constructor() {
     this.bleManager = new BleManager();
+    this.pool = [];
     this.availableDevices = [];
     this.connectedDevice = null;
     this.deviceState = DeviceState.MAIN;
@@ -87,12 +102,40 @@ export default class DeviceConnection implements IDeviceConnection {
     }
   }
 
+  private onDataReceive(
+    error: BleError | null,
+    characteristic: Characteristic | null,
+  ): void {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    if (!characteristic?.value) {
+      console.log('No Data was recieved');
+      return;
+    }
+
+    const rawData: PoolData = {
+      id: uuid.v4(),
+      data: new Uint8Array(Buffer.from(characteristic.value, 'base64')),
+    };
+    this.pool = [...this.pool, rawData];
+  }
+
   public async connect(device: Device) {
     try {
       await this.stopScanning();
       const deviceConnection = await this.bleManager.connectToDevice(device.id);
       await deviceConnection.discoverAllServicesAndCharacteristics();
       this.connectedDevice = device;
+
+      device.monitorCharacteristicForService(
+        NUS_SERVICE_UUID,
+        NUS_TX_CHARACTERISTICS_UUID,
+        this.onDataReceive,
+        undefined,
+        'notification',
+      );
     } catch (e) {
       logger.error('Error while connecting to the device');
       logger.error(e);
@@ -118,9 +161,6 @@ export default class DeviceConnection implements IDeviceConnection {
     return this.sequenceNumber;
   }
 
-  /**
-   * Returns if the device is connected or not
-   */
   public async isConnected() {
     if (this.connectedDevice && (await this.connectedDevice.isConnected())) {
       return true;
@@ -129,9 +169,6 @@ export default class DeviceConnection implements IDeviceConnection {
     return false;
   }
 
-  /**
-   * Destroyes the connection and stop listening to the data.
-   */
   public async destroy() {
     try {
       if (!(await this.isConnected())) return;
@@ -159,26 +196,20 @@ export default class DeviceConnection implements IDeviceConnection {
   // eslint-disable-next-line
   public async afterOperation() {}
 
-  /**
-   * Writes a given data string (in hex) to the device.
-   * TODO(pegvin) - Implement this function
-   */
+  // TODO(pegvin) - Check for ACK or resend the data if required.
   public async send(data: Uint8Array) {
-    logger.verbose(`Sending ${data.length} bytes...`);
+    this.connectedDevice?.writeCharacteristicWithoutResponseForService(
+      NUS_SERVICE_UUID,
+      NUS_RX_CHARACTERISTICS_UUID,
+      Buffer.from(data).toString('base64'),
+    );
   }
 
-  /**
-   * Receives data from the device.
-   * TODO(pegvin) - Implement this function
-   */
   public async receive() {
-    return new Uint8Array(0);
+    return this.pool.shift()?.data;
   }
 
-  /**
-   * TODO(pegvin) - Implement this function
-   */
   public async peek() {
-    return [];
+    return [...this.pool];
   }
 }
