@@ -26,6 +26,7 @@
   "dependencies": {
     "@cypherock/sdk-interfaces": "workspace:^0.0.16",
     "@cypherock/sdk-utils": "workspace:^",
+    "@playerdata/react-native-mcu-manager": "^4.5.9",
     "expo": "^55.0.17",
     "expo-device": "~55.0.15",
     "react-native": "^0.85.2",

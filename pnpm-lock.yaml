@@ -1387,6 +1387,9 @@ importers:
       '@cypherock/sdk-utils':
         specifier: workspace:^
         version: link:../util
+      '@playerdata/react-native-mcu-manager':
+        specifier: ^4.5.9
+        version: 4.5.9(expo@55.0.17)(react-native@0.85.2)(react@19.2.5)
       expo:
         specifier: ^55.0.17
         version: 55.0.17(@babel/core@7.26.0)(@expo/dom-webview@55.0.5)(react-native@0.85.2)(react@19.2.5)(typescript@4.9.5)
@@ -4815,6 +4818,18 @@ packages:
   /@nolyfill/is-core-module@1.0.39:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
+
+  /@playerdata/react-native-mcu-manager@4.5.9(expo@55.0.17)(react-native@0.85.2)(react@19.2.5):
+    resolution: {integrity: sha512-e9GLPKWcq7uF8x9zW3z7KAInceM5I+Q1KlHbCvI/GBFeUNDW80HbbDKPkeSzEiVGOZH9HY6jDqidgn+jAtKBPg==}
+    peerDependencies:
+      expo: '*'
+      react: '*'
+      react-native: '*'
+    dependencies:
+      expo: 55.0.17(@babel/core@7.26.0)(@expo/dom-webview@55.0.5)(react-native@0.85.2)(react@19.2.5)(typescript@4.9.5)
+      react: 19.2.5
+      react-native: 0.85.2(@babel/core@7.26.0)(react@19.2.5)
+    dev: false
 
   /@protobuf-ts/runtime-rpc@2.11.1:
     resolution: {integrity: sha512-4CqqUmNA+/uMz00+d3CYKgElXO9VrEbucjnBFEjqI4GuDrEQ32MaI3q+9qPBvIGOlL4PmHXrzM32vBPWRhQKWQ==}

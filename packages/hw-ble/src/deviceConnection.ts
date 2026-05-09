@@ -15,6 +15,12 @@ import {
 } from 'react-native-ble-plx';
 import { Buffer } from 'buffer';
 import uuid from 'uuid';
+import {
+  FirmwareUpgradeState,
+  Upgrade,
+  UpgradeFileType,
+  UpgradeMode,
+} from '@playerdata/react-native-mcu-manager';
 import { logger } from './logger';
 
 const NUS_SERVICE_UUID = '6E400001-B5A3-F393-E0A9-E50E24DCCA9E';
@@ -211,5 +217,34 @@ export default class DeviceConnection implements IDeviceConnection {
 
   public async peek() {
     return [...this.pool];
+  }
+
+  public async updateFirmware(
+    device: Device,
+    firmwareURI: string,
+    onProgress: ((progress: number) => void) | undefined,
+    onStateChange: ((state: FirmwareUpgradeState) => void) | undefined,
+  ): Promise<{ cancel: () => void }> {
+    const upgrade = new Upgrade(
+      device.id,
+      firmwareURI,
+      {
+        estimatedSwapTime: 60,
+        upgradeMode: UpgradeMode.CONFIRM_ONLY,
+        upgradeFileType: UpgradeFileType.ZIP,
+      },
+      onProgress,
+      onStateChange,
+    );
+
+    await upgrade.runUpgrade();
+    upgrade.destroy();
+
+    return {
+      cancel: () => {
+        upgrade.cancel();
+        upgrade.destroy();
+      },
+    };
   }
 }
