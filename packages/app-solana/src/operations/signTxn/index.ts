@@ -100,22 +100,40 @@ export const signTxn = async (
   let serializedTxnHex: string | undefined;
 
   if (params.serializeTxn) {
+    const msgBytes = Buffer.from(params.txn, 'hex');
+    const isVersioned = msgBytes.length > 0 && msgBytes[0] === 0x80;
+
     const solanaWeb3 = getSolanaWeb3();
-    const transaction = solanaWeb3.Transaction.populate(
-      solanaWeb3.Message.from(Buffer.from(params.txn, 'hex')),
-    );
-    if (latestBlockHash) transaction.recentBlockhash = latestBlockHash;
-    assert(
-      transaction.feePayer,
-      new Error('Cannot decode feePayer in solana txn'),
-    );
-    transaction.addSignature(
-      transaction.feePayer,
-      Buffer.from(signature, 'hex'),
-    );
-    const serializedTxnBuffer = transaction.serialize();
-    serializedTxnHex = uint8ArrayToHex(serializedTxnBuffer);
-    serializedTxn = base58Encode(serializedTxnBuffer);
+    if (isVersioned) {
+      const serializedVersionedTxn = Buffer.concat([
+        Buffer.from([0x01]),
+        Buffer.from(signature, 'hex'),
+        msgBytes,
+      ]);
+      const vt = solanaWeb3.VersionedTransaction.deserialize(
+        serializedVersionedTxn,
+      );
+      if (latestBlockHash) vt.message.recentBlockhash = latestBlockHash;
+      const serializedTxnBuffer = Buffer.from(vt.serialize());
+      serializedTxnHex = uint8ArrayToHex(serializedTxnBuffer);
+      serializedTxn = base58Encode(serializedTxnBuffer);
+    } else {
+      const transaction = solanaWeb3.Transaction.populate(
+        solanaWeb3.Message.from(msgBytes),
+      );
+      if (latestBlockHash) transaction.recentBlockhash = latestBlockHash;
+      assert(
+        transaction.feePayer,
+        new Error('Cannot decode feePayer in solana txn'),
+      );
+      transaction.addSignature(
+        transaction.feePayer,
+        Buffer.from(signature, 'hex'),
+      );
+      const serializedTxnBuffer = transaction.serialize();
+      serializedTxnHex = uint8ArrayToHex(serializedTxnBuffer);
+      serializedTxn = base58Encode(serializedTxnBuffer);
+    }
   }
 
   return {
