@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import {
-  IDeviceConnection,
   ConnectionTypeMap,
   DeviceState,
+  IDeviceConnection,
   PoolData,
 } from '@cypherock/sdk-interfaces';
 import * as ExpoDevice from 'expo-device';
@@ -13,14 +13,7 @@ import {
   Characteristic,
   Device,
 } from 'react-native-ble-plx';
-import { Buffer } from 'buffer';
 import uuid from 'uuid';
-import {
-  FirmwareUpgradeState,
-  Upgrade,
-  UpgradeFileType,
-  UpgradeMode,
-} from '@playerdata/react-native-mcu-manager';
 import { logger } from './logger';
 
 const NUS_SERVICE_UUID = '6E400001-B5A3-F393-E0A9-E50E24DCCA9E';
@@ -42,8 +35,8 @@ export default class DeviceConnection implements IDeviceConnection {
 
   private sequenceNumber: number;
 
-  constructor() {
-    this.bleManager = new BleManager();
+  constructor(mgr: BleManager) {
+    this.bleManager = mgr;
     this.pool = [];
     this.availableDevices = [];
     this.connectedDevice = null;
@@ -53,7 +46,7 @@ export default class DeviceConnection implements IDeviceConnection {
   }
 
   public async getConnectionType() {
-    return ConnectionTypeMap.BLE;
+    return ConnectionTypeMap.HID;
   }
 
   public static getAndroidPermissionList() {
@@ -83,17 +76,13 @@ export default class DeviceConnection implements IDeviceConnection {
         return;
       }
 
-      if (device?.name?.toLowerCase().includes('cypherock')) {
+      if (device?.name?.toUpperCase().includes('X1 BLE')) {
         const isDuplicate = (devices: Device[], nextDevice: Device) =>
           devices.findIndex(d => nextDevice.id === d.id) > -1;
 
         if (!isDuplicate(this.availableDevices, device)) {
           this.availableDevices = [...this.availableDevices, device];
         }
-
-        logger.verbose(
-          `Found '${device.name}' (${device.id}): '${device.manufacturerData}'`,
-        );
       }
     });
   }
@@ -108,10 +97,10 @@ export default class DeviceConnection implements IDeviceConnection {
     }
   }
 
-  private onDataReceive(
+  private readonly onDataReceive = (
     error: BleError | null,
     characteristic: Characteristic | null,
-  ): void {
+  ): void => {
     if (error) {
       logger.error(error);
       return;
@@ -126,15 +115,21 @@ export default class DeviceConnection implements IDeviceConnection {
       data: new Uint8Array(Buffer.from(characteristic.value, 'base64')),
     };
     this.pool = [...this.pool, rawData];
-  }
+  };
 
   public async connect(device: Device) {
     try {
       await this.stopScanning();
       const deviceConnection = await this.bleManager.connectToDevice(device.id);
       await deviceConnection.discoverAllServicesAndCharacteristics();
-      this.connectedDevice = device;
 
+      /* USB HID packets are 64 bytes (padded with zero if need be) thus
+       * we need to ensure Bluetooth's each maximum transmission unit (MTU)
+       * must be atleast 64 bytes (data) + 5 bytes (headers) = 69 bytes.
+       */
+      await this.bleManager.requestMTUForDevice(device.id, 517);
+
+      this.connectedDevice = device;
       device.monitorCharacteristicForService(
         NUS_SERVICE_UUID,
         NUS_TX_CHARACTERISTICS_UUID,
@@ -145,9 +140,8 @@ export default class DeviceConnection implements IDeviceConnection {
     } catch (e) {
       logger.error('Error while connecting to the device');
       logger.error(e);
+      throw e;
     }
-
-    return true;
   }
 
   public async getDeviceState() {
@@ -186,6 +180,7 @@ export default class DeviceConnection implements IDeviceConnection {
       logger.warn('Error while closing device connection');
       logger.warn(error);
     }
+    console.log('Destroying BLE Instance!');
   }
 
   /**
@@ -204,10 +199,12 @@ export default class DeviceConnection implements IDeviceConnection {
 
   // TODO(pegvin) - Check for ACK or resend the data if required.
   public async send(data: Uint8Array) {
+    const dataToWrite = [...data, ...new Array(64 - data.length).fill(0x00)];
+
     this.connectedDevice?.writeCharacteristicWithoutResponseForService(
       NUS_SERVICE_UUID,
       NUS_RX_CHARACTERISTICS_UUID,
-      Buffer.from(data).toString('base64'),
+      Buffer.from(dataToWrite).toString('base64'),
     );
   }
 
@@ -217,34 +214,5 @@ export default class DeviceConnection implements IDeviceConnection {
 
   public async peek() {
     return [...this.pool];
-  }
-
-  public async updateFirmware(
-    device: Device,
-    firmwareURI: string,
-    onProgress: ((progress: number) => void) | undefined,
-    onStateChange: ((state: FirmwareUpgradeState) => void) | undefined,
-  ): Promise<{ cancel: () => void }> {
-    const upgrade = new Upgrade(
-      device.id,
-      firmwareURI,
-      {
-        estimatedSwapTime: 60,
-        upgradeMode: UpgradeMode.CONFIRM_ONLY,
-        upgradeFileType: UpgradeFileType.ZIP,
-      },
-      onProgress,
-      onStateChange,
-    );
-
-    await upgrade.runUpgrade();
-    upgrade.destroy();
-
-    return {
-      cancel: () => {
-        upgrade.cancel();
-        upgrade.destroy();
-      },
-    };
   }
 }

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
+    "lib": ["ES2015"],
     "types": ["node"],
   },
   "extends": "@cypherock/tsconfig/base.json",
