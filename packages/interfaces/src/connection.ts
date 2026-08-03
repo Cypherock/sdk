@@ -2,6 +2,7 @@ export const ConnectionTypeMap = {
   SERIAL_PORT: 'serial',
   HID: 'hid',
   WEBUSB: 'webusb',
+  BLE: 'ble',
 };
 
 export enum DeviceState {

@@ -1,0 +1,46 @@
+{
+  "name": "@cypherock/sdk-hw-ble",
+  "version": "0.0.25",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint --ext .ts,tsx,js,jsx,js src/ --fix",
+    "lint:check": "eslint --ext .ts,tsx,js,jsx,js src/",
+    "pretty": "prettier --write 'src/**/*.ts'",
+    "pretty:check": "prettier --check 'src/**/*.ts'",
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "pre-commit": "lint-staged"
+  },
+  "devDependencies": {
+    "@cypherock/eslint-config": "workspace:*",
+    "@cypherock/prettier-config": "workspace:^0.0.8",
+    "@cypherock/tsconfig": "workspace:*",
+    "@types/node": "18.11.18",
+    "@types/uuid": "^9.0.0",
+    "eslint": "^7.32.0",
+    "lint-staged": "^13.2.0",
+    "rimraf": "^4.1.2",
+    "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "expo-device": "*",
+    "react-native-ble-plx": "*"
+  },
+  "dependencies": {
+    "@cypherock/sdk-interfaces": "workspace:^0.0.16",
+    "@cypherock/sdk-utils": "workspace:^",
+    "react-native": "0.81.5",
+    "uuid": "^9.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --ext js,jsx,ts,tsx --quiet --fix --",
+      "prettier --write"
+    ],
+    "*.{md,mdx,mjs,yml,yaml,css,json}": [
+      "prettier --write"
+    ]
+  }
+}
