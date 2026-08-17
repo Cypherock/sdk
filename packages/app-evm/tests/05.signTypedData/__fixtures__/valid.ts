@@ -65,7 +65,13 @@ const valid: ISignTypedDataCase[] = [
         ],
       },
       primaryType: 'EIP712Domain',
-      message: {},
+      message: {
+        name: 'Trezor',
+        version: 'Test v0.0.0',
+        chainId: 1,
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+        salt: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+      },
       domain: {
         name: 'Trezor',
         version: 'Test v0.0.0',
@@ -141,9 +147,60 @@ const valid: ISignTypedDataCase[] = [
       message: {
         name: 'message',
         type: 7,
-        size: 0,
+        size: 5,
         structName: 'EIP712Domain',
-        children: [],
+        children: [
+          {
+            name: 'name',
+            type: 3,
+            size: 6,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([84, 114, 101, 122, 111, 114]),
+          },
+          {
+            name: 'version',
+            type: 3,
+            size: 11,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([84, 101, 115, 116, 32, 118, 48, 46, 48, 46, 48]),
+          },
+          {
+            name: 'chainId',
+            type: 0,
+            size: 32,
+            structName: 'uint256',
+            children: [],
+            data: Buffer.from([
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+            ]),
+          },
+          {
+            name: 'verifyingContract',
+            type: 5,
+            size: 20,
+            structName: 'address',
+            children: [],
+            data: Buffer.from([
+              204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204,
+              204, 204, 204, 204, 204, 204, 204,
+            ]),
+          },
+          {
+            name: 'salt',
+            type: 2,
+            size: 32,
+            structName: 'bytes32',
+            children: [],
+            data: Buffer.from([
+              1, 35, 69, 103, 137, 171, 205, 239, 1, 35, 69, 103, 137, 171, 205,
+              239, 1, 35, 69, 103, 137, 171, 205, 239, 1, 35, 69, 103, 137, 171,
+              205, 239,
+            ]),
+          },
+        ],
         typeHash: Uint8Array.from([
           216, 124, 214, 239, 121, 212, 226, 185, 94, 21, 206, 138, 191, 115,
           45, 181, 30, 199, 113, 241, 202, 46, 220, 207, 34, 164, 108, 114, 154,
@@ -1095,6 +1152,22 @@ const valid: ISignTypedDataCase[] = [
         structName: 'EIP712Domain',
         children: [
           {
+            name: 'name',
+            type: 3,
+            size: 10,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([69, 116, 104, 101, 114, 32, 77, 97, 105, 108]),
+          },
+          {
+            name: 'version',
+            type: 3,
+            size: 1,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([49]),
+          },
+          {
             name: 'chainId',
             type: 0,
             size: 32,
@@ -1106,14 +1179,6 @@ const valid: ISignTypedDataCase[] = [
             ]),
           },
           {
-            name: 'name',
-            type: 3,
-            size: 10,
-            structName: 'string',
-            children: [],
-            data: Buffer.from([69, 116, 104, 101, 114, 32, 77, 97, 105, 108]),
-          },
-          {
             name: 'verifyingContract',
             type: 5,
             size: 20,
@@ -1123,14 +1188,6 @@ const valid: ISignTypedDataCase[] = [
               204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204,
               204, 204, 204, 204, 204, 204, 204,
             ]),
-          },
-          {
-            name: 'version',
-            type: 3,
-            size: 1,
-            structName: 'string',
-            children: [],
-            data: Buffer.from([49]),
           },
         ],
         typeHash: Uint8Array.from([
@@ -1145,16 +1202,6 @@ const valid: ISignTypedDataCase[] = [
         size: 3,
         structName: 'Mail',
         children: [
-          {
-            name: 'contents',
-            type: 3,
-            size: 11,
-            structName: 'string',
-            children: [],
-            data: Buffer.from([
-              72, 101, 108, 108, 111, 44, 32, 66, 111, 98, 33,
-            ]),
-          },
           {
             name: 'from',
             type: 7,
@@ -1175,6 +1222,7 @@ const valid: ISignTypedDataCase[] = [
                 size: 2,
                 structName: 'address[]',
                 children: [],
+                data: undefined,
               },
             ],
             typeHash: Uint8Array.from([
@@ -1209,6 +1257,7 @@ const valid: ISignTypedDataCase[] = [
                     size: 3,
                     structName: 'address[]',
                     children: [],
+                    data: undefined,
                   },
                 ],
                 typeHash: Uint8Array.from([
@@ -1218,6 +1267,16 @@ const valid: ISignTypedDataCase[] = [
                 ]),
               },
             ],
+          },
+          {
+            name: 'contents',
+            type: 3,
+            size: 11,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([
+              72, 101, 108, 108, 111, 44, 32, 66, 111, 98, 33,
+            ]),
           },
         ],
         typeHash: Uint8Array.from([
@@ -1578,6 +1637,14 @@ const valid: ISignTypedDataCase[] = [
                     structName: 'Coin',
                     children: [
                       {
+                        name: 'denom',
+                        type: 3,
+                        size: 3,
+                        structName: 'string',
+                        children: [],
+                        data: Buffer.from([105, 110, 106]),
+                      },
+                      {
                         name: 'amount',
                         type: 3,
                         size: 15,
@@ -1587,14 +1654,6 @@ const valid: ISignTypedDataCase[] = [
                           50, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48,
                           48, 48,
                         ]),
-                      },
-                      {
-                        name: 'denom',
-                        type: 3,
-                        size: 3,
-                        structName: 'string',
-                        children: [],
-                        data: Buffer.from([105, 110, 106]),
                       },
                     ],
                     typeHash: Uint8Array.from([
@@ -1658,38 +1717,6 @@ const valid: ISignTypedDataCase[] = [
                     structName: 'MsgValue',
                     children: [
                       {
-                        name: 'amount',
-                        type: 7,
-                        size: 2,
-                        structName: 'TypeAmount',
-                        children: [
-                          {
-                            name: 'amount',
-                            type: 3,
-                            size: 18,
-                            structName: 'string',
-                            children: [],
-                            data: Buffer.from([
-                              49, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48,
-                              48, 48, 48, 48, 48, 48,
-                            ]),
-                          },
-                          {
-                            name: 'denom',
-                            type: 3,
-                            size: 3,
-                            structName: 'string',
-                            children: [],
-                            data: Buffer.from([105, 110, 106]),
-                          },
-                        ],
-                        typeHash: Uint8Array.from([
-                          40, 207, 48, 91, 40, 136, 92, 110, 43, 40, 209, 2,
-                          119, 124, 136, 28, 17, 197, 231, 177, 239, 253, 160,
-                          121, 248, 150, 158, 206, 238, 170, 248, 116,
-                        ]),
-                      },
-                      {
                         name: 'delegator_address',
                         type: 3,
                         size: 42,
@@ -1714,6 +1741,38 @@ const valid: ISignTypedDataCase[] = [
                           122, 48, 54, 115, 52, 54, 99, 120, 115, 115, 48, 51,
                           109, 122, 53, 117, 109, 120, 97, 120, 101, 103, 118,
                           104, 104, 115,
+                        ]),
+                      },
+                      {
+                        name: 'amount',
+                        type: 7,
+                        size: 2,
+                        structName: 'TypeAmount',
+                        children: [
+                          {
+                            name: 'denom',
+                            type: 3,
+                            size: 3,
+                            structName: 'string',
+                            children: [],
+                            data: Buffer.from([105, 110, 106]),
+                          },
+                          {
+                            name: 'amount',
+                            type: 3,
+                            size: 18,
+                            structName: 'string',
+                            children: [],
+                            data: Buffer.from([
+                              49, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48,
+                              48, 48, 48, 48, 48, 48,
+                            ]),
+                          },
+                        ],
+                        typeHash: Uint8Array.from([
+                          40, 207, 48, 91, 40, 136, 92, 110, 43, 40, 209, 2,
+                          119, 124, 136, 28, 17, 197, 231, 177, 239, 253, 160,
+                          121, 248, 150, 158, 206, 238, 170, 248, 116,
                         ]),
                       },
                     ],
@@ -2005,6 +2064,167 @@ const valid: ISignTypedDataCase[] = [
           221, 87, 217, 89, 106, 245, 43, 67, 12, 237, 61, 91, 82, 212, 227,
           213, 220, 207, 223, 62, 5, 114, 219, 29, 207, 82, 107, 170, 211, 17,
           251, 209,
+        ]),
+      },
+    },
+  },
+  // Hyperliquid user-signed action: non-identifier primary type name and
+  // undeclared extra keys ('type', 'signatureChainId') in the message
+  {
+    data: {
+      types: {
+        EIP712Domain: [
+          {
+            name: 'name',
+            type: 'string',
+          },
+          {
+            name: 'version',
+            type: 'string',
+          },
+          {
+            name: 'chainId',
+            type: 'uint256',
+          },
+          {
+            name: 'verifyingContract',
+            type: 'address',
+          },
+        ],
+        'HyperliquidTransaction:ApproveAgent': [
+          {
+            name: 'hyperliquidChain',
+            type: 'string',
+          },
+          {
+            name: 'agentAddress',
+            type: 'address',
+          },
+          {
+            name: 'agentName',
+            type: 'string',
+          },
+          {
+            name: 'nonce',
+            type: 'uint64',
+          },
+        ],
+      },
+      primaryType: 'HyperliquidTransaction:ApproveAgent',
+      domain: {
+        name: 'HyperliquidSignTransaction',
+        version: '1',
+        chainId: 42161,
+        verifyingContract: '0x0000000000000000000000000000000000000000',
+      },
+      message: {
+        type: 'approveAgent',
+        signatureChainId: '0xa4b1',
+        hyperliquidChain: 'Mainnet',
+        agentAddress: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+        agentName: 'cysync',
+        nonce: 1755400000000,
+      },
+    },
+    results: {
+      domain: {
+        name: 'domain',
+        type: 7,
+        size: 4,
+        structName: 'EIP712Domain',
+        children: [
+          {
+            name: 'name',
+            type: 3,
+            size: 26,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([
+              72, 121, 112, 101, 114, 108, 105, 113, 117, 105, 100, 83, 105,
+              103, 110, 84, 114, 97, 110, 115, 97, 99, 116, 105, 111, 110,
+            ]),
+          },
+          {
+            name: 'version',
+            type: 3,
+            size: 1,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([49]),
+          },
+          {
+            name: 'chainId',
+            type: 0,
+            size: 32,
+            structName: 'uint256',
+            children: [],
+            data: Buffer.from([
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 164, 177,
+            ]),
+          },
+          {
+            name: 'verifyingContract',
+            type: 5,
+            size: 20,
+            structName: 'address',
+            children: [],
+            data: Buffer.from([
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ]),
+          },
+        ],
+        typeHash: Uint8Array.from([
+          139, 115, 195, 198, 155, 184, 254, 61, 81, 46, 204, 76, 247, 89, 204,
+          121, 35, 159, 123, 23, 155, 15, 250, 202, 169, 167, 93, 82, 43, 57,
+          64, 15,
+        ]),
+      },
+      message: {
+        name: 'message',
+        type: 7,
+        size: 4,
+        structName: 'HyperliquidTransaction:ApproveAgent',
+        children: [
+          {
+            name: 'hyperliquidChain',
+            type: 3,
+            size: 7,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([77, 97, 105, 110, 110, 101, 116]),
+          },
+          {
+            name: 'agentAddress',
+            type: 5,
+            size: 20,
+            structName: 'address',
+            children: [],
+            data: Buffer.from([
+              243, 159, 214, 229, 26, 173, 136, 246, 244, 206, 106, 184, 130,
+              114, 121, 207, 255, 185, 34, 102,
+            ]),
+          },
+          {
+            name: 'agentName',
+            type: 3,
+            size: 6,
+            structName: 'string',
+            children: [],
+            data: Buffer.from([99, 121, 115, 121, 110, 99]),
+          },
+          {
+            name: 'nonce',
+            type: 0,
+            size: 8,
+            structName: 'uint64',
+            children: [],
+            data: Buffer.from([0, 0, 1, 152, 181, 254, 82, 0]),
+          },
+        ],
+        typeHash: Uint8Array.from([
+          68, 100, 171, 246, 20, 143, 17, 93, 121, 54, 45, 152, 50, 0, 129, 170,
+          42, 232, 165, 200, 64, 8, 60, 182, 88, 32, 191, 252, 33, 57, 67, 120,
         ]),
       },
     },

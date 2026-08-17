@@ -1,11 +1,11 @@
-import * as eip712 from 'eip-712';
+import { ethers } from 'ethers';
 
-import { eip712JsonToStruct, setEip712Lib } from '../../src/utils';
+import { eip712JsonToStruct, setEthersLib } from '../../src/utils';
 import fixtures from './__fixtures__';
 
 describe('eip712JsonToStruct', () => {
   beforeAll(() => {
-    setEip712Lib(eip712);
+    setEthersLib(ethers);
   });
 
   fixtures.valid.forEach((testCase, index) => {
