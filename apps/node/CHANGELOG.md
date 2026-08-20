@@ -1,5 +1,12 @@
 # nodejs-test
 
+## 0.2.6
+
+### Patch Changes
+
+- Updated dependencies [[`033bd76`](https://github.com/Cypherock/sdk/commit/033bd76ff1ec83ca258a93aef91d53249b6e3cb9)]:
+  - @cypherock/sdk-app-evm@0.3.0
+
 ## 0.2.5
 
 ### Patch Changes
