@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-evm
 
+## 0.3.0
+
+### Minor Changes
+
+- [#190](https://github.com/Cypherock/sdk/pull/190) [`033bd76`](https://github.com/Cypherock/sdk/commit/033bd76ff1ec83ca258a93aef91d53249b6e3cb9) Thanks [@AryanCypherock](https://github.com/AryanCypherock)! - Fix EIP-712 typed data signing for dapps like Hyperliquid: support non-identifier struct type names, ignore undeclared message keys, and encode struct fields in declaration order. Removes the unused `setEip712Lib`/`getEip712Lib` exports; the `eip-712` package is no longer needed
+
 ## 0.2.0
 
 ### Minor Changes
