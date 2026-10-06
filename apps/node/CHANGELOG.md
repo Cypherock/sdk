@@ -1,5 +1,12 @@
 # nodejs-test
 
+## 0.2.7
+
+### Patch Changes
+
+- Updated dependencies [[`6c2a563`](https://github.com/Cypherock/sdk/commit/6c2a563a67f21b2097dae8b1e528f42421757ef0)]:
+  - @cypherock/sdk-app-solana@0.2.0
+
 ## 0.2.6
 
 ### Patch Changes
