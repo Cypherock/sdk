@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-solana
 
+## 0.2.0
+
+### Minor Changes
+
+- [#188](https://github.com/Cypherock/sdk/pull/188) [`6c2a563`](https://github.com/Cypherock/sdk/commit/6c2a563a67f21b2097dae8b1e528f42421757ef0) Thanks [@Keyur279](https://github.com/Keyur279)! - Add support for signing Solana v0 (versioned) transactions
+
 ## 0.1.3
 
 ### Patch Changes
