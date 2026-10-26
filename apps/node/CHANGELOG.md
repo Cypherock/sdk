@@ -1,5 +1,12 @@
 # nodejs-test
 
+## 0.2.8
+
+### Patch Changes
+
+- Updated dependencies [[`aea7a54`](https://github.com/Cypherock/sdk/commit/aea7a540ad5d5ea6e0430459adf65e8b458f7936)]:
+  - @cypherock/sdk-app-btc@0.1.4
+
 ## 0.2.7
 
 ### Patch Changes
