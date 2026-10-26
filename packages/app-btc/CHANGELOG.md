@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-btc
 
+## 0.1.4
+
+### Patch Changes
+
+- [#189](https://github.com/Cypherock/sdk/pull/189) [`aea7a54`](https://github.com/Cypherock/sdk/commit/aea7a540ad5d5ea6e0430459adf65e8b458f7936) Thanks [@AryanCypherock](https://github.com/AryanCypherock)! - Export transaction assembly, address derivation and raw transaction helpers for host-side signing flows
+
 ## 0.1.3
 
 ### Patch Changes
