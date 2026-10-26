@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-manager
 
+## 0.0.37
+
+### Patch Changes
+
+- [#181](https://github.com/Cypherock/sdk/pull/181) [`77e7f72`](https://github.com/Cypherock/sdk/commit/77e7f720d11845be8cb1a15cf37ef14175b15d21) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Fixes device auth issue in multivariant firmware
+
 ## 0.0.36
 
 ### Patch Changes

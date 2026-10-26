@@ -61,6 +61,7 @@ const verifyChallengeSignature = async (params: {
   challenge: Uint8Array;
   serial: Uint8Array;
   firmwareVersion: string;
+  firmwareVariant: string;
   email?: string;
   cysyncVersion?: string;
 }) => {
@@ -70,6 +71,7 @@ const verifyChallengeSignature = async (params: {
     challenge,
     serial,
     firmwareVersion,
+    firmwareVariant,
     email,
     cysyncVersion,
   } = params;
@@ -87,6 +89,7 @@ const verifyChallengeSignature = async (params: {
       serial,
       isTestApp: (await helper.sdk.getDeviceState()) === DeviceState.INITIAL,
       firmwareVersion,
+      firmwareVariant,
       email,
       cysyncVersion,
     },
@@ -112,8 +115,10 @@ export const authDevice = async (
     const info = await getDeviceInfo(sdk);
 
     assertOrThrowInvalidResult(info.firmwareVersion);
+    assertOrThrowInvalidResult(info.firmwareVariantInfo.variantStr);
 
     const firmwareVersion = `${info.firmwareVersion.major}.${info.firmwareVersion.minor}.${info.firmwareVersion.patch}`;
+    const firmwareVariant = info.firmwareVariantInfo.variantStr;
 
     const { onStatus, forceStatusUpdate } = createStatusListener({
       enums: AuthDeviceStatus,
@@ -134,6 +139,7 @@ export const authDevice = async (
       serial,
       challenge,
       firmwareVersion,
+      firmwareVariant,
       email,
       cysyncVersion,
     });

@@ -1,3 +1,7 @@
+import {
+  FirmwareVariant,
+  firmwareVariantToJSON,
+} from '../../../src/proto/generated/common';
 import { IAuthDeviceTestCase } from './types';
 
 const withValidData: IAuthDeviceTestCase = {
@@ -100,6 +104,7 @@ const withValidData: IAuthDeviceTestCase = {
           ]),
           isTestApp: false,
           firmwareVersion: '1.0.0',
+          firmwareVariant: 'MULTI_COIN',
         },
       ],
     ],
@@ -109,6 +114,10 @@ const withValidData: IAuthDeviceTestCase = {
         major: 1,
         minor: 0,
         patch: 0,
+      },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
       },
     },
   },
@@ -171,6 +180,10 @@ const withPartiallySkippedStatus: IAuthDeviceTestCase = {
         minor: 0,
         patch: 0,
       },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
+      },
     },
     challenge: new Uint8Array([
       143, 38, 255, 171, 87, 190, 161, 60, 70, 86, 74, 222, 253, 255, 156, 88,
@@ -213,6 +226,7 @@ const withPartiallySkippedStatus: IAuthDeviceTestCase = {
           ]),
           isTestApp: false,
           firmwareVersion: '1.0.0',
+          firmwareVariant: 'MULTI_COIN',
         },
       ],
     ],
@@ -274,6 +288,10 @@ const withSkippedStatuses: IAuthDeviceTestCase = {
         minor: 0,
         patch: 0,
       },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
+      },
     },
     challenge: new Uint8Array([
       63, 205, 246, 233, 246, 124, 84, 56, 185, 168, 7, 161, 59, 122, 91, 176,
@@ -316,6 +334,7 @@ const withSkippedStatuses: IAuthDeviceTestCase = {
           ]),
           isTestApp: false,
           firmwareVersion: '1.0.0',
+          firmwareVariant: 'MULTI_COIN',
         },
       ],
     ],

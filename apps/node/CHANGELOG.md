@@ -1,5 +1,33 @@
 # nodejs-test
 
+## 0.2.7
+
+### Patch Changes
+
+- Updated dependencies [[`6c2a563`](https://github.com/Cypherock/sdk/commit/6c2a563a67f21b2097dae8b1e528f42421757ef0)]:
+  - @cypherock/sdk-app-solana@0.2.0
+
+## 0.2.6
+
+### Patch Changes
+
+- Updated dependencies [[`033bd76`](https://github.com/Cypherock/sdk/commit/033bd76ff1ec83ca258a93aef91d53249b6e3cb9)]:
+  - @cypherock/sdk-app-evm@0.3.0
+
+## 0.2.5
+
+### Patch Changes
+
+- Updated dependencies [[`61e5840`](https://github.com/Cypherock/sdk/commit/61e584007e30ca32d4b0223fa3c30c96b39840a0)]:
+  - @cypherock/sdk-app-canton@1.0.2
+
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [[`77e7f72`](https://github.com/Cypherock/sdk/commit/77e7f720d11845be8cb1a15cf37ef14175b15d21)]:
+  - @cypherock/sdk-app-manager@0.0.37
+
 ## 0.2.3
 
 ### Patch Changes

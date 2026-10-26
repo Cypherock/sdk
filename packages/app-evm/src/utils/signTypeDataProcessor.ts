@@ -1,11 +1,67 @@
 import type { TypedData as EIP712TypedData } from 'eip-712';
+import { hexToUint8Array } from '@cypherock/sdk-utils';
 import BigNumber from 'bignumber.js';
 import {
   Eip712DataType,
   SignTypedDataNode,
   SignTypedDataStruct,
 } from '../proto/generated/evm/sign_msg';
-import { getEip712Lib } from './eip712';
+import { getEthersLib } from './ethers';
+
+type EIP712Types = EIP712TypedData['types'];
+
+// 'Order[2][3]' -> 'Order'; only array suffixes are stripped because type
+// names may not be valid identifiers (e.g. 'HyperliquidTransaction:ApproveAgent')
+// and must match `types` keys verbatim
+const getBaseTypeName = (fieldType: string): string =>
+  fieldType.replace(/(\[\d*\])+$/, '');
+
+const collectStructDependencies = (
+  types: EIP712Types,
+  typeName: string,
+  found: Set<string> = new Set(),
+): Set<string> => {
+  if (found.has(typeName) || !types[typeName]) return found;
+
+  found.add(typeName);
+  types[typeName].forEach(field => {
+    collectStructDependencies(types, getBaseTypeName(field.type), found);
+  });
+
+  return found;
+};
+
+const encodeStructType = (types: EIP712Types, typeName: string): string => {
+  if (!types[typeName]) {
+    throw new Error(
+      `EIP-712 type '${typeName}' is not defined in the 'types' object`,
+    );
+  }
+
+  const [primary, ...dependencies] = Array.from(
+    collectStructDependencies(types, typeName),
+  );
+
+  return [primary, ...dependencies.sort()]
+    .map(
+      name =>
+        `${name}(${types[name]
+          .map(field => `${field.type} ${field.name}`)
+          .join(',')})`,
+    )
+    .join('');
+};
+
+const getStructTypeHash = (
+  types: EIP712Types,
+  typeName: string,
+): Uint8Array => {
+  const ethers = getEthersLib();
+
+  return hexToUint8Array(
+    ethers.keccak256(ethers.toUtf8Bytes(encodeStructType(types, typeName))),
+  );
+};
 
 const preprocessTypeData = (dataTypes: any) => {
   const formattedTypes: any = {};
@@ -136,19 +192,26 @@ const eip712JsonToStruct = (
         dataNode(i.toString(), x, dataType, undefined),
       );
     } else if (structTypes[dataType]) {
-      const { getTypeHash } = getEip712Lib();
-      const childKeys = Object.keys(dataObject);
-      signedTypeDataNode.typeHash = getTypeHash(jsonData, dataType);
-      signedTypeDataNode.children = childKeys.map((x: any) =>
-        dataNode(
+      // EIP-712 hashes struct fields in declaration order; keys present in
+      // the message but not declared in `types` are excluded from the digest
+      const declaredFields = Object.keys(structTypes[dataType]);
+      signedTypeDataNode.typeHash = getStructTypeHash(jsonData.types, dataType);
+      signedTypeDataNode.size = declaredFields.length;
+      signedTypeDataNode.children = declaredFields.map((x: string) => {
+        if (dataObject[x] === undefined) {
+          throw new Error(
+            `EIP-712 message is missing field '${x}' of type '${dataType}'`,
+          );
+        }
+        return dataNode(
           x,
           dataObject[x],
           structTypes[dataType][x].type,
           structTypes[dataType][x].isArray
             ? structTypes[dataType][x].structType
             : undefined,
-        ),
-      );
+        );
+      });
     } else {
       signedTypeDataNode.data = encodedData;
     }

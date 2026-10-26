@@ -1,5 +1,9 @@
 import { DeviceAppError } from '@cypherock/sdk-interfaces';
 import { IAuthDeviceTestCase } from './types';
+import {
+  FirmwareVariant,
+  firmwareVariantToJSON,
+} from '../../../src/proto/generated/common';
 
 const withInvaidSerialSigData: IAuthDeviceTestCase = {
   name: 'Invalid data in serialSig step',
@@ -47,6 +51,10 @@ const withInvaidSerialSigData: IAuthDeviceTestCase = {
         major: 1,
         minor: 0,
         patch: 0,
+      },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
       },
     },
     challenge: new Uint8Array([
@@ -101,6 +109,10 @@ const withInvaidSerialSigData2: IAuthDeviceTestCase = {
         major: 1,
         minor: 0,
         patch: 0,
+      },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
       },
     },
     challenge: new Uint8Array([
@@ -160,6 +172,10 @@ const withInvalidChallengeSigData: IAuthDeviceTestCase = {
         minor: 0,
         patch: 0,
       },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
+      },
     },
     challenge: new Uint8Array([
       250, 253, 111, 43, 36, 92, 54, 97, 161, 102, 155, 13, 159, 32, 200, 231,
@@ -214,6 +230,10 @@ const withInvalidChallengeSigData2: IAuthDeviceTestCase = {
         major: 1,
         minor: 0,
         patch: 0,
+      },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
       },
     },
     challenge: new Uint8Array([

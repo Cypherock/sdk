@@ -22,4 +22,9 @@ export const verifyCardChallengeSignature = async (params: {
   cysyncVersion?: string;
   onlyFailure?: boolean;
   sessionId?: string;
-}) => verifyChallengeSignature({ ...params, firmwareVersion: '0.0.0' });
+}) =>
+  verifyChallengeSignature({
+    ...params,
+    firmwareVersion: '0.0.0',
+    firmwareVariant: 'MULTI_COIN',
+  });

@@ -1,5 +1,11 @@
 # @cypherock/sdk-app-canton
 
+## 1.0.2
+
+### Patch Changes
+
+- [#183](https://github.com/Cypherock/sdk/pull/183) [`61e5840`](https://github.com/Cypherock/sdk/commit/61e584007e30ca32d4b0223fa3c30c96b39840a0) Thanks [@muzaffarbhat07](https://github.com/muzaffarbhat07)! - Adds sign txn external functionality
+
 ## 1.0.1
 
 ### Patch Changes

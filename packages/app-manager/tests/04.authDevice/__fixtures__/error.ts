@@ -4,6 +4,10 @@ import {
   deviceAppErrorTypeDetails,
 } from '@cypherock/sdk-interfaces';
 import { IAuthDeviceTestCase } from './types';
+import {
+  FirmwareVariant,
+  firmwareVariantToJSON,
+} from '../../../src/proto/generated/common';
 
 const withUserRejection: IAuthDeviceTestCase = {
   name: 'When user rejects the device auth',
@@ -28,6 +32,10 @@ const withUserRejection: IAuthDeviceTestCase = {
         major: 1,
         minor: 0,
         patch: 0,
+      },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
       },
     },
   },
@@ -74,6 +82,10 @@ const withSerialSignatureFailure: IAuthDeviceTestCase = {
         major: 1,
         minor: 0,
         patch: 0,
+      },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
       },
     },
     verifySerialSignatureCalls: [
@@ -158,6 +170,10 @@ const withChallengeSignatureFailure: IAuthDeviceTestCase = {
         minor: 0,
         patch: 0,
       },
+      firmwareVariantInfo: {
+        variantId: FirmwareVariant.MULTI_COIN,
+        variantStr: firmwareVariantToJSON(FirmwareVariant.MULTI_COIN),
+      },
     },
     challenge: new Uint8Array([
       63, 205, 246, 233, 246, 124, 84, 56, 185, 168, 7, 161, 59, 122, 91, 176,
@@ -200,6 +216,7 @@ const withChallengeSignatureFailure: IAuthDeviceTestCase = {
           ]),
           isTestApp: false,
           firmwareVersion: '1.0.0',
+          firmwareVariant: 'MULTI_COIN',
         },
       ],
     ],

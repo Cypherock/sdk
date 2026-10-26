@@ -41,6 +41,12 @@ export class CantonApp {
     );
   }
 
+  public async signTxnExternal(params: operations.ISignTxnExternalParams) {
+    return this.sdk.runOperation(() =>
+      operations.signTxnExternal(this.sdk, params),
+    );
+  }
+
   public async destroy() {
     return this.sdk.destroy();
   }

@@ -18,19 +18,17 @@ EVM coin family.
 
 ## 2. Usage
 
-Install packages: `npm i @cypherock/sdk-app-evm @cypherock/sdk-hw-webusb ethers eip-712`
+Install packages: `npm i @cypherock/sdk-app-evm @cypherock/sdk-hw-webusb ethers`
 
 ```ts
 // NOTE: you can also use `@cypherock/sdk-hw-hid` dependending on the environment
 import { DeviceConnection } from '@cypherock/sdk-hw-webusb';
-import { EvmApp, setEthersLib, setEip712Lib } from '@cypherock/sdk-app-evm';
+import { EvmApp, setEthersLib } from '@cypherock/sdk-app-evm';
 
 import { ethers } from 'ethers';
-import * as eip712 from 'eip-712';
 
 // Inject dependencies
 setEthersLib(ethers);
-setEip712Lib(eip712);
 
 const connection = await DeviceConnection.create();
 const evmApp = await EvmApp.create(connection);
@@ -259,7 +257,6 @@ interface ISignTypedParams {
   onEvent?: SignMsgEventHandler;
   walletId: Uint8Array;
   derivationPath: number[];
-  // From `eip-712` npm package
   message: EIP712TypedData;
 }
 ```

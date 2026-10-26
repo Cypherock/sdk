@@ -47,7 +47,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/app-btc
       '@cypherock/sdk-app-manager':
-        specifier: workspace:^0.0.36
+        specifier: workspace:^0.0.37
         version: link:../../packages/app-manager
       '@cypherock/sdk-core':
         specifier: workspace:^0.1.2
