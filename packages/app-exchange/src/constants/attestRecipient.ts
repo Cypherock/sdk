@@ -1,0 +1,2 @@
+export const ATTEST_CHAIN_MAX_LENGTH = 31;
+export const ATTEST_ADDRESS_MAX_LENGTH = 255;

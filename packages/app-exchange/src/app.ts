@@ -30,6 +30,20 @@ export class ExchangeApp {
     );
   }
 
+  public async initiatePrivateSend(
+    params: operations.IInitiatePrivateSendParams,
+  ) {
+    return this.sdk.runOperation(() =>
+      operations.initiatePrivateSend(this.sdk, params),
+    );
+  }
+
+  public async attestRecipient(params: operations.IAttestRecipientParams) {
+    return this.sdk.runOperation(() =>
+      operations.attestRecipient(this.sdk, params),
+    );
+  }
+
   public async getSignature() {
     return this.sdk.runOperation(() => operations.getSignature(this.sdk));
   }
